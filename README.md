@@ -1,4 +1,4 @@
-<h1 align="center">⚙️ Sysacad Next - Backend API</h1>
+<h1 align="center">⚙️ Sysacad Next - Backend</h1>
 
 <div align="center">
     <a href="https://github.com/agussantinelli/Sysacad-Next-FrontEnd" target="_blank">
