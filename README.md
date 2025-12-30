@@ -67,11 +67,6 @@
             <td>Spring Security 6</td>
             <td>Filtros JWT, CORS y autorización por Roles.</td>
         </tr>
-        <tr>
-            <td><strong>Utilidades</strong></td>
-            <td>Lombok & MapStruct</td>
-            <td>Reducción de boilerplate code y mapeo de Entidad-DTO.</td>
-        </tr>
     </tbody>
 </table>
 
@@ -80,49 +75,6 @@
 <h2>💻 Setup Local</h2>
 
 <p>Requisitos: JDK 17+, Maven 3.8+ y PostgreSQL (o Docker).</p>
-
-<h3>1. Configuración de Base de Datos</h3>
-<p>Asegúrate de tener una instancia de base de datos corriendo. Crea una base de datos vacía llamada <code>sysacad_db</code>.</p>
-
-<h3>2. Variables de Entorno</h3>
-<p>Configura el archivo <code>src/main/resources/application.properties</code> (o variables de entorno del sistema):</p>
-
-<pre><code># Base de Datos
-spring.datasource.url=jdbc:postgresql://localhost:5432/sysacad_db
-spring.datasource.username=tu_usuario
-spring.datasource.password=tu_password
-
-# JPA
-spring.jpa.hibernate.ddl-auto=update
-spring.jpa.show-sql=true
-
-# JWT Seguridad
-app.jwt.secret=TU_CLAVE_SECRETA_SUPER_LARGA_Y_SEGURA_256_BITS
-app.jwt.expiration=86400000
-</code></pre>
-
-<h3>3. Ejecución</h3>
-
-<pre><code># Instalar dependencias y compilar
-mvn clean install
-
-# Levantar el servidor
-mvn spring-boot:run
-</code></pre>
-
-<p>La API estará disponible en: <code>http://localhost:8080</code></p>
-
-<hr>
-
-<h2>🧪 Testing</h2>
-
-<p>Mantenemos un alto estándar de calidad mediante pruebas automatizadas.</p>
-
-<pre><code># Ejecutar todos los tests (Unitarios + Integración)
-mvn test
-</code></pre>
-
-<hr>
 
 <h2>🤝 Contribuciones</h2>
 
