@@ -18,12 +18,12 @@
     <img src="https://img.shields.io/badge/PostgreSQL-15-4169E1?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL Badge"/>
 </div>
 
-
 <div align="center">
-    <a href="#" target="_blank">
+    <a href="https://drive.google.com/drive/folders/1Yoln2wLucIvrbcWCbQ_bY-hZ4Z1ENIdD" target="_blank">
         <img src="https://img.shields.io/badge/📂%20Documentación%20del%20Proyecto-4285F4?style=for-the-badge&logo=googledrive&logoColor=white" alt="Docs Badge"/>
     </a>
 </div>
+
 <hr>
 
 <h2>🎯 Objetivo</h2>
