@@ -42,6 +42,47 @@
 
 <hr>
 
+<h2>🗂️ Modelo de Dominio</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Área</th>
+            <th>Entidades (Tablas)</th>
+            <th>Responsabilidad</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>👤 Actores</strong></td>
+            <td><code>usuarios</code>, <code>profesores</code></td>
+            <td>Gestión de perfiles, roles (admin/estudiante), legajos y datos personales.</td>
+        </tr>
+        <tr>
+            <td><strong>🏛️ Estructura Académica</strong></td>
+            <td><code>carreras</code>, <code>planes_estudio</code>, <code>plan_materias</code></td>
+            <td>Definición de la oferta académica y versiones de planes vigentes.</td>
+        </tr>
+        <tr>
+            <td><strong>📚 Curricular</strong></td>
+            <td><code>materias</code>, <code>correlativas</code></td>
+            <td>Catálogo de asignaturas y sistema de pre-requisitos (correlatividades fuertes).</td>
+        </tr>
+        <tr>
+            <td><strong>📅 Gestión de Cursada</strong></td>
+            <td><code>comisiones</code>, <code>profesores_comisiones</code>, <code>asignaciones_profesores</code></td>
+            <td>Instancias cuatrimestrales de materias, turnos y asignación de plantel docente.</td>
+        </tr>
+        <tr>
+            <td><strong>📝 Ciclo del Alumno</strong></td>
+            <td><code>inscripciones_carrera</code>, <code>inscripciones_cursada</code>, <code>calificaciones</code></td>
+            <td>Trazabilidad completa: desde la matriculación hasta la carga de notas finales y regularidades.</td>
+        </tr>
+    </tbody>
+</table>
+
+<hr>
+
 <h2>🛠️ Stack Tecnológico</h2>
 
 <table>
