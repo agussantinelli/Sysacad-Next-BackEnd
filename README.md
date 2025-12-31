@@ -13,8 +13,8 @@
 </div>
 
 <div align="center">
-    <img src="https://img.shields.io/badge/Java-17%2B-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white" alt="Java Badge"/>
-    <img src="https://img.shields.io/badge/Spring%20Boot-3.2-6DB33F?style=for-the-badge&logo=springboot&logoColor=white" alt="Spring Boot Badge"/>
+    <img src="https://img.shields.io/badge/Java-21-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white" alt="Java Badge"/>
+    <img src="https://img.shields.io/badge/Spring%20Boot-3.5-6DB33F?style=for-the-badge&logo=springboot&logoColor=white" alt="Spring Boot Badge"/>
     <img src="https://img.shields.io/badge/PostgreSQL-15-4169E1?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL Badge"/>
 </div>
 
@@ -96,13 +96,18 @@
     <tbody>
         <tr>
             <td><strong>Core</strong></td>
-            <td>Java 17 / 21</td>
+            <td>Java 21</td>
             <td>Lenguaje base, utilizando Records y nuevas features.</td>
         </tr>
         <tr>
             <td><strong>Framework</strong></td>
-            <td>Spring Boot 3.x</td>
+            <td>Spring Boot 3.5.x</td>
             <td>Inyección de dependencias y configuración automática.</td>
+        </tr>
+        <tr>
+            <td><strong>Utilidades</strong></td>
+            <td>Lombok</td>
+            <td>Reducción de boilerplate code (Getters, Setters).</td>
         </tr>
         <tr>
             <td><strong>Datos</strong></td>
