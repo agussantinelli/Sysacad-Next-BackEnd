@@ -60,29 +60,29 @@
             <td>Sedes y aulas físicas. Raíz de la jerarquía (todo depende de una facultad).</td>
         </tr>
         <tr>
-            <td><strong>👤 Actores</strong></td>
-            <td><code>usuarios</code>, <code>profesores</code>, <code>sanciones</code></td>
-            <td>Gestión de perfiles extendidos, roles y registro de conducta (sanciones).</td>
+            <td><strong>👤 Actores y Comunicación</strong></td>
+            <td><code>usuarios</code>, <code>profesores</code>, <code>sanciones</code>, <code>avisos</code></td>
+            <td>Gestión de perfiles, roles, registro disciplinario y <strong>cartelera de novedades</strong>.</td>
         </tr>
         <tr>
             <td><strong>📜 Jerarquía Académica</strong></td>
-            <td><code>planes_de_estudios</code>, <code>carreras</code></td>
-            <td>Oferta académica estructural. Entidades débiles dependientes de Facultad.</td>
+            <td><code>carreras</code>, <code>planes_de_estudios</code></td>
+            <td>Definición estructural. Cadena de dependencia estricta: <strong>Facultad → Carrera → Plan</strong>.</td>
         </tr>
         <tr>
             <td><strong>📚 Curricular</strong></td>
             <td><code>materias</code>, <code>plan_materias</code>, <code>correlativas</code></td>
-            <td>Catálogo de asignaturas, asignación a planes (año/carga) y pre-requisitos.</td>
+            <td>Catálogo de asignaturas (fuerte), su contextualización en planes (año/carga) y sistema de correlatividades.</td>
         </tr>
         <tr>
             <td><strong>📅 Gestión de Cursada</strong></td>
             <td><code>comisiones</code>, <code>materias_comisiones</code>, <code>profesores_comisiones</code>, <code>asignaciones_materia</code></td>
-            <td>Oferta operativa. Soporta relación N:M (Comisión dicta varias materias) y roles docentes.</td>
+            <td>Oferta operativa. Soporta relación N:M (Comisión dicta varias materias) y asignación de roles docentes.</td>
         </tr>
         <tr>
             <td><strong>📝 Ciclo del Alumno</strong></td>
             <td><code>estudios_usuario</code>, <code>inscripciones</code>, <code>calificaciones</code></td>
-            <td>Trazabilidad total: Vinculación a carrera, transacción de cursada/examen y notas finales.</td>
+            <td>Trazabilidad total: Matriculación en carrera, inscripción a cursada/examen y registro de historia académica.</td>
         </tr>
     </tbody>
 </table>
