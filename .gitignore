@@ -51,3 +51,6 @@ local.properties
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+application-secret.properties
+src/main/resources/application-secret.properties
