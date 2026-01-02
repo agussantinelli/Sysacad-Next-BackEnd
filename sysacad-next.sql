@@ -2,7 +2,6 @@ DROP DATABASE IF EXISTS gestion_academica;
 CREATE DATABASE gestion_academica CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE gestion_academica;
 
-
 CREATE TABLE facultades_regionales (
                                        id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
                                        ciudad VARCHAR(100) NOT NULL,
@@ -12,23 +11,36 @@ CREATE TABLE facultades_regionales (
 CREATE TABLE usuarios (
                           id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
                           legajo VARCHAR(20) NOT NULL,
+                          dni VARCHAR(15) NOT NULL,
                           nombre VARCHAR(100) NOT NULL,
                           apellido VARCHAR(100) NOT NULL,
                           mail VARCHAR(150) NOT NULL,
+                          fecha_nacimiento DATE NOT NULL,
+                          genero ENUM('M', 'F') NOT NULL,
+                          telefono_movil VARCHAR(50),
+                          direccion_calle VARCHAR(255),
+                          ciudad_residencia VARCHAR(100),
+                          foto_perfil VARCHAR(255) COMMENT 'URL o path de la imagen',
                           fecha_ingreso DATE NOT NULL,
                           rol ENUM('admin', 'estudiante') NOT NULL,
+
                           CONSTRAINT uq_usuario_legajo UNIQUE (legajo),
-                          CONSTRAINT uq_usuario_mail UNIQUE (mail)
+                          CONSTRAINT uq_usuario_mail UNIQUE (mail),
+                          CONSTRAINT uq_usuario_dni UNIQUE (dni)
 ) ENGINE=InnoDB;
 
 CREATE TABLE profesores (
                             id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                            dni VARCHAR(15) NOT NULL,
                             nombre VARCHAR(100) NOT NULL,
                             apellido VARCHAR(100) NOT NULL,
                             mail VARCHAR(150) NOT NULL,
+                            titulo_academico VARCHAR(100) NOT NULL COMMENT 'Ej: Ing. en Sistemas, Dr. en Física',
                             fecha_nacimiento DATE NOT NULL,
                             fecha_ingreso DATE NOT NULL,
-                            CONSTRAINT uq_profesor_mail UNIQUE (mail)
+
+                            CONSTRAINT uq_profesor_mail UNIQUE (mail),
+                            CONSTRAINT uq_profesor_dni UNIQUE (dni)
 ) ENGINE=InnoDB;
 
 CREATE TABLE materias (
@@ -81,7 +93,6 @@ CREATE TABLE carreras (
                           CONSTRAINT fk_carrera_plan FOREIGN KEY (id_facultad, fecha_plan)
                               REFERENCES planes_de_estudios(id_facultad, fecha_inicio) ON DELETE CASCADE
 ) ENGINE=InnoDB;
-
 
 
 CREATE TABLE plan_materias (
@@ -141,6 +152,23 @@ CREATE TABLE asignaciones_materia (
                                       CONSTRAINT fk_am_prof FOREIGN KEY (id_profesor) REFERENCES profesores(id),
                                       CONSTRAINT fk_am_mat FOREIGN KEY (id_materia) REFERENCES materias(id)
 ) ENGINE=InnoDB;
+
+CREATE TABLE estudios_usuario (
+                                  id_usuario BIGINT UNSIGNED NOT NULL,
+                                  id_facultad BIGINT UNSIGNED NOT NULL,
+                                  fecha_plan DATE NOT NULL,
+                                  id_carrera VARCHAR(20) NOT NULL,
+
+                                  fecha_inscripcion DATE NOT NULL,
+                                  estado VARCHAR(20) NOT NULL,
+
+                                  PRIMARY KEY (id_usuario, id_facultad, fecha_plan, id_carrera),
+
+                                  CONSTRAINT fk_estudia_usuario FOREIGN KEY (id_usuario) REFERENCES usuarios(id),
+                                  CONSTRAINT fk_estudia_carrera FOREIGN KEY (id_facultad, fecha_plan, id_carrera)
+                                      REFERENCES carreras(id_facultad, fecha_plan, id_carrera)
+) ENGINE=InnoDB;
+
 
 CREATE TABLE inscripciones (
                                id_usuario BIGINT UNSIGNED NOT NULL,
