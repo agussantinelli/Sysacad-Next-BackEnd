@@ -24,6 +24,7 @@ CREATE TABLE usuarios (
                           foto_perfil VARCHAR(255),
                           fecha_ingreso DATE NOT NULL,
                           rol ENUM('admin', 'estudiante') NOT NULL,
+                          estado VARCHAR(20) NOT NULL,
 
                           CONSTRAINT uq_usuario_legajo UNIQUE (legajo),
                           CONSTRAINT uq_usuario_mail UNIQUE (mail),
@@ -40,6 +41,7 @@ CREATE TABLE profesores (
                             titulo_academico VARCHAR(100) NULL,
                             fecha_nacimiento DATE NOT NULL,
                             fecha_ingreso DATE NOT NULL,
+                            estado VARCHAR(20) NOT NULL,
 
                             CONSTRAINT uq_profesor_mail UNIQUE (mail),
                             CONSTRAINT uq_profesor_dni UNIQUE (tipo_documento, dni)
