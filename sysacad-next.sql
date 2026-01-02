@@ -75,6 +75,14 @@ CREATE TABLE sanciones (
                            CONSTRAINT fk_sancion_usuario FOREIGN KEY (id_usuario) REFERENCES usuarios(id)
 ) ENGINE=InnoDB;
 
+CREATE TABLE avisos (
+                        id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                        titulo VARCHAR(150) NOT NULL,
+                        descripcion TEXT NOT NULL,
+                        fecha_emision DATETIME NOT NULL,
+                        estado VARCHAR(20) NOT NULL
+) ENGINE=InnoDB;
+
 CREATE TABLE planes_de_estudios (
                                     id_facultad BIGINT UNSIGNED NOT NULL,
                                     fecha_inicio DATE NOT NULL,
