@@ -1,0 +1,54 @@
+package com.sysacad.backend.modelo;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.UUID;
+
+@Entity
+@Data
+@Table(name = "estudios_usuario")
+public class EstudioUsuario {
+
+    @EmbeddedId
+    private EstudioUsuarioId id;
+
+    @Column(name = "fecha_inscripcion", nullable = false)
+    private LocalDate fechaInscripcion;
+
+    @Column(nullable = false, length = 20)
+    private String estado;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_usuario", insertable = false, updatable = false)
+    private Usuario usuario;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumns({
+            @JoinColumn(name = "id_facultad", referencedColumnName = "id_facultad", insertable = false, updatable = false),
+            @JoinColumn(name = "id_carrera", referencedColumnName = "id_carrera", insertable = false, updatable = false),
+            @JoinColumn(name = "nombre_plan", referencedColumnName = "nombre", insertable = false, updatable = false)
+    })
+    private PlanDeEstudio plan;
+
+    @Embeddable
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class EstudioUsuarioId implements Serializable {
+        @Column(name = "id_usuario")
+        private UUID idUsuario;
+
+        @Column(name = "id_facultad")
+        private UUID idFacultad;
+
+        @Column(name = "id_carrera", length = 20)
+        private String idCarrera;
+
+        @Column(name = "nombre_plan", length = 100)
+        private String nombrePlan;
+    }
+}
