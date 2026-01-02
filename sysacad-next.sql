@@ -112,7 +112,7 @@ CREATE TABLE plan_materias (
     nombre_plan VARCHAR(100) NOT NULL,
     id_materia UUID NOT NULL,
     codigo_materia VARCHAR(20) NOT NULL,
-    anio SMALLINT NOT NULL,
+    nivel SMALLINT NOT NULL,
 
     PRIMARY KEY (id_facultad, id_carrera, nombre_plan, id_materia),
 
