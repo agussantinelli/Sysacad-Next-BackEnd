@@ -83,40 +83,41 @@ CREATE TABLE avisos (
                         estado VARCHAR(20) NOT NULL
 ) ENGINE=InnoDB;
 
+CREATE TABLE carreras (
+                          id_facultad BIGINT UNSIGNED NOT NULL,
+                          id_carrera VARCHAR(20) NOT NULL, -- Código interno (ej: 'ISI', 'IQ')
+                          nombre VARCHAR(100) NOT NULL,
+
+                          PRIMARY KEY (id_facultad, id_carrera),
+                          CONSTRAINT fk_carrera_facultad FOREIGN KEY (id_facultad) REFERENCES facultades_regionales(id)
+) ENGINE=InnoDB;
+
 CREATE TABLE planes_de_estudios (
                                     id_facultad BIGINT UNSIGNED NOT NULL,
+                                    id_carrera VARCHAR(20) NOT NULL,
+                                    nombre VARCHAR(100) NOT NULL, -- Ej: 'Plan 2023'
                                     fecha_inicio DATE NOT NULL,
-                                    nombre VARCHAR(100) NOT NULL,
                                     fecha_fin DATE,
                                     es_vigente BOOLEAN NOT NULL DEFAULT TRUE,
 
-                                    PRIMARY KEY (id_facultad, fecha_inicio),
-                                    CONSTRAINT fk_plan_facultad FOREIGN KEY (id_facultad) REFERENCES facultades_regionales(id)
-) ENGINE=InnoDB;
+                                    PRIMARY KEY (id_facultad, id_carrera, nombre),
 
-CREATE TABLE carreras (
-                          id_facultad BIGINT UNSIGNED NOT NULL,
-                          fecha_plan DATE NOT NULL,
-                          id_carrera VARCHAR(20) NOT NULL,
-                          nombre VARCHAR(100) NOT NULL,
-
-                          PRIMARY KEY (id_facultad, fecha_plan, id_carrera),
-
-                          CONSTRAINT fk_carrera_plan FOREIGN KEY (id_facultad, fecha_plan)
-                              REFERENCES planes_de_estudios(id_facultad, fecha_inicio) ON DELETE CASCADE
+                                    CONSTRAINT fk_plan_carrera FOREIGN KEY (id_facultad, id_carrera)
+                                        REFERENCES carreras(id_facultad, id_carrera) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE plan_materias (
                                id_facultad BIGINT UNSIGNED NOT NULL,
-                               fecha_plan DATE NOT NULL,
+                               id_carrera VARCHAR(20) NOT NULL,
+                               nombre_plan VARCHAR(100) NOT NULL,
                                id_materia BIGINT UNSIGNED NOT NULL,
                                codigo_materia VARCHAR(20) NOT NULL,
                                anio TINYINT UNSIGNED NOT NULL,
 
-                               PRIMARY KEY (id_facultad, fecha_plan, id_materia),
+                               PRIMARY KEY (id_facultad, id_carrera, nombre_plan, id_materia),
 
-                               CONSTRAINT fk_pm_plan FOREIGN KEY (id_facultad, fecha_plan)
-                                   REFERENCES planes_de_estudios(id_facultad, fecha_inicio),
+                               CONSTRAINT fk_pm_plan FOREIGN KEY (id_facultad, id_carrera, nombre_plan)
+                                   REFERENCES planes_de_estudios(id_facultad, id_carrera, nombre),
                                CONSTRAINT fk_pm_materia FOREIGN KEY (id_materia) REFERENCES materias(id)
 ) ENGINE=InnoDB;
 
@@ -168,17 +169,17 @@ CREATE TABLE asignaciones_materia (
 CREATE TABLE estudios_usuario (
                                   id_usuario BIGINT UNSIGNED NOT NULL,
                                   id_facultad BIGINT UNSIGNED NOT NULL,
-                                  fecha_plan DATE NOT NULL,
                                   id_carrera VARCHAR(20) NOT NULL,
+                                  nombre_plan VARCHAR(100) NOT NULL,
 
                                   fecha_inscripcion DATE NOT NULL,
                                   estado VARCHAR(20) NOT NULL,
 
-                                  PRIMARY KEY (id_usuario, id_facultad, fecha_plan, id_carrera),
+                                  PRIMARY KEY (id_usuario, id_facultad, id_carrera, nombre_plan),
 
                                   CONSTRAINT fk_estudia_usuario FOREIGN KEY (id_usuario) REFERENCES usuarios(id),
-                                  CONSTRAINT fk_estudia_carrera FOREIGN KEY (id_facultad, fecha_plan, id_carrera)
-                                      REFERENCES carreras(id_facultad, fecha_plan, id_carrera)
+                                  CONSTRAINT fk_estudia_plan FOREIGN KEY (id_facultad, id_carrera, nombre_plan)
+                                      REFERENCES planes_de_estudios(id_facultad, id_carrera, nombre)
 ) ENGINE=InnoDB;
 
 CREATE TABLE inscripciones (
