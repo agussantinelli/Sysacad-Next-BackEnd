@@ -39,7 +39,6 @@ CREATE TABLE profesores (
     mail VARCHAR(150) NOT NULL,
     titulo_academico VARCHAR(100) NULL,
     fecha_nacimiento DATE NOT NULL,
-    -- Agregado el campo género para coincidir con la Entidad Java
     genero VARCHAR(1) NOT NULL CHECK (genero IN ('M', 'F')),
     fecha_ingreso DATE NOT NULL,
     estado VARCHAR(20) NOT NULL,
