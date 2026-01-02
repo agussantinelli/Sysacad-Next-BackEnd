@@ -12,11 +12,17 @@
     </a>
 </div>
 
+<br>
+
 <div align="center">
     <img src="https://img.shields.io/badge/Java-21-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white" alt="Java Badge"/>
     <img src="https://img.shields.io/badge/Spring%20Boot-3.5-6DB33F?style=for-the-badge&logo=springboot&logoColor=white" alt="Spring Boot Badge"/>
+    <img src="https://img.shields.io/badge/Spring%20Security-6-6DB33F?style=for-the-badge&logo=springsecurity&logoColor=white" alt="Spring Security Badge"/>
     <img src="https://img.shields.io/badge/PostgreSQL-15-4169E1?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL Badge"/>
+    <img src="https://img.shields.io/badge/Hibernate-ORM-59666C?style=for-the-badge&logo=hibernate&logoColor=white" alt="Hibernate Badge"/>
+    <img src="https://img.shields.io/badge/Apache%20Maven-3.8+-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white" alt="Maven Badge"/>
     <img src="https://img.shields.io/badge/Project%20Lombok-Enables-BC0230?style=for-the-badge&logo=lombok&logoColor=white" alt="Lombok Badge"/>
+    <img src="https://img.shields.io/badge/JUnit-5-25A162?style=for-the-badge&logo=junit5&logoColor=white" alt="JUnit Badge"/>
 </div>
 
 <div align="center">
@@ -94,7 +100,7 @@
 <table>
     <thead>
         <tr>
-            <th>Capa</th>
+            <th>Capa / Área</th>
             <th>Tecnología</th>
             <th>Uso Principal</th>
         </tr>
@@ -111,19 +117,34 @@
             <td>Inyección de dependencias y configuración automática.</td>
         </tr>
         <tr>
-            <td><strong>Utilidades</strong></td>
-            <td>Lombok</td>
-            <td>Reducción de boilerplate code (Getters, Setters).</td>
-        </tr>
-        <tr>
-            <td><strong>Datos</strong></td>
-            <td>Spring Data JPA</td>
-            <td>ORM (Hibernate) para persistencia en PostgreSQL/MySQL.</td>
+            <td><strong>Build & CI</strong></td>
+            <td>Apache Maven</td>
+            <td>Gestión de dependencias y ciclo de vida de construcción.</td>
         </tr>
         <tr>
             <td><strong>Seguridad</strong></td>
             <td>Spring Security 6</td>
             <td>Filtros JWT, CORS y autorización por Roles.</td>
+        </tr>
+        <tr>
+            <td><strong>Datos</strong></td>
+            <td>Spring Data JPA / Hibernate</td>
+            <td>ORM potente para el mapeo objeto-relacional y persistencia.</td>
+        </tr>
+        <tr>
+            <td><strong>Testing</strong></td>
+            <td>JUnit 5 & Mockito</td>
+            <td>Pruebas unitarias y de integración (<code>spring-boot-starter-test</code>).</td>
+        </tr>
+        <tr>
+            <td><strong>Dev Experience</strong></td>
+            <td>Spring Boot DevTools</td>
+            <td>Hot-reload y reinicio automático en desarrollo local.</td>
+        </tr>
+        <tr>
+            <td><strong>Utilidades</strong></td>
+            <td>Lombok</td>
+            <td>Reducción de boilerplate code (Getters, Setters).</td>
         </tr>
     </tbody>
 </table>
