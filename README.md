@@ -55,29 +55,34 @@
     </thead>
     <tbody>
         <tr>
-            <td><strong>👤 Actores</strong></td>
-            <td><code>usuarios</code>, <code>profesores</code></td>
-            <td>Gestión de perfiles, roles (admin/estudiante), legajos y datos personales.</td>
+            <td><strong>🏢 Infraestructura</strong></td>
+            <td><code>facultades_regionales</code>, <code>salones</code></td>
+            <td>Sedes y aulas físicas. Raíz de la jerarquía (todo depende de una facultad).</td>
         </tr>
         <tr>
-            <td><strong>🏛️ Estructura Académica</strong></td>
-            <td><code>carreras</code>, <code>planes_estudio</code>, <code>plan_materias</code></td>
-            <td>Definición de la oferta académica y versiones de planes vigentes.</td>
+            <td><strong>👤 Actores</strong></td>
+            <td><code>usuarios</code>, <code>profesores</code>, <code>sanciones</code></td>
+            <td>Gestión de perfiles extendidos, roles y registro de conducta (sanciones).</td>
+        </tr>
+        <tr>
+            <td><strong>📜 Jerarquía Académica</strong></td>
+            <td><code>planes_de_estudios</code>, <code>carreras</code></td>
+            <td>Oferta académica estructural. Entidades débiles dependientes de Facultad.</td>
         </tr>
         <tr>
             <td><strong>📚 Curricular</strong></td>
-            <td><code>materias</code>, <code>correlativas</code></td>
-            <td>Catálogo de asignaturas y sistema de pre-requisitos (correlatividades fuertes).</td>
+            <td><code>materias</code>, <code>plan_materias</code>, <code>correlativas</code></td>
+            <td>Catálogo de asignaturas, asignación a planes (año/carga) y pre-requisitos.</td>
         </tr>
         <tr>
             <td><strong>📅 Gestión de Cursada</strong></td>
-            <td><code>comisiones</code>, <code>profesores_comisiones</code>, <code>asignaciones_profesores</code></td>
-            <td>Instancias cuatrimestrales de materias, turnos y asignación de plantel docente.</td>
+            <td><code>comisiones</code>, <code>materias_comisiones</code>, <code>profesores_comisiones</code>, <code>asignaciones_materia</code></td>
+            <td>Oferta operativa. Soporta relación N:M (Comisión dicta varias materias) y roles docentes.</td>
         </tr>
         <tr>
             <td><strong>📝 Ciclo del Alumno</strong></td>
-            <td><code>inscripciones_carrera</code>, <code>inscripciones_cursada</code>, <code>calificaciones</code></td>
-            <td>Trazabilidad completa: desde la matriculación hasta la carga de notas finales y regularidades.</td>
+            <td><code>estudios_usuario</code>, <code>inscripciones</code>, <code>calificaciones</code></td>
+            <td>Trazabilidad total: Vinculación a carrera, transacción de cursada/examen y notas finales.</td>
         </tr>
     </tbody>
 </table>
