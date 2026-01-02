@@ -151,6 +151,32 @@
 
 <hr>
 
+<h2>📦 Estructura del Proyecto</h2>
+
+<pre><code>Sysacad-Next-BackEnd/
+├── .mvn/                        # Archivos del Wrapper de Maven
+├── src/
+│   ├── main/
+│   │   ├── java/com/sysacad/backend/
+│   │   │   ├── modelo/          # Entidades del dominio (JPA) y Enums
+│   │   │   └── BackendApplication.java # Punto de entrada de la aplicación
+│   │   └── resources/
+│   │       ├── static/          # Archivos estáticos públicos
+│   │       ├── templates/       # Plantillas de vista
+│   │       └── application.properties # Configuración de Spring Boot
+│   └── test/                    # Tests unitarios y de integración
+├── target/                      # Salida de compilación (ignorar)
+├── .gitignore                   # Archivos ignorados por Git
+├── HELP.md                      # Documentación de ayuda de Spring Boot
+├── mvnw                         # Script Maven Wrapper (Linux/Mac)
+├── mvnw.cmd                     # Script Maven Wrapper (Windows)
+├── pom.xml                      # Definición de dependencias y build (Maven)
+├── README.md                    # Documentación del proyecto
+└── sysacad-next.sql             # Script SQL de base de datos
+</code></pre>
+
+<hr>
+
 <h2>💻 Setup Local</h2>
 
 <p>Requisitos: JDK 17+, Maven 3.8+ y PostgreSQL (o Docker).</p>
