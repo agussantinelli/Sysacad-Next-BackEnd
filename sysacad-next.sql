@@ -102,6 +102,7 @@ CREATE TABLE plan_materias (
                                id_facultad BIGINT UNSIGNED NOT NULL,
                                fecha_plan DATE NOT NULL,
                                id_materia BIGINT UNSIGNED NOT NULL,
+                               codigo_materia VARCHAR(20) NOT NULL,
                                anio TINYINT UNSIGNED NOT NULL,
 
                                PRIMARY KEY (id_facultad, fecha_plan, id_materia),
