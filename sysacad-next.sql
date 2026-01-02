@@ -53,6 +53,7 @@ CREATE TABLE materias (
                           descripcion TEXT,
                           tipo_materia ENUM('basica', 'especifica', 'compartida') NOT NULL,
                           duracion ENUM('anual', 'cuatrimestral') NOT NULL,
+                          horas_cursado SMALLINT UNSIGNED NOT NULL,
                           rendir_libre BOOLEAN NOT NULL DEFAULT FALSE,
                           optativa BOOLEAN NOT NULL DEFAULT FALSE
 ) ENGINE=InnoDB;
