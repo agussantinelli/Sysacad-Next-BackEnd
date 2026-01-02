@@ -1,5 +1,6 @@
 package com.sysacad.backend.modelo;
 
+import com.sysacad.backend.modelo.enums.Genero;
 import com.sysacad.backend.modelo.enums.TipoDocumento;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -39,6 +40,10 @@ public class Profesor {
 
     @Column(name = "fecha_nacimiento", nullable = false)
     private LocalDate fechaNacimiento;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 1)
+    private Genero genero;
 
     @Column(name = "fecha_ingreso", nullable = false)
     private LocalDate fechaIngreso;
