@@ -158,7 +158,8 @@
 ├── src/
 │   ├── main/
 │   │   ├── java/com/sysacad/backend/
-│   │   │   ├── modelo/          # Entidades del dominio (JPA) y Enums
+│   │   │   ├── modelo/          # Entidades del dominio (JPA)
+│   │   │   │   └── enums/       # Enumeraciones
 │   │   │   └── BackendApplication.java # Punto de entrada de la aplicación
 │   │   └── resources/
 │   │       ├── static/          # Archivos estáticos públicos
