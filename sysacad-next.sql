@@ -11,36 +11,38 @@ CREATE TABLE facultades_regionales (
 CREATE TABLE usuarios (
                           id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
                           legajo VARCHAR(20) NOT NULL,
+                          tipo_documento ENUM('DNI', 'PASAPORTE', 'LC', 'LE', 'CI') NOT NULL DEFAULT 'DNI',
                           dni VARCHAR(15) NOT NULL,
                           nombre VARCHAR(100) NOT NULL,
                           apellido VARCHAR(100) NOT NULL,
                           mail VARCHAR(150) NOT NULL,
                           fecha_nacimiento DATE NOT NULL,
                           genero ENUM('M', 'F') NOT NULL,
-                          telefono_movil VARCHAR(50),
+                          telefono VARCHAR(50),
                           direccion_calle VARCHAR(255),
                           ciudad_residencia VARCHAR(100),
-                          foto_perfil VARCHAR(255) COMMENT 'URL o path de la imagen',
+                          foto_perfil VARCHAR(255),
                           fecha_ingreso DATE NOT NULL,
                           rol ENUM('admin', 'estudiante') NOT NULL,
 
                           CONSTRAINT uq_usuario_legajo UNIQUE (legajo),
                           CONSTRAINT uq_usuario_mail UNIQUE (mail),
-                          CONSTRAINT uq_usuario_dni UNIQUE (dni)
+                          CONSTRAINT uq_usuario_dni UNIQUE (tipo_documento, dni)
 ) ENGINE=InnoDB;
 
 CREATE TABLE profesores (
                             id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                            tipo_documento ENUM('DNI', 'PASAPORTE', 'LC', 'LE', 'CI') NOT NULL DEFAULT 'DNI',
                             dni VARCHAR(15) NOT NULL,
                             nombre VARCHAR(100) NOT NULL,
                             apellido VARCHAR(100) NOT NULL,
                             mail VARCHAR(150) NOT NULL,
-                            titulo_academico VARCHAR(100) NULL COMMENT 'Ej: Ing. en Sistemas, Dr. en Física',
+                            titulo_academico VARCHAR(100) NULL,
                             fecha_nacimiento DATE NOT NULL,
                             fecha_ingreso DATE NOT NULL,
 
                             CONSTRAINT uq_profesor_mail UNIQUE (mail),
-                            CONSTRAINT uq_profesor_dni UNIQUE (dni)
+                            CONSTRAINT uq_profesor_dni UNIQUE (tipo_documento, dni)
 ) ENGINE=InnoDB;
 
 CREATE TABLE materias (
@@ -70,7 +72,6 @@ CREATE TABLE sanciones (
                            CONSTRAINT fk_sancion_usuario FOREIGN KEY (id_usuario) REFERENCES usuarios(id)
 ) ENGINE=InnoDB;
 
-
 CREATE TABLE planes_de_estudios (
                                     id_facultad BIGINT UNSIGNED NOT NULL,
                                     fecha_inicio DATE NOT NULL,
@@ -93,7 +94,6 @@ CREATE TABLE carreras (
                           CONSTRAINT fk_carrera_plan FOREIGN KEY (id_facultad, fecha_plan)
                               REFERENCES planes_de_estudios(id_facultad, fecha_inicio) ON DELETE CASCADE
 ) ENGINE=InnoDB;
-
 
 CREATE TABLE plan_materias (
                                id_facultad BIGINT UNSIGNED NOT NULL,
@@ -168,7 +168,6 @@ CREATE TABLE estudios_usuario (
                                   CONSTRAINT fk_estudia_carrera FOREIGN KEY (id_facultad, fecha_plan, id_carrera)
                                       REFERENCES carreras(id_facultad, fecha_plan, id_carrera)
 ) ENGINE=InnoDB;
-
 
 CREATE TABLE inscripciones (
                                id_usuario BIGINT UNSIGNED NOT NULL,
