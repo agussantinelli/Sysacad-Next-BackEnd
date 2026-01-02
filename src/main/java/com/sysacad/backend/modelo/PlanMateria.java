@@ -18,8 +18,8 @@ public class PlanMateria {
     @Column(name = "codigo_materia", nullable = false, length = 20)
     private String codigoMateria;
 
-    @Column(nullable = false)
-    private Short anio;
+    @Column(name = "nivel", nullable = false)
+    private Short nivel;
 
     // Relación con Plan de Estudio (FK Compuesta)
     @ManyToOne(fetch = FetchType.LAZY)
