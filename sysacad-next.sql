@@ -35,7 +35,7 @@ CREATE TABLE profesores (
                             nombre VARCHAR(100) NOT NULL,
                             apellido VARCHAR(100) NOT NULL,
                             mail VARCHAR(150) NOT NULL,
-                            titulo_academico VARCHAR(100) NOT NULL COMMENT 'Ej: Ing. en Sistemas, Dr. en Física',
+                            titulo_academico VARCHAR(100) NULL COMMENT 'Ej: Ing. en Sistemas, Dr. en Física',
                             fecha_nacimiento DATE NOT NULL,
                             fecha_ingreso DATE NOT NULL,
 
