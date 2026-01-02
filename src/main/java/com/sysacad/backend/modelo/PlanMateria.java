@@ -19,6 +19,8 @@ public class PlanMateria {
     private String codigoMateria;
 
     @Column(name = "nivel", nullable = false)
+    @Min(1)
+    @Max(6)
     private Short nivel;
 
     // Relación con Plan de Estudio (FK Compuesta)
