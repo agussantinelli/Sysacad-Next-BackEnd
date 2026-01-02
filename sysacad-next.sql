@@ -35,8 +35,9 @@ CREATE TABLE materias (
                           id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
                           nombre VARCHAR(100) NOT NULL,
                           descripcion TEXT,
-                          tipo_materia VARCHAR(50) NOT NULL,
-                          rendir_libre BOOLEAN NOT NULL DEFAULT FALSE
+                          tipo_materia VARCHAR(50) NOT NULL, -- Ej: "Anual", "Cuatrimestral"
+                          rendir_libre BOOLEAN NOT NULL DEFAULT FALSE,
+                          optativa BOOLEAN NOT NULL DEFAULT FALSE -- Nuevo atributo solicitado
 ) ENGINE=InnoDB;
 
 CREATE TABLE salones (
