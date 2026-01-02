@@ -2,9 +2,6 @@ DROP DATABASE IF EXISTS gestion_academica;
 CREATE DATABASE gestion_academica CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE gestion_academica;
 
--- =============================================
--- 1. ENTIDADES FUERTES
--- =============================================
 
 CREATE TABLE facultades_regionales (
                                        id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -59,45 +56,35 @@ CREATE TABLE sanciones (
                            CONSTRAINT fk_sancion_usuario FOREIGN KEY (id_usuario) REFERENCES usuarios(id)
 ) ENGINE=InnoDB;
 
--- =============================================
--- 2. JERARQUÍA MODIFICADA (Plan con Fecha en PK)
--- =============================================
 
 CREATE TABLE planes_de_estudios (
                                     id_facultad BIGINT UNSIGNED NOT NULL,
-                                    fecha_inicio DATE NOT NULL, -- Ahora es parte de la PK
-                                    nombre VARCHAR(100) NOT NULL, -- Pasa a ser atributo descriptivo
+                                    fecha_inicio DATE NOT NULL,
+                                    nombre VARCHAR(100) NOT NULL,
                                     fecha_fin DATE,
                                     es_vigente BOOLEAN NOT NULL DEFAULT TRUE,
 
-    -- PK solicitada: Facultad + Fecha Inicio
                                     PRIMARY KEY (id_facultad, fecha_inicio),
-
                                     CONSTRAINT fk_plan_facultad FOREIGN KEY (id_facultad) REFERENCES facultades_regionales(id)
 ) ENGINE=InnoDB;
 
 CREATE TABLE carreras (
                           id_facultad BIGINT UNSIGNED NOT NULL,
-                          fecha_plan DATE NOT NULL, -- Hereda la fecha del plan
+                          fecha_plan DATE NOT NULL,
                           id_carrera VARCHAR(20) NOT NULL,
                           nombre VARCHAR(100) NOT NULL,
 
-    -- PK Compuesta: Facultad + Fecha Plan + ID Carrera
                           PRIMARY KEY (id_facultad, fecha_plan, id_carrera),
 
-    -- FK hacia Plan usando la nueva clave compuesta
                           CONSTRAINT fk_carrera_plan FOREIGN KEY (id_facultad, fecha_plan)
-                              REFERENCES planes_de_estudios(id_facultad, fecha_inicio)
-                              ON DELETE CASCADE
+                              REFERENCES planes_de_estudios(id_facultad, fecha_inicio) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
--- =============================================
--- 3. RELACIONES ACTUALIZADAS
--- =============================================
+
 
 CREATE TABLE plan_materias (
                                id_facultad BIGINT UNSIGNED NOT NULL,
-                               fecha_plan DATE NOT NULL, -- Referencia actualizada
+                               fecha_plan DATE NOT NULL,
                                id_materia BIGINT UNSIGNED NOT NULL,
                                anio TINYINT UNSIGNED NOT NULL,
 
@@ -118,31 +105,22 @@ CREATE TABLE correlativas (
 
 CREATE TABLE comisiones (
                             id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-                            id_materia BIGINT UNSIGNED NOT NULL,
                             id_salon BIGINT UNSIGNED NOT NULL,
                             nombre VARCHAR(50) NOT NULL,
                             turno VARCHAR(20) NOT NULL,
                             anio YEAR NOT NULL,
 
-                            CONSTRAINT fk_comision_materia FOREIGN KEY (id_materia) REFERENCES materias(id),
                             CONSTRAINT fk_comision_salon FOREIGN KEY (id_salon) REFERENCES salones(id)
 ) ENGINE=InnoDB;
 
--- ESTUDIA: Actualizada para soportar la cadena Facultad -> Plan(Fecha) -> Carrera
-CREATE TABLE estudios_usuario (
-                                  id_usuario BIGINT UNSIGNED NOT NULL,
-                                  id_facultad BIGINT UNSIGNED NOT NULL,
-                                  fecha_plan DATE NOT NULL,
-                                  id_carrera VARCHAR(20) NOT NULL,
+CREATE TABLE materias_comisiones (
+                                     id_materia BIGINT UNSIGNED NOT NULL,
+                                     id_comision BIGINT UNSIGNED NOT NULL,
 
-                                  fecha_inscripcion DATE NOT NULL,
-                                  estado VARCHAR(20) NOT NULL,
+                                     PRIMARY KEY (id_materia, id_comision),
 
-                                  PRIMARY KEY (id_usuario, id_facultad, fecha_plan, id_carrera),
-
-                                  CONSTRAINT fk_estudia_usuario FOREIGN KEY (id_usuario) REFERENCES usuarios(id),
-                                  CONSTRAINT fk_estudia_carrera FOREIGN KEY (id_facultad, fecha_plan, id_carrera)
-                                      REFERENCES carreras(id_facultad, fecha_plan, id_carrera)
+                                     CONSTRAINT fk_mc_materia FOREIGN KEY (id_materia) REFERENCES materias(id),
+                                     CONSTRAINT fk_mc_comision FOREIGN KEY (id_comision) REFERENCES comisiones(id)
 ) ENGINE=InnoDB;
 
 CREATE TABLE profesores_comisiones (
@@ -161,10 +139,6 @@ CREATE TABLE asignaciones_materia (
                                       CONSTRAINT fk_am_prof FOREIGN KEY (id_profesor) REFERENCES profesores(id),
                                       CONSTRAINT fk_am_mat FOREIGN KEY (id_materia) REFERENCES materias(id)
 ) ENGINE=InnoDB;
-
--- =============================================
--- 4. NÚCLEO TRANSACCIONAL (INSCRIPCIONES)
--- =============================================
 
 CREATE TABLE inscripciones (
                                id_usuario BIGINT UNSIGNED NOT NULL,
