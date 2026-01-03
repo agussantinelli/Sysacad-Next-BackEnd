@@ -60,6 +60,9 @@ public class Usuario {
     @Column(name = "fecha_ingreso", nullable = false)
     private LocalDate fechaIngreso;
 
+    @Column(name = "titulo_academico", length = 100)
+    private String tituloAcademico;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private RolUsuario rol;
