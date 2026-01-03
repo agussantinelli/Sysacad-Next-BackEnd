@@ -67,7 +67,7 @@
         </tr>
         <tr>
             <td><strong>👤 Actores y Comunicación</strong></td>
-            <td><code>usuarios</code>, <code>profesores</code>, <code>sanciones</code>, <code>avisos</code></td>
+            <td><code>usuarios</code>, <code>sanciones</code>, <code>avisos</code></td>
             <td>Gestión de perfiles, roles, registro disciplinario y <strong>cartelera de novedades</strong>.</td>
         </tr>
         <tr>
