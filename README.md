@@ -160,11 +160,14 @@
 │   │   ├── java/com/sysacad/backend/
 │   │   │   ├── modelo/                        # Entidades del dominio (JPA)
 │   │   │   │   └── enums/                     # Enumeraciones
+│   │   │   ├── repository/                    # Repositorios (Acceso a Datos)
+│   │   │   ├── service/                       # Lógica de Negocio
 │   │   │   └── BackendApplication.java        # Punto de entrada de la aplicación
 │   │   └── resources/
 │   │       ├── static/                        # Archivos estáticos públicos
 │   │       ├── templates/                     # Plantillas de vista
-│   │       └── application.properties         # Configuración de Spring Boot
+│   │       ├── application.properties         # Configuración de Spring Boot
+│   │       └── application-secret.properties  # Credenciales sensibles (No versionado)
 │   └── test/                                  # Tests unitarios y de integración
 ├── target/                                    # Salida de compilación (ignorar)
 ├── .gitignore                                 # Archivos ignorados por Git
