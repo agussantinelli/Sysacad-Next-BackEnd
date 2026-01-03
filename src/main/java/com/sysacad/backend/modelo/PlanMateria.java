@@ -19,11 +19,8 @@ public class PlanMateria {
     private String codigoMateria;
 
     @Column(name = "nivel", nullable = false)
-    @Min(1)
-    @Max(6)
     private Short nivel;
 
-    // Relación con Plan de Estudio (FK Compuesta)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
             @JoinColumn(name = "id_facultad", referencedColumnName = "id_facultad", insertable = false, updatable = false),
