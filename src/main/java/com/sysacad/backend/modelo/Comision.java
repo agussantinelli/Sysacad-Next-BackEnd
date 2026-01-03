@@ -27,7 +27,6 @@ public class Comision {
     @Column(nullable = false)
     private Integer anio;
 
-    // Relación ManyToMany con Materias (Tabla intermedia simple)
     @ManyToMany
     @JoinTable(
             name = "materias_comisiones",
@@ -36,12 +35,11 @@ public class Comision {
     )
     private List<Materia> materias;
 
-    // Relación ManyToMany con Profesores
     @ManyToMany
     @JoinTable(
             name = "profesores_comisiones",
             joinColumns = @JoinColumn(name = "id_comision"),
-            inverseJoinColumns = @JoinColumn(name = "id_profesor")
+            inverseJoinColumns = @JoinColumn(name = "id_usuario")
     )
-    private List<Profesor> profesores;
+    private List<Usuario> profesores;
 }

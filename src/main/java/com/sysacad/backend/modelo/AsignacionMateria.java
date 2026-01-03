@@ -19,8 +19,8 @@ public class AsignacionMateria {
     private String rol;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_profesor", insertable = false, updatable = false)
-    private Profesor profesor;
+    @JoinColumn(name = "id_usuario", insertable = false, updatable = false)
+    private Usuario profesor;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_materia", insertable = false, updatable = false)
@@ -31,8 +31,8 @@ public class AsignacionMateria {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class AsignacionMateriaId implements Serializable {
-        @Column(name = "id_profesor")
-        private UUID idProfesor;
+        @Column(name = "id_usuario")
+        private UUID idUsuario;
 
         @Column(name = "id_materia")
         private UUID idMateria;
