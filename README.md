@@ -158,10 +158,11 @@
 ├── src/
 │   ├── main/
 │   │   ├── java/com/sysacad/backend/
+│   │   │   ├── controller/                    # Controladores REST (Entry Points)
 │   │   │   ├── modelo/                        # Entidades del dominio (JPA)
 │   │   │   │   └── enums/                     # Enumeraciones
 │   │   │   ├── repository/                    # Repositorios (Acceso a Datos)
-│   │   │   ├── service/                       # Lógica de Negocio
+│   │   │   ├── service/                       # Lógica de Negocio (Service Layer)
 │   │   │   └── BackendApplication.java        # Punto de entrada de la aplicación
 │   │   └── resources/
 │   │       ├── static/                        # Archivos estáticos públicos
