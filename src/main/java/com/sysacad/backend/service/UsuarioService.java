@@ -21,6 +21,16 @@ public class UsuarioService {
         this.usuarioRepository = usuarioRepository;
     }
 
+    public Usuario autenticar(String identificador, String password) {
+        Usuario usuario = usuarioRepository.findByLegajoOrMail(identificador, identificador)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        if (!usuario.getPassword().equals(password)) {
+            throw new RuntimeException("Contraseña incorrecta");
+        }
+        return usuario;
+    }
+
     @Transactional
     public Usuario registrarUsuario(Usuario usuario) {
         if (usuarioRepository.existsByMail(usuario.getMail())) {
@@ -29,7 +39,6 @@ public class UsuarioService {
         if (usuarioRepository.existsByLegajo(usuario.getLegajo())) {
             throw new RuntimeException("El legajo ya existe");
         }
-        // Aquí iría la encriptación de contraseña en el futuro
         return usuarioRepository.save(usuario);
     }
 
