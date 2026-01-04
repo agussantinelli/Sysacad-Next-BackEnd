@@ -158,6 +158,7 @@
 ├── src/
 │   ├── main/
 │   │   ├── java/com/sysacad/backend/
+│   │   │   ├── config/                        # Configuración global (ej. Seeder)
 │   │   │   ├── controller/                    # Controladores REST (Entry Points)
 │   │   │   ├── modelo/                        # Entidades del dominio (JPA)
 │   │   │   │   └── enums/                     # Enumeraciones
