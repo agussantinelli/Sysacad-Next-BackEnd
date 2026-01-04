@@ -4,6 +4,7 @@ import com.sysacad.backend.modelo.enums.*;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.util.UUID;
+import java.util.List;
 
 @Entity
 @Data
@@ -36,4 +37,13 @@ public class Materia {
 
     @Column(nullable = false)
     private Boolean optativa = false;
+
+    // RELACIÓN DE CORRELATIVAS (Self-Join)
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "correlativas",
+            joinColumns = @JoinColumn(name = "id_materia"),
+            inverseJoinColumns = @JoinColumn(name = "id_correlativa")
+    )
+    private List<Materia> correlativas;
 }
