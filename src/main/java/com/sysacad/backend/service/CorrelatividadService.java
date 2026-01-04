@@ -26,23 +26,31 @@ public class CorrelatividadService {
 
     @Transactional(readOnly = true)
     public boolean puedeCursar(UUID idAlumno, UUID idMateriaAspirante) {
-        // 1. Obtener el historial académico del alumno
+        // Obtener la materia a la que se quiere anotar
+        Materia materiaObjetivo = materiaRepository.findById(idMateriaAspirante)
+                .orElseThrow(() -> new RuntimeException("Materia no encontrada"));
+
+        // Si la materia no tiene correlativas, el alumno puede cursar libremente
+        if (materiaObjetivo.getCorrelativas() == null || materiaObjetivo.getCorrelativas().isEmpty()) {
+            return true;
+        }
+
+        // Obtener el historial académico del alumno
         List<Inscripcion> historial = inscripcionRepository.findByIdIdUsuario(idAlumno);
 
-        // 2. Filtrar solo las materias aprobadas (Nota >= 6 o Promocionada)
-        // Nota: Esto es un ejemplo, ajusta la lógica de "Aprobado" a tu reglamento
-        List<UUID> materiasAprobadas = historial.stream()
+        // Filtrar solo las materias APROBADAS (Nota >= 6)
+        // Obtenemos los IDs de las materias que el alumno ya metió
+        List<UUID> idsMateriasAprobadas = historial.stream()
                 .filter(i -> i.getNotaFinal() != null && i.getNotaFinal().doubleValue() >= 6.0)
-                .map(i -> i.getComision().getMaterias().get(0).getId()) // Asumiendo comisión de una sola materia
+                // Nota: Asumimos que la comisión tiene al menos una materia asociada
+                .map(i -> i.getComision().getMaterias().get(0).getId())
                 .collect(Collectors.toList());
 
-        // 3. Obtener las correlativas de la materia objetivo
-        // (Aquí necesitaríamos que Materia tenga la lista de correlativas mapeada o usar una query nativa)
-        // Por ahora, simulamos que validamos si tiene las correlativas
-        // List<Materia> correlativasNecesarias = materiaRepository.obtenerCorrelativas(idMateriaAspirante);
+        // Verificar requisitos
+        List<UUID> idsCorrelativasNecesarias = materiaObjetivo.getCorrelativas().stream()
+                .map(Materia::getId)
+                .collect(Collectors.toList());
 
-        // if (materiasAprobadas.containsAll(correlativasNecesarias.map(Materia::getId))) return true;
-
-        return true; // Retorno temporal hasta mapear la relación ManyToMany de Correlativas
+        return idsMateriasAprobadas.containsAll(idsCorrelativasNecesarias);
     }
 }
