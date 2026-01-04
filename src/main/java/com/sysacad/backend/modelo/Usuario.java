@@ -22,6 +22,9 @@ public class Usuario {
     @Column(nullable = false, length = 20)
     private String legajo;
 
+    @Column(nullable = false)
+    private String password;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo_documento", nullable = false, length = 20)
     private TipoDocumento tipoDocumento;
