@@ -218,7 +218,7 @@
 
 El sistema cuenta con un `DbSeeder` (`src/main/java/com/sysacad/backend/config/DbSeeder.java`) que se ejecuta al iniciar la aplicación. Realiza dos comprobaciones principales:
 
-1.  **Facultades:** Si la tabla `facultades_regionales` está vacía, carga toda la estructura académica (Facultad Rosario, Carreras, Planes 2023, Materias y Correlatividades).
+1.  **Facultades:** Si la tabla `facultades_regionales` está vacía, carga toda la estructura académica (Facultad Rosario, Carreras, **Planes de Estudio Reales y Oficiales de la UTN Facultad Regional Rosario**, Materias y Correlatividades).
 2.  **Usuarios:** Si la tabla `usuarios` está vacía, crea los usuarios de prueba por defecto.
 
 <h3>🔐 Usuarios de Prueba</h3>
