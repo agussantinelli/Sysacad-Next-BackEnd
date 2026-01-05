@@ -58,9 +58,8 @@ public class DbSeeder {
         };
     }
 
-    // ==========================================
-    // 💻 INGENIERÍA EN SISTEMAS DE INFORMACIÓN
-    // ==========================================
+    // INGENIERÍA EN SISTEMAS DE INFORMACIÓN
+
     private void cargarISI(FacultadRegional facu, CarreraRepository carRepo, MateriaRepository matRepo, PlanDeEstudioRepository planRepo, PlanMateriaRepository pmRepo) {
         System.out.println("... Cargando Ingeniería en Sistemas");
         Carrera carrera = crearCarrera(facu, "ISI", "Ingeniería en Sistemas de Información", carRepo);
@@ -112,14 +111,46 @@ public class DbSeeder {
         asociar(plan, "Seguridad en los Sistemas", TipoMateria.ESPECIFICA, 3, 5, matRepo, pmRepo);
         asociar(plan, "Proyecto Final", TipoMateria.ESPECIFICA, 6, 5, matRepo, pmRepo);
 
-        // Electivas ISI
+        // Electivas ISI (Lista Completa según documento)
+        // Nivel 2
+        cargarElectivas(plan, matRepo, pmRepo, 2,
+                "Entornos Gráficos",
+                "Análisis y Diseño de Datos e Información",
+                "Sistemas de Información Geográfica",
+                "Formación de Emprendedores"
+        );
+
+        // Nivel 3
         cargarElectivas(plan, matRepo, pmRepo, 3,
-                "Algoritmos Genéticos", "Java", " .NET", "Gestión Ingenieril");
+                "Algoritmos Genéticos",
+                "Información Jurídica",
+                "Lenguaje de Programación JAVA",
+                "Tecnologías de Desarrollo de Software IDE",
+                "Gestión Ingenieril",
+                "Introducción a la Práctica Profesional",
+                "Química Aplicada a la Informática"
+        );
+
+        // Nivel 4
+        cargarElectivas(plan, matRepo, pmRepo, 4,
+                "Infraestructura Tecnológica",
+                "Soporte a Bases de Datos con Prog. Visual",
+                "Metodología de la Investigación",
+                "Metodologías Ágiles en Des. de Software"
+        );
+
+        // Nivel 5
+        cargarElectivas(plan, matRepo, pmRepo, 5,
+                "Fabricación Aditiva",
+                "Dirección de Recursos Humanos",
+                "Informática en la Administración Pública",
+                "Sist. de Inf. Integrados para la Industria",
+                "Minería de Datos"
+        );
     }
 
-    // ==========================================
-    // 🏗️ INGENIERÍA CIVIL
-    // ==========================================
+    // INGENIERÍA CIVIL
+
     private void cargarCivil(FacultadRegional facu, CarreraRepository carRepo, MateriaRepository matRepo, PlanDeEstudioRepository planRepo, PlanMateriaRepository pmRepo) {
         System.out.println("... Cargando Ingeniería Civil");
         Carrera carrera = crearCarrera(facu, "IC", "Ingeniería Civil", carRepo);
@@ -179,9 +210,8 @@ public class DbSeeder {
         asociar(plan, "Proyecto Final Civil", TipoMateria.ESPECIFICA, 8, 6, matRepo, pmRepo);
     }
 
-    // ==========================================
-    // ⚙️ INGENIERÍA MECÁNICA
-    // ==========================================
+    // INGENIERÍA MECÁNICA
+
     private void cargarMecanica(FacultadRegional facu, CarreraRepository carRepo, MateriaRepository matRepo, PlanDeEstudioRepository planRepo, PlanMateriaRepository pmRepo) {
         System.out.println("... Cargando Ingeniería Mecánica");
         Carrera carrera = crearCarrera(facu, "IM", "Ingeniería Mecánica", carRepo);
@@ -238,15 +268,13 @@ public class DbSeeder {
         asociar(plan, "Proyecto Final Mecánica", TipoMateria.ESPECIFICA, 10, 5, matRepo, pmRepo);
     }
 
-    // ==========================================
-    // ⚡ INGENIERÍA EN ENERGÍA ELÉCTRICA
-    // ==========================================
+    // INGENIERÍA EN ENERGÍA ELÉCTRICA
+
     private void cargarElectrica(FacultadRegional facu, CarreraRepository carRepo, MateriaRepository matRepo, PlanDeEstudioRepository planRepo, PlanMateriaRepository pmRepo) {
         System.out.println("... Cargando Ingeniería Eléctrica");
         Carrera carrera = crearCarrera(facu, "IEE", "Ingeniería en Energía Eléctrica", carRepo);
         PlanDeEstudio plan = crearPlan(carrera, "Plan 2023", planRepo);
 
-        // Nivel 1
         asociar(plan, "Análisis Matemático I", TipoMateria.BASICA, 5, 1, matRepo, pmRepo);
         asociar(plan, "Álgebra y Geometría Analítica", TipoMateria.BASICA, 5, 1, matRepo, pmRepo);
         asociar(plan, "Ingeniería y Sociedad", TipoMateria.BASICA, 2, 1, matRepo, pmRepo);
@@ -297,9 +325,8 @@ public class DbSeeder {
         asociar(plan, "Proyecto Final Eléctrica", TipoMateria.ESPECIFICA, 2, 5, matRepo, pmRepo);
     }
 
-    // ==========================================
-    // 🧪 INGENIERÍA QUÍMICA
-    // ==========================================
+    // INGENIERÍA QUÍMICA
+
     private void cargarQuimica(FacultadRegional facu, CarreraRepository carRepo, MateriaRepository matRepo, PlanDeEstudioRepository planRepo, PlanMateriaRepository pmRepo) {
         System.out.println("... Cargando Ingeniería Química");
         Carrera carrera = crearCarrera(facu, "IQ", "Ingeniería Química", carRepo);
@@ -357,9 +384,8 @@ public class DbSeeder {
         asociar(plan, "Proyecto Final Química", TipoMateria.ESPECIFICA, 4, 5, matRepo, pmRepo);
     }
 
-    // ==========================================
-    // 👤 USUARIOS DE PRUEBA
-    // ==========================================
+    // USUARIOS DE PRUEBA
+
     private void cargarUsuarios(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
         // ADMIN
         crearUsuario(usuarioRepository, passwordEncoder, "1", "Admin", "Sistema", "admin@sysacad.com", RolUsuario.ADMIN);
