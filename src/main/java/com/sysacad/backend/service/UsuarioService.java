@@ -4,6 +4,7 @@ import com.sysacad.backend.modelo.Usuario;
 import com.sysacad.backend.modelo.enums.RolUsuario;
 import com.sysacad.backend.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder; // Importante
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,17 +16,19 @@ import java.util.UUID;
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UsuarioService(UsuarioRepository usuarioRepository) {
+    public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
         this.usuarioRepository = usuarioRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Usuario autenticar(String identificador, String password) {
         Usuario usuario = usuarioRepository.findByLegajoOrMail(identificador, identificador)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        if (!usuario.getPassword().equals(password)) {
+        if (!passwordEncoder.matches(password, usuario.getPassword())) {
             throw new RuntimeException("Contraseña incorrecta");
         }
         return usuario;
@@ -39,6 +42,10 @@ public class UsuarioService {
         if (usuarioRepository.existsByLegajo(usuario.getLegajo())) {
             throw new RuntimeException("El legajo ya existe");
         }
+
+        String hashedPassword = passwordEncoder.encode(usuario.getPassword());
+        usuario.setPassword(hashedPassword);
+
         return usuarioRepository.save(usuario);
     }
 
