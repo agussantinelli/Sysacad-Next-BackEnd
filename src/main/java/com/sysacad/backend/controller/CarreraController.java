@@ -7,6 +7,7 @@ import com.sysacad.backend.service.CarreraService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,27 +25,35 @@ public class CarreraController {
         this.carreraService = carreraService;
     }
 
+    // SOLO ADMIN PUEDE CREAR CARRERAS
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Carrera> registrarCarrera(@RequestBody Carrera carrera) {
         return new ResponseEntity<>(carreraService.registrarCarrera(carrera), HttpStatus.CREATED);
     }
 
+    // CUALQUIERA (Logueado) PUEDE LISTAR
     @GetMapping("/facultad/{idFacultad}")
     public ResponseEntity<List<Carrera>> listarPorFacultad(@PathVariable UUID idFacultad) {
         return ResponseEntity.ok(carreraService.listarCarrerasPorFacultad(idFacultad));
     }
 
+    // SOLO ADMIN PUEDE CREAR PLANES
     @PostMapping("/planes")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<PlanDeEstudio> crearPlan(@RequestBody PlanDeEstudio plan) {
         return new ResponseEntity<>(carreraService.crearPlanDeEstudio(plan), HttpStatus.CREATED);
     }
 
+    // CUALQUIERA (Logueado) PUEDE VER PLANES
     @GetMapping("/{idCarrera}/planes/vigentes")
     public ResponseEntity<List<PlanDeEstudio>> listarPlanesVigentes(@PathVariable String idCarrera) {
         return ResponseEntity.ok(carreraService.listarPlanesVigentes(idCarrera));
     }
 
+    // SOLO ADMIN PUEDE AGREGAR MATERIAS AL PLAN
     @PostMapping("/planes/materias")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> agregarMateriaAPlan(@RequestBody PlanMateria planMateria) {
         carreraService.agregarMateriaAPlan(planMateria);
         return ResponseEntity.status(HttpStatus.CREATED).build();
