@@ -3,7 +3,6 @@ CREATE DATABASE sysacad_db WITH ENCODING 'UTF8';
 
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
-
 CREATE TABLE facultades_regionales (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     ciudad VARCHAR(100) NOT NULL,
@@ -18,7 +17,8 @@ CREATE TABLE usuarios (
     nombre VARCHAR(100) NOT NULL,
     apellido VARCHAR(100) NOT NULL,
     mail VARCHAR(150) NOT NULL,
-    password VARCHAR(255) NOT NULL, 
+    password VARCHAR(255) NOT NULL,
+    password_change_required BOOLEAN NOT NULL DEFAULT TRUE,
     fecha_nacimiento DATE NOT NULL,
     genero VARCHAR(1) NOT NULL CHECK (genero IN ('M', 'F')),
     telefono VARCHAR(50),
@@ -27,7 +27,7 @@ CREATE TABLE usuarios (
     foto_perfil VARCHAR(255),
     fecha_ingreso DATE NOT NULL,
     titulo_academico VARCHAR(100), 
-    rolUsuario VARCHAR(20) NOT NULL CHECK (rol IN ('ADMIN', 'ESTUDIANTE', 'PROFESOR')),
+    rol VARCHAR(20) NOT NULL CHECK (rol IN ('ADMIN', 'ESTUDIANTE', 'PROFESOR')),
     estado VARCHAR(20) NOT NULL,
 
     CONSTRAINT uq_usuario_legajo UNIQUE (legajo),
@@ -41,8 +41,7 @@ CREATE TABLE materias (
     descripcion TEXT,
     tipo_materia VARCHAR(20) NOT NULL CHECK (tipo_materia IN ('BASICA', 'ESPECIFICA', 'COMPARTIDA')),
     duracion VARCHAR(20) NOT NULL CHECK (duracion IN ('ANUAL', 'CUATRIMESTRAL')),
-        cuatrimestre_dictado VARCHAR(20) CHECK (cuatrimestre_dictado IN ('PRIMERO', 'SEGUNDO', 'ANUAL', 'AMBOS')),
-    
+    cuatrimestre_dictado VARCHAR(20) CHECK (cuatrimestre_dictado IN ('PRIMERO', 'SEGUNDO', 'ANUAL', 'AMBOS')),
     horas_cursado SMALLINT NOT NULL,
     rendir_libre BOOLEAN NOT NULL DEFAULT FALSE,
     optativa BOOLEAN NOT NULL DEFAULT FALSE
