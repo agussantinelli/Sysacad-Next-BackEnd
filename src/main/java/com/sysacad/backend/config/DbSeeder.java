@@ -6,10 +6,10 @@ import com.sysacad.backend.repository.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder; // Importar
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Configuration
 public class DbSeeder {
@@ -22,49 +22,47 @@ public class DbSeeder {
             MateriaRepository materiaRepository,
             PlanDeEstudioRepository planRepository,
             PlanMateriaRepository planMateriaRepository,
-            UsuarioRepository usuarioRepository
+            UsuarioRepository usuarioRepository,
+            PasswordEncoder passwordEncoder // Inyectamos el encoder
     ) {
         return args -> {
-            // 1. Verificar si ya existen datos para no duplicar
             if (facultadRepository.count() > 0) {
                 System.out.println(">> La base de datos ya tiene datos. Omitiendo seed.");
                 return;
             }
 
-            System.out.println(">> Iniciando Seeding de Datos...");
+            System.out.println(">> Iniciando Seeding de Datos (Seguro)...");
 
-            // --- 2. Crear Facultad ---
+            // --- Facultad ---
             FacultadRegional frro = new FacultadRegional();
             frro.setCiudad("Rosario");
             frro.setProvincia("Santa Fe");
             frro = facultadRepository.save(frro);
 
-            // --- 3. Crear Carrera (Ingeniería en Sistemas) ---
+            // --- Carrera ---
             Carrera isi = new Carrera();
-            // Clave Compuesta
             isi.setId(new Carrera.CarreraId(frro.getId(), "ISI"));
             isi.setNombre("Ingeniería en Sistemas de Información");
-            isi.setFacultad(frro); // Relación JPA
+            isi.setFacultad(frro);
             isi = carreraRepository.save(isi);
 
-            // --- 4. Crear Materias ---
+            // --- Materias ---
             Materia am1 = crearMateria("Análisis Matemático I", TipoMateria.BASICA, DuracionMateria.ANUAL, (short) 5, materiaRepository);
             Materia aga = crearMateria("Álgebra y Geometría Analítica", TipoMateria.BASICA, DuracionMateria.ANUAL, (short) 5, materiaRepository);
             Materia syo = crearMateria("Sistemas y Organizaciones", TipoMateria.ESPECIFICA, DuracionMateria.ANUAL, (short) 3, materiaRepository);
 
-            // --- 5. Crear Plan de Estudio (Plan 2023) ---
+            // --- Plan ---
             PlanDeEstudio plan2023 = new PlanDeEstudio();
             plan2023.setId(new PlanDeEstudio.PlanId(frro.getId(), isi.getId().getIdCarrera(), "Plan 2023"));
             plan2023.setFechaInicio(LocalDate.of(2023, 3, 1));
             plan2023.setEsVigente(true);
             plan2023 = planRepository.save(plan2023);
 
-            // --- 6. Asociar Materias al Plan (PlanMateria) ---
             asociarMateria(plan2023, am1, "95-0001", (short) 1, planMateriaRepository);
             asociarMateria(plan2023, aga, "95-0002", (short) 1, planMateriaRepository);
             asociarMateria(plan2023, syo, "95-0003", (short) 1, planMateriaRepository);
 
-            // --- 7. Crear Usuarios ---
+            // --- Usuarios (CON HASH) ---
 
             // ADMIN
             Usuario admin = new Usuario();
@@ -72,7 +70,8 @@ public class DbSeeder {
             admin.setNombre("Administrador");
             admin.setApellido("Sistema");
             admin.setDni("11111111");
-            admin.setPassword("123456");
+            // ENCRIPTAMOS LA CONTRASEÑA
+            admin.setPassword(passwordEncoder.encode("123456"));
             admin.setTipoDocumento(TipoDocumento.DNI);
             admin.setMail("admin@sysacad.com");
             admin.setRol(RolUsuario.ADMIN);
@@ -84,11 +83,12 @@ public class DbSeeder {
 
             // PROFESOR
             Usuario profe = new Usuario();
-            profe.setLegajo("DOC-2024");
+            profe.setLegajo("51111");
             profe.setNombre("Nicolas");
             profe.setApellido("Cabello");
-            admin.setPassword("123456");
             profe.setDni("22222222");
+            // ENCRIPTAMOS
+            profe.setPassword(passwordEncoder.encode("123456"));
             profe.setTipoDocumento(TipoDocumento.DNI);
             profe.setMail("nic@sysacad.com");
             profe.setRol(RolUsuario.PROFESOR);
@@ -101,25 +101,24 @@ public class DbSeeder {
 
             // ESTUDIANTE
             Usuario alumno = new Usuario();
-            alumno.setLegajo("45123");
+            alumno.setLegajo("55555");
             alumno.setNombre("Marty");
             alumno.setApellido("McFly");
             alumno.setDni("33333333");
+            // ENCRIPTAMOS
+            alumno.setPassword(passwordEncoder.encode("123456"));
             alumno.setTipoDocumento(TipoDocumento.DNI);
             alumno.setMail("marty@sysacad.com");
             alumno.setRol(RolUsuario.ESTUDIANTE);
             alumno.setGenero(Genero.M);
             alumno.setEstado("ACTIVO");
-            admin.setPassword("123456");
             alumno.setFechaNacimiento(LocalDate.of(1968, 6, 12));
             alumno.setFechaIngreso(LocalDate.now());
             usuarioRepository.save(alumno);
 
-            System.out.println(">> Seeding Completado con Éxito.");
+            System.out.println(">> Seeding Completado (Con contraseñas encriptadas).");
         };
     }
-
-    // Métodos auxiliares para no repetir código
 
     private Materia crearMateria(String nombre, TipoMateria tipo, DuracionMateria duracion, Short horas, MateriaRepository repo) {
         Materia m = new Materia();
@@ -134,7 +133,6 @@ public class DbSeeder {
 
     private void asociarMateria(PlanDeEstudio plan, Materia materia, String codigo, Short nivel, PlanMateriaRepository repo) {
         PlanMateria pm = new PlanMateria();
-        // Construimos la clave compuesta
         PlanMateria.PlanMateriaId id = new PlanMateria.PlanMateriaId(
                 plan.getId().getIdFacultad(),
                 plan.getId().getIdCarrera(),
