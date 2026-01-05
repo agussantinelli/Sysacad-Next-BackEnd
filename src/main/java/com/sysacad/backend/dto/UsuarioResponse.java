@@ -4,9 +4,12 @@ import com.sysacad.backend.modelo.Usuario;
 import com.sysacad.backend.modelo.enums.Genero;
 import com.sysacad.backend.modelo.enums.RolUsuario;
 import com.sysacad.backend.modelo.enums.TipoDocumento;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -24,12 +27,17 @@ public class UsuarioResponse {
     private String direccion;
     private String ciudad;
     private String fotoPerfil;
-    private LocalDate fechaIngreso;
+    private LocalDate fechaIngreso; // Fecha de creación del usuario en sistema
     private String tituloAcademico;
     private RolUsuario rol;
     private String estado;
 
     private String tipoIdentificador;
+
+    // NUEVO: Año de ingreso académico (Calculado de la inscripción más antigua)
+    private Integer anioIngreso;
+
+    private List<InfoCarrera> carreras;
 
     public UsuarioResponse(Usuario usuario) {
         this.id = usuario.getId();
@@ -49,5 +57,13 @@ public class UsuarioResponse {
         this.tituloAcademico = usuario.getTituloAcademico();
         this.rol = usuario.getRol();
         this.estado = usuario.getEstado();
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class InfoCarrera {
+        private String nombreCarrera;
+        private String facultad;
     }
 }
