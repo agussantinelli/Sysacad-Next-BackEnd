@@ -20,8 +20,7 @@ public class UTNSeeder {
     private final PlanDeEstudioRepository planRepository;
     private final PlanMateriaRepository planMateriaRepository;
 
-    // Cache para evitar consultas repetitivas durante la carga de correlativas
-    // Clave: "COD_CARRERA-COD_MATERIA" (ej: "ISI-1") -> Valor: Entidad Materia guardada
+    private final Map<String, Materia> materiasPersistidas = new HashMap<>();
     private final Map<String, Materia> mapaCodigoMateria = new HashMap<>();
 
     public UTNSeeder(FacultadRegionalRepository facultadRepository,
@@ -45,21 +44,20 @@ public class UTNSeeder {
 
         System.out.println(">> UTNSeeder: Iniciando carga masiva de planes y correlativas (Dataset Definitivo Final)...");
 
-        // 1. Crear Facultad
+        // 1. Facultad
         FacultadRegional frro = new FacultadRegional();
-        frro.setId(UUID.randomUUID()); // O un ID fijo si prefieres
         frro.setCiudad("Rosario");
         frro.setProvincia("Santa Fe");
         frro = facultadRepository.save(frro);
 
-        // 2. Cargar Datos por Carrera
+        // 2. Cargar Datos
         cargarCarrera(frro, "ISI", "Ingeniería en Sistemas de Información", getDatasetISI());
         cargarCarrera(frro, "IC", "Ingeniería Civil", getDatasetCivil());
         cargarCarrera(frro, "IQ", "Ingeniería Química", getDatasetQuimica());
         cargarCarrera(frro, "IM", "Ingeniería Mecánica", getDatasetMecanica());
         cargarCarrera(frro, "IEE", "Ingeniería en Energía Eléctrica", getDatasetElectrica());
 
-        // 3. Conectar Correlativas (Segunda pasada)
+        // 3. Conectar Correlativas
         conectarCorrelativas("ISI", getDatasetISI());
         conectarCorrelativas("IC", getDatasetCivil());
         conectarCorrelativas("IQ", getDatasetQuimica());
@@ -69,46 +67,51 @@ public class UTNSeeder {
         System.out.println(">> UTNSeeder: Carga completa finalizada con éxito.");
     }
 
-    private void cargarCarrera(FacultadRegional facu, String codigoCarrera, String nombreCarrera, List<MateriaDef> materiasDef) {
+    private void cargarCarrera(FacultadRegional facu, String codigoCarrera, String nombreCarrera, List<MateriaDef> materias) {
         System.out.println("   -> Procesando Carrera: " + nombreCarrera);
 
         // Crear Carrera
         Carrera carrera = new Carrera();
-        Carrera.CarreraId carreraId = new Carrera.CarreraId(facu.getId(), codigoCarrera);
-        carrera.setId(carreraId);
+        carrera.setId(new Carrera.CarreraId(facu.getId(), codigoCarrera));
         carrera.setNombre(nombreCarrera);
         carrera.setFacultad(facu);
-        carreraRepository.save(carrera);
+        carrera = carreraRepository.save(carrera);
 
-        // Crear Plan 2023
+        // Crear Plan
         PlanDeEstudio plan = new PlanDeEstudio();
-        PlanDeEstudio.PlanId planId = new PlanDeEstudio.PlanId(facu.getId(), codigoCarrera, "Plan 2023");
-        plan.setId(planId);
+        plan.setId(new PlanDeEstudio.PlanId(facu.getId(), codigoCarrera, "Plan 2023"));
         plan.setFechaInicio(LocalDate.of(2023, 3, 1));
         plan.setEsVigente(true);
-        planRepository.save(plan);
+        plan = planRepository.save(plan);
 
-        // Persistir Materias y Relación Plan-Materia
-        for (MateriaDef def : materiasDef) {
-            // Buscamos si la materia ya existe por nombre (para reutilizar básicas si fuera el caso, aunque aquí creamos nuevas por simplicidad de IDs únicos por carrera)
-            Materia materia = new Materia();
-            materia.setNombre(def.nombre);
-            materia.setHorasCursado(def.horas);
-            materia.setDuracion(def.duracion);
-            materia.setTipoMateria(def.tipo);
-            materia.setOptativa(def.esElectiva);
+        for (MateriaDef def : materias) {
+            Materia materia = materiasPersistidas.get(def.nombre);
 
-            materia = materiaRepository.save(materia);
+            if (materia == null) {
+                Optional<Materia> existing = materiaRepository.findByNombre(def.nombre);
+                if (existing.isPresent()) {
+                    materia = existing.get();
+                } else {
+                    materia = new Materia();
+                    materia.setNombre(def.nombre);
+                    materia.setHorasCursado(def.horas);
+                    materia.setDuracion(def.duracion);
+                    materia.setCuatrimestreDictado(def.cuatrimestreDictado);
+                    materia.setTipoMateria(def.tipo);
+                    materia.setOptativa(def.esElectiva);
+                    materia.setRendirLibre(false);
+                    materia = materiaRepository.save(materia);
+                    materiasPersistidas.put(def.nombre, materia);
+                }
+            }
 
-            // Guardar en cache para luego buscar por código interno del plan
+            // Guardar en mapa para correlativas
             mapaCodigoMateria.put(codigoCarrera + "-" + def.codigo, materia);
 
-            // Crear relación Plan-Materia
             PlanMateria pm = new PlanMateria();
-            PlanMateria.PlanMateriaId pmId = new PlanMateria.PlanMateriaId(facu.getId(), codigoCarrera, "Plan 2023", materia.getId());
-            pm.setId(pmId);
-            pm.setPlan(plan);
+            pm.setId(new PlanMateria.PlanMateriaId(facu.getId(), codigoCarrera, "Plan 2023", materia.getId()));
             pm.setMateria(materia);
+            pm.setPlan(plan);
             pm.setCodigoMateria(def.codigo);
             pm.setNivel(def.nivel);
 
@@ -116,40 +119,33 @@ public class UTNSeeder {
         }
     }
 
-    private void conectarCorrelativas(String codigoCarrera, List<MateriaDef> materiasDef) {
-        System.out.println("   -> Conectando Correlativas para: " + codigoCarrera);
-
-        for (MateriaDef def : materiasDef) {
+    private void conectarCorrelativas(String codigoCarrera, List<MateriaDef> materias) {
+        for (MateriaDef def : materias) {
             if (def.correlativas == null || def.correlativas.isEmpty()) continue;
 
-            Materia materiaHija = mapaCodigoMateria.get(codigoCarrera + "-" + def.codigo);
-            if (materiaHija == null) continue;
+            Materia materiaActual = mapaCodigoMateria.get(codigoCarrera + "-" + def.codigo);
+            if (materiaActual == null) continue;
 
-            List<Materia> listaCorrelativas = new ArrayList<>();
-            // Mantenemos correlativas existentes si las hubiera (aunque en seed es new)
-            if (materiaHija.getCorrelativas() != null) {
-                listaCorrelativas.addAll(materiaHija.getCorrelativas());
+            List<Materia> nuevasCorrelativas = new ArrayList<>();
+            if (materiaActual.getCorrelativas() != null) {
+                nuevasCorrelativas.addAll(materiaActual.getCorrelativas());
             }
 
-            for (String codigoPadre : def.correlativas) {
-                Materia materiaPadre = mapaCodigoMateria.get(codigoCarrera + "-" + codigoPadre);
-                if (materiaPadre != null) {
-                    if (!listaCorrelativas.contains(materiaPadre)) {
-                        listaCorrelativas.add(materiaPadre);
+            for (String codCorr : def.correlativas) {
+                Materia matCorr = mapaCodigoMateria.get(codigoCarrera + "-" + codCorr);
+                if (matCorr != null) {
+                    if (!nuevasCorrelativas.contains(matCorr)) {
+                        nuevasCorrelativas.add(matCorr);
                     }
                 } else {
-                    System.out.println("      [WARN] (" + codigoCarrera + ") Correlativa no encontrada: " + codigoPadre + " (requerida por " + def.nombre + ")");
+                    System.out.println("      [WARN] (" + codigoCarrera + ") No se encontró correlativa '" + codCorr + "' para " + def.nombre);
                 }
             }
 
-            materiaHija.setCorrelativas(listaCorrelativas);
-            materiaRepository.save(materiaHija);
+            materiaActual.setCorrelativas(nuevasCorrelativas);
+            materiaRepository.save(materiaActual);
         }
     }
-
-    // ============================================================================================
-    // DEFINICIÓN DE DATOS INTERNA
-    // ============================================================================================
 
     @Data
     @AllArgsConstructor
@@ -158,33 +154,53 @@ public class UTNSeeder {
         String nombre;
         Short horas;
         DuracionMateria duracion;
+        CuatrimestreDictado cuatrimestreDictado;
         Short nivel;
         TipoMateria tipo;
         boolean esElectiva;
         List<String> correlativas;
 
-        // Constructor simplificado para facilitar la lectura del dataset
-        public MateriaDef(String codigo, String nombre, int horas, String duracionStr, int nivel, boolean esElectiva, List<String> correlativas) {
+        // Constructor inteligente que deduce el cuatrimestre basado en el string "dictadoInfo"
+        // dictadoInfo ejemplos: "ANUAL", "1 C", "2 C", "1 y 2 C" (Ambos)
+        public MateriaDef(String codigo, String nombre, int horas, String dictadoInfo, int nivel, boolean esElectiva, List<String> correlativas) {
             this.codigo = codigo;
             this.nombre = nombre;
             this.horas = (short) horas;
-            this.duracion = "ANUAL".equalsIgnoreCase(duracionStr) ? DuracionMateria.ANUAL : DuracionMateria.CUATRIMESTRAL;
+
+            // Determinar Duración y Cuatrimestre
+            String infoUpper = dictadoInfo != null ? dictadoInfo.toUpperCase() : "ANUAL";
+
+            if (infoUpper.contains("ANUAL")) {
+                this.duracion = DuracionMateria.ANUAL;
+                this.cuatrimestreDictado = CuatrimestreDictado.ANUAL;
+            } else {
+                this.duracion = DuracionMateria.CUATRIMESTRAL;
+                if (infoUpper.contains("1") && infoUpper.contains("2")) {
+                    this.cuatrimestreDictado = CuatrimestreDictado.AMBOS;
+                } else if (infoUpper.contains("1")) {
+                    this.cuatrimestreDictado = CuatrimestreDictado.PRIMERO;
+                } else if (infoUpper.contains("2")) {
+                    this.cuatrimestreDictado = CuatrimestreDictado.SEGUNDO;
+                } else {
+                    // Por defecto si es cuatrimestral y no se especifica, asumimos AMBOS para mayor disponibilidad
+                    this.cuatrimestreDictado = CuatrimestreDictado.AMBOS;
+                }
+            }
+
             this.nivel = (short) nivel;
-            this.esElectiva = esElectiva;
 
             if (esElectiva) {
-                this.tipo = TipoMateria.ESPECIFICA; // Asumimos específica para electivas
+                this.tipo = TipoMateria.ESPECIFICA;
             } else {
                 this.tipo = nivel <= 2 ? TipoMateria.BASICA : TipoMateria.ESPECIFICA;
             }
+
+            this.esElectiva = esElectiva;
             this.correlativas = correlativas;
         }
     }
 
-    // ============================================================================================
-    // DATASETS
-    // ============================================================================================
-
+    // INGENIERÍA EN SISTEMAS DE INFORMACIÓN (ISI)
     private List<MateriaDef> getDatasetISI() {
         return List.of(
                 // Nivel 1
@@ -228,18 +244,19 @@ public class UTNSeeder {
                 new MateriaDef("34", "Gestión Gerencial", 3, "ANUAL", 5, false, List.of("24", "30")),
                 new MateriaDef("35", "Seguridad en los Sistemas de Información", 3, "ANUAL", 5, false, List.of("26", "30")),
                 new MateriaDef("36", "Proyecto Final", 6, "ANUAL", 5, false, List.of("25", "26", "30")),
+
                 // ELECTIVAS ISI
-                new MateriaDef("37", "Entornos Gráficos", 4, "CUATRIMESTRAL", 2, true, List.of("5")),
-                new MateriaDef("38", "Análisis y Diseño de Datos e Información", 3, "CUATRIMESTRAL", 2, true, List.of("8", "13")),
-                new MateriaDef("39", "Sistemas de Información Geográfica", 3, "CUATRIMESTRAL", 2, true, List.of("6", "1")),
-                new MateriaDef("40", "Formación de Emprendedores", 4, "CUATRIMESTRAL", 2, true, List.of()),
+                new MateriaDef("37", "Entornos Gráficos", 4, "1 y 2 C", 2, true, List.of("5")),
+                new MateriaDef("38", "Análisis y Diseño de Datos e Información", 3, "1 y 2 C", 2, true, List.of("8", "13")),
+                new MateriaDef("39", "Sistemas de Información Geográfica", 3, "2 C", 2, true, List.of("6", "1")),
+                new MateriaDef("40", "Formación de Emprendedores", 4, "1 y 2 C", 2, true, List.of()),
                 new MateriaDef("41", "Algoritmos Genéticos", 4, "ANUAL", 3, true, List.of("13", "14")),
-                new MateriaDef("42", "Información Jurídica", 3, "CUATRIMESTRAL", 3, true, List.of("15")),
+                new MateriaDef("42", "Información Jurídica", 3, "1 y 2 C", 3, true, List.of("15")),
                 new MateriaDef("43", "Lenguaje de Programación JAVA", 4, "ANUAL", 3, true, List.of()),
                 new MateriaDef("44", "Tecnologías de Desarrollo de Software IDE", 4, "ANUAL", 3, true, List.of()),
-                new MateriaDef("45", "Gestión Ingenieril", 4, "CUATRIMESTRAL", 3, true, List.of()),
+                new MateriaDef("45", "Gestión Ingenieril", 4, "1 C", 3, true, List.of()),
                 new MateriaDef("46", "Introducción a la Práctica Profesional", 4, "ANUAL", 3, true, List.of()),
-                new MateriaDef("47", "Química Aplicada a la Informática", 4, "CUATRIMESTRAL", 3, true, List.of("4", "5", "6", "7", "8")),
+                new MateriaDef("47", "Química Aplicada a la Informática", 4, "1 C", 3, true, List.of("4", "5", "6", "7", "8")),
                 new MateriaDef("48", "Infraestructura Tecnológica", 4, "CUATRIMESTRAL", 4, true, List.of("16")),
                 new MateriaDef("49", "Soporte a las Bases de Datos con Programación Visual", 4, "ANUAL", 4, true, List.of("19")),
                 new MateriaDef("50", "Metodología de la Investigación", 4, "CUATRIMESTRAL", 4, true, List.of()),
@@ -252,6 +269,7 @@ public class UTNSeeder {
         );
     }
 
+    // INGENIERÍA CIVIL (IC)
     private List<MateriaDef> getDatasetCivil() {
         return List.of(
                 new MateriaDef("1", "Análisis Matemático I", 5, "ANUAL", 1, false, List.of()),
@@ -296,26 +314,30 @@ public class UTNSeeder {
                 new MateriaDef("36", "Organización y Conducción de Obras", 5, "ANUAL", 5, false, List.of("26", "27", "28", "30", "31")),
                 new MateriaDef("37", "Vías de Comunicación I", 4, "ANUAL", 5, false, List.of("26", "28", "31", "32")),
                 new MateriaDef("38", "Análisis Estructural II", 5, "ANUAL", 5, false, List.of("21", "26", "29", "30", "31")),
-                new MateriaDef("39", "Vías de Comunicación II", 8, "CUATRIMESTRAL", 5, false, List.of("26", "30", "31", "32", "37")),
+                new MateriaDef("39", "Vías de Comunicación II", 8, "1 C", 5, false, List.of("26", "30", "31", "32", "37")),
                 new MateriaDef("40", "Gestión Ambiental y Desarrollo Sustentable", 6, "ANUAL", 5, false, List.of("17", "18", "19")),
                 new MateriaDef("51", "Proyecto Final", 8, "ANUAL", 5, false, List.of("26", "27", "28", "29", "30", "31", "32")),
+
                 // ELECTIVAS IC
-                new MateriaDef("52", "Formación de Emprendedores", 4, "CUATRIMESTRAL", 2, true, List.of()),
+                new MateriaDef("52", "Formación de Emprendedores", 4, "1 y 2 C", 2, true, List.of()),
                 new MateriaDef("53", "Geología Aplicada", 2, "ANUAL", 2, true, List.of("4", "6", "7")),
                 new MateriaDef("54", "Elasticidad y Plasticidad", 3, "ANUAL", 4, true, List.of("9", "16")),
                 new MateriaDef("55", "Uso del Recurso Hídrico", 3, "ANUAL", 5, true, List.of("31")),
                 new MateriaDef("56", "Prefabricación", 2, "ANUAL", 5, true, List.of("17", "30")),
-                new MateriaDef("57", "Herramientas para el Desarrollo Profesional", 3, "CUATRIMESTRAL", 5, true, List.of()),
-                new MateriaDef("58", "Proyecto y Gestión Urbana", 6, "CUATRIMESTRAL", 6, true, List.of("28")),
-                new MateriaDef("59", "Vialidad Especial", 5, "CUATRIMESTRAL", 6, true, List.of("37")),
-                new MateriaDef("60", "Obras Fluviales y Marítimas", 6, "CUATRIMESTRAL", 6, true, List.of("31")),
-                new MateriaDef("61", "Tránsito y Transporte", 5, "CUATRIMESTRAL", 6, true, List.of("37")),
-                new MateriaDef("62", "Análisis Estructural III", 6, "CUATRIMESTRAL", 6, true, List.of("38")),
-                new MateriaDef("63", "Gestión y Administración Ambiental", 4, "CUATRIMESTRAL", 6, true, List.of("35")),
-                new MateriaDef("64", "Generación, Interpretación y Análisis de Información en Laboratorio", 4, "CUATRIMESTRAL", 6, true, List.of())
+                new MateriaDef("57", "Herramientas para el Desarrollo Profesional", 3, "2 C", 5, true, List.of()),
+                new MateriaDef("58", "Proyecto y Gestión Urbana", 6, "1 C", 6, true, List.of("28")),
+                new MateriaDef("59", "Vialidad Especial", 5, "1 C", 6, true, List.of("37")),
+                new MateriaDef("60", "Obras Fluviales y Marítimas", 6, "1 C", 6, true, List.of("31")),
+                new MateriaDef("61", "Tránsito y Transporte", 5, "1 C", 6, true, List.of("37")),
+                new MateriaDef("62", "Análisis Estructural III", 6, "1 C", 6, true, List.of("38")),
+                new MateriaDef("63", "Gestión y Administración Ambiental", 4, "1 C", 6, true, List.of("35")),
+                new MateriaDef("64", "Generación, Interpretación y Análisis de Información en Laboratorio", 4, "2 C", 6, true, List.of())
         );
     }
 
+    // ------------------------------------------------------------------------------------------------
+    // INGENIERÍA QUÍMICA (IQ)
+    // ------------------------------------------------------------------------------------------------
     private List<MateriaDef> getDatasetQuimica() {
         return List.of(
                 new MateriaDef("1", "Introducción a la Ingeniería Química", 3, "ANUAL", 1, false, List.of()),
@@ -325,15 +347,15 @@ public class UTNSeeder {
                 new MateriaDef("5", "Física I", 5, "ANUAL", 1, false, List.of()),
                 new MateriaDef("6", "Química", 5, "ANUAL", 1, false, List.of()),
                 new MateriaDef("7", "Sistemas de Representación", 2, "ANUAL", 1, false, List.of()),
-                new MateriaDef("8", "Fundamentos de Informática", 2, "CUATRIMESTRAL", 1, false, List.of()),
+                new MateriaDef("8", "Fundamentos de Informática", 2, "2 C", 1, false, List.of()),
                 // Nivel 2
                 new MateriaDef("9", "Introducción a Equipos y Procesos", 3, "ANUAL", 2, false, List.of("1", "6")),
                 new MateriaDef("10", "Probabilidad y Estadística", 3, "ANUAL", 2, false, List.of("3", "4")),
-                new MateriaDef("11", "Química Inorgánica", 4, "CUATRIMESTRAL", 2, false, List.of("6")),
+                new MateriaDef("11", "Química Inorgánica", 4, "1 C", 2, false, List.of("6")),
                 new MateriaDef("12", "Análisis Matemático II", 5, "ANUAL", 2, false, List.of("3", "4")),
                 new MateriaDef("13", "Física II", 5, "ANUAL", 2, false, List.of("4", "5")),
                 new MateriaDef("14", "Química Orgánica", 5, "ANUAL", 2, false, List.of("6")),
-                new MateriaDef("15", "Legislación", 2, "CUATRIMESTRAL", 2, false, List.of("1", "2")),
+                new MateriaDef("15", "Legislación", 2, "2 C", 2, false, List.of("1", "2")),
                 new MateriaDef("16", "Inglés I", 2, "ANUAL", 2, false, List.of()),
                 new MateriaDef("17", "Balances de Masa y Energía", 3, "ANUAL", 2, false, List.of("6", "9")),
                 // Nivel 3
@@ -363,27 +385,30 @@ public class UTNSeeder {
                 new MateriaDef("39", "Higiene y Seguridad en el Trabajo", 2, "ANUAL", 5, false, List.of("11", "14", "17")),
                 new MateriaDef("40", "Máquinas e Instalaciones Eléctricas", 2, "ANUAL", 5, false, List.of("28")),
                 new MateriaDef("41", "Proyecto Final", 4, "ANUAL", 5, false, List.of("27", "28", "29", "31", "32", "34")),
+
                 // ELECTIVAS IQ
                 new MateriaDef("42", "Introducción a las Tecnologías de los Alimentos", 4, "ANUAL", 2, true, List.of("1", "6")),
-                new MateriaDef("43", "Control de Calidad de los Alimentos", 4, "CUATRIMESTRAL", 3, true, List.of("10", "11", "14", "15")),
-                new MateriaDef("44", "Introducción a la Bromatología", 4, "CUATRIMESTRAL", 3, true, List.of("14", "15")),
+                new MateriaDef("43", "Control de Calidad de los Alimentos", 4, "2 C", 3, true, List.of("10", "11", "14", "15")),
+                new MateriaDef("44", "Introducción a la Bromatología", 4, "2 C", 3, true, List.of("14", "15")),
                 new MateriaDef("45", "Química de los Alimentos", 5, "ANUAL", 4, true, List.of("21")),
-                new MateriaDef("46", "Calidad de los Alimentos", 4, "CUATRIMESTRAL", 4, true, List.of()),
+                new MateriaDef("46", "Calidad de los Alimentos", 4, "1 C", 4, true, List.of()),
                 new MateriaDef("47", "Procesos y Equipos para la Industria de los Alimentos", 4, "ANUAL", 5, true, List.of("28", "29", "31")),
-                new MateriaDef("48", "Gestión Socioambiental Urbana Sustentable", 4, "CUATRIMESTRAL", 2, true, List.of("1", "2")),
-                new MateriaDef("49", "Gestión del Medioambiente y la Energía", 4, "CUATRIMESTRAL", 3, true, List.of("11", "13", "14")),
+                new MateriaDef("48", "Gestión Socioambiental Urbana Sustentable", 4, "1 y 2 C", 2, true, List.of("1", "2")),
+                new MateriaDef("49", "Gestión del Medioambiente y la Energía", 4, "2 C", 3, true, List.of("11", "13", "14")),
                 new MateriaDef("50", "Ingeniería Ambiental Aplicada a Medios Líquidos", 3, "ANUAL", 5, true, List.of("25", "28", "31")),
                 new MateriaDef("51", "Ingeniería de Control de la Contaminación del Aire", 3, "ANUAL", 5, true, List.of("25", "28", "31")),
-                new MateriaDef("52", "Gestión de Tecnologías Sustentables", 4, "CUATRIMESTRAL", 5, true, List.of("28", "31", "32")),
-                new MateriaDef("53", "Formación de Emprendedores", 4, "CUATRIMESTRAL", 2, true, List.of()),
+                new MateriaDef("52", "Gestión de Tecnologías Sustentables", 4, "2 C", 5, true, List.of("28", "31", "32")),
+                new MateriaDef("53", "Formación de Emprendedores", 4, "1 y 2 C", 2, true, List.of()),
                 new MateriaDef("54", "Electrónica Aplicada", 2, "ANUAL", 3, true, List.of("13")),
                 new MateriaDef("55", "Liderazgo en Ingeniería", 4, "ANUAL", 3, true, List.of("15")),
                 new MateriaDef("56", "Informática Aplicada a la Ingeniería de Procesos", 4, "ANUAL", 5, true, List.of("21", "27")),
                 new MateriaDef("57", "Procesos Industriales I", 3, "ANUAL", 5, true, List.of("27", "28", "29")),
-                new MateriaDef("58", "Procesos Industriales II", 4, "CUATRIMESTRAL", 5, true, List.of("21", "27")),
+                new MateriaDef("58", "Procesos Industriales II", 4, "2 C", 5, true, List.of("21", "27")),
                 new MateriaDef("59", "Aplicación de Programación Matemática", 4, "ANUAL", 5, true, List.of("18", "28", "29"))
         );
     }
+
+    // INGENIERÍA MECÁNICA (IM)
 
     private List<MateriaDef> getDatasetMecanica() {
         return List.of(
@@ -432,6 +457,7 @@ public class UTNSeeder {
                 new MateriaDef("38", "Legislación", 2, "ANUAL", 5, false, List.of("15")),
                 new MateriaDef("39", "Mantenimiento", 2, "ANUAL", 5, false, List.of("20", "26", "27")),
                 new MateriaDef("40", "Proyecto Final", 10, "ANUAL", 5, false, List.of("27", "29", "31", "32")),
+
                 // ELECTIVAS IM
                 new MateriaDef("41", "Metalografía y Tratamientos Térmicos", 4, "ANUAL", 5, true, List.of("11", "20")),
                 new MateriaDef("42", "Máquinas de Elevación y Transporte", 3, "ANUAL", 5, true, List.of("27", "31")),
@@ -441,9 +467,12 @@ public class UTNSeeder {
                 new MateriaDef("46", "Transmisión de Calor", 3, "ANUAL", 5, true, List.of("17")),
                 new MateriaDef("47", "Diseño de Instalaciones Térmicas", 2, "ANUAL", 5, true, List.of("17", "28", "30")),
                 new MateriaDef("48", "Maquinaria Agrícola", 4, "ANUAL", 5, true, List.of("27", "30", "31", "32")),
-                new MateriaDef("49", "Formación de Emprendedores", 4, "CUATRIMESTRAL", 2, true, List.of())
+                new MateriaDef("49", "Formación de Emprendedores", 4, "1 y 2 C", 2, true, List.of())
         );
     }
+
+
+    // INGENIERÍA EN ENERGÍA ELÉCTRICA (IEE)
 
     private List<MateriaDef> getDatasetElectrica() {
         return List.of(
@@ -476,13 +505,13 @@ public class UTNSeeder {
                 new MateriaDef("24", "Termodinámica", 3, "ANUAL", 3, false, List.of("9", "16")),
                 new MateriaDef("25", "Fundamentos para el Análisis de Señales", 3, "ANUAL", 3, false, List.of("16", "17")),
                 new MateriaDef("26", "Taller interdisciplinario", 0, "ANUAL", 3, false, List.of("6")),
-                new MateriaDef("13", "Mecánica Técnica", 2, "CUATRIMESTRAL", 3, false, List.of("1", "5")),
+                new MateriaDef("13", "Mecánica Técnica", 2, "1 C", 3, false, List.of("1", "5")),
                 // Nivel 4
                 new MateriaDef("29", "Electrónica I", 4, "ANUAL", 4, false, List.of("1", "5")),
                 new MateriaDef("30", "Máquinas electricas II", 6, "ANUAL", 4, false, List.of("18", "19", "20", "22")),
                 new MateriaDef("32", "Instalaciones Eléctricas y Luminotecnia", 6, "ANUAL", 4, false, List.of("6", "9", "11", "14", "15", "16")),
                 new MateriaDef("33", "Control Automático", 5, "ANUAL", 4, false, List.of("11", "16")),
-                new MateriaDef("34", "Máquinas Térmicas, Hidráulicas y de Fluido", 3, "CUATRIMESTRAL", 4, false, List.of("12", "13", "24")),
+                new MateriaDef("34", "Máquinas Térmicas, Hidráulicas y de Fluido", 3, "2 C", 4, false, List.of("12", "13", "24")),
                 new MateriaDef("35", "Legislación", 2, "ANUAL", 4, false, List.of("3")),
                 new MateriaDef("31", "Seguridad, Riesgo Eléctrico y Medio Ambiente", 2, "ANUAL", 4, false, List.of("6", "11", "19", "20")),
                 // Nivel 5
@@ -492,9 +521,10 @@ public class UTNSeeder {
                 new MateriaDef("39", "Accionamientos y Controles Eléctricos", 4, "ANUAL", 5, false, List.of("11", "18", "22", "23", "25", "26")),
                 new MateriaDef("40", "Organización y Administración de Empresas", 2, "ANUAL", 5, false, List.of("28", "35")),
                 new MateriaDef("41", "Proyecto Final", 2, "ANUAL", 5, false, List.of("18", "19", "22", "23", "25", "26", "27")),
+
                 // ELECTIVAS IEE
                 new MateriaDef("42", "Fuentes Renovables de Energía", 3, "ANUAL", 5, true, List.of("11", "21", "24")),
-                new MateriaDef("43", "Formación de Emprendedores", 4, "CUATRIMESTRAL", 2, true, List.of()),
+                new MateriaDef("43", "Formación de Emprendedores", 4, "1 y 2 C", 2, true, List.of()),
                 new MateriaDef("44", "Control Numérico, Robótica y Sistemas Inteligentes", 4, "ANUAL", 5, true, List.of("23", "32")),
                 new MateriaDef("45", "Electromedicina", 3, "ANUAL", 5, true, List.of("19", "20", "23", "29")),
                 new MateriaDef("46", "Gestión de Calidad", 2, "ANUAL", 5, true, List.of("10", "14")),
