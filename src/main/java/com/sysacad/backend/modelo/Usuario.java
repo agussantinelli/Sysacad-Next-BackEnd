@@ -3,7 +3,13 @@ package com.sysacad.backend.modelo;
 import com.sysacad.backend.modelo.enums.*;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import java.time.LocalDate;
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -13,7 +19,7 @@ import java.util.UUID;
         @UniqueConstraint(columnNames = "mail"),
         @UniqueConstraint(columnNames = {"tipo_documento", "dni"})
 })
-public class Usuario {
+public class Usuario implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -72,4 +78,23 @@ public class Usuario {
 
     @Column(nullable = false, length = 20)
     private String estado;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("ROLE_" + rol.name()));
+    }
+
+    @Override
+    public String getUsername() {
+        return legajo;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() { return true; }
+    @Override
+    public boolean isAccountNonLocked() { return true; }
+    @Override
+    public boolean isCredentialsNonExpired() { return true; }
+    @Override
+    public boolean isEnabled() { return "ACTIVO".equals(estado); }
 }
