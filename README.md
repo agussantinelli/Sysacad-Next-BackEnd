@@ -185,7 +185,49 @@
 
 <h2>💻 Setup Local</h2>
 
-<p>Requisitos: JDK 17+, Maven 3.8+ y PostgreSQL (o Docker).</p>
+<p>Requisitos: JDK 21+, Maven 3.8+ y PostgreSQL.</p>
+
+<h3>🚀 Ejecución</h3>
+
+1.  **Clonar el repositorio.**
+2.  **Configurar Base de Datos**: Asegúrate de tener PostgreSQL corriendo en el puerto `5432`. La base de datos `sysacad_db` se creará automáticamente si no existe (gracias a `update` en properties), pero se recomienda crearla manualmente si falla.
+3.  **Compilar y Correr**:
+    ```bash
+    mvn spring-boot:run
+    ```
+4.  **Puerto**: El servidor iniciará en el puerto **8081** (`http://localhost:8081`).
+5.  **CORS**: Configurado para aceptar peticiones desde `http://localhost:4200` (Frontend Angular).
+
+<h3>🌱 Base de Datos y Seeding Automático</h3>
+
+El sistema cuenta con un `DbSeeder` (`src/main/java/com/sysacad/backend/config/DbSeeder.java`) que se ejecuta al iniciar la aplicación. Si la tabla de facultades está vacía, cargará automáticamente:
+*   Facultad Regional Rosario.
+*   5 Carreras de Ingeniería con sus Planes de Estudio 2023 completos.
+*   Materias, Correlatividades y niveles.
+*   Usuarios de prueba.
+
+<h3>🔐 Usuarios de Prueba</h3>
+
+Para facilitar el desarrollo y testing, se crean los siguientes usuarios por defecto (Password para todos: `1234`):
+
+| Rol | Legajo / User | Email | Password |
+| :--- | :--- | :--- | :--- |
+| **ADMIN** | `1` | `admin@sysacad.com` | `1234` |
+| **PROFESOR** | `DOC-2024` | `nic@sysacad.com` | `1234` |
+| **ESTUDIANTE** | `45123` | `marty@sysacad.com` | `1234` |
+
+---
+
+<h2>🔌 Endpoints Principales</h2>
+
+La API se encuentra bajo el prefijo `/api`. Algunos de los controladores disponibles son:
+
+*   **Autenticación**: `POST /api/auth/login`
+*   **Usuarios**: `GET /api/usuarios`, `POST /api/usuarios`
+*   **Carreras**: `GET /api/carreras`
+*   **Materias**: `GET /api/materias`
+*   **Inscripciones**: `POST /api/inscripciones`
+*   **Comisiones**: `GET /api/comisiones`
 
 <h2>🤝 Contribuciones</h2>
 
