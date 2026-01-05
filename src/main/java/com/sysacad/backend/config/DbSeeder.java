@@ -72,6 +72,7 @@ public class DbSeeder {
             admin.setNombre("Administrador");
             admin.setApellido("Sistema");
             admin.setDni("11111111");
+            admin.setPassword("1234");
             admin.setTipoDocumento(TipoDocumento.DNI);
             admin.setMail("admin@sysacad.com");
             admin.setRol(RolUsuario.ADMIN);
@@ -86,6 +87,7 @@ public class DbSeeder {
             profe.setLegajo("DOC-2024");
             profe.setNombre("Nicolas");
             profe.setApellido("Cabello");
+            admin.setPassword("1234");
             profe.setDni("22222222");
             profe.setTipoDocumento(TipoDocumento.DNI);
             profe.setMail("nic@sysacad.com");
@@ -108,6 +110,7 @@ public class DbSeeder {
             alumno.setRol(RolUsuario.ESTUDIANTE);
             alumno.setGenero(Genero.M);
             alumno.setEstado("ACTIVO");
+            admin.setPassword("1234");
             alumno.setFechaNacimiento(LocalDate.of(1968, 6, 12));
             alumno.setFechaIngreso(LocalDate.now());
             usuarioRepository.save(alumno);
