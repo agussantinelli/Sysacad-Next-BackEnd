@@ -27,7 +27,7 @@ CREATE TABLE usuarios (
     foto_perfil VARCHAR(255),
     fecha_ingreso DATE NOT NULL,
     titulo_academico VARCHAR(100), 
-    rol VARCHAR(20) NOT NULL CHECK (rol IN ('ADMIN', 'ESTUDIANTE', 'PROFESOR')),
+    rolUsuario VARCHAR(20) NOT NULL CHECK (rol IN ('ADMIN', 'ESTUDIANTE', 'PROFESOR')),
     estado VARCHAR(20) NOT NULL,
 
     CONSTRAINT uq_usuario_legajo UNIQUE (legajo),
