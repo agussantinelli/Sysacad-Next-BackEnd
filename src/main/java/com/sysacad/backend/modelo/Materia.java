@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import java.util.UUID;
 import java.util.List;
+import java.util.ArrayList;
 
 @Entity
 @Data
@@ -29,6 +30,10 @@ public class Materia {
     @Column(nullable = false, length = 20)
     private DuracionMateria duracion;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "cuatrimestre_dictado", length = 20)
+    private CuatrimestreDictado cuatrimestreDictado;
+
     @Column(name = "horas_cursado", nullable = false)
     private Short horasCursado;
 
@@ -38,12 +43,11 @@ public class Materia {
     @Column(nullable = false)
     private Boolean optativa = false;
 
-    // RELACIÓN DE CORRELATIVAS (Self-Join)
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "correlativas",
             joinColumns = @JoinColumn(name = "id_materia"),
             inverseJoinColumns = @JoinColumn(name = "id_correlativa")
     )
-    private List<Materia> correlativas;
+    private List<Materia> correlativas = new ArrayList<>();
 }
