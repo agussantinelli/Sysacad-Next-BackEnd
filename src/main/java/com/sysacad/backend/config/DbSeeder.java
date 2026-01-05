@@ -17,50 +17,67 @@ public class DbSeeder {
     @Bean
     @Transactional
     CommandLineRunner initDatabase(
-            UTNSeeder utnSeeder, // Inyectamos nuestro nuevo seeder
+            UTNSeeder utnSeeder, // Inyectamos nuestro nuevo seeder masivo
             UsuarioRepository usuarioRepository,
             PasswordEncoder passwordEncoder) {
         return args -> {
-            // 1. Ejecutar carga masiva de planes académicos
             utnSeeder.seed();
 
             // 2. Cargar Usuarios de Prueba si no existen
             if (usuarioRepository.count() == 0) {
                 System.out.println(">> DbSeeder: Creando usuarios de prueba...");
 
-                // ADMIN
-                crearUsuario(usuarioRepository, passwordEncoder, "1", "Admin", "Sistema", "admin@sysacad.com",
-                        RolUsuario.ADMIN);
-                // PROFESOR
-                crearUsuario(usuarioRepository, passwordEncoder, "DOC-2024", "Nicolas", "Cabello", "nic@sysacad.com",
-                        RolUsuario.PROFESOR);
-                // ESTUDIANTE
-                crearUsuario(usuarioRepository, passwordEncoder, "45123", "Marty", "McFly", "marty@sysacad.com",
-                        RolUsuario.ESTUDIANTE);
+                //  ADMIN
+                Usuario admin = new Usuario();
+                admin.setLegajo("1");
+                admin.setNombre("Homero");
+                admin.setApellido("Simpson");
+                admin.setDni("11111111");
+                admin.setPassword(passwordEncoder.encode("123456"));
+                admin.setTipoDocumento(TipoDocumento.DNI);
+                admin.setMail("admin@sysacad.com");
+                admin.setRol(RolUsuario.ADMIN);
+                admin.setGenero(Genero.M);
+                admin.setEstado("ACTIVO");
+                admin.setFechaNacimiento(LocalDate.of(1980, 1, 1));
+                admin.setFechaIngreso(LocalDate.now());
+                usuarioRepository.save(admin);
 
-                System.out.println(">> DbSeeder: Usuarios creados.");
+                //  PROFESOR
+                Usuario profe = new Usuario();
+                profe.setLegajo("51111");
+                profe.setNombre("Nicolas");
+                profe.setApellido("Cabello");
+                profe.setDni("22222222");
+                profe.setPassword(passwordEncoder.encode("123456"));
+                profe.setTipoDocumento(TipoDocumento.DNI);
+                profe.setMail("nic@sysacad.com");
+                profe.setRol(RolUsuario.PROFESOR);
+                profe.setTituloAcademico("Dr. en Matemáticas");
+                profe.setGenero(Genero.M);
+                profe.setEstado("ACTIVO");
+                profe.setFechaNacimiento(LocalDate.of(1912, 6, 23));
+                profe.setFechaIngreso(LocalDate.now());
+                usuarioRepository.save(profe);
+
+                // --- ESTUDIANTE ---
+                Usuario alumno = new Usuario();
+                alumno.setLegajo("55555");
+                alumno.setNombre("Agustin");
+                alumno.setApellido("Santinelli");
+                alumno.setDni("33333333");
+                alumno.setPassword(passwordEncoder.encode("123456"));
+                alumno.setTipoDocumento(TipoDocumento.DNI);
+                alumno.setMail("agus@sysacad.com");
+                alumno.setRol(RolUsuario.ESTUDIANTE);
+                alumno.setGenero(Genero.M);
+                alumno.setEstado("ACTIVO");
+                alumno.setFechaNacimiento(LocalDate.of(2004, 11, 17));
+                alumno.setFechaIngreso(LocalDate.now());
+                usuarioRepository.save(alumno);
+
+                System.out.println(">> Seeding Completado (Con contraseñas encriptadas).");
             }
         };
-    }
-
-    private void crearUsuario(UsuarioRepository repo, PasswordEncoder encoder, String legajo, String nombre,
-            String apellido, String mail, RolUsuario rol) {
-        Usuario u = new Usuario();
-        u.setLegajo(legajo);
-        u.setNombre(nombre);
-        u.setApellido(apellido);
-        u.setMail(mail);
-        u.setDni(legajo + "000");
-        u.setPassword(encoder.encode("1234"));
-        u.setRol(rol);
-        u.setTipoDocumento(TipoDocumento.DNI);
-        u.setGenero(Genero.M);
-        u.setEstado("ACTIVO");
-        u.setFechaNacimiento(LocalDate.of(2000, 1, 1));
-        u.setFechaIngreso(LocalDate.now());
-        if (rol == RolUsuario.PROFESOR) {
-            u.setTituloAcademico("Ingeniero");
-        }
-        repo.save(u);
     }
 }
