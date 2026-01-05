@@ -31,6 +31,9 @@ public class Usuario implements UserDetails {
     @Column(nullable = false)
     private String password;
 
+    @Column(name = "password_change_required", nullable = false)
+    private Boolean passwordChangeRequired = true;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo_documento", nullable = false, length = 20)
     private TipoDocumento tipoDocumento;
