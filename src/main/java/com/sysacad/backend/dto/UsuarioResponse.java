@@ -27,15 +27,15 @@ public class UsuarioResponse {
     private String direccion;
     private String ciudad;
     private String fotoPerfil;
-    private LocalDate fechaIngreso; // Fecha de creación del usuario en sistema
+    private LocalDate fechaIngreso;
     private String tituloAcademico;
     private RolUsuario rol;
     private String estado;
 
     private String tipoIdentificador;
-
-    // NUEVO: Año de ingreso académico (Calculado de la inscripción más antigua)
     private Integer anioIngreso;
+
+    private Boolean passwordChangeRequired;
 
     private List<InfoCarrera> carreras;
 
@@ -57,6 +57,7 @@ public class UsuarioResponse {
         this.tituloAcademico = usuario.getTituloAcademico();
         this.rol = usuario.getRol();
         this.estado = usuario.getEstado();
+        this.passwordChangeRequired = usuario.getPasswordChangeRequired();
     }
 
     @Data
