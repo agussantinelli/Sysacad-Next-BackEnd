@@ -102,49 +102,64 @@
         <tr>
             <th>Capa / Área</th>
             <th>Tecnología</th>
+            <th>Versión / Detalle</th>
             <th>Uso Principal</th>
         </tr>
     </thead>
     <tbody>
         <tr>
             <td><strong>Core</strong></td>
-            <td>Java 21</td>
-            <td>Lenguaje base, utilizando Records y nuevas features.</td>
+            <td>Java (JDK)</td>
+            <td><strong>21</strong> (LTS)</td>
+            <td>Lenguaje base, Records, Pattern Matching.</td>
         </tr>
         <tr>
             <td><strong>Framework</strong></td>
-            <td>Spring Boot 3.5.x</td>
-            <td>Inyección de dependencias y configuración automática.</td>
-        </tr>
-        <tr>
-            <td><strong>Build & CI</strong></td>
-            <td>Apache Maven</td>
-            <td>Gestión de dependencias y ciclo de vida de construcción.</td>
+            <td>Spring Boot</td>
+            <td><strong>3.5.9</strong></td>
+            <td>Base del Backend, DI, Auto-configuration.</td>
         </tr>
         <tr>
             <td><strong>Seguridad</strong></td>
-            <td>Spring Security 6</td>
-            <td>Filtros JWT, CORS y autorización por Roles.</td>
+            <td>Spring Security + JWT</td>
+            <td><strong>6.x</strong> / JJWT <strong>0.11.5</strong></td>
+            <td>Autenticación Stateless, Filtros JWT, CORS, BCrypt.</td>
         </tr>
         <tr>
-            <td><strong>Datos</strong></td>
-            <td>Spring Data JPA / Hibernate</td>
-            <td>ORM potente para el mapeo objeto-relacional y persistencia.</td>
+            <td><strong>Base de Datos</strong></td>
+            <td>PostgreSQL Driver</td>
+            <td>Latest</td>
+            <td>Motor de base de datos relacional.</td>
+        </tr>
+        <tr>
+            <td><strong>ORM</strong></td>
+            <td>Spring Data JPA</td>
+            <td>Hibernate Core</td>
+            <td>Abstracción de datos, Repositorios, Entidades.</td>
+        </tr>
+        <tr>
+            <td><strong>Build Tool</strong></td>
+            <td>Apache Maven</td>
+            <td>3.8+</td>
+            <td>Gestión de dependencias y ciclo de vida.</td>
         </tr>
         <tr>
             <td><strong>Testing</strong></td>
             <td>JUnit 5 & Mockito</td>
-            <td>Pruebas unitarias y de integración (<code>spring-boot-starter-test</code>).</td>
+            <td>(Starter Test)</td>
+            <td>Pruebas unitarias y de integración.</td>
+        </tr>
+        <tr>
+            <td><strong>Herramientas</strong></td>
+            <td>Lombok</td>
+            <td>Latest</td>
+            <td>Reducción de código (Data, Builder, Slf4j).</td>
         </tr>
         <tr>
             <td><strong>Dev Experience</strong></td>
             <td>Spring Boot DevTools</td>
-            <td>Hot-reload y reinicio automático en desarrollo local.</td>
-        </tr>
-        <tr>
-            <td><strong>Utilidades</strong></td>
-            <td>Lombok</td>
-            <td>Reducción de boilerplate code (Getters, Setters).</td>
+            <td>-</td>
+            <td>Reinicio rápido y LiveReload en desarrollo.</td>
         </tr>
     </tbody>
 </table>
