@@ -216,21 +216,20 @@
 
 <h3>🌱 Base de Datos y Seeding Automático</h3>
 
-El sistema cuenta con un `DbSeeder` (`src/main/java/com/sysacad/backend/config/DbSeeder.java`) que se ejecuta al iniciar la aplicación. Si la tabla de facultades está vacía, cargará automáticamente:
-*   Facultad Regional Rosario.
-*   5 Carreras de Ingeniería con sus Planes de Estudio 2023 completos.
-*   Materias, Correlatividades y niveles.
-*   Usuarios de prueba.
+El sistema cuenta con un `DbSeeder` (`src/main/java/com/sysacad/backend/config/DbSeeder.java`) que se ejecuta al iniciar la aplicación. Realiza dos comprobaciones principales:
+
+1.  **Facultades:** Si la tabla `facultades_regionales` está vacía, carga toda la estructura académica (Facultad Rosario, Carreras, Planes 2023, Materias y Correlatividades).
+2.  **Usuarios:** Si la tabla `usuarios` está vacía, crea los usuarios de prueba por defecto.
 
 <h3>🔐 Usuarios de Prueba</h3>
 
-Para facilitar el desarrollo y testing, se crean los siguientes usuarios por defecto (Password para todos: `1234`):
+Para facilitar el desarrollo y testing, se crean los siguientes usuarios por defecto (Password para todos: `123456`):
 
 | Rol | Legajo / User | Email | Password |
 | :--- | :--- | :--- | :--- |
-| **ADMIN** | `1` | `admin@sysacad.com` | `1234` |
-| **PROFESOR** | `DOC-2024` | `nic@sysacad.com` | `1234` |
-| **ESTUDIANTE** | `45123` | `marty@sysacad.com` | `1234` |
+| **ADMIN** | `1` | `admin@sysacad.com` | `123456` |
+| **PROFESOR** | `51111` | `nic@sysacad.com` | `123456` |
+| **ESTUDIANTE** | `55555` | `agus@sysacad.com` | `123456` |
 
 ---
 
