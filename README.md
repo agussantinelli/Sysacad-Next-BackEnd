@@ -166,6 +166,7 @@
 
 <pre><code>Sysacad-Next-BackEnd/
 ├── .mvn/                                      # Archivos del Wrapper de Maven
+├── docs/                                      # Documentación técnica adicional
 ├── src/
 │   ├── main/
 │   │   ├── java/com/sysacad/backend/
