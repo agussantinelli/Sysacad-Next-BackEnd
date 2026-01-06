@@ -4,6 +4,7 @@ import com.sysacad.backend.modelo.Carrera;
 import com.sysacad.backend.modelo.PlanDeEstudio;
 import com.sysacad.backend.modelo.PlanMateria;
 import com.sysacad.backend.service.CarreraService;
+import com.sysacad.backend.service.PlanDeEstudioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,13 +20,13 @@ import java.util.UUID;
 public class CarreraController {
 
     private final CarreraService carreraService;
+    private final PlanDeEstudioService planService;
 
     @Autowired
-    public CarreraController(CarreraService carreraService) {
+    public CarreraController(CarreraService carreraService, PlanDeEstudioService planService) {
         this.carreraService = carreraService;
+        this.planService = planService;
     }
-
-    // --- SEGURIDAD: ESCRITURA (SOLO ADMIN) ---
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
@@ -33,35 +34,31 @@ public class CarreraController {
         return new ResponseEntity<>(carreraService.registrarCarrera(carrera), HttpStatus.CREATED);
     }
 
+    @GetMapping("/facultad/{idFacultad}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<Carrera>> listarPorFacultad(@PathVariable UUID idFacultad) {
+        return ResponseEntity.ok(carreraService.listarCarrerasPorFacultad(idFacultad));
+    }
+
+
     @PostMapping("/planes")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<PlanDeEstudio> crearPlan(@RequestBody PlanDeEstudio plan) {
-        return new ResponseEntity<>(carreraService.crearPlanDeEstudio(plan), HttpStatus.CREATED);
+        return new ResponseEntity<>(planService.crearPlanDeEstudio(plan), HttpStatus.CREATED);
     }
 
     @PostMapping("/planes/materias")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> agregarMateriaAPlan(@RequestBody PlanMateria planMateria) {
-        carreraService.agregarMateriaAPlan(planMateria);
+        planService.agregarMateriaAPlan(planMateria);
         return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
-
-    @GetMapping("/facultad/{idFacultad}")
-    @PreAuthorize("isAuthenticated()") // Buena práctica: Explicitar que requiere login
-    public ResponseEntity<List<Carrera>> listarPorFacultad(@PathVariable UUID idFacultad) {
-        return ResponseEntity.ok(carreraService.listarCarrerasPorFacultad(idFacultad));
     }
 
     @GetMapping("/{idCarrera}/planes/vigentes")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<PlanDeEstudio>> listarPlanesVigentes(
             @PathVariable String idCarrera,
-            @RequestParam(required = false) UUID idFacultad) { // Agregado opcional para robustez
-
-        if (idFacultad != null) {
-            // Si tu servicio lo soporta, usa ambos IDs
-            // return ResponseEntity.ok(carreraService.listarPlanes(idFacultad, idCarrera));
-        }
-        return ResponseEntity.ok(carreraService.listarPlanesVigentes(idCarrera));
+            @RequestParam(required = false) UUID idFacultad) {
+        return ResponseEntity.ok(planService.listarPlanesVigentes(idCarrera));
     }
 }
