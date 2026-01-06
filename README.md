@@ -27,14 +27,15 @@
 </div>
 
 <div align="center">
-    <a href="docs/dtos_catalog.md" target="_blank">
-        <img src="https://img.shields.io/badge/📄%20Catálogo%20DTOs-Frontend-4285F4?style=for-the-badge&logo=markdown&logoColor=white" alt="DTOs Badge"/>
-    </a>
-    <a href="docs/enums_catalog.md" target="_blank">
-        <img src="https://img.shields.io/badge/📄%20Catálogo%20Enums-Frontend-4285F4?style=for-the-badge&logo=markdown&logoColor=white" alt="Enums Badge"/>
-    </a>
     <a href="https://drive.google.com/drive/folders/1Yoln2wLucIvrbcWCbQ_bY-hZ4Z1ENIdD" target="_blank">
         <img src="https://img.shields.io/badge/📂%20Drive%20Documentación-4285F4?style=for-the-badge&logo=googledrive&logoColor=white" alt="Drive Docs Badge"/>
+    </a>
+    <br>
+    <a href="docs/dtos_catalog.md" target="_blank">
+        <img src="https://img.shields.io/badge/📄%20Catálogo%20DTOs-4285F4?style=for-the-badge&logo=markdown&logoColor=white" alt="DTOs Badge"/>
+    </a>
+    <a href="docs/enums_catalog.md" target="_blank">
+        <img src="https://img.shields.io/badge/📄%20Catálogo%20Enums-4285F4?style=for-the-badge&logo=markdown&logoColor=white" alt="Enums Badge"/>
     </a>
 </div>
 
