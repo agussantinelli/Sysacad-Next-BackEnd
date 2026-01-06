@@ -1,23 +1,9 @@
 # Backend DTO Catalog
 
 This document enumerates all Data Transfer Objects (DTOs) used in the backend application (`src/main/java/com/sysacad/backend/dto`) to facilitate integration with the frontend.
+DTOs are grouped by the Model Class they represent.
 
-## Authentication
-
-### `LoginRequest`
-Used for user authentication.
-- `identificador` (String): Legajo or Email.
-- `password` (String): User password.
-- `tipoIdentificador` (String): Optional, type of identifier used.
-
-### `AuthResponse`
-Returned upon successful authentication.
-- `token` (String): JWT token.
-- `usuario` (UsuarioResponse): Detailed user information.
-
----
-
-## Usuario (Users)
+## Usuario
 
 ### `UsuarioRequest`
 Used for creating or updating users.
@@ -69,7 +55,7 @@ Standard user response.
 
 ---
 
-## Facultad & Carrera
+## FacultadRegional
 
 ### `FacultadRequest`
 - `ciudad` (String)
@@ -81,6 +67,10 @@ Standard user response.
 - `provincia` (String)
 - `nombreCompleto` (String): e.g., "UTN - Rosario"
 
+---
+
+## Carrera
+
 ### `CarreraRequest`
 - `idFacultad` (UUID): Part of composite key.
 - `idCarrera` (String): Code, e.g., "ISI". Part of composite key.
@@ -91,6 +81,10 @@ Standard user response.
 - `idCarrera` (String)
 - `nombre` (String)
 - `nombreFacultad` (String)
+
+---
+
+## PlanDeEstudio
 
 ### `PlanDeEstudioRequest`
 - `idFacultad` (UUID)
@@ -109,7 +103,7 @@ Standard user response.
 
 ---
 
-## Materia & Comision
+## Materia
 
 ### `MateriaRequest`
 - `nombre` (String)
@@ -138,6 +132,10 @@ Standard user response.
 - `id` (UUID)
 - `nombre` (String)
 
+---
+
+## Comision
+
 ### `ComisionRequest`
 - `nombre` (String)
 - `turno` (String)
@@ -162,7 +160,7 @@ Standard user response.
 
 ---
 
-## Inscripcion & Calificacion
+## Inscripcion
 
 ### `InscripcionRequest`
 - `idUsuario` (UUID)
