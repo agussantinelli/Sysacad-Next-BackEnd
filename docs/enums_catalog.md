@@ -1,8 +1,8 @@
 # Backend Enum Catalog
 
-This document enumerates all Enum types used in the backend application (`src/main/java/com/sysacad/backend/modelo/enums`) to facilitate integration with the frontend.
+This document enumerates all Enum types used in the backend application (`src/main/java/com/sysacad/backend/modelo/enums`) to facilitate integration with the frontend. Enums are grouped by the Entity/Model they are primarily associated with.
 
-## Academic
+## Materia
 
 ### `CuatrimestreDictado`
 Defines when a subject is taught.
@@ -28,6 +28,10 @@ Classifies the type of subject.
 - `ESPECIFICA`
 - `COMPARTIDA`
 
+---
+
+## Inscripcion
+
 ### `TipoInscripcion`
 Distinguishes between enrolling for a course vs an exam.
 - `CURSADO`
@@ -35,7 +39,7 @@ Distinguishes between enrolling for a course vs an exam.
 
 ---
 
-## People & Users
+## Usuario
 
 ### `Genero`
 - `M`
@@ -55,6 +59,10 @@ Main user roles in the system.
 - `ESTUDIANTE`
 - `PROFESOR`
 
+---
+
+## Comision
+
 ### `RolCargo`
 Specific roles within a subject's teaching staff.
 - `JEFE_CATEDRA`: Administrative permissions over the subject.
@@ -62,7 +70,7 @@ Specific roles within a subject's teaching staff.
 
 ---
 
-## General
+## Horario
 
 ### `DiaSemana`
 Days of the week.

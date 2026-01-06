@@ -180,6 +180,10 @@ Standard user response.
 - `idMateria` (UUID): Reference ID.
 - `idComision` (UUID): Reference ID.
 
+---
+
+## Calificacion
+
 ### `CalificacionRequest`
 - `idUsuario` (UUID)
 - `idComision` (UUID)
