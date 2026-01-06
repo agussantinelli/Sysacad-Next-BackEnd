@@ -29,8 +29,14 @@ public class CarreraService {
         this.planMateriaRepository = planMateriaRepository;
     }
 
+    // --- LÓGICA DE CARRERAS ---
+
     @Transactional
     public Carrera registrarCarrera(Carrera carrera) {
+        // Validación: Evitar duplicados lógicos antes de ir a la BD
+        if (carreraRepository.existsById(carrera.getId())) {
+            throw new RuntimeException("La carrera ya existe en esta facultad.");
+        }
         return carreraRepository.save(carrera);
     }
 
@@ -39,18 +45,41 @@ public class CarreraService {
         return carreraRepository.findByIdIdFacultad(idFacultad);
     }
 
-    @Transactional
-    public PlanDeEstudio crearPlanDeEstudio(PlanDeEstudio plan) {
-        return planRepository.save(plan);
-    }
+    // --- LÓGICA DE PLANES ---
 
     @Transactional
-    public void agregarMateriaAPlan(PlanMateria planMateria) {
-        planMateriaRepository.save(planMateria);
+    public PlanDeEstudio crearPlanDeEstudio(PlanDeEstudio plan) {
+        // Validación CRÍTICA: Verificar que la carrera padre exista.
+        // Reconstruimos el ID de la carrera desde los datos del plan.
+        Carrera.CarreraId carreraId = new Carrera.CarreraId(plan.getId().getIdFacultad(), plan.getId().getIdCarrera());
+
+        if (!carreraRepository.existsById(carreraId)) {
+            throw new RuntimeException("No se puede crear el plan: La carrera especificada no existe.");
+        }
+
+        return planRepository.save(plan);
     }
 
     @Transactional(readOnly = true)
     public List<PlanDeEstudio> listarPlanesVigentes(String idCarrera) {
         return planRepository.findByIdIdCarreraAndEsVigenteTrue(idCarrera);
+    }
+
+    // --- LÓGICA DE MATERIAS DEL PLAN ---
+
+    @Transactional
+    public void agregarMateriaAPlan(PlanMateria planMateria) {
+        // Validación: Verificar que el plan de estudios exista
+        PlanDeEstudio.PlanDeEstudioId planId = new PlanDeEstudio.PlanDeEstudioId(
+                planMateria.getId().getIdFacultad(),
+                planMateria.getId().getIdCarrera(),
+                planMateria.getId().getNombrePlan()
+        );
+
+        if (!planRepository.existsById(planId)) {
+            throw new RuntimeException("El plan de estudios indicado no existe.");
+        }
+
+        planMateriaRepository.save(planMateria);
     }
 }
