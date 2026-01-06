@@ -245,11 +245,11 @@ El sistema cuenta con un `DbSeeder` (`src/main/java/com/sysacad/backend/config/D
 | Recurso | Métodos | Descripción Breve |
 | :--- | :--- | :--- |
 | **/auth** | `POST` | Login y obtención de Token JWT. |
-| **/usuarios** | `GET`, `POST`, `DELETE` | Gestión completa de usuarios (Admin). Búsqueda por legajo. |
-| **/facultades** | `GET`, `POST` | Gestión de facultades regionales. |
-| **/carreras** | `GET`, `POST` | Carreras y Planes de Estudio asociados. |
-| **/materias** | `GET`, `POST`, `PUT` | ABM de materias, incluyendo correlatividades y <strong>Modalidad</strong>. |
-| **/comisiones** | `GET`, `POST`, `PUT` | Comisiones anuales, asignación de docentes y horarios. |
+| **/usuarios** | `POST`, `GET`, `DELETE` | Gestión completa de usuarios (Admin). Búsqueda por legajo. |
+| **/facultades** | `POST`, `GET` | Gestión de facultades regionales. |
+| **/carreras** | `POST`, `GET` | Carreras y Planes de Estudio asociados. |
+| **/materias** | `POST`, `GET`, `PUT` | ABM de materias, incluyendo correlatividades y <strong>Modalidad</strong>. |
+| **/comisiones** | `POST`, `GET`, `PUT` | Comisiones anuales, asignación de docentes y horarios. |
 | **/inscripciones** | `POST`, `GET` | Inscripción a cursada/finales y consulta de historia académica. |
 
 <hr>
