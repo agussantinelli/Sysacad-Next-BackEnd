@@ -7,6 +7,7 @@ import com.sysacad.backend.service.InscripcionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,17 +28,9 @@ public class InscripcionController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'ESTUDIANTE')")
     public ResponseEntity<?> inscribirAlumno(@RequestBody Inscripcion inscripcion) {
         try {
-            // 1. Validar Correlatividades antes de inscribir
-            // Nota: Aquí asumimos que la inscripción viene con el ID de usuario y el ID de la materia a la que pertenece la comisión
-            // Como Inscripción apunta a Comisión, necesitaríamos navegar hasta la materia.
-            // Para simplificar, si el frontend envía los IDs correctos, validamos.
-
-            // Ejemplo de uso:
-            // boolean apto = correlatividadService.puedeCursar(inscripcion.getId().getIdUsuario(), idMateria);
-            // if (!apto) return ResponseEntity.status(HttpStatus.FORBIDDEN).body("No cumple correlativas");
-
             return new ResponseEntity<>(inscripcionService.inscribirAlumno(inscripcion), HttpStatus.CREATED);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -45,19 +38,30 @@ public class InscripcionController {
     }
 
     @GetMapping("/validar-correlatividad")
+    @PreAuthorize("hasAnyRole('ADMIN', 'ESTUDIANTE')")
     public ResponseEntity<Boolean> validarCorrelatividad(@RequestParam UUID idAlumno, @RequestParam UUID idMateria) {
         boolean puedeCursar = correlatividadService.puedeCursar(idAlumno, idMateria);
         return ResponseEntity.ok(puedeCursar);
     }
 
     @GetMapping("/alumno/{idAlumno}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'ESTUDIANTE')")
     public ResponseEntity<List<Inscripcion>> historialAlumno(@PathVariable UUID idAlumno) {
-        return ResponseEntity.ok(inscripcionService.obtenerHistorialAlumno(idAlumno));
+        try {
+            return ResponseEntity.ok(inscripcionService.obtenerHistorialAlumno(idAlumno));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
     }
 
     @PostMapping("/notas")
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESOR')")
     public ResponseEntity<Void> cargarNota(@RequestBody Calificacion calificacion) {
-        inscripcionService.cargarNota(calificacion);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        try {
+            inscripcionService.cargarNota(calificacion);
+            return ResponseEntity.status(HttpStatus.CREATED).build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 }
