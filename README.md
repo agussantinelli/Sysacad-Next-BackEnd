@@ -27,8 +27,14 @@
 </div>
 
 <div align="center">
+    <a href="docs/dtos_catalog.md" target="_blank">
+        <img src="https://img.shields.io/badge/📄%20Catálogo%20DTOs-Frontend-4285F4?style=for-the-badge&logo=markdown&logoColor=white" alt="DTOs Badge"/>
+    </a>
+    <a href="docs/enums_catalog.md" target="_blank">
+        <img src="https://img.shields.io/badge/📄%20Catálogo%20Enums-Frontend-4285F4?style=for-the-badge&logo=markdown&logoColor=white" alt="Enums Badge"/>
+    </a>
     <a href="https://drive.google.com/drive/folders/1Yoln2wLucIvrbcWCbQ_bY-hZ4Z1ENIdD" target="_blank">
-        <img src="https://img.shields.io/badge/📂%20Documentación%20del%20Proyecto-4285F4?style=for-the-badge&logo=googledrive&logoColor=white" alt="Docs Badge"/>
+        <img src="https://img.shields.io/badge/📂%20Drive%20Documentación-4285F4?style=for-the-badge&logo=googledrive&logoColor=white" alt="Drive Docs Badge"/>
     </a>
 </div>
 
@@ -36,21 +42,23 @@
 
 <h2>🎯 Objetivo</h2>
 
-<p>Proveer una API RESTful robusta, segura y escalable que actúe como el cerebro de <strong>Sysacad Next</strong>, gestionando la lógica de negocio compleja (correlatividades, actas, inscripciones) y asegurando la integridad de los datos académicos.</p>
+<p>Proveer una API RESTful robusta, segura y escalable que actúe como el cerebro de <strong>Sysacad Next</strong>, gestionando la lógica de negocio compleja (correlatividades, actas, inscripciones, auditoría) y asegurando la integridad de los datos académicos.</p>
 
 <h2>🧠 Arquitectura y Diseño</h2>
 
 <p>Este backend está construido siguiendo principios de <strong>Clean Architecture</strong> y <strong>SOLID</strong>, priorizando la desacoplación y la testabilidad.</p>
 <ul>
-    <li><strong>Seguridad Stateless:</strong> Autenticación vía JWT (JSON Web Tokens) con Spring Security.</li>
+    <li><strong>Seguridad Stateless:</strong> Autenticación vía JWT (JSON Web Tokens) con Spring Security (v6+).</li>
     <li><strong>Validación Robusta:</strong> Reglas de negocio forzadas en la capa de servicio (Domain Driven Design).</li>
-    <li><strong>Optimización:</strong> Consultas JPA optimizadas y uso de DTOs (Projections) para evitar el problema N+1.</li>
-    <li><strong>Manejo de Errores Global:</strong> <code>@ControllerAdvice</code> para respuestas de error estandarizadas.</li>
+    <li><strong>Optimización (N+1):</strong> Uso estratégico de <code>JOIN FETCH</code> en JPQL y DTOs projections.</li>
+    <li><strong>Manejo de Errores Global:</strong> <code>@ControllerAdvice</code> para respuestas JSON estandarizadas en excepciones.</li>
 </ul>
 
 <hr>
 
 <h2>🗂️ Modelo de Dominio</h2>
+
+<p>La estructura de base de datos refleja la complejidad de una institución académica real:</p>
 
 <table>
     <thead>
@@ -69,7 +77,7 @@
         <tr>
             <td><strong>👤 Actores y Comunicación</strong></td>
             <td><code>usuarios</code>, <code>sanciones</code>, <code>avisos</code></td>
-            <td>Gestión de perfiles, roles, registro disciplinario y <strong>cartelera de novedades</strong>.</td>
+            <td>Gestión de perfiles, roles (Admin/Estudiante/Profesor), registro disciplinario y cartelera.</td>
         </tr>
         <tr>
             <td><strong>📜 Jerarquía Académica</strong></td>
@@ -79,12 +87,12 @@
         <tr>
             <td><strong>📚 Curricular</strong></td>
             <td><code>materias</code>, <code>plan_materias</code>, <code>correlativas</code></td>
-            <td>Catálogo de asignaturas (fuerte), su contextualización en planes (año/carga) y sistema de correlatividades.</td>
+            <td>Asignaturas con tipología (Básica/Específica/Compartida) y <strong>nueva gestión de Modalidad (Presencial/Virtual/Mixto)</strong>.</td>
         </tr>
         <tr>
             <td><strong>📅 Gestión de Cursada</strong></td>
             <td><code>comisiones</code>, <code>materias_comisiones</code>, <code>profesores_comisiones</code>, <code>asignaciones_materia</code>, <code>horarios_cursado</code></td>
-            <td>Oferta operativa. Soporta relación N:M, asignación de roles docentes y <strong>agenda semanal de cursado</strong>.</td>
+            <td>Oferta operativa anual/cuatrimestral. Soporta relación N:M, asignación de roles docentes y <strong>agenda semanal de cursado</strong>.</td>
         </tr>
         <tr>
             <td><strong>📝 Ciclo del Alumno</strong></td>
@@ -144,22 +152,10 @@
             <td>Gestión de dependencias y ciclo de vida.</td>
         </tr>
         <tr>
-            <td><strong>Testing</strong></td>
-            <td>JUnit 5 & Mockito</td>
-            <td>(Starter Test)</td>
-            <td>Pruebas unitarias y de integración.</td>
-        </tr>
-        <tr>
             <td><strong>Herramientas</strong></td>
             <td>Lombok</td>
             <td>Latest</td>
             <td>Reducción de código (Data, Builder, Slf4j).</td>
-        </tr>
-        <tr>
-            <td><strong>Dev Experience</strong></td>
-            <td>Spring Boot DevTools</td>
-            <td>-</td>
-            <td>Reinicio rápido y LiveReload en desarrollo.</td>
         </tr>
     </tbody>
 </table>
@@ -205,7 +201,7 @@
 <h3>🚀 Ejecución</h3>
 
 1.  **Clonar el repositorio.**
-2.  **Configurar Base de Datos**: Asegúrate de tener PostgreSQL corriendo en el puerto `5432`. La base de datos `sysacad_db` se creará automáticamente si no existe (gracias a `update` en properties), pero se recomienda crearla manualmente si falla.
+2.  **Configurar Base de Datos**: Asegúrate de tener PostgreSQL corriendo en el puerto `5432`. El `application.properties` intentará crear la DB `sysacad_db` si no existe.
 3.  **Compilar y Correr**:
     ```bash
     mvn spring-boot:run
@@ -215,14 +211,11 @@
 
 <h3>🌱 Base de Datos y Seeding Automático</h3>
 
-El sistema cuenta con un `DbSeeder` (`src/main/java/com/sysacad/backend/config/DbSeeder.java`) que se ejecuta al iniciar la aplicación. Realiza dos comprobaciones principales:
+El sistema cuenta con un `DbSeeder` (`src/main/java/com/sysacad/backend/config/DbSeeder.java`) que pobla la base de datos automáticamente al inicio si detecta tablas vacías.
+*   **Carga Académica:** Crea la UTN Facultad Regional Rosario, carreras (ISI, IM, IQ, IE, IC) y la estructura de materias real.
+*   **Usuarios:** Crea usuarios de prueba si no existen.
 
-1.  **Facultades:** Si la tabla `facultades_regionales` está vacía, carga toda la estructura académica (Facultad Rosario, Carreras, **Planes de Estudio Reales y Oficiales de la UTN Facultad Regional Rosario**, Materias y Correlatividades).
-2.  **Usuarios:** Si la tabla `usuarios` está vacía, crea los usuarios de prueba por defecto.
-
-<h3>🔐 Usuarios de Prueba</h3>
-
-Para facilitar el desarrollo y testing, se crean los siguientes usuarios por defecto (Password para todos: `123456`):
+<h3>🔐 Usuarios de Prueba Generados</h3>
 
 | Rol | Legajo / User | Email | Password |
 | :--- | :--- | :--- | :--- |
@@ -232,84 +225,29 @@ Para facilitar el desarrollo y testing, se crean los siguientes usuarios por def
 
 ---
 
-<h2 align="center">🚀 Catálogo Completo de Endpoints</h2>
-<p align="center"><em>Generado a partir del análisis del código fuente en `com.sysacad.backend.controller`</em></p>
+<h2 align="center">📚 Documentación de API</h2>
 
-<h3>🔐 Autenticación</h3>
-<table>
-  <thead><tr><th>Método</th><th>Recurso</th><th>Acción</th></tr></thead>
-  <tbody>
-    <tr><td><code>POST</code></td><td><code>/api/auth/login</code></td><td>Inicia sesión y genera token JWT.</td></tr>
-  </tbody>
-</table>
+<p align="center">
+  Para ver el detalle estructura de los objetos de request y response, consulta:<br>
+  👉 <a href="docs/dtos_catalog.md"><strong>Catálogo de DTOs</strong></a> |
+  👉 <a href="docs/enums_catalog.md"><strong>Catálogo de Enums</strong></a>
+</p>
 
-<h3>👥 Usuarios</h3>
-<table>
-  <thead><tr><th>Método</th><th>Recurso</th><th>Acción</th></tr></thead>
-  <tbody>
-    <tr><td><code>POST</code></td><td><code>/api/usuarios</code></td><td>Registra un nuevo usuario (Solo Admin).</td></tr>
-    <tr><td><code>GET</code></td><td><code>/api/usuarios</code></td><td>Lista todos los usuarios, opcionalmente filtrados por Rol (Solo Admin).</td></tr>
-    <tr><td><code>GET</code></td><td><code>/api/usuarios/{id}</code></td><td>Obtiene perfil de usuario por ID (Admin, Profesor).</td></tr>
-    <tr><td><code>GET</code></td><td><code>/api/usuarios/buscar/legajo/{legajo}</code></td><td>Busca usuario por legajo (Admin, Profesor).</td></tr>
-    <tr><td><code>GET</code></td><td><code>/api/usuarios/materia/{idMateria}</code></td><td>Lista docentes asignados a una materia (Admin, Profesor).</td></tr>
-    <tr><td><code>GET</code></td><td><code>/api/usuarios/alumnos/materia/{idMateria}</code></td><td>Lista alumnos inscriptos en una materia (Admin, Profesor).</td></tr>
-    <tr><td><code>DELETE</code></td><td><code>/api/usuarios/{id}</code></td><td>Elimina un usuario (Solo Admin).</td></tr>
-  </tbody>
-</table>
+<h3>Resumen de Endpoints Principales</h3>
 
-<h3>🏫 Facultades y Carreras</h3>
-<table>
-  <thead><tr><th>Método</th><th>Recurso</th><th>Acción</th></tr></thead>
-  <tbody>
-    <tr><td><code>POST</code></td><td><code>/api/facultades</code></td><td>Crea una nueva facultad (Solo Admin).</td></tr>
-    <tr><td><code>GET</code></td><td><code>/api/facultades</code></td><td>Lista todas las facultades.</td></tr>
-    <tr><td><code>GET</code></td><td><code>/api/facultades/{id}</code></td><td>Obtiene detalle de una facultad.</td></tr>
-    <tr><td><code>POST</code></td><td><code>/api/carreras</code></td><td>Registra una nueva carrera (Solo Admin).</td></tr>
-    <tr><td><code>GET</code></td><td><code>/api/carreras/facultad/{idFacultad}</code></td><td>Lista carreras de una facultad específica.</td></tr>
-    <tr><td><code>POST</code></td><td><code>/api/carreras/planes</code></td><td>Crea un nuevo plan de estudio (Solo Admin).</td></tr>
-    <tr><td><code>POST</code></td><td><code>/api/carreras/planes/materias</code></td><td>Agrega materia a un plan (Solo Admin).</td></tr>
-    <tr><td><code>GET</code></td><td><code>/api/carreras/{idCarrera}/planes/vigentes</code></td><td>Lista planes vigentes de una carrera.</td></tr>
-    <tr><td><code>POST</code></td><td><code>/api/planes</code></td><td>Crea un nuevo plan de estudio (Solo Admin).</td></tr>
-    <tr><td><code>POST</code></td><td><code>/api/planes/materias</code></td><td>Agrega materia a un plan de estudio (Solo Admin).</td></tr>
-    <tr><td><code>GET</code></td><td><code>/api/planes/vigentes/{idCarrera}</code></td><td>Lista planes vigentes (Endpoint alternativo/duplicado lógica).</td></tr>
-    <tr><td><code>GET</code></td><td><code>/api/planes/carrera/{idCarrera}</code></td><td>Lista todos los planes de una carrera.</td></tr>
-  </tbody>
-</table>
+> [!NOTE]
+> Este resumen es manual. La referencia final siempre es el código fuente en `controller/` o la documentación de DTOs.
 
-<h3>📚 Materias y Comisiones</h3>
-<table>
-  <thead><tr><th>Método</th><th>Recurso</th><th>Acción</th></tr></thead>
-  <tbody>
-    <tr><td><code>POST</code></td><td><code>/api/materias</code></td><td>Crea una nueva materia (Solo Admin).</td></tr>
-    <tr><td><code>PUT</code></td><td><code>/api/materias/{id}</code></td><td>Actualiza datos de una materia (Admin, Profesor).</td></tr>
-    <tr><td><code>GET</code></td><td><code>/api/materias</code></td><td>Lista materias, opcional filtro por Tipo.</td></tr>
-    <tr><td><code>GET</code></td><td><code>/api/materias/{id}</code></td><td>Obtiene detalle de una materia.</td></tr>
-    <tr><td><code>DELETE</code></td><td><code>/api/materias/{id}</code></td><td>Elimina una materia (Solo Admin).</td></tr>
-    <tr><td><code>POST</code></td><td><code>/api/comisiones</code></td><td>Crea una nueva comisión (Solo Admin).</td></tr>
-    <tr><td><code>GET</code></td><td><code>/api/comisiones</code></td><td>Lista comisiones por año (Admin, Profesor).</td></tr>
-    <tr><td><code>GET</code></td><td><code>/api/comisiones/{id}</code></td><td>Obtiene detalle de comisión (Solo Admin).</td></tr>
-    <tr><td><code>POST</code></td><td><code>/api/comisiones/{id}/profesores</code></td><td>Asigna profesor a una comisión (Admin, Profesor).</td></tr>
-  </tbody>
-</table>
+| Recurso | Métodos | Descripción Breve |
+| :--- | :--- | :--- |
+| **/auth** | `POST` | Login y obtención de Token JWT. |
+| **/usuarios** | `GET`, `POST`, `DELETE` | Gestión completa de usuarios (Admin). Búsqueda por legajo. |
+| **/facultades** | `GET`, `POST` | Gestión de facultades regionales. |
+| **/carreras** | `GET`, `POST` | Carreras y Planes de Estudio asociados. |
+| **/materias** | `GET`, `POST`, `PUT` | ABM de materias, incluyendo correlatividades y <strong>Modalidad</strong>. |
+| **/comisiones** | `GET`, `POST`, `PUT` | Comisiones anuales, asignación de docentes y horarios. |
+| **/inscripciones** | `POST`, `GET` | Inscripción a cursada/finales y consulta de historia académica. |
 
-<h3>📝 Inscripciones y Notas</h3>
-<table>
-  <thead><tr><th>Método</th><th>Recurso</th><th>Acción</th></tr></thead>
-  <tbody>
-    <tr><td><code>POST</code></td><td><code>/api/inscripciones</code></td><td>Inscribe alumno a cursada/final (Admin, Estudiante).</td></tr>
-    <tr><td><code>GET</code></td><td><code>/api/inscripciones/validar-correlatividad</code></td><td>Verifica si alumno puede cursar materia.</td></tr>
-    <tr><td><code>GET</code></td><td><code>/api/inscripciones/alumno/{idAlumno}</code></td><td>Obtiene historial académico del alumno.</td></tr>
-    <tr><td><code>POST</code></td><td><code>/api/inscripciones/notas</code></td><td>Carga nota a una inscripción (Admin, Profesor).</td></tr>
-  </tbody>
-</table>
-
-<h2>🤝 Contribuciones</h2>
-
-<p>Para proponer cambios en la lógica de negocio o nuevos endpoints:</p>
-<ol>
-    <li>Crea una rama siguiendo la convención: <code>feature/nombre-funcionalidad</code> o <code>fix/nombre-bug</code>.</li>
-    <li>Asegúrate de que los tests pasen (<code>mvn test</code>).</li>
-    <li>Abre un PR hacia `develop`.</li>
-</ol>
+<hr>
 
 <p align="center">Desarrollado con ❤️ y mucho ☕ para la comunidad académica.</p>
