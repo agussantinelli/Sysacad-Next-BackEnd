@@ -1,5 +1,6 @@
 package com.sysacad.backend.modelo;
 
+import com.sysacad.backend.modelo.enums.RolCargo;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,8 +16,9 @@ public class AsignacionMateria {
     @EmbeddedId
     private AsignacionMateriaId id;
 
-    @Column(nullable = false, length = 50)
-    private String rol;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private RolCargo cargo;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_usuario", insertable = false, updatable = false)
