@@ -22,7 +22,7 @@ public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
     private final AsignacionMateriaRepository asignacionMateriaRepository;
-    private final InscripcionRepository inscripcionRepository; // Nueva dependencia
+    private final InscripcionRepository inscripcionRepository;
 
     @Autowired
     public UsuarioService(UsuarioRepository usuarioRepository,
@@ -33,6 +33,16 @@ public class UsuarioService {
         this.passwordEncoder = passwordEncoder;
         this.asignacionMateriaRepository = asignacionMateriaRepository;
         this.inscripcionRepository = inscripcionRepository;
+    }
+
+    public Usuario autenticar(String identificador, String password) {
+        Usuario usuario = usuarioRepository.findByLegajoOrMail(identificador, identificador)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        if (!passwordEncoder.matches(password, usuario.getPassword())) {
+            throw new RuntimeException("Contraseña incorrecta");
+        }
+        return usuario;
     }
 
     @Transactional
