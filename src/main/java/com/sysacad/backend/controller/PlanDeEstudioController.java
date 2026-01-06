@@ -1,5 +1,7 @@
 package com.sysacad.backend.controller;
 
+import com.sysacad.backend.dto.PlanDeEstudioRequest;
+import com.sysacad.backend.dto.PlanDeEstudioResponse;
 import com.sysacad.backend.modelo.PlanDeEstudio;
 import com.sysacad.backend.modelo.PlanMateria;
 import com.sysacad.backend.service.PlanDeEstudioService;
@@ -10,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/planes")
@@ -23,12 +26,20 @@ public class PlanDeEstudioController {
         this.planService = planService;
     }
 
-    // --- ESCRITURA: SOLO ADMIN ---
-
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<PlanDeEstudio> crearPlan(@RequestBody PlanDeEstudio plan) {
-        return new ResponseEntity<>(planService.crearPlanDeEstudio(plan), HttpStatus.CREATED);
+    public ResponseEntity<PlanDeEstudioResponse> crearPlan(@RequestBody PlanDeEstudioRequest request) {
+        PlanDeEstudio plan = new PlanDeEstudio();
+        PlanDeEstudio.PlanId id = new PlanDeEstudio.PlanId(
+                request.getIdFacultad(), request.getIdCarrera(), request.getNombrePlan()
+        );
+        plan.setId(id);
+        plan.setFechaInicio(request.getFechaInicio());
+        plan.setFechaFin(request.getFechaFin());
+        plan.setEsVigente(request.getEsVigente());
+
+        PlanDeEstudio guardado = planService.crearPlanDeEstudio(plan);
+        return new ResponseEntity<>(new PlanDeEstudioResponse(guardado), HttpStatus.CREATED);
     }
 
     @PostMapping("/materias")
@@ -40,13 +51,19 @@ public class PlanDeEstudioController {
 
     @GetMapping("/vigentes/{idCarrera}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<PlanDeEstudio>> listarPlanesVigentes(@PathVariable String idCarrera) {
-        return ResponseEntity.ok(planService.listarPlanesVigentes(idCarrera));
+    public ResponseEntity<List<PlanDeEstudioResponse>> listarPlanesVigentes(@PathVariable String idCarrera) {
+        List<PlanDeEstudio> planes = planService.listarPlanesVigentes(idCarrera);
+        return ResponseEntity.ok(planes.stream()
+                .map(PlanDeEstudioResponse::new)
+                .collect(Collectors.toList()));
     }
 
     @GetMapping("/carrera/{idCarrera}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<PlanDeEstudio>> listarTodosPorCarrera(@PathVariable String idCarrera) {
-        return ResponseEntity.ok(planService.listarTodosPorCarrera(idCarrera));
+    public ResponseEntity<List<PlanDeEstudioResponse>> listarTodosPorCarrera(@PathVariable String idCarrera) {
+        List<PlanDeEstudio> planes = planService.listarTodosPorCarrera(idCarrera);
+        return ResponseEntity.ok(planes.stream()
+                .map(PlanDeEstudioResponse::new)
+                .collect(Collectors.toList()));
     }
 }
