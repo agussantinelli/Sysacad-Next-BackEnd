@@ -1,5 +1,9 @@
 package com.sysacad.backend.controller;
 
+import com.sysacad.backend.dto.CarreraRequest;
+import com.sysacad.backend.dto.CarreraResponse;
+import com.sysacad.backend.dto.PlanDeEstudioRequest;
+import com.sysacad.backend.dto.PlanDeEstudioResponse;
 import com.sysacad.backend.modelo.Carrera;
 import com.sysacad.backend.modelo.PlanDeEstudio;
 import com.sysacad.backend.modelo.PlanMateria;
@@ -13,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/carreras")
@@ -30,21 +35,42 @@ public class CarreraController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Carrera> registrarCarrera(@RequestBody Carrera carrera) {
-        return new ResponseEntity<>(carreraService.registrarCarrera(carrera), HttpStatus.CREATED);
+    public ResponseEntity<CarreraResponse> registrarCarrera(@RequestBody CarreraRequest request) {
+        Carrera carrera = new Carrera();
+        Carrera.CarreraId id = new Carrera.CarreraId(request.getIdFacultad(), request.getIdCarrera());
+        carrera.setId(id);
+        carrera.setNombre(request.getNombre());
+
+        Carrera guardada = carreraService.registrarCarrera(carrera);
+        return new ResponseEntity<>(new CarreraResponse(guardada), HttpStatus.CREATED);
     }
 
     @GetMapping("/facultad/{idFacultad}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<Carrera>> listarPorFacultad(@PathVariable UUID idFacultad) {
-        return ResponseEntity.ok(carreraService.listarCarrerasPorFacultad(idFacultad));
-    }
+    public ResponseEntity<List<CarreraResponse>> listarPorFacultad(@PathVariable UUID idFacultad) {
+        List<Carrera> carreras = carreraService.listarCarrerasPorFacultad(idFacultad);
 
+        List<CarreraResponse> response = carreras.stream()
+                .map(CarreraResponse::new)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(response);
+    }
 
     @PostMapping("/planes")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<PlanDeEstudio> crearPlan(@RequestBody PlanDeEstudio plan) {
-        return new ResponseEntity<>(planService.crearPlanDeEstudio(plan), HttpStatus.CREATED);
+    public ResponseEntity<PlanDeEstudioResponse> crearPlan(@RequestBody PlanDeEstudioRequest request) {
+        PlanDeEstudio plan = new PlanDeEstudio();
+        PlanDeEstudio.PlanId id = new PlanDeEstudio.PlanId(
+                request.getIdFacultad(), request.getIdCarrera(), request.getNombrePlan()
+        );
+        plan.setId(id);
+        plan.setFechaInicio(request.getFechaInicio());
+        plan.setFechaFin(request.getFechaFin());
+        plan.setEsVigente(request.getEsVigente());
+
+        PlanDeEstudio guardado = planService.crearPlanDeEstudio(plan);
+        return new ResponseEntity<>(new PlanDeEstudioResponse(guardado), HttpStatus.CREATED);
     }
 
     @PostMapping("/planes/materias")
@@ -56,9 +82,16 @@ public class CarreraController {
 
     @GetMapping("/{idCarrera}/planes/vigentes")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<PlanDeEstudio>> listarPlanesVigentes(
+    public ResponseEntity<List<PlanDeEstudioResponse>> listarPlanesVigentes(
             @PathVariable String idCarrera,
             @RequestParam(required = false) UUID idFacultad) {
-        return ResponseEntity.ok(planService.listarPlanesVigentes(idCarrera));
+
+        List<PlanDeEstudio> planes = planService.listarPlanesVigentes(idCarrera);
+
+        List<PlanDeEstudioResponse> response = planes.stream()
+                .map(PlanDeEstudioResponse::new)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(response);
     }
 }
