@@ -41,6 +41,7 @@ CREATE TABLE materias (
     descripcion TEXT,
     tipo_materia VARCHAR(20) NOT NULL CHECK (tipo_materia IN ('BASICA', 'ESPECIFICA', 'COMPARTIDA')),
     duracion VARCHAR(20) NOT NULL CHECK (duracion IN ('ANUAL', 'CUATRIMESTRAL')),
+    modalidad VARCHAR(20) NOT NULL DEFAULT 'PRESENCIAL' CHECK (modalidad IN ('PRESENCIAL', 'MIXTO', 'VIRTUAL')),
     cuatrimestre_dictado VARCHAR(20) CHECK (cuatrimestre_dictado IN ('PRIMERO', 'SEGUNDO', 'ANUAL', 'AMBOS')),
     horas_cursado SMALLINT NOT NULL,
     rendir_libre BOOLEAN NOT NULL DEFAULT FALSE,
