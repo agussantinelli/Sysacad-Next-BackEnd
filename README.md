@@ -228,11 +228,16 @@ El sistema cuenta con un `DbSeeder` (`src/main/java/com/sysacad/backend/config/D
 
 <h2 align="center">📚 Documentación de API</h2>
 
-<p align="center">
-  Para ver el detalle estructura de los objetos de request y response, consulta:<br>
-  👉 <a href="docs/dtos_catalog.md"><strong>Catálogo de DTOs</strong></a> |
-  👉 <a href="docs/enums_catalog.md"><strong>Catálogo de Enums</strong></a>
-</p>
+<p align="center">Para ver el detalle estructura de los objetos de request y response, consulta:</p>
+
+<div align="center">
+    <a href="docs/dtos_catalog.md" target="_blank">
+        <img src="https://img.shields.io/badge/📄%20Catálogo%20DTOs-Frontend-4285F4?style=for-the-badge&logo=markdown&logoColor=white" alt="DTOs Badge"/>
+    </a>
+    <a href="docs/enums_catalog.md" target="_blank">
+        <img src="https://img.shields.io/badge/📄%20Catálogo%20Enums-Frontend-4285F4?style=for-the-badge&logo=markdown&logoColor=white" alt="Enums Badge"/>
+    </a>
+</div>
 
 <h3>Resumen de Endpoints Principales</h3>
 
