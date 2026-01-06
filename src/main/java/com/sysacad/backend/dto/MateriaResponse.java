@@ -3,6 +3,7 @@ package com.sysacad.backend.dto;
 import com.sysacad.backend.modelo.Materia;
 import com.sysacad.backend.modelo.enums.CuatrimestreDictado;
 import com.sysacad.backend.modelo.enums.DuracionMateria;
+import com.sysacad.backend.modelo.enums.ModalidadMateria;
 import com.sysacad.backend.modelo.enums.TipoMateria;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,12 +20,12 @@ public class MateriaResponse {
     private String descripcion;
     private TipoMateria tipoMateria;
     private DuracionMateria duracion;
+    private ModalidadMateria modalidad;
     private CuatrimestreDictado cuatrimestreDictado;
     private Short horasCursado;
     private Boolean rendirLibre;
     private Boolean optativa;
 
-    // Lista plana de nombres o IDs para evitar recursión infinita
     private List<SimpleMateriaDTO> correlativas;
 
     public MateriaResponse(Materia materia) {
@@ -33,6 +34,7 @@ public class MateriaResponse {
         this.descripcion = materia.getDescripcion();
         this.tipoMateria = materia.getTipoMateria();
         this.duracion = materia.getDuracion();
+        this.modalidad = materia.getModalidad();
         this.cuatrimestreDictado = materia.getCuatrimestreDictado();
         this.horasCursado = materia.getHorasCursado();
         this.rendirLibre = materia.getRendirLibre();
@@ -45,7 +47,6 @@ public class MateriaResponse {
         }
     }
 
-    // Clase estática anidada para representar datos mínimos
     @Data
     @NoArgsConstructor
     public static class SimpleMateriaDTO {
