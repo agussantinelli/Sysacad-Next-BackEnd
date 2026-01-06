@@ -191,3 +191,15 @@ CREATE TABLE calificaciones (
             ON DELETE CASCADE
             ON UPDATE CASCADE
 );
+
+CREATE TABLE horarios_cursado (
+    id_comision UUID NOT NULL,
+    id_materia UUID NOT NULL,
+    dia VARCHAR(20) NOT NULL CHECK (dia IN ('LUNES', 'MARTES', 'MIERCOLES', 'JUEVES', 'VIERNES', 'SABADO'),
+    hora_desde TIME NOT NULL,
+    hora_hasta TIME NOT NULL,
+    PRIMARY KEY (id_comision, id_materia, dia, hora_desde),
+    CONSTRAINT fk_hc_comision FOREIGN KEY (id_comision) REFERENCES comisiones(id),
+    CONSTRAINT fk_hc_materia FOREIGN KEY (id_materia) REFERENCES materias(id),
+    CONSTRAINT chk_horario_valido CHECK (hora_hasta > hora_desde)
+);
