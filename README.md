@@ -235,9 +235,6 @@ El sistema cuenta con un `DbSeeder` (`src/main/java/com/sysacad/backend/config/D
 
 <h3>Resumen de Endpoints Principales</h3>
 
-> [!NOTE]
-> Este resumen es manual. La referencia final siempre es el código fuente en `controller/` o la documentación de DTOs.
-
 | Recurso | Métodos | Descripción Breve |
 | :--- | :--- | :--- |
 | **/auth** | `POST` | Login y obtención de Token JWT. |
