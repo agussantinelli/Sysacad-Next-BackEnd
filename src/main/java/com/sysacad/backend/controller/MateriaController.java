@@ -3,6 +3,7 @@ package com.sysacad.backend.controller;
 import com.sysacad.backend.dto.MateriaRequest;
 import com.sysacad.backend.dto.MateriaResponse;
 import com.sysacad.backend.modelo.Materia;
+import com.sysacad.backend.modelo.enums.ModalidadMateria;
 import com.sysacad.backend.modelo.enums.TipoMateria;
 import com.sysacad.backend.service.MateriaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,9 @@ public class MateriaController {
         nuevaMateria.setDescripcion(request.getDescripcion());
         nuevaMateria.setTipoMateria(request.getTipoMateria());
         nuevaMateria.setDuracion(request.getDuracion());
+        if (request.getModalidad() != null) {
+            nuevaMateria.setModalidad(request.getModalidad());
+        }
         nuevaMateria.setCuatrimestreDictado(request.getCuatrimestreDictado());
         nuevaMateria.setHorasCursado(request.getHorasCursado());
         nuevaMateria.setRendirLibre(request.getRendirLibre());
@@ -52,6 +56,9 @@ public class MateriaController {
         materiaUpdate.setDescripcion(request.getDescripcion());
         materiaUpdate.setTipoMateria(request.getTipoMateria());
         materiaUpdate.setDuracion(request.getDuracion());
+        if (request.getModalidad() != null) {
+            materiaUpdate.setModalidad(request.getModalidad());
+        }
         materiaUpdate.setCuatrimestreDictado(request.getCuatrimestreDictado());
         materiaUpdate.setHorasCursado(request.getHorasCursado());
         materiaUpdate.setRendirLibre(request.getRendirLibre());
