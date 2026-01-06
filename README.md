@@ -247,4 +247,4 @@ El sistema cuenta con un `DbSeeder` (`src/main/java/com/sysacad/backend/config/D
 
 <hr>
 
-<p align="center">Desarrollado con ❤️ y mucho ☕ para la comunidad académica.</p>
+<p align="center">Desarrollado con ❤️ y mucho 🧉 para la comunidad académica.</p>
