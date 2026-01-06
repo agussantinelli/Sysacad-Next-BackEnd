@@ -141,7 +141,7 @@ CREATE TABLE profesores_comisiones (
 CREATE TABLE asignaciones_materia (
     id_usuario UUID NOT NULL,
     id_materia UUID NOT NULL,
-    rol VARCHAR(50) NOT NULL,
+    cargo VARCHAR(20) NOT NULL CHECK (cargo IN ('JEFE_CATEDRA', 'DOCENTE')),
     PRIMARY KEY (id_usuario, id_materia),
     CONSTRAINT fk_am_prof FOREIGN KEY (id_usuario) REFERENCES usuarios(id),
     CONSTRAINT fk_am_mat FOREIGN KEY (id_materia) REFERENCES materias(id)
