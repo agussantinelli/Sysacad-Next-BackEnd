@@ -1,6 +1,9 @@
 package com.sysacad.backend.modelo;
 
-import com.sysacad.backend.modelo.enums.*;
+import com.sysacad.backend.modelo.enums.CuatrimestreDictado;
+import com.sysacad.backend.modelo.enums.DuracionMateria;
+import com.sysacad.backend.modelo.enums.ModalidadMateria;
+import com.sysacad.backend.modelo.enums.TipoMateria;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.util.UUID;
@@ -29,6 +32,10 @@ public class Materia {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private DuracionMateria duracion;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "modalidad", nullable = false, length = 20)
+    private ModalidadMateria modalidad = ModalidadMateria.PRESENCIAL; // Default en Java
 
     @Enumerated(EnumType.STRING)
     @Column(name = "cuatrimestre_dictado", length = 20)
