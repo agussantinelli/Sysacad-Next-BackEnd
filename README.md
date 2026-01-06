@@ -235,7 +235,7 @@ Para facilitar el desarrollo y testing, se crean los siguientes usuarios por def
 <h2 align="center">🚀 Catálogo Completo de Endpoints</h2>
 <p align="center"><em>Generado a partir del análisis del código fuente en `com.sysacad.backend.controller`</em></p>
 
-<h3>🔐 Autenticación (`AuthController`)</h3>
+<h3>🔐 Autenticación</h3>
 <table>
   <thead><tr><th>Método</th><th>Recurso</th><th>Acción</th></tr></thead>
   <tbody>
@@ -243,7 +243,7 @@ Para facilitar el desarrollo y testing, se crean los siguientes usuarios por def
   </tbody>
 </table>
 
-<h3>👥 Usuarios (`UsuarioController`)</h3>
+<h3>👥 Usuarios</h3>
 <table>
   <thead><tr><th>Método</th><th>Recurso</th><th>Acción</th></tr></thead>
   <tbody>
@@ -257,7 +257,7 @@ Para facilitar el desarrollo y testing, se crean los siguientes usuarios por def
   </tbody>
 </table>
 
-<h3>🏫 Facultades y Carreras (`FacultadController`, `CarreraController`, `PlanDeEstudioController`)</h3>
+<h3>🏫 Facultades y Carreras</h3>
 <table>
   <thead><tr><th>Método</th><th>Recurso</th><th>Acción</th></tr></thead>
   <tbody>
@@ -276,7 +276,7 @@ Para facilitar el desarrollo y testing, se crean los siguientes usuarios por def
   </tbody>
 </table>
 
-<h3>📚 Materias y Comisiones (`MateriaController`, `ComisionController`)</h3>
+<h3>📚 Materias y Comisiones</h3>
 <table>
   <thead><tr><th>Método</th><th>Recurso</th><th>Acción</th></tr></thead>
   <tbody>
@@ -292,7 +292,7 @@ Para facilitar el desarrollo y testing, se crean los siguientes usuarios por def
   </tbody>
 </table>
 
-<h3>📝 Inscripciones y Notas (`InscripcionController`)</h3>
+<h3>📝 Inscripciones y Notas</h3>
 <table>
   <thead><tr><th>Método</th><th>Recurso</th><th>Acción</th></tr></thead>
   <tbody>
