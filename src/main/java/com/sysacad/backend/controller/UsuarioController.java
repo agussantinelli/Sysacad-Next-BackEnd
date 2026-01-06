@@ -76,12 +76,24 @@ public class UsuarioController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // SEGURIDAD: ADMIN Y PROFESOR (Nuevo Requerimiento)
+    // SEGURIDAD: ADMIN Y PROFESOR (Docentes de la materia)
     @GetMapping("/materia/{idMateria}")
     @PreAuthorize("hasAnyRole('ADMIN', 'PROFESOR')")
     public ResponseEntity<List<UsuarioResponse>> obtenerPorMateria(@PathVariable UUID idMateria) {
         List<Usuario> docentes = usuarioService.obtenerDocentesPorMateria(idMateria);
         List<UsuarioResponse> response = docentes.stream()
+                .map(this::convertirADTO)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(response);
+    }
+
+    // SEGURIDAD: ADMIN Y PROFESOR (Alumnos inscriptos en la materia)
+    // Útil para que los profesores vean su lista de alumnos o carguen notas
+    @GetMapping("/alumnos/materia/{idMateria}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESOR')")
+    public ResponseEntity<List<UsuarioResponse>> obtenerAlumnosInscriptosPorMateria(@PathVariable UUID idMateria) {
+        List<Usuario> alumnos = usuarioService.obtenerAlumnosInscriptosPorMateria(idMateria);
+        List<UsuarioResponse> response = alumnos.stream()
                 .map(this::convertirADTO)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(response);
