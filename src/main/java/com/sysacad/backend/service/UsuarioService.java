@@ -4,6 +4,7 @@ import com.sysacad.backend.modelo.AsignacionMateria;
 import com.sysacad.backend.modelo.Usuario;
 import com.sysacad.backend.modelo.enums.RolUsuario;
 import com.sysacad.backend.repository.AsignacionMateriaRepository;
+import com.sysacad.backend.repository.InscripcionRepository;
 import com.sysacad.backend.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,14 +22,17 @@ public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
     private final AsignacionMateriaRepository asignacionMateriaRepository;
+    private final InscripcionRepository inscripcionRepository; // Nueva dependencia
 
     @Autowired
     public UsuarioService(UsuarioRepository usuarioRepository,
                           PasswordEncoder passwordEncoder,
-                          AsignacionMateriaRepository asignacionMateriaRepository) {
+                          AsignacionMateriaRepository asignacionMateriaRepository,
+                          InscripcionRepository inscripcionRepository) {
         this.usuarioRepository = usuarioRepository;
         this.passwordEncoder = passwordEncoder;
         this.asignacionMateriaRepository = asignacionMateriaRepository;
+        this.inscripcionRepository = inscripcionRepository;
     }
 
     @Transactional
@@ -66,10 +70,14 @@ public class UsuarioService {
 
     @Transactional(readOnly = true)
     public List<Usuario> obtenerDocentesPorMateria(UUID idMateria) {
-        // Obtenemos las asignaciones y extraemos los usuarios (profesores)
         return asignacionMateriaRepository.findByIdIdMateria(idMateria).stream()
                 .map(AsignacionMateria::getProfesor)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<Usuario> obtenerAlumnosInscriptosPorMateria(UUID idMateria) {
+        return inscripcionRepository.findAlumnosByMateria(idMateria);
     }
 
     @Transactional
