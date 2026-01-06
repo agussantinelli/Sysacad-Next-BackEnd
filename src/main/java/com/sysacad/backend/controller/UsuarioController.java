@@ -9,6 +9,7 @@ import com.sysacad.backend.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -30,13 +31,17 @@ public class UsuarioController {
         this.matriculacionService = matriculacionService;
     }
 
+    // SEGURIDAD: SOLO ADMIN PUEDE CREAR
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UsuarioResponse> crearUsuario(@RequestBody Usuario usuario) {
         Usuario nuevoUsuario = usuarioService.registrarUsuario(usuario);
         return new ResponseEntity<>(new UsuarioResponse(nuevoUsuario), HttpStatus.CREATED);
     }
 
+    // SEGURIDAD: SOLO ADMIN PUEDE VER TODOS
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UsuarioResponse>> obtenerTodos(@RequestParam(required = false) RolUsuario rol) {
         List<Usuario> usuarios;
 
@@ -53,21 +58,38 @@ public class UsuarioController {
         return ResponseEntity.ok(response);
     }
 
+    // SEGURIDAD: ADMIN Y PROFESOR
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESOR')")
     public ResponseEntity<UsuarioResponse> obtenerPorId(@PathVariable UUID id) {
         return usuarioService.obtenerPorId(id)
                 .map(u -> ResponseEntity.ok(convertirADTO(u)))
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // SEGURIDAD: ADMIN Y PROFESOR
     @GetMapping("/buscar/legajo/{legajo}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESOR')")
     public ResponseEntity<UsuarioResponse> obtenerPorLegajo(@PathVariable String legajo) {
         return usuarioService.obtenerPorLegajo(legajo)
                 .map(u -> ResponseEntity.ok(convertirADTO(u)))
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // SEGURIDAD: ADMIN Y PROFESOR (Nuevo Requerimiento)
+    @GetMapping("/materia/{idMateria}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESOR')")
+    public ResponseEntity<List<UsuarioResponse>> obtenerPorMateria(@PathVariable UUID idMateria) {
+        List<Usuario> docentes = usuarioService.obtenerDocentesPorMateria(idMateria);
+        List<UsuarioResponse> response = docentes.stream()
+                .map(this::convertirADTO)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(response);
+    }
+
+    // SEGURIDAD: SOLO ADMIN PUEDE ELIMINAR
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> eliminarUsuario(@PathVariable UUID id) {
         usuarioService.eliminarUsuario(id);
         return ResponseEntity.noContent().build();
@@ -94,9 +116,9 @@ public class UsuarioController {
 
             // 2. Calculamos el Año de Ingreso (el menor de todas las inscripciones)
             estudios.stream()
-                    .map(EstudioUsuario::getFechaInscripcion) // Obtenemos fechas
-                    .min(LocalDate::compareTo)                // Buscamos la más vieja
-                    .ifPresent(fecha -> dto.setAnioIngreso(fecha.getYear())); // Seteamos el año
+                    .map(EstudioUsuario::getFechaInscripcion)
+                    .min(LocalDate::compareTo)
+                    .ifPresent(fecha -> dto.setAnioIngreso(fecha.getYear()));
         }
 
         return dto;
