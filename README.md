@@ -83,8 +83,8 @@
         </tr>
         <tr>
             <td><strong>📅 Gestión de Cursada</strong></td>
-            <td><code>comisiones</code>, <code>materias_comisiones</code>, <code>profesores_comisiones</code>, <code>asignaciones_materia</code></td>
-            <td>Oferta operativa. Soporta relación N:M (Comisión dicta varias materias) y asignación de roles docentes.</td>
+            <td><code>comisiones</code>, <code>materias_comisiones</code>, <code>profesores_comisiones</code>, <code>asignaciones_materia</code>, <code>horarios_cursado</code></td>
+            <td>Oferta operativa. Soporta relación N:M, asignación de roles docentes y <strong>agenda semanal de cursado</strong>.</td>
         </tr>
         <tr>
             <td><strong>📝 Ciclo del Alumno</strong></td>
@@ -93,7 +93,6 @@
         </tr>
     </tbody>
 </table>
-
 <hr>
 
 <h2>🛠️ Stack Tecnológico</h2>
