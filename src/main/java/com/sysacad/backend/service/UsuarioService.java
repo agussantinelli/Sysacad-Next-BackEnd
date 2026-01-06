@@ -1,37 +1,34 @@
 package com.sysacad.backend.service;
 
+import com.sysacad.backend.modelo.AsignacionMateria;
 import com.sysacad.backend.modelo.Usuario;
 import com.sysacad.backend.modelo.enums.RolUsuario;
+import com.sysacad.backend.repository.AsignacionMateriaRepository;
 import com.sysacad.backend.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder; // Importante
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AsignacionMateriaRepository asignacionMateriaRepository;
 
     @Autowired
-    public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
+    public UsuarioService(UsuarioRepository usuarioRepository,
+                          PasswordEncoder passwordEncoder,
+                          AsignacionMateriaRepository asignacionMateriaRepository) {
         this.usuarioRepository = usuarioRepository;
         this.passwordEncoder = passwordEncoder;
-    }
-
-    public Usuario autenticar(String identificador, String password) {
-        Usuario usuario = usuarioRepository.findByLegajoOrMail(identificador, identificador)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-
-        if (!passwordEncoder.matches(password, usuario.getPassword())) {
-            throw new RuntimeException("Contraseña incorrecta");
-        }
-        return usuario;
+        this.asignacionMateriaRepository = asignacionMateriaRepository;
     }
 
     @Transactional
@@ -43,9 +40,7 @@ public class UsuarioService {
             throw new RuntimeException("El legajo ya existe");
         }
 
-        String hashedPassword = passwordEncoder.encode(usuario.getPassword());
-        usuario.setPassword(hashedPassword);
-
+        usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
         return usuarioRepository.save(usuario);
     }
 
@@ -67,6 +62,14 @@ public class UsuarioService {
     @Transactional(readOnly = true)
     public List<Usuario> obtenerPorRol(RolUsuario rol) {
         return usuarioRepository.findByRol(rol);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Usuario> obtenerDocentesPorMateria(UUID idMateria) {
+        // Obtenemos las asignaciones y extraemos los usuarios (profesores)
+        return asignacionMateriaRepository.findByIdIdMateria(idMateria).stream()
+                .map(AsignacionMateria::getProfesor)
+                .collect(Collectors.toList());
     }
 
     @Transactional
