@@ -1,5 +1,6 @@
 package com.sysacad.backend.controller;
 
+import com.sysacad.backend.dto.UsuarioRequest;
 import com.sysacad.backend.dto.UsuarioResponse;
 import com.sysacad.backend.modelo.EstudioUsuario;
 import com.sysacad.backend.modelo.Usuario;
@@ -31,34 +32,44 @@ public class UsuarioController {
         this.matriculacionService = matriculacionService;
     }
 
-    // SEGURIDAD: SOLO ADMIN PUEDE CREAR
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<UsuarioResponse> crearUsuario(@RequestBody Usuario usuario) {
+    public ResponseEntity<UsuarioResponse> crearUsuario(@RequestBody UsuarioRequest request) {
+        Usuario usuario = new Usuario();
+        usuario.setLegajo(request.getLegajo());
+        usuario.setPassword(request.getPassword());
+        usuario.setTipoDocumento(request.getTipoDocumento());
+        usuario.setDni(request.getDni());
+        usuario.setNombre(request.getNombre());
+        usuario.setApellido(request.getApellido());
+        usuario.setMail(request.getMail());
+        usuario.setFechaNacimiento(request.getFechaNacimiento());
+        usuario.setGenero(request.getGenero());
+        usuario.setTelefono(request.getTelefono());
+        usuario.setDireccion(request.getDireccion());
+        usuario.setCiudad(request.getCiudad());
+        usuario.setFotoPerfil(request.getFotoPerfil());
+        usuario.setFechaIngreso(request.getFechaIngreso());
+        usuario.setTituloAcademico(request.getTituloAcademico());
+        usuario.setRol(request.getRol());
+        usuario.setEstado(request.getEstado());
+
         Usuario nuevoUsuario = usuarioService.registrarUsuario(usuario);
-        return new ResponseEntity<>(new UsuarioResponse(nuevoUsuario), HttpStatus.CREATED);
+        return new ResponseEntity<>(convertirADTO(nuevoUsuario), HttpStatus.CREATED);
     }
 
-    // SEGURIDAD: SOLO ADMIN PUEDE VER TODOS
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UsuarioResponse>> obtenerTodos(@RequestParam(required = false) RolUsuario rol) {
         List<Usuario> usuarios;
-
         if (rol != null) {
             usuarios = usuarioService.obtenerPorRol(rol);
         } else {
             usuarios = usuarioService.obtenerTodos();
         }
-
-        List<UsuarioResponse> response = usuarios.stream()
-                .map(this::convertirADTO)
-                .collect(Collectors.toList());
-
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(usuarios.stream().map(this::convertirADTO).collect(Collectors.toList()));
     }
 
-    // SEGURIDAD: ADMIN Y PROFESOR
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'PROFESOR')")
     public ResponseEntity<UsuarioResponse> obtenerPorId(@PathVariable UUID id) {
@@ -67,7 +78,6 @@ public class UsuarioController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // SEGURIDAD: ADMIN Y PROFESOR
     @GetMapping("/buscar/legajo/{legajo}")
     @PreAuthorize("hasAnyRole('ADMIN', 'PROFESOR')")
     public ResponseEntity<UsuarioResponse> obtenerPorLegajo(@PathVariable String legajo) {
@@ -76,30 +86,20 @@ public class UsuarioController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // SEGURIDAD: ADMIN Y PROFESOR (Docentes de la materia)
     @GetMapping("/materia/{idMateria}")
     @PreAuthorize("hasAnyRole('ADMIN', 'PROFESOR')")
     public ResponseEntity<List<UsuarioResponse>> obtenerPorMateria(@PathVariable UUID idMateria) {
         List<Usuario> docentes = usuarioService.obtenerDocentesPorMateria(idMateria);
-        List<UsuarioResponse> response = docentes.stream()
-                .map(this::convertirADTO)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(docentes.stream().map(this::convertirADTO).collect(Collectors.toList()));
     }
 
-    // SEGURIDAD: ADMIN Y PROFESOR (Alumnos inscriptos en la materia)
-    // Útil para que los profesores vean su lista de alumnos o carguen notas
     @GetMapping("/alumnos/materia/{idMateria}")
     @PreAuthorize("hasAnyRole('ADMIN', 'PROFESOR')")
     public ResponseEntity<List<UsuarioResponse>> obtenerAlumnosInscriptosPorMateria(@PathVariable UUID idMateria) {
         List<Usuario> alumnos = usuarioService.obtenerAlumnosInscriptosPorMateria(idMateria);
-        List<UsuarioResponse> response = alumnos.stream()
-                .map(this::convertirADTO)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(alumnos.stream().map(this::convertirADTO).collect(Collectors.toList()));
     }
 
-    // SEGURIDAD: SOLO ADMIN PUEDE ELIMINAR
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> eliminarUsuario(@PathVariable UUID id) {
@@ -107,32 +107,22 @@ public class UsuarioController {
         return ResponseEntity.noContent().build();
     }
 
-    // --- LÓGICA DE ENRIQUECIMIENTO ---
     private UsuarioResponse convertirADTO(Usuario usuario) {
         UsuarioResponse dto = new UsuarioResponse(usuario);
-
         if (usuario.getRol() == RolUsuario.ESTUDIANTE) {
-            // Traemos todas las carreras que cursa
             List<EstudioUsuario> estudios = matriculacionService.obtenerCarrerasPorAlumno(usuario.getId());
-
-            // 1. Mapeamos info visual
             List<UsuarioResponse.InfoCarrera> carrerasInfo = estudios.stream()
-                    .map(e -> {
-                        String nombreCarrera = e.getPlan().getCarrera().getNombre();
-                        String facultad = e.getPlan().getCarrera().getFacultad().getCiudad() + ", " +
-                                e.getPlan().getCarrera().getFacultad().getProvincia();
-                        return new UsuarioResponse.InfoCarrera(nombreCarrera, facultad);
-                    })
+                    .map(e -> new UsuarioResponse.InfoCarrera(
+                            e.getPlan().getCarrera().getNombre(),
+                            e.getPlan().getCarrera().getFacultad().getCiudad() + ", " +
+                                    e.getPlan().getCarrera().getFacultad().getProvincia()))
                     .collect(Collectors.toList());
             dto.setCarreras(carrerasInfo);
-
-            // 2. Calculamos el Año de Ingreso (el menor de todas las inscripciones)
             estudios.stream()
                     .map(EstudioUsuario::getFechaInscripcion)
                     .min(LocalDate::compareTo)
                     .ifPresent(fecha -> dto.setAnioIngreso(fecha.getYear()));
         }
-
         return dto;
     }
 }
