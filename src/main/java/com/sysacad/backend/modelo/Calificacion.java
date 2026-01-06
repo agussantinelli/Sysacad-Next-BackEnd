@@ -1,5 +1,6 @@
 package com.sysacad.backend.modelo;
 
+import com.sysacad.backend.modelo.Inscripcion.InscripcionId;
 import com.sysacad.backend.modelo.enums.TipoInscripcion;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -20,7 +21,7 @@ public class Calificacion {
     @Column(nullable = false, precision = 4, scale = 2)
     private BigDecimal nota;
 
-    // Relación con Inscripción (Compleja porque la FK es compuesta de 4 campos)
+    // Relación JPA para integridad referencial (mapea las columnas del ID a la entidad padre)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
             @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario", insertable = false, updatable = false),
@@ -35,6 +36,7 @@ public class Calificacion {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class CalificacionId implements Serializable {
+
         @Column(name = "id_usuario")
         private UUID idUsuario;
 
@@ -50,5 +52,10 @@ public class Calificacion {
 
         @Column(name = "concepto", length = 100)
         private String concepto;
+
+        public InscripcionId toInscripcionId() {
+            // Nota: El orden de argumentos debe coincidir con el constructor de InscripcionId
+            return new InscripcionId(idUsuario, idComision, tipoInscripcion, vecesTipoInscripcion);
+        }
     }
 }
