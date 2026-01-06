@@ -232,16 +232,76 @@ Para facilitar el desarrollo y testing, se crean los siguientes usuarios por def
 
 ---
 
-<h2>🔌 Endpoints Principales</h2>
+<h2 align="center">🚀 Catálogo Completo de Endpoints</h2>
+<p align="center"><em>Generado a partir del análisis del código fuente en `com.sysacad.backend.controller`</em></p>
 
-La API se encuentra bajo el prefijo `/api`. Algunos de los controladores disponibles son:
+<h3>🔐 Autenticación (`AuthController`)</h3>
+<table>
+  <thead><tr><th>Método</th><th>Recurso</th><th>Acción</th></tr></thead>
+  <tbody>
+    <tr><td><code>POST</code></td><td><code>/api/auth/login</code></td><td>Inicia sesión y genera token JWT.</td></tr>
+  </tbody>
+</table>
 
-*   **Autenticación**: `POST /api/auth/login`
-*   **Usuarios**: `GET /api/usuarios`, `POST /api/usuarios`
-*   **Carreras**: `GET /api/carreras`
-*   **Materias**: `GET /api/materias`
-*   **Inscripciones**: `POST /api/inscripciones`
-*   **Comisiones**: `GET /api/comisiones`
+<h3>👥 Usuarios (`UsuarioController`)</h3>
+<table>
+  <thead><tr><th>Método</th><th>Recurso</th><th>Acción</th></tr></thead>
+  <tbody>
+    <tr><td><code>POST</code></td><td><code>/api/usuarios</code></td><td>Registra un nuevo usuario (Solo Admin).</td></tr>
+    <tr><td><code>GET</code></td><td><code>/api/usuarios</code></td><td>Lista todos los usuarios, opcionalmente filtrados por Rol (Solo Admin).</td></tr>
+    <tr><td><code>GET</code></td><td><code>/api/usuarios/{id}</code></td><td>Obtiene perfil de usuario por ID (Admin, Profesor).</td></tr>
+    <tr><td><code>GET</code></td><td><code>/api/usuarios/buscar/legajo/{legajo}</code></td><td>Busca usuario por legajo (Admin, Profesor).</td></tr>
+    <tr><td><code>GET</code></td><td><code>/api/usuarios/materia/{idMateria}</code></td><td>Lista docentes asignados a una materia (Admin, Profesor).</td></tr>
+    <tr><td><code>GET</code></td><td><code>/api/usuarios/alumnos/materia/{idMateria}</code></td><td>Lista alumnos inscriptos en una materia (Admin, Profesor).</td></tr>
+    <tr><td><code>DELETE</code></td><td><code>/api/usuarios/{id}</code></td><td>Elimina un usuario (Solo Admin).</td></tr>
+  </tbody>
+</table>
+
+<h3>🏫 Facultades y Carreras (`FacultadController`, `CarreraController`, `PlanDeEstudioController`)</h3>
+<table>
+  <thead><tr><th>Método</th><th>Recurso</th><th>Acción</th></tr></thead>
+  <tbody>
+    <tr><td><code>POST</code></td><td><code>/api/facultades</code></td><td>Crea una nueva facultad (Solo Admin).</td></tr>
+    <tr><td><code>GET</code></td><td><code>/api/facultades</code></td><td>Lista todas las facultades.</td></tr>
+    <tr><td><code>GET</code></td><td><code>/api/facultades/{id}</code></td><td>Obtiene detalle de una facultad.</td></tr>
+    <tr><td><code>POST</code></td><td><code>/api/carreras</code></td><td>Registra una nueva carrera (Solo Admin).</td></tr>
+    <tr><td><code>GET</code></td><td><code>/api/carreras/facultad/{idFacultad}</code></td><td>Lista carreras de una facultad específica.</td></tr>
+    <tr><td><code>POST</code></td><td><code>/api/carreras/planes</code></td><td>Crea un nuevo plan de estudio (Solo Admin).</td></tr>
+    <tr><td><code>POST</code></td><td><code>/api/carreras/planes/materias</code></td><td>Agrega materia a un plan (Solo Admin).</td></tr>
+    <tr><td><code>GET</code></td><td><code>/api/carreras/{idCarrera}/planes/vigentes</code></td><td>Lista planes vigentes de una carrera.</td></tr>
+    <tr><td><code>POST</code></td><td><code>/api/planes</code></td><td>Crea un nuevo plan de estudio (Solo Admin).</td></tr>
+    <tr><td><code>POST</code></td><td><code>/api/planes/materias</code></td><td>Agrega materia a un plan de estudio (Solo Admin).</td></tr>
+    <tr><td><code>GET</code></td><td><code>/api/planes/vigentes/{idCarrera}</code></td><td>Lista planes vigentes (Endpoint alternativo/duplicado lógica).</td></tr>
+    <tr><td><code>GET</code></td><td><code>/api/planes/carrera/{idCarrera}</code></td><td>Lista todos los planes de una carrera.</td></tr>
+  </tbody>
+</table>
+
+<h3>📚 Materias y Comisiones (`MateriaController`, `ComisionController`)</h3>
+<table>
+  <thead><tr><th>Método</th><th>Recurso</th><th>Acción</th></tr></thead>
+  <tbody>
+    <tr><td><code>POST</code></td><td><code>/api/materias</code></td><td>Crea una nueva materia (Solo Admin).</td></tr>
+    <tr><td><code>PUT</code></td><td><code>/api/materias/{id}</code></td><td>Actualiza datos de una materia (Admin, Profesor).</td></tr>
+    <tr><td><code>GET</code></td><td><code>/api/materias</code></td><td>Lista materias, opcional filtro por Tipo.</td></tr>
+    <tr><td><code>GET</code></td><td><code>/api/materias/{id}</code></td><td>Obtiene detalle de una materia.</td></tr>
+    <tr><td><code>DELETE</code></td><td><code>/api/materias/{id}</code></td><td>Elimina una materia (Solo Admin).</td></tr>
+    <tr><td><code>POST</code></td><td><code>/api/comisiones</code></td><td>Crea una nueva comisión (Solo Admin).</td></tr>
+    <tr><td><code>GET</code></td><td><code>/api/comisiones</code></td><td>Lista comisiones por año (Admin, Profesor).</td></tr>
+    <tr><td><code>GET</code></td><td><code>/api/comisiones/{id}</code></td><td>Obtiene detalle de comisión (Solo Admin).</td></tr>
+    <tr><td><code>POST</code></td><td><code>/api/comisiones/{id}/profesores</code></td><td>Asigna profesor a una comisión (Admin, Profesor).</td></tr>
+  </tbody>
+</table>
+
+<h3>📝 Inscripciones y Notas (`InscripcionController`)</h3>
+<table>
+  <thead><tr><th>Método</th><th>Recurso</th><th>Acción</th></tr></thead>
+  <tbody>
+    <tr><td><code>POST</code></td><td><code>/api/inscripciones</code></td><td>Inscribe alumno a cursada/final (Admin, Estudiante).</td></tr>
+    <tr><td><code>GET</code></td><td><code>/api/inscripciones/validar-correlatividad</code></td><td>Verifica si alumno puede cursar materia.</td></tr>
+    <tr><td><code>GET</code></td><td><code>/api/inscripciones/alumno/{idAlumno}</code></td><td>Obtiene historial académico del alumno.</td></tr>
+    <tr><td><code>POST</code></td><td><code>/api/inscripciones/notas</code></td><td>Carga nota a una inscripción (Admin, Profesor).</td></tr>
+  </tbody>
+</table>
 
 <h2>🤝 Contribuciones</h2>
 
