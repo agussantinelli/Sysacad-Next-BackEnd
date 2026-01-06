@@ -21,11 +21,20 @@ public class FacultadService {
 
     @Transactional
     public FacultadRegional crearFacultad(FacultadRegional facultad) {
+        if (facultadRepository.existsByCiudadAndProvincia(facultad.getCiudad(), facultad.getProvincia())) {
+            throw new RuntimeException("Ya existe una Facultad Regional en esa ciudad y provincia.");
+        }
         return facultadRepository.save(facultad);
     }
 
     @Transactional(readOnly = true)
     public List<FacultadRegional> listarTodas() {
         return facultadRepository.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    public FacultadRegional buscarPorId(UUID id) {
+        return facultadRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Facultad no encontrada"));
     }
 }
