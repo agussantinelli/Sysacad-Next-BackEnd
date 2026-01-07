@@ -248,6 +248,9 @@ El sistema cuenta con un `DbSeeder` (`src/main/java/com/sysacad/backend/config/D
     <a href="docs/enums_catalog.md" target="_blank">
         <img src="https://img.shields.io/badge/📄%20Catálogo%20Enums-Frontend-4285F4?style=for-the-badge&logo=markdown&logoColor=white" alt="Enums Badge"/>
     </a>
+    <a href="docs/endpoints_catalog.md" target="_blank">
+        <img src="https://img.shields.io/badge/📄%20Catálogo%20Endpoints-API-4285F4?style=for-the-badge&logo=markdown&logoColor=white" alt="Endpoints Badge"/>
+    </a>
 </div>
 
 <h3>Resumen de Endpoints Principales</h3>
