@@ -17,6 +17,8 @@ public interface InscripcionRepository extends JpaRepository<Inscripcion, Inscri
 
     List<Inscripcion> findByIdIdComision(UUID idComision);
 
+    List<Inscripcion> findByIdIdUsuarioAndIdIdComision(UUID idUsuario, UUID idComision);
+
     @Query("SELECT DISTINCT i.usuario FROM Inscripcion i " +
             "JOIN i.comision c " +
             "JOIN c.materias m " +
