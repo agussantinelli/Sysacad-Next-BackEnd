@@ -90,7 +90,6 @@ public class UsuarioService {
         usuario.setGenero(request.getGenero());
 
         // Permitir actualizar fotoPerfil si viene en el request (ej: string vacío para borrarla o URL externa)
-        // Si es null, no se toca (preservando lo que haya subido el endpoint de fotos)
         if (request.getFotoPerfil() != null) {
             usuario.setFotoPerfil(request.getFotoPerfil());
         }
@@ -108,7 +107,7 @@ public class UsuarioService {
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        // Seguridad: Se permite que cualquier usuario suba foto a cualquier perfil (según solicitud)
+        // Seguridad: Se permite que cualquier usuario suba foto a cualquier perfil
         // validarPermisoModificacion(usuario.getLegajo());
 
         if (archivo.isEmpty()) {
@@ -116,25 +115,47 @@ public class UsuarioService {
         }
 
         try {
-            // Crear directorio si no existe
+            // 1. Asegurar que el directorio existe
             Path directorioPath = Paths.get(DIRECTORIO_UPLOAD);
             if (!Files.exists(directorioPath)) {
                 Files.createDirectories(directorioPath);
             }
 
-            // Generar nombre único: ID_Usuario + Extensión original
+            // 2. Extraer extensión original
             String nombreOriginal = archivo.getOriginalFilename();
-            String extension = nombreOriginal != null && nombreOriginal.contains(".")
-                    ? nombreOriginal.substring(nombreOriginal.lastIndexOf("."))
-                    : ".jpg";
+            String extension = "";
+            if (nombreOriginal != null && nombreOriginal.lastIndexOf(".") > 0) {
+                extension = nombreOriginal.substring(nombreOriginal.lastIndexOf("."));
+            } else {
+                extension = ".jpg"; // Default por si acaso
+            }
 
-            String nombreArchivo = id.toString() + extension;
+            // 3. Generar NOMBRE ÚNICO: {Legajo}-{HashAleatorio}.ext
+            String hash = UUID.randomUUID().toString().substring(0, 8); // Tomamos los primeros 8 chars del UUID
+            String nombreArchivo = usuario.getLegajo() + "-" + hash + extension;
+
             Path rutaArchivo = directorioPath.resolve(nombreArchivo);
 
-            // Guardar archivo en disco (Reemplaza si existe)
+            // 4. (Opcional) Borrar foto anterior si existe para no llenar el disco
+            if (usuario.getFotoPerfil() != null) {
+                try {
+                    // Cuidado: validar que sea un archivo local nuestro antes de borrar
+                    Path fotoAnterior = Paths.get(usuario.getFotoPerfil());
+                    // Solo borramos si el nombre coincide con nuestro patrón para no borrar defaults
+                    if (Files.exists(fotoAnterior) && fotoAnterior.getParent().equals(directorioPath)) {
+                        Files.delete(fotoAnterior);
+                    }
+                } catch (Exception e) {
+                    // Ignoramos error al borrar anterior, no es bloqueante
+                    System.out.println("No se pudo borrar la foto anterior: " + e.getMessage());
+                }
+            }
+
+            // 5. Guardar archivo nuevo
             Files.copy(archivo.getInputStream(), rutaArchivo, StandardCopyOption.REPLACE_EXISTING);
 
-            // Guardar la ruta relativa en la base de datos
+            // 6. Actualizar ruta en BD
+            // Guardamos la ruta relativa o absoluta según convenga. Aquí guardamos relativa.
             usuario.setFotoPerfil(rutaArchivo.toString());
             usuarioRepository.save(usuario);
 
@@ -180,9 +201,10 @@ public class UsuarioService {
         usuarioRepository.deleteById(id);
     }
 
+    // --- SEGURIDAD ---
     private void validarPermisoModificacion(String legajoObjetivo) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String legajoAutenticado = auth.getName(); // El username es el legajo
+        String legajoAutenticado = auth.getName();
 
         boolean isAdmin = auth.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
