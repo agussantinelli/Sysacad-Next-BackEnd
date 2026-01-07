@@ -214,16 +214,26 @@
 <h3>🌱 Base de Datos y Seeding Automático</h3>
 
 El sistema cuenta con un `DbSeeder` (`src/main/java/com/sysacad/backend/config/DbSeeder.java`) que pobla la base de datos automáticamente al inicio si detecta tablas vacías.
-*   **Carga Académica:** Crea la UTN Facultad Regional Rosario, carreras (ISI, IM, IQ, IE, IC) y la estructura de materias real.
-*   **Usuarios:** Crea usuarios de prueba si no existen.
+*   **Carga Estructural:** Crea la UTN Facultad Regional Rosario, carreras (ISI, IM, IQ, IE, IC) y la estructura de materias real.
+*   **Simulación de Cursada:** Genera comisiones en distintos turnos, asigna equipos docentes, define horarios de cursado, inscribe alumnos y carga notas de exámenes y parciales.
+*   **Usuarios:** Crea una población diversa de usuarios (Admin, Profesores, Estudiantes) para pruebas.
 
 <h3>🔐 Usuarios de Prueba Generados</h3>
 
-| Rol | Legajo / User | Email | Password |
-| :--- | :--- | :--- | :--- |
-| **ADMIN** | `1` | `admin@sysacad.com` | `123456` |
-| **PROFESOR** | `51111` | `nic@sysacad.com` | `123456` |
-| **ESTUDIANTE** | `55555` | `agus@sysacad.com` | `123456` |
+| Rol | Legajo | Nombre | Email | Password |
+| :--- | :--- | :--- | :--- | :--- |
+| **ADMIN** | `1` | Homero Simpson | `admin@sysacad.com` | `123456` |
+| **PROFESOR** | `51111` | Nicolas Cabello | `nic@sysacad.com` | `123456` |
+| **PROFESOR** | `52222` | Laura Gomez | `laura@sysacad.com` | `123456` |
+| **PROFESOR** | `53333` | Roberto Diaz | `roberto@sysacad.com` | `123456` |
+| **PROFESOR** | `54444` | Ana Martinez | `ana@sysacad.com` | `123456` |
+| **ESTUDIANTE** | `55555` | Agustin Santinelli | `agus@sysacad.com` | `123456` |
+| **ESTUDIANTE** | `56666` | Maria Rodriguez | `maria@sysacad.com` | `123456` |
+| **ESTUDIANTE** | `57777` | Juan Perez | `juan@sysacad.com` | `123456` |
+| **ESTUDIANTE** | `58888` | Sofia Lopez | `sofia@sysacad.com` | `123456` |
+| **ESTUDIANTE** | `59999` | Miguel Torres | `miguel@sysacad.com` | `123456` |
+| **ESTUDIANTE** | `60001` | Lucia Fernandez | `lucia@sysacad.com` | `123456` |
+| **ESTUDIANTE** | `60002` | Carlos Tevez | `carlos@sysacad.com` | `123456` |
 
 ---
 
