@@ -32,7 +32,7 @@
     </a>
     <br>
     <a href="docs/endpoints_catalog.md" target="_blank">
-        <img src="https://img.shields.io/badge/📄%20Catálogo%20Endpoints-API-4285F4?style=for-the-badge&logo=markdown&logoColor=white" alt="Endpoints Badge"/>
+        <img src="https://img.shields.io/badge/📄%20Catálogo%20Endpoints-4285F4?style=for-the-badge&logo=markdown&logoColor=white" alt="Endpoints Badge"/>
     </a>
     <a href="docs/dtos_catalog.md" target="_blank">
         <img src="https://img.shields.io/badge/📄%20Catálogo%20DTOs-4285F4?style=for-the-badge&logo=markdown&logoColor=white" alt="DTOs Badge"/>
@@ -246,7 +246,7 @@ El sistema cuenta con un `DbSeeder` (`src/main/java/com/sysacad/backend/config/D
 
 <div align="center">
     <a href="docs/endpoints_catalog.md" target="_blank">
-        <img src="https://img.shields.io/badge/📄%20Catálogo%20Endpoints-API-4285F4?style=for-the-badge&logo=markdown&logoColor=white" alt="Endpoints Badge"/>
+        <img src="https://img.shields.io/badge/📄%20Catálogo%20Endpoints-4285F4?style=for-the-badge&logo=markdown&logoColor=white" alt="Endpoints Badge"/>
     </a>
     <a href="docs/dtos_catalog.md" target="_blank">
         <img src="https://img.shields.io/badge/📄%20Catálogo%20DTOs-4285F4?style=for-the-badge&logo=markdown&logoColor=white" alt="DTOs Badge"/>
