@@ -9,11 +9,12 @@ import com.sysacad.backend.service.MatriculacionService;
 import com.sysacad.backend.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -58,6 +59,28 @@ public class UsuarioController {
         return new ResponseEntity<>(convertirADTO(nuevoUsuario), HttpStatus.CREATED);
     }
 
+    @PutMapping("/{id}")
+    @PreAuthorize("isAuthenticated()") // La validación fina se hace en el servicio
+    public ResponseEntity<UsuarioResponse> actualizarUsuario(@PathVariable UUID id, @RequestBody UsuarioRequest request) {
+        try {
+            Usuario actualizado = usuarioService.actualizarUsuario(id, request);
+            return ResponseEntity.ok(convertirADTO(actualizado));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().build(); // O Forbidden según el error
+        }
+    }
+
+    @PostMapping(value = "/{id}/foto", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<String> subirFotoPerfil(@PathVariable UUID id, @RequestParam("file") MultipartFile file) {
+        try {
+            usuarioService.subirFoto(id, file);
+            return ResponseEntity.ok("Foto subida exitosamente");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al subir foto: " + e.getMessage());
+        }
+    }
+
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UsuarioResponse>> obtenerTodos(@RequestParam(required = false) RolUsuario rol) {
@@ -71,7 +94,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESOR')")
+    @PreAuthorize("isAuthenticated()") // Permitimos a cualquiera autenticado intentar, el servicio o lógica UI filtra
     public ResponseEntity<UsuarioResponse> obtenerPorId(@PathVariable UUID id) {
         return usuarioService.obtenerPorId(id)
                 .map(u -> ResponseEntity.ok(convertirADTO(u)))
