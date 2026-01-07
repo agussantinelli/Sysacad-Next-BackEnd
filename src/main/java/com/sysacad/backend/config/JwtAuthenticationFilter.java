@@ -17,11 +17,11 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 @Component
-@RequiredArgsConstructor // Inyecta constructor con atributos final
+@RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
-    private final UserDetailsService userDetailsService; // Spring busca la implementación (UsuarioService lo hará)
+    private final UserDetailsService userDetailsService;
 
     @Override
     protected void doFilterInternal(
@@ -34,34 +34,41 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String jwt;
         final String userLegajo;
 
-        // 1. Validar cabecera
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        // 1. Validar que la cabecera exista y tenga el formato correcto
+        // FIX: Agregamos validación de longitud para evitar "Bearer " vacío
+        if (authHeader == null || !authHeader.startsWith("Bearer ") || authHeader.length() <= 7) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        // 2. Extraer token
-        jwt = authHeader.substring(7);
-        userLegajo = jwtService.extractUsername(jwt); // En nuestro caso, el username es el legajo
+        try {
+            // 2. Extraer token
+            jwt = authHeader.substring(7);
 
-        // 3. Validar seguridad
-        if (userLegajo != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            // Buscamos el usuario en DB
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(userLegajo);
+            // 3. Extraer usuario (Lanzará excepción si el token está mal formado, la capturamos abajo)
+            userLegajo = jwtService.extractUsername(jwt);
 
-            if (jwtService.isTokenValid(jwt, userDetails)) {
-                // Creamos la sesión de seguridad para este request
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        userDetails,
-                        null,
-                        userDetails.getAuthorities()
-                );
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            // 4. Validar seguridad
+            if (userLegajo != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UserDetails userDetails = this.userDetailsService.loadUserByUsername(userLegajo);
 
-                // ESTABLECEMOS EL USUARIO COMO LOGUEADO
-                SecurityContextHolder.getContext().setAuthentication(authToken);
+                if (jwtService.isTokenValid(jwt, userDetails)) {
+                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                            userDetails,
+                            null,
+                            userDetails.getAuthorities()
+                    );
+                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                }
             }
+        } catch (Exception e) {
+            // Logueamos el error pero NO detenemos la cadena violentamente.
+            // Si el token es inválido, simplemente el usuario seguirá como "no autenticado" (null)
+            // y Spring Security devolverá 403 Forbidden más adelante.
+            System.out.println("Error procesando JWT: " + e.getMessage());
         }
+
         filterChain.doFilter(request, response);
     }
 }
