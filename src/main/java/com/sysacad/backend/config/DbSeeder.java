@@ -46,32 +46,43 @@ public class DbSeeder {
             Usuario profeLaura = null;
             Usuario profeRoberto = null;
             Usuario profeAna = null;
+            Usuario profeSandra = null; // Nuevo
+            Usuario profeCristian = null; // Nuevo
 
             Usuario alumnoAgustin = null;
             Usuario alumnoMaria = null;
             Usuario alumnoJuan = null;
             Usuario alumnoSofia = null;
             Usuario alumnoMiguel = null;
+            Usuario alumnoLucia = null;
+            Usuario alumnoCarlos = null;
 
             // 2. Cargar Usuarios
             if (usuarioRepository.count() == 0) {
                 System.out.println(">> DbSeeder: Creando población de usuarios...");
 
                 // --- ADMIN ---
-                Usuario admin = createUsuario(usuarioRepository, passwordEncoder, "1", "Homero", "Simpson", "11111111", "admin@sysacad.com", RolUsuario.ADMIN, Genero.M, "Rector");
+                createUsuario(usuarioRepository, passwordEncoder, "1", "Homero", "Simpson", "11111111", "admin@sysacad.com", RolUsuario.ADMIN, Genero.M, "Rector", LocalDate.of(1980, 5, 12));
 
                 // --- PROFESORES ---
-                profeNicolas = createUsuario(usuarioRepository, passwordEncoder, "51111", "Nicolas", "Cabello", "22222222", "nic@sysacad.com", RolUsuario.PROFESOR, Genero.M, "Dr. en Ciencias de la Computación");
-                profeLaura = createUsuario(usuarioRepository, passwordEncoder, "52222", "Laura", "Gomez", "22222223", "laura@sysacad.com", RolUsuario.PROFESOR, Genero.F, "Ingeniera en Sistemas");
-                profeRoberto = createUsuario(usuarioRepository, passwordEncoder, "53333", "Roberto", "Diaz", "22222224", "roberto@sysacad.com", RolUsuario.PROFESOR, Genero.M, "Lic. en Física");
-                profeAna = createUsuario(usuarioRepository, passwordEncoder, "54444", "Ana", "Martinez", "22222225", "ana@sysacad.com", RolUsuario.PROFESOR, Genero.F, "Traductora Pública");
+                profeNicolas = createUsuario(usuarioRepository, passwordEncoder, "51111", "Nicolas", "Cabello", "22222222", "nic@sysacad.com", RolUsuario.PROFESOR, Genero.M, "Dr. en Ciencias de la Computación", LocalDate.of(1990, 6, 23));
+                profeLaura = createUsuario(usuarioRepository, passwordEncoder, "52222", "Laura", "Gomez", "22222223", "laura@sysacad.com", RolUsuario.PROFESOR, Genero.F, "Ingeniera en Sistemas", LocalDate.of(1985, 3, 15));
+                profeRoberto = createUsuario(usuarioRepository, passwordEncoder, "53333", "Roberto", "Diaz", "22222224", "roberto@sysacad.com", RolUsuario.PROFESOR, Genero.M, "Lic. en Física", LocalDate.of(1978, 9, 10));
+                profeAna = createUsuario(usuarioRepository, passwordEncoder, "54444", "Ana", "Martinez", "22222225", "ana@sysacad.com", RolUsuario.PROFESOR, Genero.F, "Traductora Pública", LocalDate.of(1982, 11, 30));
+
+                // Nuevos Profesores
+                profeSandra = createUsuario(usuarioRepository, passwordEncoder, "55551", "Sandra", "Mansilla", "22222226", "sandra@sysacad.com", RolUsuario.PROFESOR, Genero.F, "Matemática", LocalDate.of(1975, 4, 12));
+                profeCristian = createUsuario(usuarioRepository, passwordEncoder, "55552", "Cristian", "Tresalli", "22222227", "cristian@sysacad.com", RolUsuario.PROFESOR, Genero.M, "Ingeniero Electrónico", LocalDate.of(1988, 8, 25));
 
                 // --- ESTUDIANTES ---
-                alumnoAgustin = createUsuario(usuarioRepository, passwordEncoder, "55555", "Agustin", "Santinelli", "33333333", "agus@sysacad.com", RolUsuario.ESTUDIANTE, Genero.M, null);
-                alumnoMaria = createUsuario(usuarioRepository, passwordEncoder, "56666", "Maria", "Rodriguez", "33333334", "maria@sysacad.com", RolUsuario.ESTUDIANTE, Genero.F, null);
-                alumnoJuan = createUsuario(usuarioRepository, passwordEncoder, "57777", "Juan", "Perez", "33333335", "juan@sysacad.com", RolUsuario.ESTUDIANTE, Genero.M, null);
-                alumnoSofia = createUsuario(usuarioRepository, passwordEncoder, "58888", "Sofia", "Lopez", "33333336", "sofia@sysacad.com", RolUsuario.ESTUDIANTE, Genero.F, null);
-                alumnoMiguel = createUsuario(usuarioRepository, passwordEncoder, "59999", "Miguel", "Torres", "33333337", "miguel@sysacad.com", RolUsuario.ESTUDIANTE, Genero.M, null);
+                alumnoAgustin = createUsuario(usuarioRepository, passwordEncoder, "55555", "Agustin", "Santinelli", "33333333", "agus@sysacad.com", RolUsuario.ESTUDIANTE, Genero.M, null, LocalDate.of(2004, 11, 17));
+                alumnoMaria = createUsuario(usuarioRepository, passwordEncoder, "56666", "Maria", "Rodriguez", "33333334", "maria@sysacad.com", RolUsuario.ESTUDIANTE, Genero.F, null, LocalDate.of(2003, 5, 20));
+                alumnoJuan = createUsuario(usuarioRepository, passwordEncoder, "57777", "Juan", "Perez", "33333335", "juan@sysacad.com", RolUsuario.ESTUDIANTE, Genero.M, null, LocalDate.of(2004, 1, 10));
+                alumnoSofia = createUsuario(usuarioRepository, passwordEncoder, "58888", "Sofia", "Lopez", "33333336", "sofia@sysacad.com", RolUsuario.ESTUDIANTE, Genero.F, null, LocalDate.of(2001, 7, 8));
+                alumnoMiguel = createUsuario(usuarioRepository, passwordEncoder, "59999", "Miguel", "Torres", "33333337", "miguel@sysacad.com", RolUsuario.ESTUDIANTE, Genero.M, null, LocalDate.of(2004, 3, 30));
+
+                alumnoLucia = createUsuario(usuarioRepository, passwordEncoder, "60001", "Lucia", "Fernandez", "33333338", "lucia@sysacad.com", RolUsuario.ESTUDIANTE, Genero.F, null, LocalDate.of(2002, 12, 12));
+                alumnoCarlos = createUsuario(usuarioRepository, passwordEncoder, "60002", "Carlos", "Tevez", "33333339", "carlos@sysacad.com", RolUsuario.ESTUDIANTE, Genero.M, null, LocalDate.of(2003, 2, 5));
 
                 System.out.println(">> Usuarios creados con éxito.");
             } else {
@@ -80,12 +91,16 @@ public class DbSeeder {
                 profeLaura = usuarioRepository.findByLegajo("52222").orElse(null);
                 profeRoberto = usuarioRepository.findByLegajo("53333").orElse(null);
                 profeAna = usuarioRepository.findByLegajo("54444").orElse(null);
+                profeSandra = usuarioRepository.findByLegajo("55551").orElse(null);
+                profeCristian = usuarioRepository.findByLegajo("55552").orElse(null);
 
                 alumnoAgustin = usuarioRepository.findByLegajo("55555").orElse(null);
                 alumnoMaria = usuarioRepository.findByLegajo("56666").orElse(null);
                 alumnoJuan = usuarioRepository.findByLegajo("57777").orElse(null);
                 alumnoSofia = usuarioRepository.findByLegajo("58888").orElse(null);
                 alumnoMiguel = usuarioRepository.findByLegajo("59999").orElse(null);
+                alumnoLucia = usuarioRepository.findByLegajo("60001").orElse(null);
+                alumnoCarlos = usuarioRepository.findByLegajo("60002").orElse(null);
             }
 
             // 3. Infraestructura y Cursada
@@ -103,7 +118,7 @@ public class DbSeeder {
                 Salon aula402 = createSalon(salonRepository, frro, "Aula 402", "4");
                 Salon aula101 = createSalon(salonRepository, frro, "Aula 101", "1"); // PB
                 Salon aula301 = createSalon(salonRepository, frro, "Aula 301", "3");
-                Salon sum = createSalon(salonRepository, frro, "SUM", "0");
+                Salon sum = createSalon(salonRepository, frro, "SUM", "1");
                 Salon aula201 = createSalon(salonRepository, frro, "Aula 201", "2");
 
                 // --- MATERIAS NIVEL 1 ---
@@ -124,18 +139,22 @@ public class DbSeeder {
                 // --- MATERIAS NIVEL 3 ---
                 Materia disenio = getMateria(materiaRepository, "Diseño de Sistemas de Información");
                 Materia basesDatos = getMateria(materiaRepository, "Bases de Datos");
+                Materia analisisNumerico = getMateria(materiaRepository, "Análisis Numérico"); // Agregada para Cristian
 
                 // --- ASIGNACIONES DOCENTES (Jefaturas) ---
                 asignarCargo(asignacionMateriaRepository, profeNicolas, algoritmos, RolCargo.JEFE_CATEDRA);
                 asignarCargo(asignacionMateriaRepository, profeNicolas, basesDatos, RolCargo.JEFE_CATEDRA);
-                asignarCargo(asignacionMateriaRepository, profeNicolas, sintaxis, RolCargo.JEFE_CATEDRA); // Experto en computación
+                asignarCargo(asignacionMateriaRepository, profeNicolas, sintaxis, RolCargo.JEFE_CATEDRA);
 
-                asignarCargo(asignacionMateriaRepository, profeLaura, analisis1, RolCargo.JEFE_CATEDRA);
-                asignarCargo(asignacionMateriaRepository, profeLaura, analisis2, RolCargo.JEFE_CATEDRA);
+                // Sandra Mansilla toma Análisis I y Álgebra
+                asignarCargo(asignacionMateriaRepository, profeSandra, analisis1, RolCargo.JEFE_CATEDRA);
+                asignarCargo(asignacionMateriaRepository, profeSandra, algebra, RolCargo.JEFE_CATEDRA);
+
+                // Cristian Tresalli toma Análisis II y Análisis Numérico
+                asignarCargo(asignacionMateriaRepository, profeCristian, analisis2, RolCargo.JEFE_CATEDRA);
+                asignarCargo(asignacionMateriaRepository, profeCristian, analisisNumerico, RolCargo.JEFE_CATEDRA);
 
                 asignarCargo(asignacionMateriaRepository, profeRoberto, fisica1, RolCargo.JEFE_CATEDRA);
-                asignarCargo(asignacionMateriaRepository, profeRoberto, algebra, RolCargo.JEFE_CATEDRA); // Lic. en Física enseña Álgebra
-
                 asignarCargo(asignacionMateriaRepository, profeAna, ingles1, RolCargo.JEFE_CATEDRA);
 
 
@@ -143,77 +162,111 @@ public class DbSeeder {
 
                 // 1. COMISIÓN 1K1 (Mañana - 1er Año) - Aula Grande
                 // Materias: Algoritmos, Sistemas, Inglés, Álgebra
+                // Profes: Nico, Ana, Sandra (Nueva)
                 Comision c1k1 = createComision(comisionRepository, "1K1", 1, "MAÑANA", lab305,
                         Arrays.asList(algoritmos, sistemas, ingles1, algebra),
-                        List.of(profeNicolas, profeAna, profeRoberto));
+                        List.of(profeNicolas, profeAna, profeSandra));
 
-                crearHorario(horarioCursadoRepository, c1k1, algoritmos, DiaSemana.LUNES, 8, 12); // Nico
-                crearHorario(horarioCursadoRepository, c1k1, sistemas, DiaSemana.MARTES, 10, 13); // Nico (Docente)
-                crearHorario(horarioCursadoRepository, c1k1, algebra, DiaSemana.JUEVES, 8, 12);   // Roberto
-                crearHorario(horarioCursadoRepository, c1k1, ingles1, DiaSemana.VIERNES, 8, 10);  // Ana
+                crearHorario(horarioCursadoRepository, c1k1, algoritmos, DiaSemana.LUNES, 8, 12);
+                crearHorario(horarioCursadoRepository, c1k1, sistemas, DiaSemana.MARTES, 10, 13);
+                crearHorario(horarioCursadoRepository, c1k1, algebra, DiaSemana.JUEVES, 8, 12);   // Ahora da Sandra
+                crearHorario(horarioCursadoRepository, c1k1, ingles1, DiaSemana.VIERNES, 8, 10);
 
                 // 2. COMISIÓN 1K2 (Noche - 1er Año) - Aula Común
                 // Materias: Algoritmos, Análisis I, Física I, Arquitectura
+                // Profes: Nico, Sandra (Análisis), Roberto
                 Comision c1k2 = createComision(comisionRepository, "1K2", 1, "NOCHE", aula401,
                         Arrays.asList(algoritmos, analisis1, fisica1, arquitectura),
-                        List.of(profeNicolas, profeLaura, profeRoberto));
+                        List.of(profeNicolas, profeSandra, profeRoberto));
 
-                crearHorario(horarioCursadoRepository, c1k2, arquitectura, DiaSemana.LUNES, 18, 22); // Nico (Docente)
-                crearHorario(horarioCursadoRepository, c1k2, algoritmos, DiaSemana.MIERCOLES, 18, 22); // Nico
-                crearHorario(horarioCursadoRepository, c1k2, analisis1, DiaSemana.JUEVES, 19, 23);   // Laura
-                crearHorario(horarioCursadoRepository, c1k2, fisica1, DiaSemana.VIERNES, 18, 22);    // Roberto
+                crearHorario(horarioCursadoRepository, c1k2, arquitectura, DiaSemana.LUNES, 18, 22);
+                crearHorario(horarioCursadoRepository, c1k2, algoritmos, DiaSemana.MIERCOLES, 18, 22);
+                crearHorario(horarioCursadoRepository, c1k2, analisis1, DiaSemana.JUEVES, 19, 23);   // Ahora da Sandra
+                crearHorario(horarioCursadoRepository, c1k2, fisica1, DiaSemana.VIERNES, 18, 22);
 
                 // 3. COMISIÓN 2K1 (Tarde - 2do Año)
                 // Materias: Análisis II, Sintaxis, Paradigmas, Sist. Operativos
+                // Profes: Cristian (Nuevo), Nicolas
                 Comision c2k1 = createComision(comisionRepository, "2K1", 2, "TARDE", aula201,
                         Arrays.asList(analisis2, sintaxis, paradigmas, sistemasOp),
-                        List.of(profeLaura, profeNicolas));
+                        List.of(profeCristian, profeNicolas));
 
-                crearHorario(horarioCursadoRepository, c2k1, analisis2, DiaSemana.LUNES, 14, 18);    // Laura
-                crearHorario(horarioCursadoRepository, c2k1, sintaxis, DiaSemana.MARTES, 14, 18);    // Nico
-                crearHorario(horarioCursadoRepository, c2k1, paradigmas, DiaSemana.MIERCOLES, 14, 18);// Nico
-                crearHorario(horarioCursadoRepository, c2k1, sistemasOp, DiaSemana.VIERNES, 14, 18);  // Nico
+                crearHorario(horarioCursadoRepository, c2k1, analisis2, DiaSemana.LUNES, 14, 18);    // Ahora da Cristian
+                crearHorario(horarioCursadoRepository, c2k1, sintaxis, DiaSemana.MARTES, 14, 18);
+                crearHorario(horarioCursadoRepository, c2k1, paradigmas, DiaSemana.MIERCOLES, 14, 18);
+                crearHorario(horarioCursadoRepository, c2k1, sistemasOp, DiaSemana.VIERNES, 14, 18);
 
                 // 4. COMISIÓN 3K1 (Noche - 3er Año)
-                // Materias: Diseño, Bases de Datos
+                // Materias: Diseño, Bases de Datos, Análisis Numérico (Agregado para Cristian)
                 Comision c3k1 = createComision(comisionRepository, "3K1", 3, "NOCHE", lab305,
-                        Arrays.asList(disenio, basesDatos),
-                        List.of(profeNicolas));
+                        Arrays.asList(disenio, basesDatos, analisisNumerico),
+                        List.of(profeNicolas, profeCristian));
 
-                crearHorario(horarioCursadoRepository, c3k1, basesDatos, DiaSemana.MARTES, 18, 22); // Nico (BD)
-                crearHorario(horarioCursadoRepository, c3k1, disenio, DiaSemana.JUEVES, 18, 22);    // Nico (Diseño)
+                crearHorario(horarioCursadoRepository, c3k1, basesDatos, DiaSemana.MARTES, 18, 22);
+                crearHorario(horarioCursadoRepository, c3k1, disenio, DiaSemana.JUEVES, 18, 22);
+                crearHorario(horarioCursadoRepository, c3k1, analisisNumerico, DiaSemana.VIERNES, 18, 21); // Cristian
 
 
-                // === INSCRIPCIONES ===
+                // === INSCRIPCIONES Y NOTAS ===
 
-                // Agustin (Legajo 55555) -> Cursa 2do Año (2K1) pero debe recursar Algoritmos (1K1)
+                // 1. Agustin -> Recursante 1K1, Cursando 2K1
                 if (alumnoAgustin != null) {
                     inscribirAlumno(inscripcionRepository, alumnoAgustin, c1k1);
                     inscribirAlumno(inscripcionRepository, alumnoAgustin, c2k1);
 
-                    // Notas Históricas
                     cargarNota(calificacionRepository, inscripcionRepository, alumnoAgustin, c1k1, "1er Parcial - Algoritmos", "8.50");
                     cargarNota(calificacionRepository, inscripcionRepository, alumnoAgustin, c1k1, "TP Inglés", "9.00");
                 }
 
-                // Maria (Legajo 56666) -> Ingresante pura (1K1)
+                // 2. Sofia -> Alumna AVANZADA (3er Año)
+                if (alumnoSofia != null) {
+                    inscribirAlumno(inscripcionRepository, alumnoSofia, c1k1);
+                    cargarNota(calificacionRepository, inscripcionRepository, alumnoSofia, c1k1, "Final Algoritmos", "9.00");
+                    cargarNota(calificacionRepository, inscripcionRepository, alumnoSofia, c1k1, "Final Sistemas", "8.00");
+                    cargarNota(calificacionRepository, inscripcionRepository, alumnoSofia, c1k1, "Final Inglés I", "10.00");
+                    cargarNota(calificacionRepository, inscripcionRepository, alumnoSofia, c1k1, "Final Álgebra", "7.50");
+
+                    inscribirAlumno(inscripcionRepository, alumnoSofia, c1k2);
+                    cargarNota(calificacionRepository, inscripcionRepository, alumnoSofia, c1k2, "Final Análisis Matemático I", "8.00");
+                    cargarNota(calificacionRepository, inscripcionRepository, alumnoSofia, c1k2, "Final Física I", "9.50");
+
+                    inscribirAlumno(inscripcionRepository, alumnoSofia, c2k1);
+                    cargarNota(calificacionRepository, inscripcionRepository, alumnoSofia, c2k1, "Final Análisis Matemático II", "7.00");
+                    cargarNota(calificacionRepository, inscripcionRepository, alumnoSofia, c2k1, "Final Sintaxis", "10.00");
+                    cargarNota(calificacionRepository, inscripcionRepository, alumnoSofia, c2k1, "Final Paradigmas", "9.00");
+
+                    inscribirAlumno(inscripcionRepository, alumnoSofia, c3k1);
+                    cargarNota(calificacionRepository, inscripcionRepository, alumnoSofia, c3k1, "TP Normalización BD", "7.50");
+                }
+
+                // 3. Carlos -> Alumno Promedio (2do Año)
+                if (alumnoCarlos != null) {
+                    inscribirAlumno(inscripcionRepository, alumnoCarlos, c1k1);
+                    cargarNota(calificacionRepository, inscripcionRepository, alumnoCarlos, c1k1, "Final Algoritmos", "6.00");
+                    cargarNota(calificacionRepository, inscripcionRepository, alumnoCarlos, c1k1, "Final Sistemas", "7.00");
+
+                    inscribirAlumno(inscripcionRepository, alumnoCarlos, c2k1);
+                    cargarNota(calificacionRepository, inscripcionRepository, alumnoCarlos, c2k1, "1er Parcial Sintaxis", "4.00");
+                }
+
+                // 4. Lucia -> Recursante de 2do
+                if (alumnoLucia != null) {
+                    inscribirAlumno(inscripcionRepository, alumnoLucia, c2k1);
+                    cargarNota(calificacionRepository, inscripcionRepository, alumnoLucia, c2k1, "1er Parcial Análisis II", "2.00");
+                }
+
+                // 5. Maria -> Ingresante pura (1K1)
                 if (alumnoMaria != null) {
                     inscribirAlumno(inscripcionRepository, alumnoMaria, c1k1);
                     cargarNota(calificacionRepository, inscripcionRepository, alumnoMaria, c1k1, "1er Parcial - Algoritmos", "10.00");
                 }
 
-                // Juan (Legajo 57777) -> Ingresante Turno Noche (1K2)
+                // 6. Juan -> Ingresante Turno Noche (1K2)
                 if (alumnoJuan != null) {
                     inscribirAlumno(inscripcionRepository, alumnoJuan, c1k2);
                 }
 
-                // Sofia (Legajo 58888) -> Avanzada (3K1)
-                if (alumnoSofia != null) {
-                    inscribirAlumno(inscripcionRepository, alumnoSofia, c3k1);
-                    cargarNota(calificacionRepository, inscripcionRepository, alumnoSofia, c3k1, "TP Normalización BD", "7.50");
-                }
-
-                // Miguel (Legajo 59999) -> Ingresante 1K2, sin notas aun
+                // 7. Miguel -> Ingresante 1K2
                 if (alumnoMiguel != null) {
                     inscribirAlumno(inscripcionRepository, alumnoMiguel, c1k2);
                 }
@@ -225,7 +278,8 @@ public class DbSeeder {
 
     // --- Métodos Helper para limpieza y DRY ---
 
-    private Usuario createUsuario(UsuarioRepository repo, PasswordEncoder encoder, String legajo, String nombre, String apellido, String dni, String mail, RolUsuario rol, Genero genero, String titulo) {
+    // Modificado para aceptar fecha de nacimiento
+    private Usuario createUsuario(UsuarioRepository repo, PasswordEncoder encoder, String legajo, String nombre, String apellido, String dni, String mail, RolUsuario rol, Genero genero, String titulo, LocalDate fechaNacimiento) {
         Usuario u = new Usuario();
         u.setLegajo(legajo);
         u.setNombre(nombre);
@@ -238,7 +292,8 @@ public class DbSeeder {
         u.setGenero(genero);
         u.setEstado("ACTIVO");
         u.setTituloAcademico(titulo);
-        u.setFechaNacimiento(LocalDate.of(1995, 1, 1)); // Default
+        // Usamos la fecha pasada por parámetro o un default si es null
+        u.setFechaNacimiento(fechaNacimiento != null ? fechaNacimiento : LocalDate.of(1995, 1, 1));
         u.setFechaIngreso(LocalDate.now());
         return repo.save(u);
     }
@@ -300,7 +355,6 @@ public class DbSeeder {
     }
 
     private void cargarNota(CalificacionRepository califRepo, InscripcionRepository inscRepo, Usuario alumno, Comision comision, String concepto, String valor) {
-        // Usamos el método seguro para obtener la inscripción
         Inscripcion insc = inscRepo.findByIdIdUsuarioAndIdIdComision(alumno.getId(), comision.getId())
                 .stream().findFirst()
                 .orElseThrow(() -> new RuntimeException("No se encontró inscripción para cargar nota"));
