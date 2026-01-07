@@ -31,6 +31,9 @@
         <img src="https://img.shields.io/badge/📂%20Drive%20Documentación-4285F4?style=for-the-badge&logo=googledrive&logoColor=white" alt="Drive Docs Badge"/>
     </a>
     <br>
+    <a href="docs/endpoints_catalog.md" target="_blank">
+        <img src="https://img.shields.io/badge/📄%20Catálogo%20Endpoints-API-4285F4?style=for-the-badge&logo=markdown&logoColor=white" alt="Endpoints Badge"/>
+    </a>
     <a href="docs/dtos_catalog.md" target="_blank">
         <img src="https://img.shields.io/badge/📄%20Catálogo%20DTOs-4285F4?style=for-the-badge&logo=markdown&logoColor=white" alt="DTOs Badge"/>
     </a>
@@ -242,14 +245,14 @@ El sistema cuenta con un `DbSeeder` (`src/main/java/com/sysacad/backend/config/D
 <p align="center">Para ver el detalle estructura de los objetos de request y response, consulta:</p>
 
 <div align="center">
-    <a href="docs/dtos_catalog.md" target="_blank">
-        <img src="https://img.shields.io/badge/📄%20Catálogo%20DTOs-Frontend-4285F4?style=for-the-badge&logo=markdown&logoColor=white" alt="DTOs Badge"/>
-    </a>
-    <a href="docs/enums_catalog.md" target="_blank">
-        <img src="https://img.shields.io/badge/📄%20Catálogo%20Enums-Frontend-4285F4?style=for-the-badge&logo=markdown&logoColor=white" alt="Enums Badge"/>
-    </a>
     <a href="docs/endpoints_catalog.md" target="_blank">
         <img src="https://img.shields.io/badge/📄%20Catálogo%20Endpoints-API-4285F4?style=for-the-badge&logo=markdown&logoColor=white" alt="Endpoints Badge"/>
+    </a>
+    <a href="docs/dtos_catalog.md" target="_blank">
+        <img src="https://img.shields.io/badge/📄%20Catálogo%20DTOs-4285F4?style=for-the-badge&logo=markdown&logoColor=white" alt="DTOs Badge"/>
+    </a>
+    <a href="docs/enums_catalog.md" target="_blank">
+        <img src="https://img.shields.io/badge/📄%20Catálogo%20Enums-4285F4?style=for-the-badge&logo=markdown&logoColor=white" alt="Enums Badge"/>
     </a>
 </div>
 
