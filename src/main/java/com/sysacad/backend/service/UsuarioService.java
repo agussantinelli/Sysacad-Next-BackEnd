@@ -15,11 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -32,19 +27,18 @@ public class UsuarioService {
     private final PasswordEncoder passwordEncoder;
     private final AsignacionMateriaRepository asignacionMateriaRepository;
     private final InscripcionRepository inscripcionRepository;
-
-    // Directorio donde se guardarán las fotos (se crea en la raíz del proyecto)
-    private static final String DIRECTORIO_UPLOAD = "uploads/perfiles/";
-
+    private final FileStorageService fileStorageService;
     @Autowired
     public UsuarioService(UsuarioRepository usuarioRepository,
                           PasswordEncoder passwordEncoder,
                           AsignacionMateriaRepository asignacionMateriaRepository,
-                          InscripcionRepository inscripcionRepository) {
+                          InscripcionRepository inscripcionRepository,
+                          FileStorageService fileStorageService) {
         this.usuarioRepository = usuarioRepository;
         this.passwordEncoder = passwordEncoder;
         this.asignacionMateriaRepository = asignacionMateriaRepository;
         this.inscripcionRepository = inscripcionRepository;
+        this.fileStorageService = fileStorageService;
     }
 
     public Usuario autenticar(String identificador, String password) {
@@ -75,10 +69,8 @@ public class UsuarioService {
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        // Seguridad: Se permite que cualquier usuario modifique cualquier perfil (según solicitud)
-        // validarPermisoModificacion(usuario.getLegajo());
+        // validarPermisoModificacion(usuario.getLegajo()); // Seguridad desactivada a pedido
 
-        // Actualizamos campos permitidos (No tocamos Legajo ni Rol por seguridad)
         usuario.setNombre(request.getNombre());
         usuario.setApellido(request.getApellido());
         usuario.setDni(request.getDni());
@@ -89,12 +81,13 @@ public class UsuarioService {
         usuario.setFechaNacimiento(request.getFechaNacimiento());
         usuario.setGenero(request.getGenero());
 
-        // Permitir actualizar fotoPerfil si viene en el request (ej: string vacío para borrarla o URL externa)
         if (request.getFotoPerfil() != null) {
+            // Si viene una URL externa o vacío, actualizamos.
+            // Si el usuario quiere borrar la foto anterior del disco al poner una URL externa,
+            // podríamos llamar a fileStorageService.borrarArchivo(usuario.getFotoPerfil()) aquí.
             usuario.setFotoPerfil(request.getFotoPerfil());
         }
 
-        // Solo actualizamos password si viene en el request
         if (request.getPassword() != null && !request.getPassword().isEmpty()) {
             usuario.setPassword(passwordEncoder.encode(request.getPassword()));
         }
@@ -107,61 +100,15 @@ public class UsuarioService {
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        // Seguridad: Se permite que cualquier usuario suba foto a cualquier perfil
-        // validarPermisoModificacion(usuario.getLegajo());
+        // Delegamos TODA la lógica de archivos al servicio especializado
+        String rutaGuardada = fileStorageService.guardarFotoPerfil(
+                archivo,
+                usuario.getLegajo(),
+                usuario.getFotoPerfil()
+        );
 
-        if (archivo.isEmpty()) {
-            throw new RuntimeException("El archivo está vacío");
-        }
-
-        try {
-            // 1. Asegurar que el directorio existe
-            Path directorioPath = Paths.get(DIRECTORIO_UPLOAD);
-            if (!Files.exists(directorioPath)) {
-                Files.createDirectories(directorioPath);
-            }
-
-            // 2. Extraer extensión original
-            String nombreOriginal = archivo.getOriginalFilename();
-            String extension = "";
-            if (nombreOriginal != null && nombreOriginal.lastIndexOf(".") > 0) {
-                extension = nombreOriginal.substring(nombreOriginal.lastIndexOf("."));
-            } else {
-                extension = ".jpg"; // Default por si acaso
-            }
-
-            // 3. Generar NOMBRE ÚNICO: {Legajo}-{HashAleatorio}.ext
-            String hash = UUID.randomUUID().toString().substring(0, 8); // Tomamos los primeros 8 chars del UUID
-            String nombreArchivo = usuario.getLegajo() + "-" + hash + extension;
-
-            Path rutaArchivo = directorioPath.resolve(nombreArchivo);
-
-            // 4. (Opcional) Borrar foto anterior si existe para no llenar el disco
-            if (usuario.getFotoPerfil() != null) {
-                try {
-                    // Cuidado: validar que sea un archivo local nuestro antes de borrar
-                    Path fotoAnterior = Paths.get(usuario.getFotoPerfil());
-                    // Solo borramos si el nombre coincide con nuestro patrón para no borrar defaults
-                    if (Files.exists(fotoAnterior) && fotoAnterior.getParent().equals(directorioPath)) {
-                        Files.delete(fotoAnterior);
-                    }
-                } catch (Exception e) {
-                    // Ignoramos error al borrar anterior, no es bloqueante
-                    System.out.println("No se pudo borrar la foto anterior: " + e.getMessage());
-                }
-            }
-
-            // 5. Guardar archivo nuevo
-            Files.copy(archivo.getInputStream(), rutaArchivo, StandardCopyOption.REPLACE_EXISTING);
-
-            // 6. Actualizar ruta en BD
-            // Guardamos la ruta relativa o absoluta según convenga. Aquí guardamos relativa.
-            usuario.setFotoPerfil(rutaArchivo.toString());
-            usuarioRepository.save(usuario);
-
-        } catch (IOException e) {
-            throw new RuntimeException("Error al guardar la imagen: " + e.getMessage());
-        }
+        usuario.setFotoPerfil(rutaGuardada);
+        usuarioRepository.save(usuario);
     }
 
     @Transactional(readOnly = true)
@@ -198,10 +145,13 @@ public class UsuarioService {
 
     @Transactional
     public void eliminarUsuario(UUID id) {
+        // Antes de eliminar el usuario, limpiamos su foto del disco para no dejar basura
+        usuarioRepository.findById(id).ifPresent(u ->
+                fileStorageService.borrarArchivo(u.getFotoPerfil())
+        );
         usuarioRepository.deleteById(id);
     }
 
-    // --- SEGURIDAD ---
     private void validarPermisoModificacion(String legajoObjetivo) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String legajoAutenticado = auth.getName();
