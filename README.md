@@ -176,6 +176,7 @@
 │   │   ├── java/com/sysacad/backend/
 │   │   │   ├── config/                        # Configuración global (ej. Seeder)
 │   │   │   ├── controller/                    # Controladores REST (Entry Points)
+│   │   │   ├── dto/                           # Data Transfer Objects (DTOs)
 │   │   │   ├── modelo/                        # Entidades del dominio (JPA)
 │   │   │   │   └── enums/                     # Enumeraciones
 │   │   │   ├── repository/                    # Repositorios (Acceso a Datos)
@@ -194,7 +195,8 @@
 ├── mvnw.cmd                                   # Script Maven Wrapper (Windows)
 ├── pom.xml                                    # Definición de dependencias y build (Maven)
 ├── README.md                                  # Documentación del proyecto
-└── sysacad-next.sql                           # Script SQL de base de datos
+├── sysacad-next.sql                           # Script SQL de base de datos
+└── uploads/                                   # Archivos subidos (Avatares, etc.)
 </code></pre>
 
 <hr>
@@ -264,6 +266,7 @@ El sistema cuenta con un `DbSeeder` (`src/main/java/com/sysacad/backend/config/D
 | **/usuarios** | `POST`, `GET`, `DELETE` | Gestión completa de usuarios (Admin). Búsqueda por legajo. |
 | **/facultades** | `POST`, `GET` | Gestión de facultades regionales. |
 | **/carreras** | `POST`, `GET` | Carreras y Planes de Estudio asociados. |
+| **/planes** | `POST`, `GET` | Planes de estudio independientes. |
 | **/materias** | `POST`, `GET`, `PUT` | ABM de materias, incluyendo correlatividades y <strong>Modalidad</strong>. |
 | **/comisiones** | `POST`, `GET`, `PUT` | Comisiones anuales, asignación de docentes y horarios. |
 | **/inscripciones** | `POST`, `GET` | Inscripción a cursada/finales y consulta de historia académica. |
