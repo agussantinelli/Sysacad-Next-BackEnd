@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -62,7 +63,8 @@ public class UsuarioController {
 
     @PutMapping("/{id}")
     @PreAuthorize("isAuthenticated()") // La validación fina se hace en el servicio
-    public ResponseEntity<UsuarioResponse> actualizarUsuario(@PathVariable UUID id, @RequestBody UsuarioRequest request) {
+    public ResponseEntity<UsuarioResponse> actualizarUsuario(@PathVariable UUID id,
+            @RequestBody UsuarioRequest request) {
         try {
             Usuario actualizado = usuarioService.actualizarUsuario(id, request);
             return ResponseEntity.ok(convertirADTO(actualizado));
@@ -78,7 +80,8 @@ public class UsuarioController {
             usuarioService.subirFoto(id, file);
             return ResponseEntity.ok("Foto subida exitosamente");
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al subir foto: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al subir foto: " + e.getMessage());
         }
     }
 
@@ -133,6 +136,27 @@ public class UsuarioController {
 
     private UsuarioResponse convertirADTO(Usuario usuario) {
         UsuarioResponse dto = new UsuarioResponse(usuario);
+
+        // Logica para URL absoluta de la foto
+        if (dto.getFotoPerfil() != null && !dto.getFotoPerfil().isEmpty()) {
+            String fotoPath = dto.getFotoPerfil();
+            // Si no es una URL externa (http/https), asumimos que es local
+            if (!fotoPath.startsWith("http")) {
+                // Normalizar separadores (Windows usa backslash, URL necesita slash)
+                String pathNormalizado = fotoPath.replace("\\", "/");
+
+                // Asegurar que no empiece con slash si vamos a unirlo
+                if (pathNormalizado.startsWith("/")) {
+                    pathNormalizado = pathNormalizado.substring(1);
+                }
+
+                // Obtener URL base actual (ej: http://localhost:8080)
+                String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+
+                dto.setFotoPerfil(baseUrl + "/" + pathNormalizado);
+            }
+        }
+
         if (usuario.getRol() == RolUsuario.ESTUDIANTE) {
             List<EstudioUsuario> estudios = matriculacionService.obtenerCarrerasPorAlumno(usuario.getId());
             List<UsuarioResponse.InfoCarrera> carrerasInfo = estudios.stream()
