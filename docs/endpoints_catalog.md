@@ -84,3 +84,36 @@ Base URL: `/api/usuarios`
 | `GET` | `/materia/{idMateria}` | ADMIN, PROFESOR | Obtener docentes de una materia. |
 | `GET` | `/alumnos/materia/{idMateria}` | ADMIN, PROFESOR | Obtener alumnos inscriptos en una materia. |
 | `DELETE` | `/{id}` | ADMIN | Eliminar un usuario. |
+
+## AvisoController
+Base URL: `/api/avisos`
+
+| Método | Endpoint | Roles / Acceso | Descripción |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/` | ADMIN | Publicar un nuevo aviso. |
+| `GET` | `/` | Authenticated | Obtener listado de últimos avisos. |
+
+## HorarioCursadoController
+Base URL: `/api/horarios`
+
+| Método | Endpoint | Roles / Acceso | Descripción |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/` | ADMIN | Registrar nuevo horario de cursado. |
+| `GET` | `/comision/{idComision}` | Authenticated | Obtener horarios de una comisión. |
+| `DELETE` | `/` | ADMIN | Eliminar horario (params: `idComision`, `idMateria`, `dia`, `horaDesde`). |
+
+## SalonController
+Base URL: `/api/salones`
+
+| Método | Endpoint | Roles / Acceso | Descripción |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/` | ADMIN | Crear un nuevo salón/aula. |
+| `GET` | `/facultad/{idFacultad}` | Authenticated | Listar salones detallados de una facultad. |
+
+## SancionController
+Base URL: `/api/sanciones`
+
+| Método | Endpoint | Roles / Acceso | Descripción |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/` | ADMIN | Aplicar una sanción a un estudiante. |
+| `GET` | `/usuario/{idUsuario}` | ADMIN, ESTUDIANTE | Ver sanciones vigentes e históricas de un usuario. |
