@@ -270,6 +270,10 @@ El sistema cuenta con un `DbSeeder` (`src/main/java/com/sysacad/backend/config/D
 | **/materias** | `POST`, `GET`, `PUT` | ABM de materias, incluyendo correlatividades y <strong>Modalidad</strong>. |
 | **/comisiones** | `POST`, `GET`, `PUT` | Comisiones anuales, asignación de docentes y horarios. |
 | **/inscripciones** | `POST`, `GET` | Inscripción a cursada/finales y consulta de historia académica. |
+| **/avisos** | `POST`, `GET` | Cartelera de novedades (Admin publica, todos leen). |
+| **/salones** | `POST`, `GET` | Gestión de aulas físicas y asignación a facultades. |
+| **/sanciones** | `POST`, `GET` | Registro disciplinario de estudiantes. |
+| **/horarios** | `POST`, `GET`, `DELETE` | Gestión de agenda semanal por comisión y materia. |
 
 <hr>
 
