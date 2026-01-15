@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -25,13 +27,26 @@ public class PlanDeEstudio {
     @Column(name = "es_vigente", nullable = false)
     private Boolean esVigente = true;
 
-    // Relación con Carrera (Solo lectura)
+    // Relación con Carrera (Solo lectura para integridad)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
             @JoinColumn(name = "id_facultad", referencedColumnName = "id_facultad", insertable = false, updatable = false),
             @JoinColumn(name = "id_carrera", referencedColumnName = "id_carrera", insertable = false, updatable = false)
     })
     private Carrera carrera;
+
+    // RELACIÓN AGREGADA: Vinculación real con las materias
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "materias_por_plan", // Nombre estándar de tabla intermedia
+            joinColumns = {
+                    @JoinColumn(name = "id_facultad", referencedColumnName = "id_facultad"),
+                    @JoinColumn(name = "id_carrera", referencedColumnName = "id_carrera"),
+                    @JoinColumn(name = "nombre_plan", referencedColumnName = "nombre")
+            },
+            inverseJoinColumns = @JoinColumn(name = "id_materia")
+    )
+    private List<Materia> materias = new ArrayList<>();
 
     @Embeddable
     @Data
