@@ -191,3 +191,87 @@ Standard user response.
 - `vecesTipoInscripcion` (Integer)
 - `concepto` (String): e.g., "Parcial 1".
 - `nota` (BigDecimal)
+
+### `CalificacionResponse`
+- `idUsuario` (UUID)
+- `nombreUsuario` (String)
+- `legajoUsuario` (String)
+- `idComision` (UUID)
+- `nombreComision` (String)
+- `materia` (String)
+- `tipoInscripcion` (TipoInscripcion enum)
+- `vecesTipoInscripcion` (Integer)
+- `concepto` (String)
+- `nota` (BigDecimal)
+- `fecha` (LocalDate)
+
+---
+
+## Aviso
+
+### `AvisoRequest`
+- `titulo` (String)
+- `descripcion` (String)
+- `estado` (String)
+
+### `AvisoResponse`
+- `id` (UUID)
+- `titulo` (String)
+- `descripcion` (String)
+- `fechaEmision` (LocalDateTime)
+- `estado` (String)
+
+---
+
+## Salon
+
+### `SalonRequest`
+- `idFacultad` (UUID)
+- `nombre` (String)
+- `piso` (String)
+
+### `SalonResponse`
+- `id` (UUID)
+- `idFacultad` (UUID)
+- `nombreFacultad` (String)
+- `nombre` (String)
+- `piso` (String)
+
+---
+
+## Sancion
+
+### `SancionRequest`
+- `idUsuario` (UUID)
+- `motivo` (String)
+- `fechaInicio` (LocalDate)
+- `fechaFin` (LocalDate)
+
+### `SancionResponse`
+- `id` (UUID)
+- `idUsuario` (UUID)
+- `nombreUsuario` (String)
+- `legajoUsuario` (String)
+- `motivo` (String)
+- `fechaInicio` (LocalDate)
+- `fechaFin` (LocalDate)
+
+---
+
+## Horario
+
+### `HorarioRequest`
+- `idComision` (UUID)
+- `idMateria` (UUID)
+- `dia` (DiaSemana enum)
+- `horaDesde` (LocalTime)
+- `horaHasta` (LocalTime)
+
+### `HorarioResponse`
+- `idComision` (UUID)
+- `nombreComision` (String)
+- `idMateria` (UUID)
+- `nombreMateria` (String)
+- `dia` (DiaSemana enum)
+- `horaDesde` (LocalTime)
+- `horaHasta` (LocalTime)
