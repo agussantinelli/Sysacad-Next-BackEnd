@@ -148,6 +148,7 @@ CREATE TABLE asignaciones_materia (
     CONSTRAINT fk_am_mat FOREIGN KEY (id_materia) REFERENCES materias(id)
 );
 
+-- 8. Vida Académica del Alumno
 CREATE TABLE estudios_usuario (
     id_usuario UUID NOT NULL,
     id_facultad UUID NOT NULL,
@@ -196,7 +197,7 @@ CREATE TABLE calificaciones (
 CREATE TABLE horarios_cursado (
     id_comision UUID NOT NULL,
     id_materia UUID NOT NULL,
-    dia VARCHAR(20) NOT NULL CHECK (dia IN ('LUNES', 'MARTES', 'MIERCOLES', 'JUEVES', 'VIERNES', 'SABADO'),
+    dia VARCHAR(20) NOT NULL CHECK (dia IN ('LUNES', 'MARTES', 'MIERCOLES', 'JUEVES', 'VIERNES', 'SABADO')),
     hora_desde TIME NOT NULL,
     hora_hasta TIME NOT NULL,
     PRIMARY KEY (id_comision, id_materia, dia, hora_desde),
