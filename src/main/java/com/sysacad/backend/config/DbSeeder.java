@@ -26,6 +26,7 @@ public class DbSeeder {
     CommandLineRunner initDatabase(
             UTNSeeder utnSeeder,
             UsuarioRepository usuarioRepository,
+            EstudioUsuarioRepository estudioUsuarioRepository, // Agregado para matricular alumnos
             PasswordEncoder passwordEncoder,
             FacultadRegionalRepository facultadRepository,
             SalonRepository salonRepository,
@@ -38,7 +39,7 @@ public class DbSeeder {
 
         return args -> {
 
-            // 1. Carga Estructural (Materias, Planes)
+            // 1. Carga Estructural (Materias, Planes, Carreras)
             utnSeeder.seed();
 
             Usuario profeNicolas = null;
@@ -122,6 +123,32 @@ public class DbSeeder {
                 alumnoLucia = usuarioRepository.findByLegajo("60001").orElse(null);
                 alumnoCarlos = usuarioRepository.findByLegajo("60002").orElse(null);
             }
+
+            // -----------------------------------------------------------------------------------------
+            // NUEVO: MATRICULACIÓN DE ALUMNOS EN CARRERAS (Esencial para que vean sus materias)
+            // -----------------------------------------------------------------------------------------
+            if (estudioUsuarioRepository.count() == 0) {
+                System.out.println(">> DbSeeder: Matriculando alumnos de prueba en carreras...");
+
+                // Necesitamos la facultad creada por UTNSeeder
+                FacultadRegional frro = facultadRepository.findAll().stream()
+                        .filter(f -> f.getCiudad().equalsIgnoreCase("Rosario"))
+                        .findFirst()
+                        .orElseThrow(() -> new RuntimeException("Error: Facultad Rosario no encontrada (UTNSeeder falló?)."));
+
+                // Matriculamos a la mayoría en Sistemas (ISI) - Plan 2023
+                matricularAlumno(estudioUsuarioRepository, alumnoAgustin, frro, "ISI", "Plan 2023");
+                matricularAlumno(estudioUsuarioRepository, alumnoSofia, frro, "ISI", "Plan 2023");
+                matricularAlumno(estudioUsuarioRepository, alumnoCarlos, frro, "ISI", "Plan 2023");
+                matricularAlumno(estudioUsuarioRepository, alumnoMaria, frro, "ISI", "Plan 2023");
+
+                // Matriculamos a algunos en otras carreras para variedad
+                matricularAlumno(estudioUsuarioRepository, alumnoJuan, frro, "IC", "Plan 2023"); // Civil
+                matricularAlumno(estudioUsuarioRepository, alumnoMiguel, frro, "IEE", "Plan 2023"); // Electrica
+
+                System.out.println(">> Alumnos matriculados exitosamente.");
+            }
+
 
             if (comisionRepository.count() == 0 && profeNicolas != null) {
                 System.out.println(">> DbSeeder: Desplegando infraestructura de cursada completa...");
@@ -287,9 +314,21 @@ public class DbSeeder {
         };
     }
 
+    // --- HELPERS ---
+
+    private void matricularAlumno(EstudioUsuarioRepository repo, Usuario alumno, FacultadRegional facu, String carrera, String plan) {
+        if (alumno == null) return;
+        EstudioUsuario eu = new EstudioUsuario();
+        EstudioUsuario.EstudioUsuarioId id = new EstudioUsuario.EstudioUsuarioId(alumno.getId(), facu.getId(), carrera, plan);
+        eu.setId(id);
+        eu.setFechaInscripcion(LocalDate.now());
+        eu.setEstado("ACTIVO");
+        repo.save(eu);
+    }
+
     private Usuario createUsuario(UsuarioRepository repo, PasswordEncoder encoder, String legajo, String nombre,
-            String apellido, String dni, String mail, RolUsuario rol, Genero genero, String titulo,
-            LocalDate fechaNacimiento) {
+                                  String apellido, String dni, String mail, RolUsuario rol, Genero genero, String titulo,
+                                  LocalDate fechaNacimiento) {
         Usuario u = new Usuario();
         u.setLegajo(legajo);
         u.setNombre(nombre);
@@ -316,7 +355,7 @@ public class DbSeeder {
     }
 
     private Comision createComision(ComisionRepository repo, String nombre, Integer anio, String turno, Salon salon,
-            List<Materia> materias, List<Usuario> profes) {
+                                    List<Materia> materias, List<Usuario> profes) {
         Comision c = new Comision();
         c.setNombre(nombre);
         c.setAnio(anio);
@@ -333,7 +372,7 @@ public class DbSeeder {
     }
 
     private void crearHorario(HorarioCursadoRepository repo, Comision com, Materia mat, DiaSemana dia, int hDesde,
-            int hHasta) {
+                              int hHasta) {
         HorarioCursado horario = new HorarioCursado();
         HorarioCursado.HorarioCursadoId id = new HorarioCursado.HorarioCursadoId(
                 com.getId(), mat.getId(), dia, LocalTime.of(hDesde, 0));
@@ -365,7 +404,7 @@ public class DbSeeder {
     }
 
     private void cargarNota(CalificacionRepository califRepo, InscripcionRepository inscRepo, Usuario alumno,
-            Comision comision, String concepto, String valor) {
+                            Comision comision, String concepto, String valor) {
         Inscripcion insc = inscRepo.findByIdIdUsuarioAndIdIdComision(alumno.getId(), comision.getId())
                 .stream().findFirst()
                 .orElseThrow(() -> new RuntimeException("No se encontró inscripción para cargar nota"));
