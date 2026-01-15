@@ -78,11 +78,11 @@ public class DbSeeder {
                 profeAna = createUsuario(usuarioRepository, passwordEncoder, "54444", "Ana", "Martinez", "22222225",
                         "ana@sysacad.com", RolUsuario.PROFESOR, Genero.F, "Traductora Pública",
                         LocalDate.of(1982, 11, 30));
-                profeSandra = createUsuario(usuarioRepository, passwordEncoder, "55551", "Sandra", "Mansilla",
-                        "22222226", "sandra@sysacad.com", RolUsuario.PROFESOR, Genero.F, "Matemática",
+                profeSandra = createUsuario(usuarioRepository, passwordEncoder, "55551", "Julian", "Bricco",
+                        "22222226", "juli@sysacad.com", RolUsuario.PROFESOR, Genero.F, "Matemática",
                         LocalDate.of(1975, 4, 12));
-                profeCristian = createUsuario(usuarioRepository, passwordEncoder, "55552", "Cristian", "Tresalli",
-                        "22222227", "cristian@sysacad.com", RolUsuario.PROFESOR, Genero.M, "Ingeniero Electrónico",
+                profeCristian = createUsuario(usuarioRepository, passwordEncoder, "55552", "Marino", "Hinestroza",
+                        "22222227", "marino@sysacad.com", RolUsuario.PROFESOR, Genero.M, "Ingeniero Electrónico",
                         LocalDate.of(1988, 8, 25));
 
                 // ESTUDIANTES
