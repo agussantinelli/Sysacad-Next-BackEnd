@@ -100,7 +100,7 @@
         </tr>
         <tr>
             <td><strong>📝 Ciclo del Alumno</strong></td>
-            <td><code>estudios_usuario</code>, <code>inscripciones</code>, <code>calificaciones</code></td>
+            <td><code>matriculaciones</code>, <code>inscripciones</code>, <code>calificaciones</code></td>
             <td>Trazabilidad total: Matriculación en carrera, inscripción a cursada/examen y registro de historia académica.</td>
         </tr>
     </tbody>
@@ -213,7 +213,7 @@
     ```bash
     mvn spring-boot:run
     ```
-4.  **Puerto**: El servidor iniciará en el puerto **8081** (`http://localhost:8081`).
+4.  **Puerto**: El servidor iniciará en el puerto **8080** (`http://localhost:8080`).
 5.  **CORS**: Configurado para aceptar peticiones desde `http://localhost:4200` (Frontend Angular).
 
 <h3>🌱 Base de Datos y Seeding Automático</h3>
@@ -274,6 +274,7 @@ El sistema cuenta con un `DbSeeder` (`src/main/java/com/sysacad/backend/config/D
 | **/salones** | `POST`, `GET` | Gestión de aulas físicas y asignación a facultades. |
 | **/sanciones** | `POST`, `GET` | Registro disciplinario de estudiantes. |
 | **/horarios** | `POST`, `GET`, `DELETE` | Gestión de agenda semanal por comisión y materia. |
+| **/alumnos** | `POST`, `GET` | Matriculación en carreras y consulta de plan de estudio personal. |
 
 <hr>
 
