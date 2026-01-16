@@ -117,3 +117,10 @@ Base URL: `/api/sanciones`
 | :--- | :--- | :--- | :--- |
 | `POST` | `/` | ADMIN | Aplicar una sanción a un estudiante. |
 | `GET` | `/usuario/{idUsuario}` | ADMIN, ESTUDIANTE | Ver sanciones vigentes e históricas de un usuario. |
+
+## MatriculacionController
+Base URL: `/api/alumnos`
+
+| Método | Endpoint | Roles / Acceso | Descripción |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/mis-carreras-materias` | ESTUDIANTE | Obtener carreras y plan de materias del alumno logueado, con estado académico enriquecido (notas, regularidades). |
