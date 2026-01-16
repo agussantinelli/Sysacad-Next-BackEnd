@@ -16,4 +16,5 @@ public class EstudianteMateriaDTO {
     private String estado; // "PENDIENTE", "CURSANDO", "REGULAR", "APROBADA"
     private String nota; // "8", "9.50", "-"
     private Boolean sePuedeInscribir; // flag booleano
+    private Boolean esElectiva;
 }
