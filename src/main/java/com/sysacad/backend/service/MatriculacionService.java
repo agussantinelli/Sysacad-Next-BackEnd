@@ -2,12 +2,12 @@ package com.sysacad.backend.service;
 
 import com.sysacad.backend.dto.CarreraMateriasDTO;
 import com.sysacad.backend.dto.MateriaResponse;
-import com.sysacad.backend.modelo.EstudioUsuario;
+import com.sysacad.backend.modelo.Matriculacion;
 import com.sysacad.backend.modelo.Materia;
 import com.sysacad.backend.modelo.PlanDeEstudio;
 import com.sysacad.backend.modelo.Usuario;
 import com.sysacad.backend.modelo.enums.RolUsuario;
-import com.sysacad.backend.repository.EstudioUsuarioRepository;
+import com.sysacad.backend.repository.MatriculacionRepository;
 import com.sysacad.backend.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,39 +29,39 @@ import java.util.stream.Collectors;
 @Service
 public class MatriculacionService {
 
-    private final EstudioUsuarioRepository estudioUsuarioRepository;
+    private final MatriculacionRepository matriculacionRepository;
     private final UsuarioRepository usuarioRepository;
     private final InscripcionRepository inscripcionRepository;
     private final CalificacionRepository calificacionRepository;
 
     @Autowired
-    public MatriculacionService(EstudioUsuarioRepository estudioUsuarioRepository,
+    public MatriculacionService(MatriculacionRepository matriculacionRepository,
             UsuarioRepository usuarioRepository,
             InscripcionRepository inscripcionRepository,
             CalificacionRepository calificacionRepository) {
-        this.estudioUsuarioRepository = estudioUsuarioRepository;
+        this.matriculacionRepository = matriculacionRepository;
         this.usuarioRepository = usuarioRepository;
         this.inscripcionRepository = inscripcionRepository;
         this.calificacionRepository = calificacionRepository;
     }
 
     @Transactional
-    public EstudioUsuario matricularAlumno(EstudioUsuario estudio) {
-        Usuario alumno = usuarioRepository.findById(estudio.getId().getIdUsuario())
+    public Matriculacion matricularAlumno(Matriculacion matricula) {
+        Usuario alumno = usuarioRepository.findById(matricula.getId().getIdUsuario())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         if (alumno.getRol() != RolUsuario.ESTUDIANTE) {
             throw new RuntimeException("Solo se pueden matricular usuarios con rol ESTUDIANTE");
         }
 
-        estudio.setFechaInscripcion(LocalDate.now());
-        estudio.setEstado("ACTIVO");
-        return estudioUsuarioRepository.save(estudio);
+        matricula.setFechaInscripcion(LocalDate.now());
+        matricula.setEstado("ACTIVO");
+        return matriculacionRepository.save(matricula);
     }
 
     @Transactional(readOnly = true)
-    public List<EstudioUsuario> obtenerCarrerasPorAlumno(UUID idAlumno) {
-        return estudioUsuarioRepository.findByIdIdUsuario(idAlumno);
+    public List<Matriculacion> obtenerCarrerasPorAlumno(UUID idAlumno) {
+        return matriculacionRepository.findByIdIdUsuario(idAlumno);
     }
 
     @Transactional(readOnly = true)
@@ -70,8 +70,8 @@ public class MatriculacionService {
         Usuario alumno = usuarioRepository.findByLegajo(legajo)
                 .orElseThrow(() -> new RuntimeException("Alumno no encontrado con legajo: " + legajo));
 
-        // 2. Obtener inscripciones (EstudioUsuario - Matriculación en carreras)
-        List<EstudioUsuario> matriculaciones = estudioUsuarioRepository.findByIdIdUsuario(alumno.getId());
+        // 2. Obtener inscripciones (Matriculacion - Matriculación en carreras)
+        List<Matriculacion> matriculaciones = matriculacionRepository.findByIdIdUsuario(alumno.getId());
         List<CarreraMateriasDTO> resultado = new ArrayList<>();
 
         // 3. Pre-cargar el historial académico completo del alumno para evitar N+1
@@ -84,7 +84,7 @@ public class MatriculacionService {
                 historialNotas);
 
         // 4. Iterar sobre cada carrera
-        for (EstudioUsuario matricula : matriculaciones) {
+        for (Matriculacion matricula : matriculaciones) {
             PlanDeEstudio plan = matricula.getPlan();
 
             if (plan != null) {

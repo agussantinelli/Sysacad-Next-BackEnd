@@ -26,7 +26,7 @@ public class DbSeeder {
         CommandLineRunner initDatabase(
                         UTNSeeder utnSeeder,
                         UsuarioRepository usuarioRepository,
-                        EstudioUsuarioRepository estudioUsuarioRepository, // Agregado para matricular alumnos
+                        MatriculacionRepository matriculacionRepository, // Agregado para matricular alumnos
                         PasswordEncoder passwordEncoder,
                         FacultadRegionalRepository facultadRepository,
                         SalonRepository salonRepository,
@@ -148,7 +148,7 @@ public class DbSeeder {
                         // NUEVO: MATRICULACIÓN DE ALUMNOS EN CARRERAS (Esencial para que vean sus
                         // materias)
                         // -----------------------------------------------------------------------------------------
-                        if (estudioUsuarioRepository.count() == 0) {
+                        if (matriculacionRepository.count() == 0) {
                                 System.out.println(">> DbSeeder: Matriculando alumnos de prueba en carreras...");
 
                                 // Necesitamos la facultad creada por UTNSeeder
@@ -159,14 +159,14 @@ public class DbSeeder {
                                                                 "Error: Facultad Rosario no encontrada (UTNSeeder falló?)."));
 
                                 // Matriculamos a la mayoría en Sistemas (ISI) - Plan 2023
-                                matricularAlumno(estudioUsuarioRepository, alumnoAgustin, frro, "ISI", "Plan 2023");
-                                matricularAlumno(estudioUsuarioRepository, alumnoSofia, frro, "ISI", "Plan 2023");
-                                matricularAlumno(estudioUsuarioRepository, alumnoCarlos, frro, "ISI", "Plan 2023");
-                                matricularAlumno(estudioUsuarioRepository, alumnoMaria, frro, "ISI", "Plan 2023");
+                                matricularAlumno(matriculacionRepository, alumnoAgustin, frro, "ISI", "Plan 2023");
+                                matricularAlumno(matriculacionRepository, alumnoSofia, frro, "ISI", "Plan 2023");
+                                matricularAlumno(matriculacionRepository, alumnoCarlos, frro, "ISI", "Plan 2023");
+                                matricularAlumno(matriculacionRepository, alumnoMaria, frro, "ISI", "Plan 2023");
 
                                 // Matriculamos a algunos en otras carreras para variedad
-                                matricularAlumno(estudioUsuarioRepository, alumnoJuan, frro, "IC", "Plan 2023"); // Civil
-                                matricularAlumno(estudioUsuarioRepository, alumnoMiguel, frro, "IEE", "Plan 2023"); // Electrica
+                                matricularAlumno(matriculacionRepository, alumnoJuan, frro, "IC", "Plan 2023"); // Civil
+                                matricularAlumno(matriculacionRepository, alumnoMiguel, frro, "IEE", "Plan 2023"); // Electrica
 
                                 System.out.println(">> Alumnos matriculados exitosamente.");
                         }
@@ -359,12 +359,12 @@ public class DbSeeder {
 
         // --- HELPERS ---
 
-        private void matricularAlumno(EstudioUsuarioRepository repo, Usuario alumno, FacultadRegional facu,
+        private void matricularAlumno(MatriculacionRepository repo, Usuario alumno, FacultadRegional facu,
                         String carrera, String plan) {
                 if (alumno == null)
                         return;
-                EstudioUsuario eu = new EstudioUsuario();
-                EstudioUsuario.EstudioUsuarioId id = new EstudioUsuario.EstudioUsuarioId(alumno.getId(), facu.getId(),
+                Matriculacion eu = new Matriculacion();
+                Matriculacion.MatriculacionId id = new Matriculacion.MatriculacionId(alumno.getId(), facu.getId(),
                                 carrera, plan);
                 eu.setId(id);
                 eu.setFechaInscripcion(LocalDate.now());

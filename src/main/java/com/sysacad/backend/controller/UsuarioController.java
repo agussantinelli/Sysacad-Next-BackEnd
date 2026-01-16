@@ -2,7 +2,7 @@ package com.sysacad.backend.controller;
 
 import com.sysacad.backend.dto.UsuarioRequest;
 import com.sysacad.backend.dto.UsuarioResponse;
-import com.sysacad.backend.modelo.EstudioUsuario;
+import com.sysacad.backend.modelo.Matriculacion;
 import com.sysacad.backend.modelo.Usuario;
 import com.sysacad.backend.modelo.enums.RolUsuario;
 import com.sysacad.backend.service.MatriculacionService;
@@ -158,7 +158,7 @@ public class UsuarioController {
         }
 
         if (usuario.getRol() == RolUsuario.ESTUDIANTE) {
-            List<EstudioUsuario> estudios = matriculacionService.obtenerCarrerasPorAlumno(usuario.getId());
+            List<Matriculacion> estudios = matriculacionService.obtenerCarrerasPorAlumno(usuario.getId());
             List<UsuarioResponse.InfoCarrera> carrerasInfo = estudios.stream()
                     .map(e -> new UsuarioResponse.InfoCarrera(
                             e.getPlan().getCarrera().getNombre(),
@@ -167,7 +167,7 @@ public class UsuarioController {
                     .collect(Collectors.toList());
             dto.setCarreras(carrerasInfo);
             estudios.stream()
-                    .map(EstudioUsuario::getFechaInscripcion)
+                    .map(Matriculacion::getFechaInscripcion)
                     .min(LocalDate::compareTo)
                     .ifPresent(fecha -> dto.setAnioIngreso(fecha.getYear()));
         }
