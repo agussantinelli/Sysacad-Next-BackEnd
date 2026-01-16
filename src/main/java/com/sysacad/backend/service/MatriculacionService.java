@@ -116,7 +116,8 @@ public class MatriculacionService {
                             pm.getNivel(),
                             estadoActual.estado,
                             estadoActual.nota,
-                            sePuedeInscribir);
+                            sePuedeInscribir,
+                            materia.getOptativa());
                     materiasDTO.add(dto);
                 }
 
