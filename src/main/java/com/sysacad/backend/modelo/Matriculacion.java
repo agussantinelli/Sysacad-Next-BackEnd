@@ -10,11 +10,11 @@ import java.util.UUID;
 
 @Entity
 @Data
-@Table(name = "estudios_usuario")
-public class EstudioUsuario {
+@Table(name = "matriculaciones")
+public class Matriculacion {
 
     @EmbeddedId
-    private EstudioUsuarioId id;
+    private MatriculacionId id;
 
     @Column(name = "fecha_inscripcion", nullable = false)
     private LocalDate fechaInscripcion;
@@ -38,7 +38,7 @@ public class EstudioUsuario {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class EstudioUsuarioId implements Serializable {
+    public static class MatriculacionId implements Serializable {
         @Column(name = "id_usuario")
         private UUID idUsuario;
 
