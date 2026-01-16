@@ -1,6 +1,6 @@
 package com.sysacad.backend.dto;
 
-import com.sysacad.backend.dto.MateriaResponse.SimpleMateriaDTO;
+import com.sysacad.backend.dto.EstudianteMateriaDTO;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,9 +13,10 @@ public class CarreraMateriasDTO {
     private String idCarrera;
     private String nombreCarrera;
     private String nombrePlan;
-    private List<SimpleMateriaDTO> materias;
+    private List<EstudianteMateriaDTO> materias;
 
-    public CarreraMateriasDTO(String idCarrera, String nombreCarrera, String nombrePlan, List<SimpleMateriaDTO> materias) {
+    public CarreraMateriasDTO(String idCarrera, String nombreCarrera, String nombrePlan,
+            List<EstudianteMateriaDTO> materias) {
         this.idCarrera = idCarrera;
         this.nombreCarrera = nombreCarrera;
         this.nombrePlan = nombrePlan;
