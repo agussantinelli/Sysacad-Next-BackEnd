@@ -275,3 +275,24 @@ Standard user response.
 - `dia` (DiaSemana enum)
 - `horaDesde` (LocalTime)
 - `horaHasta` (LocalTime)
+
+---
+
+## Matriculacion / Academico
+
+### `CarreraMateriasDTO`
+Response structure for `/api/alumnos/mis-carreras-materias`.
+- `idCarrera` (String)
+- `nombreCarrera` (String)
+- `nombrePlan` (String)
+- `materias` (List<EstudianteMateriaDTO>)
+
+### `EstudianteMateriaDTO`
+Enriched subject details for a specific student.
+- `idMateria` (UUID)
+- `nombre` (String)
+- `nivel` (Short): Year/Level of the subject in the plan.
+- `estado` (String): "PENDIENTE", "CURSANDO", "REGULAR", "APROBADA", "LIBRE".
+- `nota` (String): Final grade or "-" if not approved.
+- `sePuedeInscribir` (Boolean): Calculated based on correlatives and current status.
+- `esElectiva` (Boolean)
