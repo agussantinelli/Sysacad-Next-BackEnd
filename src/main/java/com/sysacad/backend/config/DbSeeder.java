@@ -362,39 +362,54 @@ public class DbSeeder {
                         }
 
                         if (mesaExamenRepository.count() == 0) {
-                                System.out.println(">> DbSeeder: Creando Mesas de Examen...");
+                                System.out.println(">> DbSeeder: Desplegando Mesas de Examen...");
 
-                                // 1. Crear Mesa
-                                MesaExamen mesaFeb = new MesaExamen();
-                                mesaFeb.setNombre("Turno Febrero 2026");
-                                mesaFeb.setFechaInicio(LocalDate.of(2026, 2, 1));
-                                mesaFeb.setFechaFin(LocalDate.of(2026, 2, 28));
-                                mesaExamenRepository.save(mesaFeb);
+                                // 1. Crear Turnos (Mesas)
+                                MesaExamen mesaFeb = createMesa(mesaExamenRepository, "Turno Febrero 2026",
+                                                LocalDate.of(2026, 2, 1), LocalDate.of(2026, 2, 28));
+                                MesaExamen mesaJul = createMesa(mesaExamenRepository, "Turno Julio 2026",
+                                                LocalDate.of(2026, 7, 1), LocalDate.of(2026, 7, 31));
+                                MesaExamen mesaDic = createMesa(mesaExamenRepository, "Turno Diciembre 2026",
+                                                LocalDate.of(2026, 12, 1), LocalDate.of(2026, 12, 22));
 
-                                // 2. Crear Detalle (Materia en Mesa)
-                                Materia algoritmos = materiaRepository.findByNombre("Algoritmos y Estructuras de Datos")
-                                                .orElseThrow();
+                                // 2. Agregar Materias a las Mesas (Detalles)
+                                Materia algoritmos = getMateria(materiaRepository, "Algoritmos y Estructuras de Datos");
+                                Materia sistemas = getMateria(materiaRepository, "Sistemas y Procesos de Negocio");
+                                Materia analisis1 = getMateria(materiaRepository, "Análisis Matemático I");
+                                Materia fisica1 = getMateria(materiaRepository, "Física I");
+                                Materia sintaxis = getMateria(materiaRepository,
+                                                "Sintaxis y Semántica de los Lenguajes");
 
-                                DetalleMesaExamen detalleAlgo = new DetalleMesaExamen();
-                                detalleAlgo.setMesaExamen(mesaFeb);
-                                detalleAlgo.setMateria(algoritmos);
-                                detalleAlgo.setDiaExamen(LocalDate.of(2026, 2, 10));
-                                detalleAlgo.setHoraExamen(LocalTime.of(9, 0));
-                                detalleMesaExamenRepository.save(detalleAlgo);
+                                // Febrero
+                                DetalleMesaExamen febAlgo = createDetalleMesa(detalleMesaExamenRepository, mesaFeb,
+                                                algoritmos, LocalDate.of(2026, 2, 10), LocalTime.of(9, 0));
+                                DetalleMesaExamen febSistemas = createDetalleMesa(detalleMesaExamenRepository, mesaFeb,
+                                                sistemas, LocalDate.of(2026, 2, 12), LocalTime.of(14, 0));
+                                DetalleMesaExamen febAnalisis = createDetalleMesa(detalleMesaExamenRepository, mesaFeb,
+                                                analisis1, LocalDate.of(2026, 2, 15), LocalTime.of(9, 0));
 
-                                // 3. Inscribir Alumno a Examen
+                                // Julio
+                                DetalleMesaExamen julSintaxis = createDetalleMesa(detalleMesaExamenRepository, mesaJul,
+                                                sintaxis, LocalDate.of(2026, 7, 10), LocalTime.of(9, 0));
+                                DetalleMesaExamen julFisica = createDetalleMesa(detalleMesaExamenRepository, mesaJul,
+                                                fisica1, LocalDate.of(2026, 7, 15), LocalTime.of(16, 0));
+
+                                // 3. Inscribir Alumnos a Examenes
                                 if (alumnoAgustin != null) {
-                                        InscripcionExamen inscExamen = new InscripcionExamen();
-                                        inscExamen.setUsuario(alumnoAgustin);
-                                        inscExamen.setDetalleMesaExamen(detalleAlgo);
-                                        inscExamen.setFechaInscripcion(LocalDateTime.now());
-                                        inscExamen.setEstado("PENDIENTE");
-                                        inscripcionExamenRepository.save(inscExamen);
-                                        System.out.println(
-                                                        ">> Alumno inscripto a examen: " + alumnoAgustin.getNombre());
+                                        inscribirExamen(inscripcionExamenRepository, alumnoAgustin, febAlgo);
+                                        inscribirExamen(inscripcionExamenRepository, alumnoAgustin, julSintaxis);
                                 }
 
-                                System.out.println(">> Mesa creada: " + mesaFeb.getNombre());
+                                if (alumnoSofia != null) {
+                                        inscribirExamen(inscripcionExamenRepository, alumnoSofia, febSistemas);
+                                        inscribirExamen(inscripcionExamenRepository, alumnoSofia, febAnalisis);
+                                }
+
+                                if (alumnoCarlos != null) {
+                                        inscribirExamen(inscripcionExamenRepository, alumnoCarlos, julFisica);
+                                }
+
+                                System.out.println(">> Mesas de Examen creadas exitosamente.");
                         }
                 };
         }
@@ -508,5 +523,33 @@ public class DbSeeder {
                 nota.setNota(new BigDecimal(valor));
                 nota.setInscripcion(insc);
                 califRepo.save(nota);
+        }
+
+        private MesaExamen createMesa(MesaExamenRepository repo, String nombre, LocalDate inicio, LocalDate fin) {
+                MesaExamen mesa = new MesaExamen();
+                mesa.setNombre(nombre);
+                mesa.setFechaInicio(inicio);
+                mesa.setFechaFin(fin);
+                return repo.save(mesa);
+        }
+
+        private DetalleMesaExamen createDetalleMesa(DetalleMesaExamenRepository repo, MesaExamen mesa, Materia materia,
+                        LocalDate dia, LocalTime hora) {
+                DetalleMesaExamen detalle = new DetalleMesaExamen();
+                detalle.setMesaExamen(mesa);
+                detalle.setMateria(materia);
+                detalle.setDiaExamen(dia);
+                detalle.setHoraExamen(hora);
+                return repo.save(detalle);
+        }
+
+        private InscripcionExamen inscribirExamen(InscripcionExamenRepository repo, Usuario alumno,
+                        DetalleMesaExamen detalle) {
+                InscripcionExamen insc = new InscripcionExamen();
+                insc.setUsuario(alumno);
+                insc.setDetalleMesaExamen(detalle);
+                insc.setFechaInscripcion(LocalDateTime.now());
+                insc.setEstado("PENDIENTE");
+                return repo.save(insc);
         }
 }
