@@ -27,4 +27,7 @@ public class InscripcionExamen {
 
     @Column(nullable = false, length = 50)
     private String estado; // PENDIENTE, APROBADO, RECHAZADO, AUSENTE, DESAPROBADO
+
+    @Column(precision = 4, scale = 2)
+    private java.math.BigDecimal nota;
 }
