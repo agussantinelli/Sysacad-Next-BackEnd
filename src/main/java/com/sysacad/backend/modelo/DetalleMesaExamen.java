@@ -23,6 +23,10 @@ public class DetalleMesaExamen {
     @JoinColumn(name = "id_materia", nullable = false)
     private Materia materia;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_presidente", nullable = false)
+    private Usuario presidente;
+
     @Column(name = "dia_examen", nullable = false)
     private LocalDate diaExamen;
 
