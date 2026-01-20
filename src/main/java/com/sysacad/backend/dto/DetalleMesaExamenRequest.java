@@ -9,6 +9,7 @@ import java.util.UUID;
 public class DetalleMesaExamenRequest {
     private UUID idMesaExamen;
     private UUID idMateria;
+    private UUID idPresidente;
     private LocalDate diaExamen;
     private LocalTime horaExamen;
 }

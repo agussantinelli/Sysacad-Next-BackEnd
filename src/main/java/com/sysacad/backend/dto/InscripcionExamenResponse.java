@@ -16,4 +16,5 @@ public class InscripcionExamenResponse {
     private LocalTime horaExamen;
     private LocalDateTime fechaInscripcion;
     private String estado;
+    private java.math.BigDecimal nota;
 }
