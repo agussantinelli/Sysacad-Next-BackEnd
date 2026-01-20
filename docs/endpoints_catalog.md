@@ -142,6 +142,7 @@ Base URL: `/api/inscripciones-examen`
 | `POST` | `/` | ADMIN, ESTUDIANTE | Inscribir a un alumno en el examen final de una materia. |
 | `GET` | `/mis-inscripciones` | ESTUDIANTE | Listar inscripciones a exámenes del usuario actual. |
 | `DELETE` | `/{id}` | ADMIN, ESTUDIANTE | Dar de baja una inscripción a examen. |
+| `POST` | `/{id}/calificar` | ADMIN, PROFESOR | Cargar nota y estado a un examen. |
 
 ## InscripcionCursadoController
 Base URL: `/api/inscripciones-cursado`
