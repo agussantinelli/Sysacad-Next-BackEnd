@@ -72,6 +72,18 @@ public class InscripcionExamenService {
         inscripcionExamenRepository.delete(insc);
     }
 
+    @Transactional
+    public InscripcionExamenResponse calificarExamen(UUID idInscripcion, CargaNotaExamenRequest request) {
+        InscripcionExamen insc = inscripcionExamenRepository.findById(idInscripcion)
+                .orElseThrow(() -> new RuntimeException("Inscripción no encontrada"));
+
+        insc.setNota(request.getNota());
+        insc.setEstado(request.getEstado()); // APROBADO, DESAPROBADO, etc.
+
+        insc = inscripcionExamenRepository.save(insc);
+        return mapToResponse(insc);
+    }
+
     private InscripcionExamenResponse mapToResponse(InscripcionExamen insc) {
         InscripcionExamenResponse response = new InscripcionExamenResponse();
         response.setId(insc.getId());
@@ -82,6 +94,7 @@ public class InscripcionExamenService {
         response.setHoraExamen(insc.getDetalleMesaExamen().getHoraExamen());
         response.setFechaInscripcion(insc.getFechaInscripcion());
         response.setEstado(insc.getEstado());
+        response.setNota(insc.getNota());
         return response;
     }
 }
