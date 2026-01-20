@@ -11,6 +11,7 @@ import com.sysacad.backend.repository.MatriculacionRepository;
 import com.sysacad.backend.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import com.sysacad.backend.modelo.PlanMateria;
 import com.sysacad.backend.modelo.Comision;
 import com.sysacad.backend.dto.EstudianteMateriaDTO;
