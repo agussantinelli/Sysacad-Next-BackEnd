@@ -123,4 +123,22 @@ Base URL: `/api/alumnos`
 
 | Método | Endpoint | Roles / Acceso | Descripción |
 | :--- | :--- | :--- | :--- |
-| `GET` | `/mis-carreras-materias` | ESTUDIANTE | Obtener carreras y plan de materias del alumno logueado, con estado académico enriquecido (notas, regularidades). |
+
+## MesaExamenController
+Base URL: `/api/mesas`
+
+| Método | Endpoint | Roles / Acceso | Descripción |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/` | ADMIN | Crear una nueva mesa de examen (Turno). |
+| `GET` | `/` | Authenticated | Listar todos los turnos/mesas de examen disponibles. |
+| `POST` | `/detalles` | ADMIN | Agregar fecha y hora de examen para una materia en un turno. |
+
+## InscripcionExamenController
+Base URL: `/api/inscripciones-examen`
+
+| Método | Endpoint | Roles / Acceso | Descripción |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/` | ADMIN, ESTUDIANTE | Inscribir a un alumno en el examen final de una materia. |
+| `GET` | `/mis-inscripciones` | ESTUDIANTE | Listar inscripciones a exámenes del usuario actual. |
+| `DELETE` | `/{id}` | ADMIN, ESTUDIANTE | Dar de baja una inscripción a examen. |
+
