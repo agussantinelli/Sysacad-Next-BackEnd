@@ -54,4 +54,10 @@ public class InscripcionExamenController {
         inscripcionExamenService.darDeBaja(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/{id}/calificar")
+    public ResponseEntity<InscripcionExamenResponse> calificar(@PathVariable UUID id,
+            @RequestBody CargaNotaExamenRequest request) {
+        return ResponseEntity.ok(inscripcionExamenService.calificarExamen(id, request));
+    }
 }
