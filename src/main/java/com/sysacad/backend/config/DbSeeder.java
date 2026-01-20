@@ -1,8 +1,8 @@
 package com.sysacad.backend.config;
 
 import com.sysacad.backend.modelo.*;
-import com.sysacad.backend.modelo.Inscripcion.InscripcionId;
-import com.sysacad.backend.modelo.Calificacion.CalificacionId;
+import com.sysacad.backend.modelo.Materia;
+import com.sysacad.backend.modelo.Matriculacion;
 import com.sysacad.backend.modelo.enums.*;
 import com.sysacad.backend.repository.*;
 import com.sysacad.backend.modelo.MesaExamen;
@@ -37,8 +37,6 @@ public class DbSeeder {
                         ComisionRepository comisionRepository,
                         AsignacionMateriaRepository asignacionMateriaRepository,
                         HorarioCursadoRepository horarioCursadoRepository,
-                        InscripcionRepository inscripcionRepository,
-                        CalificacionRepository calificacionRepository,
                         MesaExamenRepository mesaExamenRepository,
                         DetalleMesaExamenRepository detalleMesaExamenRepository,
                         InscripcionExamenRepository inscripcionExamenRepository,
