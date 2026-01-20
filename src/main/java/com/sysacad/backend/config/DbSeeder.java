@@ -65,6 +65,8 @@ public class DbSeeder {
                         Usuario alumnoMiguel = null;
                         Usuario alumnoLucia = null;
                         Usuario alumnoCarlos = null;
+                        Usuario alumnoMartin = null;
+                        Usuario alumnoFlavia = null;
 
                         // Cargar Usuarios
                         if (usuarioRepository.count() == 0) {
@@ -93,14 +95,14 @@ public class DbSeeder {
                                                 "22222225",
                                                 "ana@sysacad.com", RolUsuario.PROFESOR, Genero.F, "Traductora Pública",
                                                 LocalDate.of(1982, 11, 30));
-                                profeSandra = createUsuario(usuarioRepository, passwordEncoder, "55551", "Julian",
-                                                "Bricco",
-                                                "22222226", "juli@sysacad.com", RolUsuario.PROFESOR, Genero.F,
+                                profeSandra = createUsuario(usuarioRepository, passwordEncoder, "55551", "Sandra",
+                                                "Civiero",
+                                                "22222226", "sandra@sysacad.com", RolUsuario.PROFESOR, Genero.F,
                                                 "Matemática",
                                                 LocalDate.of(1975, 4, 12));
-                                profeCristian = createUsuario(usuarioRepository, passwordEncoder, "55552", "Marino",
-                                                "Hinestroza",
-                                                "22222227", "marino@sysacad.com", RolUsuario.PROFESOR, Genero.M,
+                                profeCristian = createUsuario(usuarioRepository, passwordEncoder, "55552", "Cristian",
+                                                "Milone",
+                                                "22222227", "cristian@sysacad.com", RolUsuario.PROFESOR, Genero.M,
                                                 "Ingeniero Electrónico",
                                                 LocalDate.of(1988, 8, 25));
 
@@ -133,6 +135,14 @@ public class DbSeeder {
                                                 "Tevez", "33333339",
                                                 "carlos@sysacad.com", RolUsuario.ESTUDIANTE, Genero.M, null,
                                                 LocalDate.of(2003, 2, 5));
+                                alumnoMartin = createUsuario(usuarioRepository, passwordEncoder, "60003", "Martin",
+                                                "Palermo", "33333340",
+                                                "martin@sysacad.com", RolUsuario.ESTUDIANTE, Genero.M, null,
+                                                LocalDate.of(2003, 11, 7));
+                                alumnoFlavia = createUsuario(usuarioRepository, passwordEncoder, "60004", "Flavia",
+                                                "Avara", "33333341",
+                                                "flavia@sysacad.com", RolUsuario.ESTUDIANTE, Genero.F, null,
+                                                LocalDate.of(2004, 11, 24));
 
                                 System.out.println(">> Usuarios creados con éxito.");
                         } else {
@@ -151,6 +161,8 @@ public class DbSeeder {
                                 alumnoMiguel = usuarioRepository.findByLegajo("59999").orElse(null);
                                 alumnoLucia = usuarioRepository.findByLegajo("60001").orElse(null);
                                 alumnoCarlos = usuarioRepository.findByLegajo("60002").orElse(null);
+                                alumnoMartin = usuarioRepository.findByLegajo("60003").orElse(null);
+                                alumnoFlavia = usuarioRepository.findByLegajo("60004").orElse(null);
                         }
 
                         // -----------------------------------------------------------------------------------------
@@ -176,6 +188,8 @@ public class DbSeeder {
                                 // Matriculamos a algunos en otras carreras para variedad
                                 matricularAlumno(matriculacionRepository, alumnoJuan, frro, "IC", "Plan 2023"); // Civil
                                 matricularAlumno(matriculacionRepository, alumnoMiguel, frro, "IEE", "Plan 2023"); // Electrica
+                                matricularAlumno(matriculacionRepository, alumnoMartin, frro, "ISI", "Plan 2023");
+                                matricularAlumno(matriculacionRepository, alumnoFlavia, frro, "ISI", "Plan 2023");
 
                                 System.out.println(">> Alumnos matriculados exitosamente.");
                         }
@@ -282,11 +296,24 @@ public class DbSeeder {
                                         // 1K1 -> Algoritmos, Sistemas, Ingles, Algebra
                                         var insc = inscribirCursado(inscripcionCursadoRepository, alumnoAgustin, c1k1,
                                                         algoritmos);
-                                        cargarNotaCursada(calificacionCursadaRepository, insc, "1er Parcial", "8.50");
+                                        insc.setNotaFinal(new BigDecimal("9.00"));
+                                        insc.setEstado(EstadoCursada.PROMOCIONADO);
+                                        insc.setFechaPromocion(LocalDate.now());
+                                        inscripcionCursadoRepository.save(insc);
+
+                                        var inscSist = inscribirCursado(inscripcionCursadoRepository, alumnoAgustin,
+                                                        c1k1, sistemas);
+                                        inscSist.setNotaFinal(new BigDecimal("8.00"));
+                                        inscSist.setEstado(EstadoCursada.PROMOCIONADO);
+                                        inscSist.setFechaPromocion(LocalDate.now());
+                                        inscripcionCursadoRepository.save(inscSist);
 
                                         var inscEng = inscribirCursado(inscripcionCursadoRepository, alumnoAgustin,
                                                         c1k1, ingles1);
-                                        cargarNotaCursada(calificacionCursadaRepository, inscEng, "TP", "9.00");
+                                        inscEng.setNotaFinal(new BigDecimal("10.00"));
+                                        inscEng.setEstado(EstadoCursada.PROMOCIONADO);
+                                        inscEng.setFechaPromocion(LocalDate.now());
+                                        inscripcionCursadoRepository.save(inscEng);
 
                                         // 2K1 -> Analisis II, Sintaxis, Paradigmas, Sistemas Op
                                         inscribirCursado(inscripcionCursadoRepository, alumnoAgustin, c2k1, analisis2);
@@ -386,6 +413,16 @@ public class DbSeeder {
                                         inscribirCursado(inscripcionCursadoRepository, alumnoMiguel, c1k2, fisica1);
                                 }
 
+                                if (alumnoMartin != null) {
+                                        var insc = inscribirCursado(inscripcionCursadoRepository, alumnoMartin, c1k1,
+                                                        algoritmos);
+                                        cargarNotaCursada(calificacionCursadaRepository, insc, "1er Parcial", "2.00");
+                                }
+
+                                if (alumnoFlavia != null) {
+                                        inscribirCursado(inscripcionCursadoRepository, alumnoFlavia, c1k1, sistemas);
+                                }
+
                                 System.out
                                                 .println(">> Seeding Académico Finalizado: 4 Comisiones, Múltiples Horarios y Notas cargadas (Nueva Estructura).");
                         }
@@ -448,8 +485,6 @@ public class DbSeeder {
                         }
                 };
         }
-
-        // --- HELPERS ---
 
         private void matricularAlumno(MatriculacionRepository repo, Usuario alumno, FacultadRegional facu,
                         String carrera, String plan) {
