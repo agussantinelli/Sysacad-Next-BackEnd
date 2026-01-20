@@ -232,3 +232,27 @@ CREATE TABLE inscripciones_examen (
     CONSTRAINT fk_ie_usuario FOREIGN KEY (id_usuario) REFERENCES usuarios(id),
     CONSTRAINT fk_ie_detalle FOREIGN KEY (id_detalle_mesa) REFERENCES detalle_mesa_examen(id)
 );
+
+CREATE TABLE inscripciones_cursado (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id_usuario UUID NOT NULL,
+    id_materia UUID NOT NULL,
+    id_comision UUID NOT NULL,
+    fecha_inscripcion TIMESTAMP NOT NULL,
+    estado VARCHAR(50) NOT NULL,
+    nota_final DECIMAL(4, 2),
+    fecha_promocion DATE,
+    CONSTRAINT fk_ic_usuario FOREIGN KEY (id_usuario) REFERENCES usuarios(id),
+    CONSTRAINT fk_ic_materia FOREIGN KEY (id_materia) REFERENCES materias(id),
+    CONSTRAINT fk_ic_comision FOREIGN KEY (id_comision) REFERENCES comisiones(id)
+);
+
+CREATE TABLE calificaciones_cursada (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id_inscripcion_cursado UUID NOT NULL,
+    descripcion VARCHAR(100) NOT NULL,
+    nota DECIMAL(4, 2) NOT NULL,
+    fecha DATE NOT NULL,
+    CONSTRAINT fk_cc_inscripcion FOREIGN KEY (id_inscripcion_cursado) REFERENCES inscripciones_cursado(id) ON DELETE CASCADE
+);
+
