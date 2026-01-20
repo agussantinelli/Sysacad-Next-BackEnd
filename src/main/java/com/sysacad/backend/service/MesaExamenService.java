@@ -27,6 +27,9 @@ public class MesaExamenService {
     @Autowired
     private MateriaRepository materiaRepository;
 
+    @Autowired
+    private com.sysacad.backend.repository.UsuarioRepository usuarioRepository;
+
     @Transactional
     public MesaExamenResponse createMesa(MesaExamenRequest request) {
         MesaExamen mesa = new MesaExamen();
@@ -53,9 +56,13 @@ public class MesaExamenService {
         Materia materia = materiaRepository.findById(request.getIdMateria())
                 .orElseThrow(() -> new RuntimeException("Materia no encontrada"));
 
+        com.sysacad.backend.modelo.Usuario presidente = usuarioRepository.findById(request.getIdPresidente())
+                .orElseThrow(() -> new RuntimeException("Presidente de mesa no encontrado"));
+
         DetalleMesaExamen detalle = new DetalleMesaExamen();
         detalle.setMesaExamen(mesa);
         detalle.setMateria(materia);
+        detalle.setPresidente(presidente);
         detalle.setDiaExamen(request.getDiaExamen());
         detalle.setHoraExamen(request.getHoraExamen());
 
@@ -82,6 +89,11 @@ public class MesaExamenService {
         response.setId(detalle.getId());
         response.setNombreMateria(detalle.getMateria().getNombre());
         response.setIdMateria(detalle.getMateria().getId());
+        if (detalle.getPresidente() != null) {
+            response.setNombrePresidente(
+                    detalle.getPresidente().getNombre() + " " + detalle.getPresidente().getApellido());
+            response.setIdPresidente(detalle.getPresidente().getId());
+        }
         response.setDiaExamen(detalle.getDiaExamen());
         response.setHoraExamen(detalle.getHoraExamen());
         return response;
