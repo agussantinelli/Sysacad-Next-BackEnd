@@ -296,3 +296,50 @@ Enriched subject details for a specific student.
 - `nota` (String): Final grade or "-" if not approved.
 - `sePuedeInscribir` (Boolean): Calculated based on correlatives and current status.
 - `esElectiva` (Boolean)
+
+---
+
+## MesaExamen
+
+### `MesaExamenRequest`
+- `nombre` (String): e.g., "Turno Febrero 2026".
+- `fechaInicio` (LocalDate)
+- `fechaFin` (LocalDate)
+
+### `MesaExamenResponse`
+- `id` (UUID)
+- `nombre` (String)
+- `fechaInicio` (LocalDate)
+- `fechaFin` (LocalDate)
+- `detalles` (List<DetalleMesaExamenResponse>)
+
+### `DetalleMesaExamenRequest`
+- `idMesaExamen` (UUID)
+- `idMateria` (UUID)
+- `diaExamen` (LocalDate)
+- `horaExamen` (LocalTime)
+
+### `DetalleMesaExamenResponse`
+- `id` (UUID)
+- `nombreMateria` (String)
+- `idMateria` (UUID)
+- `diaExamen` (LocalDate)
+- `horaExamen` (LocalTime)
+
+---
+
+## InscripcionExamen
+
+### `InscripcionExamenRequest`
+- `idUsuario` (UUID): Optional (inferred from token if missing).
+- `idDetalleMesa` (UUID)
+
+### `InscripcionExamenResponse`
+- `id` (UUID)
+- `nombreAlumno` (String)
+- `legajoAlumno` (String)
+- `nombreMateria` (String)
+- `fechaExamen` (LocalDate)
+- `horaExamen` (LocalTime)
+- `fechaInscripcion` (LocalDateTime)
+- `estado` (String): e.g., "PENDIENTE".
