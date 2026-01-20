@@ -411,17 +411,18 @@ public class DbSeeder {
 
                                 // Febrero
                                 DetalleMesaExamen febAlgo = createDetalleMesa(detalleMesaExamenRepository, mesaFeb,
-                                                algoritmos, LocalDate.of(2026, 2, 10), LocalTime.of(9, 0));
+                                                algoritmos, profeNicolas, LocalDate.of(2026, 2, 10),
+                                                LocalTime.of(9, 0));
                                 DetalleMesaExamen febSistemas = createDetalleMesa(detalleMesaExamenRepository, mesaFeb,
-                                                sistemas, LocalDate.of(2026, 2, 12), LocalTime.of(14, 0));
+                                                sistemas, profeNicolas, LocalDate.of(2026, 2, 12), LocalTime.of(14, 0));
                                 DetalleMesaExamen febAnalisis = createDetalleMesa(detalleMesaExamenRepository, mesaFeb,
-                                                analisis1, LocalDate.of(2026, 2, 15), LocalTime.of(9, 0));
+                                                analisis1, profeSandra, LocalDate.of(2026, 2, 15), LocalTime.of(9, 0));
 
                                 // Julio
                                 DetalleMesaExamen julSintaxis = createDetalleMesa(detalleMesaExamenRepository, mesaJul,
-                                                sintaxis, LocalDate.of(2026, 7, 10), LocalTime.of(9, 0));
+                                                sintaxis, profeNicolas, LocalDate.of(2026, 7, 10), LocalTime.of(9, 0));
                                 DetalleMesaExamen julFisica = createDetalleMesa(detalleMesaExamenRepository, mesaJul,
-                                                fisica1, LocalDate.of(2026, 7, 15), LocalTime.of(16, 0));
+                                                fisica1, profeRoberto, LocalDate.of(2026, 7, 15), LocalTime.of(16, 0));
 
                                 // 3. Inscribir Alumnos a Examenes
                                 if (alumnoAgustin != null) {
@@ -431,7 +432,12 @@ public class DbSeeder {
 
                                 if (alumnoSofia != null) {
                                         inscribirExamen(inscripcionExamenRepository, alumnoSofia, febSistemas);
-                                        inscribirExamen(inscripcionExamenRepository, alumnoSofia, febAnalisis);
+                                        var insc = inscribirExamen(inscripcionExamenRepository, alumnoSofia,
+                                                        febAnalisis);
+                                        // Simulamos corrección
+                                        insc.setNota(new BigDecimal("9.00"));
+                                        insc.setEstado("APROBADO");
+                                        inscripcionExamenRepository.save(insc);
                                 }
 
                                 if (alumnoCarlos != null) {
@@ -564,10 +570,11 @@ public class DbSeeder {
         }
 
         private DetalleMesaExamen createDetalleMesa(DetalleMesaExamenRepository repo, MesaExamen mesa, Materia materia,
-                        LocalDate dia, LocalTime hora) {
+                        Usuario presidente, LocalDate dia, LocalTime hora) {
                 DetalleMesaExamen detalle = new DetalleMesaExamen();
                 detalle.setMesaExamen(mesa);
                 detalle.setMateria(materia);
+                detalle.setPresidente(presidente);
                 detalle.setDiaExamen(dia);
                 detalle.setHoraExamen(hora);
                 return repo.save(detalle);
