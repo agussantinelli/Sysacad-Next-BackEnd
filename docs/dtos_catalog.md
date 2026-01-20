@@ -343,3 +343,34 @@ Enriched subject details for a specific student.
 - `horaExamen` (LocalTime)
 - `fechaInscripcion` (LocalDateTime)
 - `estado` (String): e.g., "PENDIENTE".
+
+---
+
+## InscripcionCursado
+
+### `InscripcionCursadoRequest`
+- `idUsuario` (UUID): Optional if token used.
+- `idMateria` (UUID)
+- `idComision` (UUID)
+
+### `InscripcionCursadoResponse`
+- `id` (UUID)
+- `nombreMateria` (String)
+- `nombreComision` (String)
+- `anioCursado` (Integer)
+- `estado` (String)
+- `notaFinal` (BigDecimal)
+- `fechaPromocion` (LocalDate)
+- `fechaInscripcion` (LocalDateTime)
+- `calificaciones` (List<CalificacionCursadaResponse>)
+
+### `CalificacionCursadaRequest`
+- `descripcion` (String)
+- `nota` (BigDecimal)
+
+### `CalificacionCursadaResponse`
+- `id` (UUID)
+- `descripcion` (String)
+- `nota` (BigDecimal)
+- `fecha` (LocalDate)
+
