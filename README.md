@@ -99,6 +99,11 @@
             <td>Oferta operativa anual/cuatrimestral. Soporta relación N:M, asignación de roles docentes y <strong>agenda semanal de cursado</strong>.</td>
         </tr>
         <tr>
+            <td><strong>🗓️ Exámenes Finales</strong></td>
+            <td><code>mesas_examen</code>, <code>detalle_mesa_examen</code>, <code>inscripciones_examen</code></td>
+            <td>Gestión de turnos de examen (periodos), cronograma de fechas por materia e inscripciones de alumnos a mesas.</td>
+        </tr>
+        <tr>
             <td><strong>📝 Ciclo del Alumno</strong></td>
             <td><code>matriculaciones</code>, <code>inscripciones</code>, <code>calificaciones</code></td>
             <td>Trazabilidad total: Matriculación en carrera, inscripción a cursada/examen y registro de historia académica.</td>
@@ -220,7 +225,7 @@
 
 El sistema cuenta con un `DbSeeder` (`src/main/java/com/sysacad/backend/config/DbSeeder.java`) que pobla la base de datos automáticamente al inicio si detecta tablas vacías.
 *   **Carga Estructural:** Crea la UTN Facultad Regional Rosario, carreras (ISI, IM, IQ, IE, IC) y la estructura de materias real.
-*   **Simulación de Cursada:** Genera comisiones en distintos turnos, asigna equipos docentes, define horarios de cursado, inscribe alumnos y carga notas de exámenes y parciales.
+*   **Simulación de Cursada y Exámenes:** Genera comisiones en distintos turnos, asigna docentes, define horarios, inscribe alumnos, carga notas y **crea mesas de examen en Febrero, Julio y Diciembre con alumnos inscriptos**.
 *   **Usuarios:** Crea una población diversa de usuarios (Admin, Profesores, Estudiantes) para pruebas.
 
 <h3>🔐 Usuarios de Prueba Generados</h3>
@@ -275,6 +280,8 @@ El sistema cuenta con un `DbSeeder` (`src/main/java/com/sysacad/backend/config/D
 | **/sanciones** | `POST`, `GET` | Registro disciplinario de estudiantes. |
 | **/horarios** | `POST`, `GET`, `DELETE` | Gestión de agenda semanal por comisión y materia. |
 | **/alumnos** | `POST`, `GET` | Matriculación en carreras y consulta de plan de estudio personal. |
+| **/mesas** | `POST`, `GET` | Gestión de Turnos de Examen y cronograma de fechas. |
+| **/inscripciones-examen** | `POST`, `GET`, `DELETE` | Inscripción específica a finales y consulta de inscripciones. |
 
 <hr>
 
