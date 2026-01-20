@@ -205,3 +205,30 @@ CREATE TABLE horarios_cursado (
     CONSTRAINT fk_hc_materia FOREIGN KEY (id_materia) REFERENCES materias(id),
     CONSTRAINT chk_horario_valido CHECK (hora_hasta > hora_desde)
 );
+
+CREATE TABLE mesas_examen (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    nombre VARCHAR(100) NOT NULL,
+    fecha_inicio DATE NOT NULL,
+    fecha_fin DATE NOT NULL
+);
+
+CREATE TABLE detalle_mesa_examen (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id_mesa_examen UUID NOT NULL,
+    id_materia UUID NOT NULL,
+    dia_examen DATE NOT NULL,
+    hora_examen TIME NOT NULL,
+    CONSTRAINT fk_dme_mesa FOREIGN KEY (id_mesa_examen) REFERENCES mesas_examen(id),
+    CONSTRAINT fk_dme_materia FOREIGN KEY (id_materia) REFERENCES materias(id)
+);
+
+CREATE TABLE inscripciones_examen (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id_usuario UUID NOT NULL,
+    id_detalle_mesa UUID NOT NULL,
+    fecha_inscripcion TIMESTAMP NOT NULL,
+    estado VARCHAR(50) NOT NULL,
+    CONSTRAINT fk_ie_usuario FOREIGN KEY (id_usuario) REFERENCES usuarios(id),
+    CONSTRAINT fk_ie_detalle FOREIGN KEY (id_detalle_mesa) REFERENCES detalle_mesa_examen(id)
+);
