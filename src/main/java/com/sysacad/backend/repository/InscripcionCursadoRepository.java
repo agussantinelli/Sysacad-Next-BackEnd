@@ -15,4 +15,6 @@ public interface InscripcionCursadoRepository extends JpaRepository<InscripcionC
     Optional<InscripcionCursado> findByUsuarioIdAndMateriaId(UUID idUsuario, UUID idMateria);
 
     List<InscripcionCursado> findByComisionId(UUID idComision);
+
+    List<InscripcionCursado> findByMateriaId(UUID idMateria);
 }
