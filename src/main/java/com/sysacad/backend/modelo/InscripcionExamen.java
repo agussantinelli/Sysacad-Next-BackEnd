@@ -25,8 +25,9 @@ public class InscripcionExamen {
     @Column(name = "fecha_inscripcion", nullable = false)
     private LocalDateTime fechaInscripcion;
 
-    @Column(nullable = false, length = 50)
-    private String estado; // PENDIENTE, APROBADO, RECHAZADO, AUSENTE, DESAPROBADO
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private com.sysacad.backend.modelo.enums.EstadoExamen estado;
 
     @Column(precision = 4, scale = 2)
     private java.math.BigDecimal nota;

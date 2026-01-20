@@ -38,8 +38,9 @@ public class InscripcionCursado {
     @Column(name = "fecha_inscripcion", nullable = false)
     private LocalDateTime fechaInscripcion;
 
-    @Column(nullable = false, length = 50)
-    private String estado; // REGULAR, LIBRE, PROMOCIONADO, CURSANDO
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private com.sysacad.backend.modelo.enums.EstadoCursada estado;
 
     @Column(name = "nota_final", precision = 4, scale = 2)
     private BigDecimal notaFinal;
