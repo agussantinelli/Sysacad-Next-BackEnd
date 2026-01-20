@@ -123,6 +123,7 @@ Base URL: `/api/alumnos`
 
 | Método | Endpoint | Roles / Acceso | Descripción |
 | :--- | :--- | :--- | :--- |
+| `GET` | `/mis-carreras-materias` | ESTUDIANTE | Obtener info de carreras y materias del alumno (estado, notas, etc.). |
 
 ## MesaExamenController
 Base URL: `/api/mesas`
