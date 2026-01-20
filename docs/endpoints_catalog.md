@@ -39,15 +39,6 @@ Base URL: `/api/facultades`
 | `GET` | `/` | Authenticated | Listar todas las facultades. |
 | `GET` | `/{id}` | Authenticated | Buscar una facultad por ID. |
 
-## InscripcionController
-Base URL: `/api/inscripciones`
-
-| Método | Endpoint | Roles / Acceso | Descripción |
-| :--- | :--- | :--- | :--- |
-| `POST` | `/` | ADMIN, ESTUDIANTE | Inscribir un alumno a una comisión. |
-| `GET` | `/alumno/{idAlumno}` | ADMIN, ESTUDIANTE | Obtener historial de inscripciones de un alumno. |
-| `POST` | `/notas` | ADMIN, PROFESOR | Cargar nota a una inscripción. |
-| `GET` | `/validar-correlatividad` | ADMIN, ESTUDIANTE | Validar si un alumno puede cursar una materia. |
 
 ## MateriaController
 Base URL: `/api/materias`

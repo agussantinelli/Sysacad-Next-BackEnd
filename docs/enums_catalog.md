@@ -32,10 +32,6 @@ Classifies the type of subject.
 
 ## Inscripcion
 
-### `TipoInscripcion` (Deprecated)
-Distinguishes between enrolling for a course vs an exam. (Legacy entity `Inscripcion`).
-- `CURSADO`
-- `EXAMEN`
 
 ### `EstadoCursada`
 Used in `InscripcionCursado`.

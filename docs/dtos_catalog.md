@@ -160,52 +160,6 @@ Standard user response.
 
 ---
 
-## Inscripcion
-
-### `InscripcionRequest`
-- `idUsuario` (UUID)
-- `idComision` (UUID)
-- `tipo` (TipoInscripcion enum): "CURSADO" or "EXAMEN".
-- `vecesTipo` (Integer): Default 1.
-- `condicion` (String): e.g., "REGULAR", "LIBRE".
-
-### `InscripcionResponse`
-- `nombreMateria` (String)
-- `comision` (String)
-- `anioCursado` (Integer)
-- `tipo` (TipoInscripcion enum)
-- `fechaInscripcion` (String): Formatted "dd/MM/yyyy HH:mm".
-- `condicion` (String)
-- `notaFinal` (BigDecimal)
-- `idMateria` (UUID): Reference ID.
-- `idComision` (UUID): Reference ID.
-
----
-
-## Calificacion
-
-### `CalificacionRequest`
-- `idUsuario` (UUID)
-- `idComision` (UUID)
-- `tipoInscripcion` (TipoInscripcion enum)
-- `vecesTipoInscripcion` (Integer)
-- `concepto` (String): e.g., "Parcial 1".
-- `nota` (BigDecimal)
-
-### `CalificacionResponse`
-- `idUsuario` (UUID)
-- `nombreUsuario` (String)
-- `legajoUsuario` (String)
-- `idComision` (UUID)
-- `nombreComision` (String)
-- `materia` (String)
-- `tipoInscripcion` (TipoInscripcion enum)
-- `vecesTipoInscripcion` (Integer)
-- `concepto` (String)
-- `nota` (BigDecimal)
-- `fecha` (LocalDate)
-
----
 
 ## Aviso
 
