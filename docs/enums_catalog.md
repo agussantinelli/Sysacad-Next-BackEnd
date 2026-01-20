@@ -32,10 +32,25 @@ Classifies the type of subject.
 
 ## Inscripcion
 
-### `TipoInscripcion`
-Distinguishes between enrolling for a course vs an exam.
+### `TipoInscripcion` (Deprecated)
+Distinguishes between enrolling for a course vs an exam. (Legacy entity `Inscripcion`).
 - `CURSADO`
 - `EXAMEN`
+
+### `EstadoCursada`
+Used in `InscripcionCursado`.
+- `CURSANDO`
+- `REGULAR`
+- `PROMOCIONADO`
+- `LIBRE`
+- `APROBADO`
+
+### `EstadoExamen`
+Used in `InscripcionExamen`.
+- `PENDIENTE`
+- `APROBADO`
+- `DESAPROBADO`
+- `AUSENTE`
 
 ---
 
