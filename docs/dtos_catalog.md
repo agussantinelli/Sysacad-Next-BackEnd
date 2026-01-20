@@ -316,6 +316,7 @@ Enriched subject details for a specific student.
 ### `DetalleMesaExamenRequest`
 - `idMesaExamen` (UUID)
 - `idMateria` (UUID)
+- `idPresidente` (UUID)
 - `diaExamen` (LocalDate)
 - `horaExamen` (LocalTime)
 
@@ -323,6 +324,8 @@ Enriched subject details for a specific student.
 - `id` (UUID)
 - `nombreMateria` (String)
 - `idMateria` (UUID)
+- `nombrePresidente` (String)
+- `idPresidente` (UUID)
 - `diaExamen` (LocalDate)
 - `horaExamen` (LocalTime)
 
@@ -343,6 +346,11 @@ Enriched subject details for a specific student.
 - `horaExamen` (LocalTime)
 - `fechaInscripcion` (LocalDateTime)
 - `estado` (String): e.g., "PENDIENTE".
+- `nota` (BigDecimal)
+
+### `CargaNotaExamenRequest`
+- `nota` (BigDecimal)
+- `estado` (String)
 
 ---
 
