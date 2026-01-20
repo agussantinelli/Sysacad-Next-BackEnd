@@ -345,12 +345,13 @@ Enriched subject details for a specific student.
 - `fechaExamen` (LocalDate)
 - `horaExamen` (LocalTime)
 - `fechaInscripcion` (LocalDateTime)
-- `estado` (String): e.g., "PENDIENTE".
+- `fechaInscripcion` (LocalDateTime)
+- `estado` (String): e.g., "PENDIENTE" (mapped from EstadoExamen).
 - `nota` (BigDecimal)
 
 ### `CargaNotaExamenRequest`
 - `nota` (BigDecimal)
-- `estado` (String)
+- `estado` (EstadoExamen enum)
 
 ---
 
@@ -366,7 +367,7 @@ Enriched subject details for a specific student.
 - `nombreMateria` (String)
 - `nombreComision` (String)
 - `anioCursado` (Integer)
-- `estado` (String)
+- `estado` (String): e.g., "CURSANDO" (mapped from EstadoCursada).
 - `notaFinal` (BigDecimal)
 - `fechaPromocion` (LocalDate)
 - `fechaInscripcion` (LocalDateTime)
