@@ -143,3 +143,13 @@ Base URL: `/api/inscripciones-examen`
 | `GET` | `/mis-inscripciones` | ESTUDIANTE | Listar inscripciones a exámenes del usuario actual. |
 | `DELETE` | `/{id}` | ADMIN, ESTUDIANTE | Dar de baja una inscripción a examen. |
 
+## InscripcionCursadoController
+Base URL: `/api/inscripciones-cursado`
+
+| Método | Endpoint | Roles / Acceso | Descripción |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/` | ADMIN, ESTUDIANTE | Inscribirse a cursar una materia en una comisión. |
+| `GET` | `/mis-cursadas` | ESTUDIANTE | Obtener historial de materias cursadas y notas parciales. |
+| `POST` | `/{id}/notas` | ADMIN, PROFESOR | Cargar una nota parcial a una cursada. |
+
+
