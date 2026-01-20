@@ -63,7 +63,7 @@ public class InscripcionCursadoService {
         insc.setMateria(materia);
         insc.setComision(comision);
         insc.setFechaInscripcion(LocalDateTime.now());
-        insc.setEstado("CURSENDO"); // Estado inicial
+        insc.setEstado(com.sysacad.backend.modelo.enums.EstadoCursada.CURSANDO); // Estado inicial
 
         insc = inscripcionCursadoRepository.save(insc);
         return mapToResponse(insc);
@@ -96,7 +96,7 @@ public class InscripcionCursadoService {
         dto.setNombreMateria(insc.getMateria().getNombre());
         dto.setNombreComision(insc.getComision().getNombre());
         dto.setAnioCursado(insc.getComision().getAnio());
-        dto.setEstado(insc.getEstado());
+        dto.setEstado(insc.getEstado().toString());
         dto.setNotaFinal(insc.getNotaFinal());
         dto.setFechaPromocion(insc.getFechaPromocion());
         dto.setFechaInscripcion(insc.getFechaInscripcion());
