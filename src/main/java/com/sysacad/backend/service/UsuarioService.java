@@ -5,6 +5,7 @@ import com.sysacad.backend.modelo.AsignacionMateria;
 import com.sysacad.backend.modelo.Usuario;
 import com.sysacad.backend.modelo.enums.RolUsuario;
 import com.sysacad.backend.repository.AsignacionMateriaRepository;
+import com.sysacad.backend.repository.InscripcionCursadoRepository;
 import com.sysacad.backend.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -25,14 +26,14 @@ public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
     private final AsignacionMateriaRepository asignacionMateriaRepository;
-    private final com.sysacad.backend.repository.InscripcionCursadoRepository inscripcionCursadoRepository;
+    private final InscripcionCursadoRepository inscripcionCursadoRepository;
     private final FileStorageService fileStorageService;
 
     @Autowired
     public UsuarioService(UsuarioRepository usuarioRepository,
             PasswordEncoder passwordEncoder,
             AsignacionMateriaRepository asignacionMateriaRepository,
-            com.sysacad.backend.repository.InscripcionCursadoRepository inscripcionCursadoRepository,
+            InscripcionCursadoRepository inscripcionCursadoRepository,
             FileStorageService fileStorageService) {
         this.usuarioRepository = usuarioRepository;
         this.passwordEncoder = passwordEncoder;
