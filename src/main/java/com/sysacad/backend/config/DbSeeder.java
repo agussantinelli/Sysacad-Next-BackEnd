@@ -299,39 +299,39 @@ public class DbSeeder {
                                         var inscAlgo = inscribirCursado(inscripcionCursadoRepository, alumnoSofia, c1k1,
                                                         algoritmos);
                                         inscAlgo.setNotaFinal(new BigDecimal("9.00"));
-                                        inscAlgo.setEstado("PROMOCIONADO");
+                                        inscAlgo.setEstado(EstadoCursada.PROMOCIONADO);
                                         inscAlgo.setFechaPromocion(LocalDate.now());
                                         inscripcionCursadoRepository.save(inscAlgo);
 
                                         var inscSis = inscribirCursado(inscripcionCursadoRepository, alumnoSofia, c1k1,
                                                         sistemas);
                                         inscSis.setNotaFinal(new BigDecimal("8.00"));
-                                        inscSis.setEstado("PROMOCIONADO");
+                                        inscSis.setEstado(EstadoCursada.PROMOCIONADO);
                                         inscripcionCursadoRepository.save(inscSis);
 
                                         var inscIng = inscribirCursado(inscripcionCursadoRepository, alumnoSofia, c1k1,
                                                         ingles1);
                                         inscIng.setNotaFinal(new BigDecimal("10.00"));
-                                        inscIng.setEstado("PROMOCIONADO");
+                                        inscIng.setEstado(EstadoCursada.PROMOCIONADO);
                                         inscripcionCursadoRepository.save(inscIng);
 
                                         var inscAlg = inscribirCursado(inscripcionCursadoRepository, alumnoSofia, c1k1,
                                                         algebra);
                                         inscAlg.setNotaFinal(new BigDecimal("7.50"));
-                                        inscAlg.setEstado("PROMOCIONADO");
+                                        inscAlg.setEstado(EstadoCursada.PROMOCIONADO);
                                         inscripcionCursadoRepository.save(inscAlg);
 
                                         // 1K2 -> Analisis 1, Fisica 1
                                         var inscAn1 = inscribirCursado(inscripcionCursadoRepository, alumnoSofia, c1k2,
                                                         analisis1);
                                         inscAn1.setNotaFinal(new BigDecimal("8.00"));
-                                        inscAn1.setEstado("REGULAR");
+                                        inscAn1.setEstado(EstadoCursada.REGULAR);
                                         inscripcionCursadoRepository.save(inscAn1);
 
                                         var inscFis1 = inscribirCursado(inscripcionCursadoRepository, alumnoSofia, c1k2,
                                                         fisica1);
                                         inscFis1.setNotaFinal(new BigDecimal("9.50"));
-                                        inscFis1.setEstado("PROMOCIONADO");
+                                        inscFis1.setEstado(EstadoCursada.PROMOCIONADO);
                                         inscripcionCursadoRepository.save(inscFis1);
 
                                         // 2K1
@@ -436,7 +436,7 @@ public class DbSeeder {
                                                         febAnalisis);
                                         // Simulamos corrección
                                         insc.setNota(new BigDecimal("9.00"));
-                                        insc.setEstado("APROBADO");
+                                        insc.setEstado(EstadoExamen.APROBADO);
                                         inscripcionExamenRepository.save(insc);
                                 }
 
@@ -547,7 +547,7 @@ public class DbSeeder {
                 insc.setComision(comision);
                 insc.setMateria(materia);
                 insc.setFechaInscripcion(LocalDateTime.now());
-                insc.setEstado("CURSANDO");
+                insc.setEstado(EstadoCursada.CURSANDO);
                 return repo.save(insc);
         }
 
@@ -586,7 +586,7 @@ public class DbSeeder {
                 insc.setUsuario(alumno);
                 insc.setDetalleMesaExamen(detalle);
                 insc.setFechaInscripcion(LocalDateTime.now());
-                insc.setEstado("PENDIENTE");
+                insc.setEstado(EstadoExamen.PENDIENTE);
                 return repo.save(insc);
         }
 }
