@@ -5,6 +5,9 @@ import com.sysacad.backend.modelo.Inscripcion.InscripcionId;
 import com.sysacad.backend.modelo.Calificacion.CalificacionId;
 import com.sysacad.backend.modelo.enums.*;
 import com.sysacad.backend.repository.*;
+import com.sysacad.backend.modelo.MesaExamen;
+import com.sysacad.backend.modelo.DetalleMesaExamen;
+import com.sysacad.backend.modelo.InscripcionExamen;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,7 +38,10 @@ public class DbSeeder {
                         AsignacionMateriaRepository asignacionMateriaRepository,
                         HorarioCursadoRepository horarioCursadoRepository,
                         InscripcionRepository inscripcionRepository,
-                        CalificacionRepository calificacionRepository) {
+                        CalificacionRepository calificacionRepository,
+                        MesaExamenRepository mesaExamenRepository,
+                        DetalleMesaExamenRepository detalleMesaExamenRepository,
+                        InscripcionExamenRepository inscripcionExamenRepository) {
 
                 return args -> {
 
@@ -353,6 +359,42 @@ public class DbSeeder {
 
                                 System.out
                                                 .println(">> Seeding Académico Finalizado: 4 Comisiones, Múltiples Horarios y Notas cargadas.");
+                        }
+
+                        if (mesaExamenRepository.count() == 0) {
+                                System.out.println(">> DbSeeder: Creando Mesas de Examen...");
+
+                                // 1. Crear Mesa
+                                MesaExamen mesaFeb = new MesaExamen();
+                                mesaFeb.setNombre("Turno Febrero 2026");
+                                mesaFeb.setFechaInicio(LocalDate.of(2026, 2, 1));
+                                mesaFeb.setFechaFin(LocalDate.of(2026, 2, 28));
+                                mesaExamenRepository.save(mesaFeb);
+
+                                // 2. Crear Detalle (Materia en Mesa)
+                                Materia algoritmos = materiaRepository.findByNombre("Algoritmos y Estructuras de Datos")
+                                                .orElseThrow();
+
+                                DetalleMesaExamen detalleAlgo = new DetalleMesaExamen();
+                                detalleAlgo.setMesaExamen(mesaFeb);
+                                detalleAlgo.setMateria(algoritmos);
+                                detalleAlgo.setDiaExamen(LocalDate.of(2026, 2, 10));
+                                detalleAlgo.setHoraExamen(LocalTime.of(9, 0));
+                                detalleMesaExamenRepository.save(detalleAlgo);
+
+                                // 3. Inscribir Alumno a Examen
+                                if (alumnoAgustin != null) {
+                                        InscripcionExamen inscExamen = new InscripcionExamen();
+                                        inscExamen.setUsuario(alumnoAgustin);
+                                        inscExamen.setDetalleMesaExamen(detalleAlgo);
+                                        inscExamen.setFechaInscripcion(LocalDateTime.now());
+                                        inscExamen.setEstado("PENDIENTE");
+                                        inscripcionExamenRepository.save(inscExamen);
+                                        System.out.println(
+                                                        ">> Alumno inscripto a examen: " + alumnoAgustin.getNombre());
+                                }
+
+                                System.out.println(">> Mesa creada: " + mesaFeb.getNombre());
                         }
                 };
         }
