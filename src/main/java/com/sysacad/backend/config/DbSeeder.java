@@ -41,7 +41,10 @@ public class DbSeeder {
                         CalificacionRepository calificacionRepository,
                         MesaExamenRepository mesaExamenRepository,
                         DetalleMesaExamenRepository detalleMesaExamenRepository,
-                        InscripcionExamenRepository inscripcionExamenRepository) {
+                        InscripcionExamenRepository inscripcionExamenRepository,
+                        InscripcionCursadoRepository inscripcionCursadoRepository, // NEW
+                        CalificacionCursadaRepository calificacionCursadaRepository // NEW
+        ) {
 
                 return args -> {
 
@@ -273,92 +276,118 @@ public class DbSeeder {
                                 crearHorario(horarioCursadoRepository, c3k1, analisisNumerico, DiaSemana.VIERNES, 18,
                                                 21); // Cristian
 
-                                // INSCRIPCIONES Y NOTAS
+                                // INSCRIPCIONES Y NOTAS (NUEVO SISTEMA)
 
                                 if (alumnoAgustin != null) {
-                                        inscribirAlumno(inscripcionRepository, alumnoAgustin, c1k1);
-                                        inscribirAlumno(inscripcionRepository, alumnoAgustin, c2k1);
+                                        // 1K1 -> Algoritmos, Sistemas, Ingles, Algebra
+                                        var insc = inscribirCursado(inscripcionCursadoRepository, alumnoAgustin, c1k1,
+                                                        algoritmos);
+                                        cargarNotaCursada(calificacionCursadaRepository, insc, "1er Parcial", "8.50");
 
-                                        cargarNota(calificacionRepository, inscripcionRepository, alumnoAgustin, c1k1,
-                                                        "1er Parcial - " + algoritmos.getNombre(), "8.50");
-                                        cargarNota(calificacionRepository, inscripcionRepository, alumnoAgustin, c1k1,
-                                                        "TP " + ingles1.getNombre(), "9.00");
+                                        var inscEng = inscribirCursado(inscripcionCursadoRepository, alumnoAgustin,
+                                                        c1k1, ingles1);
+                                        cargarNotaCursada(calificacionCursadaRepository, inscEng, "TP", "9.00");
+
+                                        // 2K1 -> Analisis II, Sintaxis, Paradigmas, Sistemas Op
+                                        inscribirCursado(inscripcionCursadoRepository, alumnoAgustin, c2k1, analisis2);
+                                        // inscribirCursado(inscripcionCursadoRepository, alumnoAgustin, c2k1, ingles1);
+                                        // // NO ES DE 2K1
                                 }
 
                                 if (alumnoSofia != null) {
-                                        inscribirAlumno(inscripcionRepository, alumnoSofia, c1k1);
-                                        cargarNota(calificacionRepository, inscripcionRepository, alumnoSofia, c1k1,
-                                                        "Final " + algoritmos.getNombre(),
-                                                        "9.00");
-                                        cargarNota(calificacionRepository, inscripcionRepository, alumnoSofia, c1k1,
-                                                        "Final " + sistemas.getNombre(),
-                                                        "8.00");
-                                        cargarNota(calificacionRepository, inscripcionRepository, alumnoSofia, c1k1,
-                                                        "Final " + ingles1.getNombre(),
-                                                        "10.00");
-                                        cargarNota(calificacionRepository, inscripcionRepository, alumnoSofia, c1k1,
-                                                        "Final " + algebra.getNombre(),
-                                                        "7.50");
+                                        // 1K1
+                                        var inscAlgo = inscribirCursado(inscripcionCursadoRepository, alumnoSofia, c1k1,
+                                                        algoritmos);
+                                        inscAlgo.setNotaFinal(new BigDecimal("9.00"));
+                                        inscAlgo.setEstado("PROMOCIONADO");
+                                        inscAlgo.setFechaPromocion(LocalDate.now());
+                                        inscripcionCursadoRepository.save(inscAlgo);
 
-                                        inscribirAlumno(inscripcionRepository, alumnoSofia, c1k2);
-                                        cargarNota(calificacionRepository, inscripcionRepository, alumnoSofia, c1k2,
-                                                        "Final " + analisis1.getNombre(), "8.00");
-                                        cargarNota(calificacionRepository, inscripcionRepository, alumnoSofia, c1k2,
-                                                        "Final " + fisica1.getNombre(),
-                                                        "9.50");
+                                        var inscSis = inscribirCursado(inscripcionCursadoRepository, alumnoSofia, c1k1,
+                                                        sistemas);
+                                        inscSis.setNotaFinal(new BigDecimal("8.00"));
+                                        inscSis.setEstado("PROMOCIONADO");
+                                        inscripcionCursadoRepository.save(inscSis);
 
-                                        inscribirAlumno(inscripcionRepository, alumnoSofia, c2k1);
-                                        cargarNota(calificacionRepository, inscripcionRepository, alumnoSofia, c2k1,
-                                                        "Final " + analisis2.getNombre(), "7.00");
-                                        cargarNota(calificacionRepository, inscripcionRepository, alumnoSofia, c2k1,
-                                                        "Final " + sintaxis.getNombre(),
-                                                        "10.00");
-                                        cargarNota(calificacionRepository, inscripcionRepository, alumnoSofia, c2k1,
-                                                        "Final " + paradigmas.getNombre(),
-                                                        "9.00");
+                                        var inscIng = inscribirCursado(inscripcionCursadoRepository, alumnoSofia, c1k1,
+                                                        ingles1);
+                                        inscIng.setNotaFinal(new BigDecimal("10.00"));
+                                        inscIng.setEstado("PROMOCIONADO");
+                                        inscripcionCursadoRepository.save(inscIng);
 
-                                        inscribirAlumno(inscripcionRepository, alumnoSofia, c3k1);
-                                        cargarNota(calificacionRepository, inscripcionRepository, alumnoSofia, c3k1,
-                                                        "TP Normalización " + basesDatos.getNombre(),
-                                                        "7.50");
+                                        var inscAlg = inscribirCursado(inscripcionCursadoRepository, alumnoSofia, c1k1,
+                                                        algebra);
+                                        inscAlg.setNotaFinal(new BigDecimal("7.50"));
+                                        inscAlg.setEstado("PROMOCIONADO");
+                                        inscripcionCursadoRepository.save(inscAlg);
+
+                                        // 1K2 -> Analisis 1, Fisica 1
+                                        var inscAn1 = inscribirCursado(inscripcionCursadoRepository, alumnoSofia, c1k2,
+                                                        analisis1);
+                                        inscAn1.setNotaFinal(new BigDecimal("8.00"));
+                                        inscAn1.setEstado("REGULAR");
+                                        inscripcionCursadoRepository.save(inscAn1);
+
+                                        var inscFis1 = inscribirCursado(inscripcionCursadoRepository, alumnoSofia, c1k2,
+                                                        fisica1);
+                                        inscFis1.setNotaFinal(new BigDecimal("9.50"));
+                                        inscFis1.setEstado("PROMOCIONADO");
+                                        inscripcionCursadoRepository.save(inscFis1);
+
+                                        // 2K1
+                                        var inscAn2 = inscribirCursado(inscripcionCursadoRepository, alumnoSofia, c2k1,
+                                                        analisis2);
+                                        inscAn2.setNotaFinal(new BigDecimal("7.00"));
+                                        inscripcionCursadoRepository.save(inscAn2);
+
+                                        var inscSin = inscribirCursado(inscripcionCursadoRepository, alumnoSofia, c2k1,
+                                                        sintaxis);
+                                        inscSin.setNotaFinal(new BigDecimal("10.00"));
+                                        inscripcionCursadoRepository.save(inscSin);
                                 }
 
                                 if (alumnoCarlos != null) {
-                                        inscribirAlumno(inscripcionRepository, alumnoCarlos, c1k1);
-                                        cargarNota(calificacionRepository, inscripcionRepository, alumnoCarlos, c1k1,
-                                                        "Final " + algoritmos.getNombre(),
-                                                        "6.00");
-                                        cargarNota(calificacionRepository, inscripcionRepository, alumnoCarlos, c1k1,
-                                                        "Final " + sistemas.getNombre(),
-                                                        "7.00");
+                                        var inscAlgo = inscribirCursado(inscripcionCursadoRepository, alumnoCarlos,
+                                                        c1k1, algoritmos);
+                                        inscAlgo.setNotaFinal(new BigDecimal("6.00"));
+                                        inscripcionCursadoRepository.save(inscAlgo);
 
-                                        inscribirAlumno(inscripcionRepository, alumnoCarlos, c2k1);
-                                        cargarNota(calificacionRepository, inscripcionRepository, alumnoCarlos, c2k1,
-                                                        "1er Parcial " + sintaxis.getNombre(), "4.00");
+                                        var inscSis = inscribirCursado(inscripcionCursadoRepository, alumnoCarlos, c1k1,
+                                                        sistemas);
+                                        inscSis.setNotaFinal(new BigDecimal("7.00"));
+                                        inscripcionCursadoRepository.save(inscSis);
+
+                                        var inscSin = inscribirCursado(inscripcionCursadoRepository, alumnoCarlos, c2k1,
+                                                        sintaxis);
+                                        cargarNotaCursada(calificacionCursadaRepository, inscSin, "1er Parcial",
+                                                        "4.00");
                                 }
 
                                 if (alumnoLucia != null) {
-                                        inscribirAlumno(inscripcionRepository, alumnoLucia, c2k1);
-                                        cargarNota(calificacionRepository, inscripcionRepository, alumnoLucia, c2k1,
-                                                        "1er Parcial " + analisis2.getNombre(), "2.00");
+                                        var inscAn2 = inscribirCursado(inscripcionCursadoRepository, alumnoLucia, c2k1,
+                                                        analisis2);
+                                        cargarNotaCursada(calificacionCursadaRepository, inscAn2, "1er Parcial",
+                                                        "2.00");
                                 }
 
                                 if (alumnoMaria != null) {
-                                        inscribirAlumno(inscripcionRepository, alumnoMaria, c1k1);
-                                        cargarNota(calificacionRepository, inscripcionRepository, alumnoMaria, c1k1,
-                                                        "1er Parcial - " + algoritmos.getNombre(), "10.00");
+                                        var inscAlgo = inscribirCursado(inscripcionCursadoRepository, alumnoMaria, c1k1,
+                                                        algoritmos);
+                                        cargarNotaCursada(calificacionCursadaRepository, inscAlgo, "1er Parcial",
+                                                        "10.00");
                                 }
 
+                                // Juan y Miguel solo inscriptos
                                 if (alumnoJuan != null) {
-                                        inscribirAlumno(inscripcionRepository, alumnoJuan, c1k2);
+                                        inscribirCursado(inscripcionCursadoRepository, alumnoJuan, c1k2, analisis1);
                                 }
 
                                 if (alumnoMiguel != null) {
-                                        inscribirAlumno(inscripcionRepository, alumnoMiguel, c1k2);
+                                        inscribirCursado(inscripcionCursadoRepository, alumnoMiguel, c1k2, fisica1);
                                 }
 
                                 System.out
-                                                .println(">> Seeding Académico Finalizado: 4 Comisiones, Múltiples Horarios y Notas cargadas.");
+                                                .println(">> Seeding Académico Finalizado: 4 Comisiones, Múltiples Horarios y Notas cargadas (Nueva Estructura).");
                         }
 
                         if (mesaExamenRepository.count() == 0) {
@@ -495,34 +524,35 @@ public class DbSeeder {
                 repo.save(asignacion);
         }
 
-        private Inscripcion inscribirAlumno(InscripcionRepository repo, Usuario alumno, Comision comision) {
-                Inscripcion insc = new Inscripcion();
-                InscripcionId id = new InscripcionId(alumno.getId(), comision.getId(), TipoInscripcion.CURSADO, 1);
-                insc.setId(id);
-                insc.setCondicion("REGULAR");
-                insc.setFechaInscripcion(LocalDateTime.now());
+        // --- NUEVOS HELPERS PARA INSCRIPCION CURSADO ---
+
+        private InscripcionCursado inscribirCursado(InscripcionCursadoRepository repo, Usuario alumno,
+                        Comision comision, Materia materia) {
+                // Verificar que la comisión tenga esa materia (simple check)
+                boolean materiaEnComision = comision.getMaterias().stream()
+                                .anyMatch(m -> m.getId().equals(materia.getId()));
+                if (!materiaEnComision) {
+                        System.out.println("WARNING: Intentando inscribir en materia " + materia.getNombre()
+                                        + " no presente en comisión " + comision.getNombre());
+                }
+
+                InscripcionCursado insc = new InscripcionCursado();
                 insc.setUsuario(alumno);
                 insc.setComision(comision);
+                insc.setMateria(materia);
+                insc.setFechaInscripcion(LocalDateTime.now());
+                insc.setEstado("CURSANDO");
                 return repo.save(insc);
         }
 
-        private void cargarNota(CalificacionRepository califRepo, InscripcionRepository inscRepo, Usuario alumno,
-                        Comision comision, String concepto, String valor) {
-                Inscripcion insc = inscRepo.findByIdIdUsuarioAndIdIdComision(alumno.getId(), comision.getId())
-                                .stream().findFirst()
-                                .orElseThrow(() -> new RuntimeException("No se encontró inscripción para cargar nota"));
-
-                Calificacion nota = new Calificacion();
-                CalificacionId id = new CalificacionId(
-                                insc.getId().getIdUsuario(),
-                                insc.getId().getIdComision(),
-                                insc.getId().getTipo(),
-                                insc.getId().getVecesTipo(),
-                                concepto);
-                nota.setId(id);
-                nota.setNota(new BigDecimal(valor));
-                nota.setInscripcion(insc);
-                califRepo.save(nota);
+        private void cargarNotaCursada(CalificacionCursadaRepository repo, InscripcionCursado insc, String descripcion,
+                        String valor) {
+                CalificacionCursada calif = new CalificacionCursada();
+                calif.setInscripcionCursado(insc);
+                calif.setDescripcion(descripcion);
+                calif.setNota(new BigDecimal(valor));
+                calif.setFecha(LocalDate.now());
+                repo.save(calif);
         }
 
         private MesaExamen createMesa(MesaExamenRepository repo, String nombre, LocalDate inicio, LocalDate fin) {
