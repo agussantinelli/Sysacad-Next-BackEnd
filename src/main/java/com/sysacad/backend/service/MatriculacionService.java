@@ -11,12 +11,6 @@ import com.sysacad.backend.repository.MatriculacionRepository;
 import com.sysacad.backend.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import com.sysacad.backend.repository.InscripcionRepository;
-import com.sysacad.backend.repository.CalificacionRepository;
-import com.sysacad.backend.modelo.Inscripcion;
-import com.sysacad.backend.modelo.Calificacion;
 import com.sysacad.backend.modelo.PlanMateria;
 import com.sysacad.backend.modelo.Comision;
 import com.sysacad.backend.dto.EstudianteMateriaDTO;
@@ -31,18 +25,18 @@ public class MatriculacionService {
 
     private final MatriculacionRepository matriculacionRepository;
     private final UsuarioRepository usuarioRepository;
-    private final InscripcionRepository inscripcionRepository;
-    private final CalificacionRepository calificacionRepository;
+    private final com.sysacad.backend.repository.InscripcionCursadoRepository inscripcionCursadoRepository;
+    private final com.sysacad.backend.repository.InscripcionExamenRepository inscripcionExamenRepository;
 
     @Autowired
     public MatriculacionService(MatriculacionRepository matriculacionRepository,
             UsuarioRepository usuarioRepository,
-            InscripcionRepository inscripcionRepository,
-            CalificacionRepository calificacionRepository) {
+            com.sysacad.backend.repository.InscripcionCursadoRepository inscripcionCursadoRepository,
+            com.sysacad.backend.repository.InscripcionExamenRepository inscripcionExamenRepository) {
         this.matriculacionRepository = matriculacionRepository;
         this.usuarioRepository = usuarioRepository;
-        this.inscripcionRepository = inscripcionRepository;
-        this.calificacionRepository = calificacionRepository;
+        this.inscripcionCursadoRepository = inscripcionCursadoRepository;
+        this.inscripcionExamenRepository = inscripcionExamenRepository;
     }
 
     @Transactional
@@ -74,14 +68,12 @@ public class MatriculacionService {
         List<Matriculacion> matriculaciones = matriculacionRepository.findByIdIdUsuario(alumno.getId());
         List<CarreraMateriasDTO> resultado = new ArrayList<>();
 
-        // 3. Pre-cargar el historial académico completo del alumno para evitar N+1
-        // queries
-        List<Inscripcion> historialInscripciones = inscripcionRepository.findByIdIdUsuario(alumno.getId());
-        List<Calificacion> historialNotas = calificacionRepository.findByIdIdUsuario(alumno.getId());
+        // 3. Pre-cargar el historial académico completo (NUEVO SISTEMA)
+        var cursadas = inscripcionCursadoRepository.findByUsuarioId(alumno.getId());
+        var examenes = inscripcionExamenRepository.findByUsuarioId(alumno.getId());
 
         // 3.1 Construir mapa de ESTADO por Materia ID
-        Map<UUID, EstadoMateria> mapaEstadoMaterias = construirMapaEstadoMaterias(historialInscripciones,
-                historialNotas);
+        Map<UUID, EstadoMateria> mapaEstadoMaterias = construirMapaEstadoMaterias(cursadas, examenes);
 
         // 4. Iterar sobre cada carrera
         for (Matriculacion matricula : matriculaciones) {
@@ -92,8 +84,8 @@ public class MatriculacionService {
                 String nombreCarrera = plan.getCarrera().getNombre();
                 String nombrePlan = plan.getId().getNombre();
 
-                // Obtener las materias del plan con su metadata (nivel, correlativas)
-                List<PlanMateria> planMaterias = plan.getPlanMaterias(); // Usamos la nueva relación directa
+                // Obtener las materias del plan
+                List<PlanMateria> planMaterias = plan.getPlanMaterias();
 
                 List<EstudianteMateriaDTO> materiasDTO = new ArrayList<>();
 
@@ -106,6 +98,7 @@ public class MatriculacionService {
 
                     // Verificar correlativas para saber si se puede inscribir
                     boolean sePuedeInscribir = false;
+                    // Solo si está PENDIENTE o LIBRE verificamos si puede cursar
                     if (estadoActual.estado.equals("PENDIENTE") || estadoActual.estado.equals("LIBRE")) {
                         sePuedeInscribir = verificarCorrelativas(materia, mapaEstadoMaterias);
                     }
@@ -121,7 +114,7 @@ public class MatriculacionService {
                     materiasDTO.add(dto);
                 }
 
-                // Ordenar por nivel y luego nombre para prolijidad
+                // Ordenar por nivel y luego nombre
                 materiasDTO.sort(Comparator.comparing(EstudianteMateriaDTO::getNivel)
                         .thenComparing(EstudianteMateriaDTO::getNombre));
 
@@ -134,68 +127,36 @@ public class MatriculacionService {
 
     // --- Helpers de Lógica de Negocio ---
 
-    private Map<UUID, EstadoMateria> construirMapaEstadoMaterias(List<Inscripcion> inscripciones,
-            List<Calificacion> calificaciones) {
+    private Map<UUID, EstadoMateria> construirMapaEstadoMaterias(
+            List<com.sysacad.backend.modelo.InscripcionCursado> cursadas,
+            List<com.sysacad.backend.modelo.InscripcionExamen> examenes) {
+
         Map<UUID, EstadoMateria> mapa = new HashMap<>();
 
-        // Paso 1: Procesar Inscripciones (Define CURSANDO o REGULAR)
-        for (Inscripcion insc : inscripciones) {
-            // Una inscripción es a una comisión, que tiene Múltiples Materias.
-            // Asumimos que la inscripción aplica a TODAS las materias de la comisión.
-            Comision com = insc.getComision();
-            if (com != null && com.getMaterias() != null) {
-                for (Materia mat : com.getMaterias()) {
-                    String estado = "CURSANDO";
-                    if ("REGULAR".equalsIgnoreCase(insc.getCondicion())) {
-                        estado = "REGULAR";
-                    } else if ("LIBRE".equalsIgnoreCase(insc.getCondicion())) {
-                        estado = "LIBRE";
-                    }
-                    // Guardamos el mejor estado encontrado hasta ahora (Jerarquía: REGULAR >
-                    // CURSANDO > PENDIENTE)
-                    mapa.put(mat.getId(), new EstadoMateria(estado, "-"));
-                }
+        // 1. Procesar Cursadas
+        for (com.sysacad.backend.modelo.InscripcionCursado cur : cursadas) {
+            String estadoStr = cur.getEstado().toString();
+            // CURSANDO, REGULAR, PROMOCIONADO, LIBRE, APROBADO
+            String notaStr = cur.getNotaFinal() != null ? cur.getNotaFinal().toString() : "-";
+
+            // Normalizar estado 'PROMOCIONADO' -> 'APROBADA' visualmente, o mantener
+            // logica?
+            // El DTO espera: "PENDIENTE", "CURSANDO", "REGULAR", "APROBADA", "LIBRE"
+            String estadoFinal = estadoStr;
+            if (cur.getEstado() == com.sysacad.backend.modelo.enums.EstadoCursada.PROMOCIONADO ||
+                    cur.getEstado() == com.sysacad.backend.modelo.enums.EstadoCursada.APROBADO) {
+                estadoFinal = "APROBADA";
             }
+
+            mapa.put(cur.getMateria().getId(), new EstadoMateria(estadoFinal, notaStr));
         }
 
-        // Paso 2: Procesar Calificaciones (Define APROBADA y Nota)
-        // Esto es "loose coupling" porque la calificacion no apunta directo a materia,
-        // sino via String concepto
-        // Intentaremos matchear inteligentemente o usar la inscripción previa
-        for (Calificacion calif : calificaciones) {
-            // La calificación está ligada a una inscripción.
-            // Buscamos las materias de esa inscripción.
-            Inscripcion insc = calif.getInscripcion();
-            if (insc != null && insc.getComision() != null && insc.getComision().getMaterias() != null) {
-                for (Materia mat : insc.getComision().getMaterias()) {
-                    // Checkeo difuso: Si el concepto contiene el nombre de la materia OR es un
-                    // final genérico
-                    // Para simplificar, si la inscripción tiene nota final >= 6, asumimos APROBADA
-                    // todas las materias de esa comisión?
-                    // NO, eso es peligroso.
-                    // Vamos a confiar en el concepto.
-                    boolean esEstaMateria = calif.getId().getConcepto().toLowerCase()
-                            .contains(mat.getNombre().toLowerCase());
-                    boolean esAprobada = calif.getNota().doubleValue() >= 6.0;
-
-                    if (esEstaMateria && esAprobada) {
-                        mapa.put(mat.getId(), new EstadoMateria("APROBADA", calif.getNota().toString()));
-                    }
-                }
-            }
-        }
-
-        // Paso 3: Revisar notas directas en Inscripción (algunos modelos guardan nota
-        // final ahí)
-        for (Inscripcion insc : inscripciones) {
-            if (insc.getNotaFinal() != null && insc.getNotaFinal().doubleValue() >= 6.0) {
-                if (insc.getComision() != null && insc.getComision().getMaterias() != null) {
-                    for (Materia mat : insc.getComision().getMaterias()) {
-                        // Si tiene nota final en la inscripción, asumimos que aprobó TODO el bloque
-                        // (ej. cuatrimestre) o es inscripción única
-                        mapa.put(mat.getId(), new EstadoMateria("APROBADA", insc.getNotaFinal().toString()));
-                    }
-                }
+        // 2. Procesar Exámenes (Sobreescribe si aprobó final)
+        for (com.sysacad.backend.modelo.InscripcionExamen ex : examenes) {
+            if (ex.getEstado() == com.sysacad.backend.modelo.enums.EstadoExamen.APROBADO) {
+                // Aprobó final -> APROBADA
+                mapa.put(ex.getDetalleMesaExamen().getMateria().getId(),
+                        new EstadoMateria("APROBADA", ex.getNota() != null ? ex.getNota().toString() : "-"));
             }
         }
 
@@ -204,24 +165,23 @@ public class MatriculacionService {
 
     private boolean verificarCorrelativas(Materia materia, Map<UUID, EstadoMateria> historial) {
         if (materia.getCorrelativas() == null || materia.getCorrelativas().isEmpty()) {
-            return true; // Sin correlativas = libre inscripción
+            return true;
         }
 
         for (Materia correlativa : materia.getCorrelativas()) {
             EstadoMateria estadoCorr = historial.get(correlativa.getId());
-            // Regla de negocio estándar: Para cursar, necesitas la correlativa REGULARIZADA
-            // o APROBADA
+            // Regla: Para cursar, correlativa debe estar REGULAR o APROBADA (PROMOCIONADA
+            // cae en APROBADA)
             boolean correlativaOk = estadoCorr != null &&
                     (estadoCorr.estado.equals("REGULAR") || estadoCorr.estado.equals("APROBADA"));
 
             if (!correlativaOk) {
-                return false; // Falló una correlativa
+                return false;
             }
         }
         return true;
     }
 
-    // Helper interno
     private static class EstadoMateria {
         String estado;
         String nota;

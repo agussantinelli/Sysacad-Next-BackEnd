@@ -1,8 +1,6 @@
 package com.sysacad.backend.service;
 
-import com.sysacad.backend.modelo.Inscripcion;
 import com.sysacad.backend.modelo.Materia;
-import com.sysacad.backend.repository.InscripcionRepository;
 import com.sysacad.backend.repository.MateriaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,12 +13,17 @@ import java.util.stream.Collectors;
 @Service
 public class CorrelatividadService {
 
-    private final InscripcionRepository inscripcionRepository;
+    private final com.sysacad.backend.repository.InscripcionCursadoRepository inscripcionCursadoRepository;
+    private final com.sysacad.backend.repository.InscripcionExamenRepository inscripcionExamenRepository;
     private final MateriaRepository materiaRepository;
 
     @Autowired
-    public CorrelatividadService(InscripcionRepository inscripcionRepository, MateriaRepository materiaRepository) {
-        this.inscripcionRepository = inscripcionRepository;
+    public CorrelatividadService(
+            com.sysacad.backend.repository.InscripcionCursadoRepository inscripcionCursadoRepository,
+            com.sysacad.backend.repository.InscripcionExamenRepository inscripcionExamenRepository,
+            MateriaRepository materiaRepository) {
+        this.inscripcionCursadoRepository = inscripcionCursadoRepository;
+        this.inscripcionExamenRepository = inscripcionExamenRepository;
         this.materiaRepository = materiaRepository;
     }
 
@@ -35,22 +38,27 @@ public class CorrelatividadService {
             return true;
         }
 
-        // Obtener el historial académico del alumno
-        List<Inscripcion> historial = inscripcionRepository.findByIdIdUsuario(idAlumno);
+        // Obtener IDs de materias aprobadas (Promocionadas o Examen Final Aprobado)
+        List<UUID> idsAprobadas = new java.util.ArrayList<>();
 
-        // Filtrar solo las materias APROBADAS (Nota >= 6)
-        // Obtenemos los IDs de las materias que el alumno ya metió
-        List<UUID> idsMateriasAprobadas = historial.stream()
-                .filter(i -> i.getNotaFinal() != null && i.getNotaFinal().doubleValue() >= 6.0)
-                // Nota: Asumimos que la comisión tiene al menos una materia asociada
-                .map(i -> i.getComision().getMaterias().get(0).getId())
-                .collect(Collectors.toList());
+        // 1. Promocionadas
+        idsAprobadas.addAll(inscripcionCursadoRepository.findByUsuarioId(idAlumno).stream()
+                .filter(i -> i.getEstado() == com.sysacad.backend.modelo.enums.EstadoCursada.PROMOCIONADO ||
+                        i.getEstado() == com.sysacad.backend.modelo.enums.EstadoCursada.APROBADO)
+                .map(i -> i.getMateria().getId())
+                .collect(Collectors.toList()));
+
+        // 2. Finales Aprobados
+        idsAprobadas.addAll(inscripcionExamenRepository.findByUsuarioId(idAlumno).stream()
+                .filter(i -> i.getEstado() == com.sysacad.backend.modelo.enums.EstadoExamen.APROBADO)
+                .map(i -> i.getDetalleMesaExamen().getMateria().getId())
+                .collect(Collectors.toList()));
 
         // Verificar requisitos
         List<UUID> idsCorrelativasNecesarias = materiaObjetivo.getCorrelativas().stream()
                 .map(Materia::getId)
                 .collect(Collectors.toList());
 
-        return idsMateriasAprobadas.containsAll(idsCorrelativasNecesarias);
+        return idsAprobadas.containsAll(idsCorrelativasNecesarias);
     }
 }

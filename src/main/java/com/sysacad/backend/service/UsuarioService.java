@@ -5,7 +5,6 @@ import com.sysacad.backend.modelo.AsignacionMateria;
 import com.sysacad.backend.modelo.Usuario;
 import com.sysacad.backend.modelo.enums.RolUsuario;
 import com.sysacad.backend.repository.AsignacionMateriaRepository;
-import com.sysacad.backend.repository.InscripcionRepository;
 import com.sysacad.backend.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -26,18 +25,19 @@ public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
     private final AsignacionMateriaRepository asignacionMateriaRepository;
-    private final InscripcionRepository inscripcionRepository;
+    private final com.sysacad.backend.repository.InscripcionCursadoRepository inscripcionCursadoRepository;
     private final FileStorageService fileStorageService;
+
     @Autowired
     public UsuarioService(UsuarioRepository usuarioRepository,
-                          PasswordEncoder passwordEncoder,
-                          AsignacionMateriaRepository asignacionMateriaRepository,
-                          InscripcionRepository inscripcionRepository,
-                          FileStorageService fileStorageService) {
+            PasswordEncoder passwordEncoder,
+            AsignacionMateriaRepository asignacionMateriaRepository,
+            com.sysacad.backend.repository.InscripcionCursadoRepository inscripcionCursadoRepository,
+            FileStorageService fileStorageService) {
         this.usuarioRepository = usuarioRepository;
         this.passwordEncoder = passwordEncoder;
         this.asignacionMateriaRepository = asignacionMateriaRepository;
-        this.inscripcionRepository = inscripcionRepository;
+        this.inscripcionCursadoRepository = inscripcionCursadoRepository;
         this.fileStorageService = fileStorageService;
     }
 
@@ -69,7 +69,8 @@ public class UsuarioService {
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        // validarPermisoModificacion(usuario.getLegajo()); // Seguridad desactivada a pedido
+        // validarPermisoModificacion(usuario.getLegajo()); // Seguridad desactivada a
+        // pedido
 
         usuario.setNombre(request.getNombre());
         usuario.setApellido(request.getApellido());
@@ -83,8 +84,10 @@ public class UsuarioService {
 
         if (request.getFotoPerfil() != null) {
             // Si viene una URL externa o vacío, actualizamos.
-            // Si el usuario quiere borrar la foto anterior del disco al poner una URL externa,
-            // podríamos llamar a fileStorageService.borrarArchivo(usuario.getFotoPerfil()) aquí.
+            // Si el usuario quiere borrar la foto anterior del disco al poner una URL
+            // externa,
+            // podríamos llamar a fileStorageService.borrarArchivo(usuario.getFotoPerfil())
+            // aquí.
             usuario.setFotoPerfil(request.getFotoPerfil());
         }
 
@@ -104,8 +107,7 @@ public class UsuarioService {
         String rutaGuardada = fileStorageService.guardarFotoPerfil(
                 archivo,
                 usuario.getLegajo(),
-                usuario.getFotoPerfil()
-        );
+                usuario.getFotoPerfil());
 
         usuario.setFotoPerfil(rutaGuardada);
         usuarioRepository.save(usuario);
@@ -140,15 +142,17 @@ public class UsuarioService {
 
     @Transactional(readOnly = true)
     public List<Usuario> obtenerAlumnosInscriptosPorMateria(UUID idMateria) {
-        return inscripcionRepository.findAlumnosByMateria(idMateria);
+        // Obtenemos inscripciones cursado para la materia
+        return inscripcionCursadoRepository.findByMateriaId(idMateria).stream()
+                .map(com.sysacad.backend.modelo.InscripcionCursado::getUsuario)
+                .collect(Collectors.toList());
     }
 
     @Transactional
     public void eliminarUsuario(UUID id) {
-        // Antes de eliminar el usuario, limpiamos su foto del disco para no dejar basura
-        usuarioRepository.findById(id).ifPresent(u ->
-                fileStorageService.borrarArchivo(u.getFotoPerfil())
-        );
+        // Antes de eliminar el usuario, limpiamos su foto del disco para no dejar
+        // basura
+        usuarioRepository.findById(id).ifPresent(u -> fileStorageService.borrarArchivo(u.getFotoPerfil()));
         usuarioRepository.deleteById(id);
     }
 
