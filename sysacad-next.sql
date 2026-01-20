@@ -219,8 +219,10 @@ CREATE TABLE detalle_mesa_examen (
     id_materia UUID NOT NULL,
     dia_examen DATE NOT NULL,
     hora_examen TIME NOT NULL,
+    id_presidente UUID NOT NULL,
     CONSTRAINT fk_dme_mesa FOREIGN KEY (id_mesa_examen) REFERENCES mesas_examen(id),
-    CONSTRAINT fk_dme_materia FOREIGN KEY (id_materia) REFERENCES materias(id)
+    CONSTRAINT fk_dme_materia FOREIGN KEY (id_materia) REFERENCES materias(id),
+    CONSTRAINT fk_dme_presidente FOREIGN KEY (id_presidente) REFERENCES usuarios(id)
 );
 
 CREATE TABLE inscripciones_examen (
@@ -229,6 +231,7 @@ CREATE TABLE inscripciones_examen (
     id_detalle_mesa UUID NOT NULL,
     fecha_inscripcion TIMESTAMP NOT NULL,
     estado VARCHAR(50) NOT NULL,
+    nota DECIMAL(4, 2),
     CONSTRAINT fk_ie_usuario FOREIGN KEY (id_usuario) REFERENCES usuarios(id),
     CONSTRAINT fk_ie_detalle FOREIGN KEY (id_detalle_mesa) REFERENCES detalle_mesa_examen(id)
 );
