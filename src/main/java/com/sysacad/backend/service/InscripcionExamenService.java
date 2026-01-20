@@ -49,7 +49,7 @@ public class InscripcionExamenService {
         inscripcion.setUsuario(usuario);
         inscripcion.setDetalleMesaExamen(detalle);
         inscripcion.setFechaInscripcion(LocalDateTime.now());
-        inscripcion.setEstado("PENDIENTE");
+        inscripcion.setEstado(com.sysacad.backend.modelo.enums.EstadoExamen.PENDIENTE);
 
         inscripcion = inscripcionExamenRepository.save(inscripcion);
         return mapToResponse(inscripcion);
@@ -93,7 +93,7 @@ public class InscripcionExamenService {
         response.setFechaExamen(insc.getDetalleMesaExamen().getDiaExamen());
         response.setHoraExamen(insc.getDetalleMesaExamen().getHoraExamen());
         response.setFechaInscripcion(insc.getFechaInscripcion());
-        response.setEstado(insc.getEstado());
+        response.setEstado(insc.getEstado().toString());
         response.setNota(insc.getNota());
         return response;
     }
