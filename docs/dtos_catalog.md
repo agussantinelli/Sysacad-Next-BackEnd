@@ -73,12 +73,14 @@ Standard user response.
 
 ### `CarreraRequest`
 - `idFacultad` (UUID): Part of composite key.
-- `idCarrera` (String): Code, e.g., "ISI". Part of composite key.
+- `nroCarrera` (Integer): Sequential number, e.g., 1. Part of composite key.
+- `alias` (String): E.g., "ISI".
 - `nombre` (String)
 
 ### `CarreraResponse`
 - `idFacultad` (UUID)
-- `idCarrera` (String)
+- `nroCarrera` (Integer)
+- `alias` (String)
 - `nombre` (String)
 - `nombreFacultad` (String)
 
@@ -88,7 +90,7 @@ Standard user response.
 
 ### `PlanDeEstudioRequest`
 - `idFacultad` (UUID)
-- `idCarrera` (String)
+- `nroCarrera` (Integer)
 - `nombrePlan` (String): Identifier, e.g., "Plan 2008".
 - `fechaInicio` (LocalDate)
 - `fechaFin` (LocalDate)
@@ -236,7 +238,7 @@ Standard user response.
 
 ### `CarreraMateriasDTO`
 Response structure for `/api/alumnos/mis-carreras-materias`.
-- `idCarrera` (String)
+- `nroCarrera` (Integer)
 - `nombreCarrera` (String)
 - `nombrePlan` (String)
 - `materias` (List<EstudianteMateriaDTO>)
