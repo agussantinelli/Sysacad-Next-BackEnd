@@ -91,12 +91,14 @@ Standard user response.
 ### `PlanDeEstudioRequest`
 - `idFacultad` (UUID)
 - `nroCarrera` (Integer)
-- `nombrePlan` (String): Identifier, e.g., "Plan 2008".
+- `nroPlan` (Integer): Identifier, e.g., 2023.
+- `nombrePlan` (String): e.g., "Plan 2023".
 - `fechaInicio` (LocalDate)
 - `fechaFin` (LocalDate)
 - `esVigente` (Boolean)
 
 ### `PlanDeEstudioResponse`
+- `nroPlan` (Integer)
 - `nombrePlan` (String)
 - `fechaInicio` (LocalDate)
 - `fechaFin` (LocalDate)
