@@ -105,8 +105,8 @@
         </tr>
         <tr>
             <td><strong>📝 Ciclo del Alumno</strong></td>
-            <td><code>matriculaciones</code>, <code>inscripciones_cursado</code>, <code>inscripciones_examen</code></td>
-            <td>Trazabilidad total: Matriculación en carrera, cursada (regularidad) y exámenes finales.</td>
+            <td><code>matriculaciones</code>, <code>inscripciones</code>, <code>calificaciones</code></td>
+            <td>Trazabilidad total: Matriculación en carrera, inscripción a cursada/examen y registro de historia académica.</td>
         </tr>
     </tbody>
 </table>
@@ -278,14 +278,14 @@ El sistema cuenta con un `DbSeeder` (`src/main/java/com/sysacad/backend/config/D
 | **/planes** | `POST`, `GET` | Planes de estudio independientes. |
 | **/materias** | `POST`, `GET`, `PUT` | ABM de materias, incluyendo correlatividades y <strong>Modalidad</strong>. |
 | **/comisiones** | `POST`, `GET`, `PUT` | Comisiones anuales, asignación de docentes y horarios. |
-| **/inscripciones-cursado** | `POST`, `GET` | Inscripción a cursada. |
-| **/inscripciones-examen** | `POST`, `GET` | Inscripción a exámenes finales. |
+| **/inscripciones** | `POST`, `GET` | Inscripción a cursada/finales y consulta de historia académica. |
 | **/avisos** | `POST`, `GET` | Cartelera de novedades (Admin publica, todos leen). |
 | **/salones** | `POST`, `GET` | Gestión de aulas físicas y asignación a facultades. |
 | **/sanciones** | `POST`, `GET` | Registro disciplinario de estudiantes. |
 | **/horarios** | `POST`, `GET`, `DELETE` | Gestión de agenda semanal por comisión y materia. |
 | **/alumnos** | `POST`, `GET` | Matriculación en carreras y consulta de plan de estudio personal. |
 | **/mesas** | `POST`, `GET` | Gestión de Turnos de Examen y cronograma de fechas. |
+| **/inscripciones-examen** | `POST`, `GET`, `DELETE` | Inscripción específica a finales y consulta de inscripciones. |
 
 <hr>
 
