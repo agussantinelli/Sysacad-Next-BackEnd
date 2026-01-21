@@ -10,13 +10,15 @@ import java.util.UUID;
 @NoArgsConstructor
 public class CarreraResponse {
     private UUID idFacultad;
-    private String idCarrera;
+    private Integer nroCarrera;
+    private String alias;
     private String nombre;
     private String nombreFacultad;
 
     public CarreraResponse(Carrera carrera) {
         this.idFacultad = carrera.getId().getIdFacultad();
-        this.idCarrera = carrera.getId().getIdCarrera();
+        this.nroCarrera = carrera.getId().getNroCarrera();
+        this.alias = carrera.getAlias();
         this.nombre = carrera.getNombre();
 
         if (carrera.getFacultad() != null) {

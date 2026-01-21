@@ -10,7 +10,8 @@ import java.util.UUID;
 public class CarreraRequest {
     // Parte de la PK compuesta
     private UUID idFacultad;
-    private String idCarrera; // Ej: "ISI", "IM"
+    private Integer nroCarrera; // Ej: 1, 2
+    private String alias; // Ej: "ISI", "IM"
 
     private String nombre; // Ej: "Ingeniería en Sistemas de Información"
 }

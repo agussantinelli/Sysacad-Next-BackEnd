@@ -9,13 +9,10 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 public class PlanDeEstudioRequest {
-    // IDs de la Carrera Padre
+    // Parte de la PK compuesta
     private UUID idFacultad;
-    private String idCarrera;
-
-    // Identificador del Plan
-    private String nombrePlan; // Ej: "Plan 2008", "Plan 2023"
-
+    private Integer nroCarrera; // PK
+    private String nombrePlan; // PK, ej: "Plan 2023"
     private LocalDate fechaInicio;
     private LocalDate fechaFin;
     private Boolean esVigente;
