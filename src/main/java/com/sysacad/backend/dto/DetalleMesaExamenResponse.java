@@ -7,7 +7,8 @@ import java.util.UUID;
 
 @Data
 public class DetalleMesaExamenResponse {
-    private UUID id;
+    private UUID idMesaExamen;
+    private Integer nroDetalle;
     private String nombreMateria;
     private UUID idMateria; // added for convenience
     private String nombrePresidente;

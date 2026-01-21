@@ -8,6 +8,7 @@ import java.util.UUID;
 @Data
 public class DetalleMesaExamenRequest {
     private UUID idMesaExamen;
+    private Integer nroDetalle;
     private UUID idMateria;
     private UUID idPresidente;
     private LocalDate diaExamen;
