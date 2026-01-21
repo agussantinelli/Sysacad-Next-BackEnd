@@ -28,6 +28,9 @@ public class PlanDeEstudio {
         @Column(name = "es_vigente", nullable = false)
         private Boolean esVigente = true;
 
+        @Column(name = "nombre", length = 100, nullable = false)
+        private String nombre;
+
         @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumns({
                         @JoinColumn(name = "id_facultad", referencedColumnName = "id_facultad", insertable = false, updatable = false),
@@ -57,7 +60,7 @@ public class PlanDeEstudio {
                 @Column(name = "nro_carrera")
                 private Integer nroCarrera;
 
-                @Column(name = "nombre", length = 100)
-                private String nombre;
+                @Column(name = "nro_plan")
+                private Integer nroPlan;
         }
 }
