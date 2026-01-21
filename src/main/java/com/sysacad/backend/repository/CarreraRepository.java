@@ -11,4 +11,10 @@ import java.util.UUID;
 public interface CarreraRepository extends JpaRepository<Carrera, Carrera.CarreraId> {
 
     List<Carrera> findByIdIdFacultad(UUID idFacultad);
+
+    // Búsqueda por alias (antiguo ID string)
+    // Nota: El alias debería ser único por facultad, pero aquí buscamos global o
+    // por facultad si fuera necesario
+    // Por simplicidad buscamos global primero o por facultad y alias
+    java.util.Optional<Carrera> findByIdIdFacultadAndAlias(UUID idFacultad, String alias);
 }

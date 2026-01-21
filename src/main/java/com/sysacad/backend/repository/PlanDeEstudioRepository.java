@@ -11,8 +11,8 @@ import java.util.List;
 public interface PlanDeEstudioRepository extends JpaRepository<PlanDeEstudio, PlanId> {
 
     // Buscar planes vigentes por carrera (parte de la PK compuesta)
-    List<PlanDeEstudio> findByIdIdCarreraAndEsVigenteTrue(String idCarrera);
+    List<PlanDeEstudio> findByIdNroCarreraAndEsVigenteTrue(Integer nroCarrera);
 
     // Buscar todos los planes de una carrera específica
-    List<PlanDeEstudio> findByIdIdCarrera(String idCarrera);
+    List<PlanDeEstudio> findByIdNroCarrera(Integer nroCarrera);
 }
