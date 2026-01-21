@@ -75,34 +75,35 @@ CREATE TABLE avisos (
 
 CREATE TABLE carreras (
     id_facultad UUID NOT NULL,
-    id_carrera VARCHAR(20) NOT NULL, 
+    nro_carrera INTEGER NOT NULL, 
     nombre VARCHAR(100) NOT NULL,
-    PRIMARY KEY (id_facultad, id_carrera),
+    alias VARCHAR(20) NOT NULL,
+    PRIMARY KEY (id_facultad, nro_carrera),
     CONSTRAINT fk_carrera_facultad FOREIGN KEY (id_facultad) REFERENCES facultades_regionales(id)
 );
 
 CREATE TABLE planes_de_estudios (
     id_facultad UUID NOT NULL,
-    id_carrera VARCHAR(20) NOT NULL,
+    nro_carrera INTEGER NOT NULL,
     nombre VARCHAR(100) NOT NULL, 
     fecha_inicio DATE NOT NULL,
     fecha_fin DATE,
     es_vigente BOOLEAN NOT NULL DEFAULT TRUE,
-    PRIMARY KEY (id_facultad, id_carrera, nombre),
-    CONSTRAINT fk_plan_carrera FOREIGN KEY (id_facultad, id_carrera)
-        REFERENCES carreras(id_facultad, id_carrera) ON DELETE CASCADE
+    PRIMARY KEY (id_facultad, nro_carrera, nombre),
+    CONSTRAINT fk_plan_carrera FOREIGN KEY (id_facultad, nro_carrera)
+        REFERENCES carreras(id_facultad, nro_carrera) ON DELETE CASCADE
 );
 
 CREATE TABLE plan_materias (
     id_facultad UUID NOT NULL,
-    id_carrera VARCHAR(20) NOT NULL,
+    nro_carrera INTEGER NOT NULL,
     nombre_plan VARCHAR(100) NOT NULL,
     id_materia UUID NOT NULL,
     codigo_materia VARCHAR(20) NOT NULL,
     nivel SMALLINT NOT NULL,
-    PRIMARY KEY (id_facultad, id_carrera, nombre_plan, id_materia),
-    CONSTRAINT fk_pm_plan FOREIGN KEY (id_facultad, id_carrera, nombre_plan)
-        REFERENCES planes_de_estudios(id_facultad, id_carrera, nombre),
+    PRIMARY KEY (id_facultad, nro_carrera, nombre_plan, id_materia),
+    CONSTRAINT fk_pm_plan FOREIGN KEY (id_facultad, nro_carrera, nombre_plan)
+        REFERENCES planes_de_estudios(id_facultad, nro_carrera, nombre),
     CONSTRAINT fk_pm_materia FOREIGN KEY (id_materia) REFERENCES materias(id)
 );
 
@@ -152,14 +153,14 @@ CREATE TABLE asignaciones_materia (
 CREATE TABLE estudios_usuario (
     id_usuario UUID NOT NULL,
     id_facultad UUID NOT NULL,
-    id_carrera VARCHAR(20) NOT NULL,
+    nro_carrera INTEGER NOT NULL,
     nombre_plan VARCHAR(100) NOT NULL,
     fecha_inscripcion DATE NOT NULL,
     estado VARCHAR(20) NOT NULL,
-    PRIMARY KEY (id_usuario, id_facultad, id_carrera, nombre_plan),
+    PRIMARY KEY (id_usuario, id_facultad, nro_carrera, nombre_plan),
     CONSTRAINT fk_estudia_usuario FOREIGN KEY (id_usuario) REFERENCES usuarios(id),
-    CONSTRAINT fk_estudia_plan FOREIGN KEY (id_facultad, id_carrera, nombre_plan)
-        REFERENCES planes_de_estudios(id_facultad, id_carrera, nombre)
+    CONSTRAINT fk_estudia_plan FOREIGN KEY (id_facultad, nro_carrera, nombre_plan)
+        REFERENCES planes_de_estudios(id_facultad, nro_carrera, nombre)
 );
 
 
