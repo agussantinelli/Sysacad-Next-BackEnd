@@ -183,12 +183,13 @@ CREATE TABLE mesas_examen (
 );
 
 CREATE TABLE detalle_mesa_examen (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     id_mesa_examen UUID NOT NULL,
+    nro_detalle INTEGER NOT NULL,
     id_materia UUID NOT NULL,
     dia_examen DATE NOT NULL,
     hora_examen TIME NOT NULL,
     id_presidente UUID NOT NULL,
+    PRIMARY KEY (id_mesa_examen, nro_detalle),
     CONSTRAINT fk_dme_mesa FOREIGN KEY (id_mesa_examen) REFERENCES mesas_examen(id),
     CONSTRAINT fk_dme_materia FOREIGN KEY (id_materia) REFERENCES materias(id),
     CONSTRAINT fk_dme_presidente FOREIGN KEY (id_presidente) REFERENCES usuarios(id)
@@ -197,12 +198,13 @@ CREATE TABLE detalle_mesa_examen (
 CREATE TABLE inscripciones_examen (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     id_usuario UUID NOT NULL,
-    id_detalle_mesa UUID NOT NULL,
+    id_mesa_examen UUID NOT NULL,
+    nro_detalle INTEGER NOT NULL,
     fecha_inscripcion TIMESTAMP NOT NULL,
     estado VARCHAR(50) NOT NULL,
     nota DECIMAL(4, 2),
     CONSTRAINT fk_ie_usuario FOREIGN KEY (id_usuario) REFERENCES usuarios(id),
-    CONSTRAINT fk_ie_detalle FOREIGN KEY (id_detalle_mesa) REFERENCES detalle_mesa_examen(id)
+    CONSTRAINT fk_ie_detalle FOREIGN KEY (id_mesa_examen, nro_detalle) REFERENCES detalle_mesa_examen(id_mesa_examen, nro_detalle)
 );
 
 CREATE TABLE inscripciones_cursado (
