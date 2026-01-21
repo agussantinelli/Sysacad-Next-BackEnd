@@ -31,8 +31,7 @@ public class PlanDeEstudioController {
     public ResponseEntity<PlanDeEstudioResponse> crearPlan(@RequestBody PlanDeEstudioRequest request) {
         PlanDeEstudio plan = new PlanDeEstudio();
         PlanDeEstudio.PlanId id = new PlanDeEstudio.PlanId(
-                request.getIdFacultad(), request.getIdCarrera(), request.getNombrePlan()
-        );
+                request.getIdFacultad(), request.getNroCarrera(), request.getNombrePlan());
         plan.setId(id);
         plan.setFechaInicio(request.getFechaInicio());
         plan.setFechaFin(request.getFechaFin());
@@ -49,19 +48,19 @@ public class PlanDeEstudioController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @GetMapping("/vigentes/{idCarrera}")
+    @GetMapping("/vigentes/{nroCarrera}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<PlanDeEstudioResponse>> listarPlanesVigentes(@PathVariable String idCarrera) {
-        List<PlanDeEstudio> planes = planService.listarPlanesVigentes(idCarrera);
+    public ResponseEntity<List<PlanDeEstudioResponse>> listarPlanesVigentes(@PathVariable Integer nroCarrera) {
+        List<PlanDeEstudio> planes = planService.listarPlanesVigentes(nroCarrera);
         return ResponseEntity.ok(planes.stream()
                 .map(PlanDeEstudioResponse::new)
                 .collect(Collectors.toList()));
     }
 
-    @GetMapping("/carrera/{idCarrera}")
+    @GetMapping("/carrera/{nroCarrera}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<PlanDeEstudioResponse>> listarTodosPorCarrera(@PathVariable String idCarrera) {
-        List<PlanDeEstudio> planes = planService.listarTodosPorCarrera(idCarrera);
+    public ResponseEntity<List<PlanDeEstudioResponse>> listarTodosPorCarrera(@PathVariable Integer nroCarrera) {
+        List<PlanDeEstudio> planes = planService.listarTodosPorCarrera(nroCarrera);
         return ResponseEntity.ok(planes.stream()
                 .map(PlanDeEstudioResponse::new)
                 .collect(Collectors.toList()));

@@ -37,7 +37,7 @@ public class CarreraController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CarreraResponse> registrarCarrera(@RequestBody CarreraRequest request) {
         Carrera carrera = new Carrera();
-        Carrera.CarreraId id = new Carrera.CarreraId(request.getIdFacultad(), request.getIdCarrera());
+        Carrera.CarreraId id = new Carrera.CarreraId(request.getIdFacultad(), request.getNroCarrera());
         carrera.setId(id);
         carrera.setNombre(request.getNombre());
 
@@ -62,8 +62,7 @@ public class CarreraController {
     public ResponseEntity<PlanDeEstudioResponse> crearPlan(@RequestBody PlanDeEstudioRequest request) {
         PlanDeEstudio plan = new PlanDeEstudio();
         PlanDeEstudio.PlanId id = new PlanDeEstudio.PlanId(
-                request.getIdFacultad(), request.getIdCarrera(), request.getNombrePlan()
-        );
+                request.getIdFacultad(), request.getNroCarrera(), request.getNombrePlan());
         plan.setId(id);
         plan.setFechaInicio(request.getFechaInicio());
         plan.setFechaFin(request.getFechaFin());
@@ -83,7 +82,7 @@ public class CarreraController {
     @GetMapping("/{idCarrera}/planes/vigentes")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<PlanDeEstudioResponse>> listarPlanesVigentes(
-            @PathVariable String idCarrera,
+            @PathVariable Integer idCarrera,
             @RequestParam(required = false) UUID idFacultad) {
 
         List<PlanDeEstudio> planes = planService.listarPlanesVigentes(idCarrera);
