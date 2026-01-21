@@ -1,6 +1,5 @@
 package com.sysacad.backend.dto;
 
-import com.sysacad.backend.dto.EstudianteMateriaDTO;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
