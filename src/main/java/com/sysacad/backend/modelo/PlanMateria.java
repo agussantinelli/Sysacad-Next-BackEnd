@@ -24,7 +24,7 @@ public class PlanMateria {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
             @JoinColumn(name = "id_facultad", referencedColumnName = "id_facultad", insertable = false, updatable = false),
-            @JoinColumn(name = "id_carrera", referencedColumnName = "id_carrera", insertable = false, updatable = false),
+            @JoinColumn(name = "nro_carrera", referencedColumnName = "nro_carrera", insertable = false, updatable = false),
             @JoinColumn(name = "nombre_plan", referencedColumnName = "nombre", insertable = false, updatable = false)
     })
     private PlanDeEstudio plan;
@@ -42,8 +42,8 @@ public class PlanMateria {
         @Column(name = "id_facultad")
         private UUID idFacultad;
 
-        @Column(name = "id_carrera", length = 20)
-        private String idCarrera;
+        @Column(name = "nro_carrera")
+        private Integer nroCarrera;
 
         @Column(name = "nombre_plan", length = 100)
         private String nombrePlan;
