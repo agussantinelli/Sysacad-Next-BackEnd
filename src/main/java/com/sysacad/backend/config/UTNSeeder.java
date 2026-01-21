@@ -82,7 +82,8 @@ public class UTNSeeder {
 
         // Crear Plan
         PlanDeEstudio plan = new PlanDeEstudio();
-        plan.setId(new PlanDeEstudio.PlanId(facu.getId(), nroCarrera, "Plan 2023"));
+        plan.setId(new PlanDeEstudio.PlanId(facu.getId(), nroCarrera, 2023));
+        plan.setNombre("Plan 2023");
         plan.setFechaInicio(LocalDate.of(2023, 3, 1));
         plan.setEsVigente(true);
         plan = planRepository.save(plan);
@@ -112,7 +113,7 @@ public class UTNSeeder {
             mapaCodigoMateria.put(nroCarrera + "-" + def.codigo, materia);
 
             PlanMateria pm = new PlanMateria();
-            pm.setId(new PlanMateria.PlanMateriaId(facu.getId(), nroCarrera, "Plan 2023", materia.getId()));
+            pm.setId(new PlanMateria.PlanMateriaId(facu.getId(), nroCarrera, 2023, materia.getId()));
             pm.setMateria(materia);
             pm.setPlan(plan);
             pm.setCodigoMateria(def.codigo);
