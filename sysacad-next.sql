@@ -85,25 +85,24 @@ CREATE TABLE carreras (
 CREATE TABLE planes_de_estudios (
     id_facultad UUID NOT NULL,
     nro_carrera INTEGER NOT NULL,
-    nombre VARCHAR(100) NOT NULL, 
+    nro_plan INTEGER NOT NULL,
+    nombre VARCHAR(100) NOT NULL,
     fecha_inicio DATE NOT NULL,
     fecha_fin DATE,
     es_vigente BOOLEAN NOT NULL DEFAULT TRUE,
-    PRIMARY KEY (id_facultad, nro_carrera, nombre),
-    CONSTRAINT fk_plan_carrera FOREIGN KEY (id_facultad, nro_carrera)
-        REFERENCES carreras(id_facultad, nro_carrera) ON DELETE CASCADE
+    PRIMARY KEY (id_facultad, nro_carrera, nro_plan),
+    CONSTRAINT fk_plan_carrera FOREIGN KEY (id_facultad, nro_carrera) REFERENCES carreras(id_facultad, nro_carrera)
 );
 
 CREATE TABLE plan_materias (
     id_facultad UUID NOT NULL,
     nro_carrera INTEGER NOT NULL,
-    nombre_plan VARCHAR(100) NOT NULL,
+    nro_plan INTEGER NOT NULL,
     id_materia UUID NOT NULL,
     codigo_materia VARCHAR(20) NOT NULL,
     nivel SMALLINT NOT NULL,
-    PRIMARY KEY (id_facultad, nro_carrera, nombre_plan, id_materia),
-    CONSTRAINT fk_pm_plan FOREIGN KEY (id_facultad, nro_carrera, nombre_plan)
-        REFERENCES planes_de_estudios(id_facultad, nro_carrera, nombre),
+    PRIMARY KEY (id_facultad, nro_carrera, nro_plan, id_materia),
+    CONSTRAINT fk_pm_plan FOREIGN KEY (id_facultad, nro_carrera, nro_plan) REFERENCES planes_de_estudios(id_facultad, nro_carrera, nro_plan),
     CONSTRAINT fk_pm_materia FOREIGN KEY (id_materia) REFERENCES materias(id)
 );
 
