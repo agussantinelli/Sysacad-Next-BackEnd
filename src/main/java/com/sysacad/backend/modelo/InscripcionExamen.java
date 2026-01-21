@@ -19,7 +19,10 @@ public class InscripcionExamen {
     private Usuario usuario;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_detalle_mesa", nullable = false)
+    @JoinColumns({
+            @JoinColumn(name = "id_mesa_examen", referencedColumnName = "id_mesa_examen", nullable = false),
+            @JoinColumn(name = "nro_detalle", referencedColumnName = "nro_detalle", nullable = false)
+    })
     private DetalleMesaExamen detalleMesaExamen;
 
     @Column(name = "fecha_inscripcion", nullable = false)
