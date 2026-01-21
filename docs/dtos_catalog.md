@@ -269,13 +269,15 @@ Enriched subject details for a specific student.
 
 ### `DetalleMesaExamenRequest`
 - `idMesaExamen` (UUID)
+- `nroDetalle` (Integer): Sequential number for the detail within the exam table.
 - `idMateria` (UUID)
 - `idPresidente` (UUID)
 - `diaExamen` (LocalDate)
 - `horaExamen` (LocalTime)
 
 ### `DetalleMesaExamenResponse`
-- `id` (UUID)
+- `idMesaExamen` (UUID)
+- `nroDetalle` (Integer)
 - `nombreMateria` (String)
 - `idMateria` (UUID)
 - `nombrePresidente` (String)
@@ -289,7 +291,8 @@ Enriched subject details for a specific student.
 
 ### `InscripcionExamenRequest`
 - `idUsuario` (UUID): Optional (inferred from token if missing).
-- `idDetalleMesa` (UUID)
+- `idMesaExamen` (UUID)
+- `nroDetalle` (Integer)
 
 ### `InscripcionExamenResponse`
 - `id` (UUID)
