@@ -9,6 +9,7 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 public class PlanDeEstudioResponse {
+    private Integer nroPlan;
     private String nombrePlan;
     private LocalDate fechaInicio;
     private LocalDate fechaFin;
@@ -16,7 +17,8 @@ public class PlanDeEstudioResponse {
     private String nombreCarrera;
 
     public PlanDeEstudioResponse(PlanDeEstudio plan) {
-        this.nombrePlan = plan.getId().getNombre();
+        this.nroPlan = plan.getId().getNroPlan();
+        this.nombrePlan = plan.getNombre();
         this.fechaInicio = plan.getFechaInicio();
         this.fechaFin = plan.getFechaFin();
         this.esVigente = plan.getEsVigente();
