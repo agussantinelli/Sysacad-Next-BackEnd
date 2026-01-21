@@ -1,7 +1,11 @@
 package com.sysacad.backend.modelo;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.UUID;
@@ -11,12 +15,12 @@ import java.util.UUID;
 @Table(name = "detalle_mesa_examen")
 public class DetalleMesaExamen {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @EmbeddedId
+    private DetalleId id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_mesa_examen", nullable = false)
+    @MapsId("idMesaExamen")
+    @JoinColumn(name = "id_mesa_examen")
     private MesaExamen mesaExamen;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -32,4 +36,16 @@ public class DetalleMesaExamen {
 
     @Column(name = "hora_examen", nullable = false)
     private LocalTime horaExamen;
+
+    @Embeddable
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class DetalleId implements Serializable {
+        @Column(name = "id_mesa_examen")
+        private UUID idMesaExamen;
+
+        @Column(name = "nro_detalle")
+        private Integer nroDetalle;
+    }
 }
