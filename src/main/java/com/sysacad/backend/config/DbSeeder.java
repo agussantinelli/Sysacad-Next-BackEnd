@@ -445,18 +445,21 @@ public class DbSeeder {
                                                 "Sintaxis y Semántica de los Lenguajes");
 
                                 // Febrero
-                                DetalleMesaExamen febAlgo = createDetalleMesa(detalleMesaExamenRepository, mesaFeb,
+                                DetalleMesaExamen febAlgo = createDetalleMesa(detalleMesaExamenRepository, mesaFeb, 1,
                                                 algoritmos, profeNicolas, LocalDate.of(2026, 2, 10),
                                                 LocalTime.of(9, 0));
                                 DetalleMesaExamen febSistemas = createDetalleMesa(detalleMesaExamenRepository, mesaFeb,
+                                                2,
                                                 sistemas, profeNicolas, LocalDate.of(2026, 2, 12), LocalTime.of(14, 0));
                                 DetalleMesaExamen febAnalisis = createDetalleMesa(detalleMesaExamenRepository, mesaFeb,
+                                                3,
                                                 analisis1, profeSandra, LocalDate.of(2026, 2, 15), LocalTime.of(9, 0));
 
                                 // Julio
                                 DetalleMesaExamen julSintaxis = createDetalleMesa(detalleMesaExamenRepository, mesaJul,
+                                                1,
                                                 sintaxis, profeNicolas, LocalDate.of(2026, 7, 10), LocalTime.of(9, 0));
-                                DetalleMesaExamen julFisica = createDetalleMesa(detalleMesaExamenRepository, mesaJul,
+                                DetalleMesaExamen julFisica = createDetalleMesa(detalleMesaExamenRepository, mesaJul, 2,
                                                 fisica1, profeRoberto, LocalDate.of(2026, 7, 15), LocalTime.of(16, 0));
 
                                 // 3. Inscribir Alumnos a Examenes
@@ -602,9 +605,11 @@ public class DbSeeder {
                 return repo.save(mesa);
         }
 
-        private DetalleMesaExamen createDetalleMesa(DetalleMesaExamenRepository repo, MesaExamen mesa, Materia materia,
+        private DetalleMesaExamen createDetalleMesa(DetalleMesaExamenRepository repo, MesaExamen mesa, Integer nro,
+                        Materia materia,
                         Usuario presidente, LocalDate dia, LocalTime hora) {
                 DetalleMesaExamen detalle = new DetalleMesaExamen();
+                detalle.setId(new DetalleMesaExamen.DetalleId(mesa.getId(), nro));
                 detalle.setMesaExamen(mesa);
                 detalle.setMateria(materia);
                 detalle.setPresidente(presidente);
