@@ -21,8 +21,8 @@ public class PlanDeEstudioService {
 
     @Autowired
     public PlanDeEstudioService(PlanDeEstudioRepository planRepository,
-                                PlanMateriaRepository planMateriaRepository,
-                                CarreraRepository carreraRepository) {
+            PlanMateriaRepository planMateriaRepository,
+            CarreraRepository carreraRepository) {
         this.planRepository = planRepository;
         this.planMateriaRepository = planMateriaRepository;
         this.carreraRepository = carreraRepository;
@@ -33,8 +33,7 @@ public class PlanDeEstudioService {
         // Validación: Verificar que la carrera padre exista antes de crear el plan
         Carrera.CarreraId carreraId = new Carrera.CarreraId(
                 plan.getId().getIdFacultad(),
-                plan.getId().getIdCarrera()
-        );
+                plan.getId().getNroCarrera());
 
         if (!carreraRepository.existsById(carreraId)) {
             throw new RuntimeException("No se puede crear el plan: La carrera especificada no existe.");
@@ -44,13 +43,13 @@ public class PlanDeEstudioService {
     }
 
     @Transactional(readOnly = true)
-    public List<PlanDeEstudio> listarPlanesVigentes(String idCarrera) {
-        return planRepository.findByIdIdCarreraAndEsVigenteTrue(idCarrera);
+    public List<PlanDeEstudio> listarPlanesVigentes(Integer nroCarrera) {
+        return planRepository.findByIdNroCarreraAndEsVigenteTrue(nroCarrera);
     }
 
     @Transactional(readOnly = true)
-    public List<PlanDeEstudio> listarTodosPorCarrera(String idCarrera) {
-        return planRepository.findByIdIdCarrera(idCarrera);
+    public List<PlanDeEstudio> listarTodosPorCarrera(Integer nroCarrera) {
+        return planRepository.findByIdNroCarrera(nroCarrera);
     }
 
     @Transactional
@@ -59,9 +58,8 @@ public class PlanDeEstudioService {
         // Se usa la clase estática PlanId definida en la entidad PlanDeEstudio
         PlanDeEstudio.PlanId planId = new PlanDeEstudio.PlanId(
                 planMateria.getId().getIdFacultad(),
-                planMateria.getId().getIdCarrera(),
-                planMateria.getId().getNombrePlan()
-        );
+                planMateria.getId().getNroCarrera(),
+                planMateria.getId().getNombrePlan());
 
         if (!planRepository.existsById(planId)) {
             throw new RuntimeException("El plan de estudios indicado no existe.");

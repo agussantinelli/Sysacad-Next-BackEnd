@@ -1,7 +1,6 @@
 package com.sysacad.backend.service;
 
 import com.sysacad.backend.dto.CarreraMateriasDTO;
-import com.sysacad.backend.dto.MateriaResponse;
 import com.sysacad.backend.modelo.Matriculacion;
 import com.sysacad.backend.modelo.Materia;
 import com.sysacad.backend.modelo.PlanDeEstudio;
@@ -13,13 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.sysacad.backend.modelo.PlanMateria;
-import com.sysacad.backend.modelo.Comision;
 import com.sysacad.backend.dto.EstudianteMateriaDTO;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class MatriculacionService {
@@ -81,7 +77,7 @@ public class MatriculacionService {
             PlanDeEstudio plan = matricula.getPlan();
 
             if (plan != null) {
-                String idCarrera = plan.getCarrera().getId().getIdCarrera();
+                Integer nroCarrera = plan.getCarrera().getId().getNroCarrera();
                 String nombreCarrera = plan.getCarrera().getNombre();
                 String nombrePlan = plan.getId().getNombre();
 
@@ -119,7 +115,7 @@ public class MatriculacionService {
                 materiasDTO.sort(Comparator.comparing(EstudianteMateriaDTO::getNivel)
                         .thenComparing(EstudianteMateriaDTO::getNombre));
 
-                resultado.add(new CarreraMateriasDTO(idCarrera, nombreCarrera, nombrePlan, materiasDTO));
+                resultado.add(new CarreraMateriasDTO(nroCarrera, nombreCarrera, nombrePlan, materiasDTO));
             }
         }
 
