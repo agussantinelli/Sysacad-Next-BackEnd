@@ -15,8 +15,11 @@ public class Carrera {
     @EmbeddedId
     private CarreraId id;
 
-    @Column(nullable = false, length = 100)
+    @Column(name = "nombre", nullable = false, length = 100)
     private String nombre;
+
+    @Column(name = "alias", length = 20, nullable = false)
+    private String alias;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_facultad", insertable = false, updatable = false)
@@ -30,7 +33,7 @@ public class Carrera {
         @Column(name = "id_facultad")
         private UUID idFacultad;
 
-        @Column(name = "id_carrera", length = 20)
-        private String idCarrera;
+        @Column(name = "id_carrera")
+        private Integer idCarrera;
     }
 }
