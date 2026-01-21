@@ -162,37 +162,6 @@ CREATE TABLE estudios_usuario (
         REFERENCES planes_de_estudios(id_facultad, id_carrera, nombre)
 );
 
-CREATE TABLE inscripciones (
-    id_usuario UUID NOT NULL,
-    id_comision UUID NOT NULL,
-    tipo VARCHAR(20) NOT NULL CHECK (tipo IN ('CURSADO', 'EXAMEN')),
-    veces_tipo INTEGER NOT NULL DEFAULT 1,
-    fecha_inscripcion TIMESTAMP NOT NULL,
-    condicion VARCHAR(50) NOT NULL,
-    descripcion_condicion TEXT,
-    fecha_promocion DATE,
-    nota_final DECIMAL(4, 2),
-    tomo VARCHAR(20),
-    folio VARCHAR(20),
-    PRIMARY KEY (id_usuario, id_comision, tipo, veces_tipo),
-    CONSTRAINT fk_inscrip_usuario FOREIGN KEY (id_usuario) REFERENCES usuarios(id),
-    CONSTRAINT fk_inscrip_comision FOREIGN KEY (id_comision) REFERENCES comisiones(id)
-);
-
-CREATE TABLE calificaciones (
-    id_usuario UUID NOT NULL,
-    id_comision UUID NOT NULL,
-    tipo_inscripcion VARCHAR(20) NOT NULL CHECK (tipo_inscripcion IN ('CURSADO', 'EXAMEN')),
-    veces_tipo_inscripcion INTEGER NOT NULL,
-    concepto VARCHAR(100) NOT NULL,
-    nota DECIMAL(4, 2) NOT NULL,
-    PRIMARY KEY (id_usuario, id_comision, tipo_inscripcion, veces_tipo_inscripcion, concepto),
-    CONSTRAINT fk_calif_inscripcion
-        FOREIGN KEY (id_usuario, id_comision, tipo_inscripcion, veces_tipo_inscripcion)
-            REFERENCES inscripciones (id_usuario, id_comision, tipo, veces_tipo)
-            ON DELETE CASCADE
-            ON UPDATE CASCADE
-);
 
 CREATE TABLE horarios_cursado (
     id_comision UUID NOT NULL,
