@@ -33,7 +33,7 @@ public class Carrera {
         @Column(name = "id_facultad")
         private UUID idFacultad;
 
-        @Column(name = "id_carrera")
-        private Integer idCarrera;
+        @Column(name = "nro_carrera")
+        private Integer nroCarrera;
     }
 }
