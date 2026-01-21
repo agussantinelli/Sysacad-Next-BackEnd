@@ -59,7 +59,7 @@ public class PlanDeEstudioService {
         PlanDeEstudio.PlanId planId = new PlanDeEstudio.PlanId(
                 planMateria.getId().getIdFacultad(),
                 planMateria.getId().getNroCarrera(),
-                planMateria.getId().getNombrePlan());
+                planMateria.getId().getNroPlan());
 
         if (!planRepository.existsById(planId)) {
             throw new RuntimeException("El plan de estudios indicado no existe.");

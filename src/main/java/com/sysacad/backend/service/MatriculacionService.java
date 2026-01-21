@@ -79,7 +79,7 @@ public class MatriculacionService {
             if (plan != null) {
                 Integer nroCarrera = plan.getCarrera().getId().getNroCarrera();
                 String nombreCarrera = plan.getCarrera().getNombre();
-                String nombrePlan = plan.getId().getNombre();
+                String nombrePlan = plan.getNombre();
 
                 // Obtener las materias del plan
                 List<PlanMateria> planMaterias = plan.getPlanMaterias();
