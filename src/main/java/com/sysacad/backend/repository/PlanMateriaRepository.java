@@ -9,7 +9,7 @@ import java.util.List;
 @Repository
 public interface PlanMateriaRepository extends JpaRepository<PlanMateria, PlanMateria.PlanMateriaId> {
 
-    List<PlanMateria> findByIdNombrePlan(String nombrePlan);
+    List<PlanMateria> findByIdNroPlan(Integer nroPlan);
 
     List<PlanMateria> findByNivel(Short nivel);
 }
