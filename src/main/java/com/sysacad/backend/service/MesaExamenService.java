@@ -60,6 +60,7 @@ public class MesaExamenService {
                 .orElseThrow(() -> new RuntimeException("Presidente de mesa no encontrado"));
 
         DetalleMesaExamen detalle = new DetalleMesaExamen();
+        detalle.setId(new DetalleMesaExamen.DetalleId(mesa.getId(), request.getNroDetalle()));
         detalle.setMesaExamen(mesa);
         detalle.setMateria(materia);
         detalle.setPresidente(presidente);
@@ -86,7 +87,8 @@ public class MesaExamenService {
 
     private DetalleMesaExamenResponse mapToResponse(DetalleMesaExamen detalle) {
         DetalleMesaExamenResponse response = new DetalleMesaExamenResponse();
-        response.setId(detalle.getId());
+        response.setIdMesaExamen(detalle.getId().getIdMesaExamen());
+        response.setNroDetalle(detalle.getId().getNroDetalle());
         response.setNombreMateria(detalle.getMateria().getNombre());
         response.setIdMateria(detalle.getMateria().getId());
         if (detalle.getPresidente() != null) {

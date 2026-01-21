@@ -31,7 +31,10 @@ public class InscripcionExamenService {
 
     @Transactional
     public InscripcionExamenResponse inscribirAlumno(InscripcionExamenRequest request) {
-        DetalleMesaExamen detalle = detalleMesaExamenRepository.findById(request.getIdDetalleMesa())
+        DetalleMesaExamen.DetalleId detalleId = new DetalleMesaExamen.DetalleId(request.getIdMesaExamen(),
+                request.getNroDetalle());
+
+        DetalleMesaExamen detalle = detalleMesaExamenRepository.findById(detalleId)
                 .orElseThrow(() -> new RuntimeException("Mesa de examen no encontrada"));
 
         Usuario usuario = usuarioRepository.findById(request.getIdUsuario())
