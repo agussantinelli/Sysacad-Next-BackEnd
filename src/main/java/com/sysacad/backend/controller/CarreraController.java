@@ -62,8 +62,9 @@ public class CarreraController {
     public ResponseEntity<PlanDeEstudioResponse> crearPlan(@RequestBody PlanDeEstudioRequest request) {
         PlanDeEstudio plan = new PlanDeEstudio();
         PlanDeEstudio.PlanId id = new PlanDeEstudio.PlanId(
-                request.getIdFacultad(), request.getNroCarrera(), request.getNombrePlan());
+                request.getIdFacultad(), request.getNroCarrera(), request.getNroPlan());
         plan.setId(id);
+        plan.setNombre(request.getNombrePlan());
         plan.setFechaInicio(request.getFechaInicio());
         plan.setFechaFin(request.getFechaFin());
         plan.setEsVigente(request.getEsVigente());
