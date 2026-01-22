@@ -74,35 +74,38 @@ CREATE TABLE avisos (
 );
 
 CREATE TABLE carreras (
-    id_facultad UUID NOT NULL,
-    nro_carrera INTEGER NOT NULL, 
+    id_carrera UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     nombre VARCHAR(100) NOT NULL,
-    alias VARCHAR(20) NOT NULL,
-    PRIMARY KEY (id_facultad, nro_carrera),
-    CONSTRAINT fk_carrera_facultad FOREIGN KEY (id_facultad) REFERENCES facultades_regionales(id)
+    alias VARCHAR(20) NOT NULL
+);
+
+CREATE TABLE facultades_carreras (
+    id_facultad UUID NOT NULL,
+    id_carrera UUID NOT NULL,
+    PRIMARY KEY (id_facultad, id_carrera),
+    CONSTRAINT fk_fc_facultad FOREIGN KEY (id_facultad) REFERENCES facultades_regionales(id),
+    CONSTRAINT fk_fc_carrera FOREIGN KEY (id_carrera) REFERENCES carreras(id_carrera)
 );
 
 CREATE TABLE planes_de_estudios (
-    id_facultad UUID NOT NULL,
-    nro_carrera INTEGER NOT NULL,
+    id_carrera UUID NOT NULL,
     nro_plan INTEGER NOT NULL,
     nombre VARCHAR(100) NOT NULL,
     fecha_inicio DATE NOT NULL,
     fecha_fin DATE,
     es_vigente BOOLEAN NOT NULL DEFAULT TRUE,
-    PRIMARY KEY (id_facultad, nro_carrera, nro_plan),
-    CONSTRAINT fk_plan_carrera FOREIGN KEY (id_facultad, nro_carrera) REFERENCES carreras(id_facultad, nro_carrera)
+    PRIMARY KEY (id_carrera, nro_plan),
+    CONSTRAINT fk_plan_carrera FOREIGN KEY (id_carrera) REFERENCES carreras(id_carrera)
 );
 
 CREATE TABLE plan_materias (
-    id_facultad UUID NOT NULL,
-    nro_carrera INTEGER NOT NULL,
+    id_carrera UUID NOT NULL,
     nro_plan INTEGER NOT NULL,
     id_materia UUID NOT NULL,
     codigo_materia VARCHAR(20) NOT NULL,
     nivel SMALLINT NOT NULL,
-    PRIMARY KEY (id_facultad, nro_carrera, nro_plan, id_materia),
-    CONSTRAINT fk_pm_plan FOREIGN KEY (id_facultad, nro_carrera, nro_plan) REFERENCES planes_de_estudios(id_facultad, nro_carrera, nro_plan),
+    PRIMARY KEY (id_carrera, nro_plan, id_materia),
+    CONSTRAINT fk_pm_plan FOREIGN KEY (id_carrera, nro_plan) REFERENCES planes_de_estudios(id_carrera, nro_plan),
     CONSTRAINT fk_pm_materia FOREIGN KEY (id_materia) REFERENCES materias(id)
 );
 
@@ -149,17 +152,17 @@ CREATE TABLE asignaciones_materia (
 );
 
 -- 8. Vida Académica del Alumno
-CREATE TABLE estudios_usuario (
+CREATE TABLE matriculaciones (
     id_usuario UUID NOT NULL,
     id_facultad UUID NOT NULL,
-    nro_carrera INTEGER NOT NULL,
-    nombre_plan VARCHAR(100) NOT NULL,
+    id_carrera UUID NOT NULL,
+    nro_plan INTEGER NOT NULL,
     fecha_inscripcion DATE NOT NULL,
     estado VARCHAR(20) NOT NULL,
-    PRIMARY KEY (id_usuario, id_facultad, nro_carrera, nombre_plan),
-    CONSTRAINT fk_estudia_usuario FOREIGN KEY (id_usuario) REFERENCES usuarios(id),
-    CONSTRAINT fk_estudia_plan FOREIGN KEY (id_facultad, nro_carrera, nombre_plan)
-        REFERENCES planes_de_estudios(id_facultad, nro_carrera, nombre)
+    PRIMARY KEY (id_usuario, id_facultad, id_carrera, nro_plan),
+    CONSTRAINT fk_matr_usuario FOREIGN KEY (id_usuario) REFERENCES usuarios(id),
+    CONSTRAINT fk_matr_facultad FOREIGN KEY (id_facultad) REFERENCES facultades_regionales(id),
+    CONSTRAINT fk_matr_plan FOREIGN KEY (id_carrera, nro_plan) REFERENCES planes_de_estudios(id_carrera, nro_plan)
 );
 
 
