@@ -23,8 +23,7 @@ public class PlanMateria {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
-            @JoinColumn(name = "id_facultad", referencedColumnName = "id_facultad", insertable = false, updatable = false),
-            @JoinColumn(name = "nro_carrera", referencedColumnName = "nro_carrera", insertable = false, updatable = false),
+            @JoinColumn(name = "id_carrera", referencedColumnName = "id_carrera", insertable = false, updatable = false),
             @JoinColumn(name = "nro_plan", referencedColumnName = "nro_plan", insertable = false, updatable = false)
     })
     private PlanDeEstudio plan;
@@ -39,11 +38,8 @@ public class PlanMateria {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class PlanMateriaId implements Serializable {
-        @Column(name = "id_facultad")
-        private UUID idFacultad;
-
-        @Column(name = "nro_carrera")
-        private Integer nroCarrera;
+        @Column(name = "id_carrera")
+        private UUID idCarrera;
 
         @Column(name = "nro_plan")
         private Integer nroPlan;

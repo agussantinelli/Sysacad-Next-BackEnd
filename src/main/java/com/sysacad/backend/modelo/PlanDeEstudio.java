@@ -32,10 +32,7 @@ public class PlanDeEstudio {
         private String nombre;
 
         @ManyToOne(fetch = FetchType.LAZY)
-        @JoinColumns({
-                        @JoinColumn(name = "id_facultad", referencedColumnName = "id_facultad", insertable = false, updatable = false),
-                        @JoinColumn(name = "nro_carrera", referencedColumnName = "nro_carrera", insertable = false, updatable = false)
-        })
+        @JoinColumn(name = "id_carrera", insertable = false, updatable = false)
         private Carrera carrera;
 
         @OneToMany(mappedBy = "plan", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -54,11 +51,8 @@ public class PlanDeEstudio {
         @NoArgsConstructor
         @AllArgsConstructor
         public static class PlanId implements Serializable {
-                @Column(name = "id_facultad")
-                private UUID idFacultad;
-
-                @Column(name = "nro_carrera")
-                private Integer nroCarrera;
+                @Column(name = "id_carrera")
+                private UUID idCarrera;
 
                 @Column(name = "nro_plan")
                 private Integer nroPlan;
