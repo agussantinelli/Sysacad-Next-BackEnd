@@ -33,6 +33,10 @@ public class Matriculacion {
     })
     private PlanDeEstudio plan;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_facultad", insertable = false, updatable = false)
+    private FacultadRegional facultad;
+
     @Embeddable
     @Data
     @NoArgsConstructor
