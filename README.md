@@ -44,9 +44,13 @@
 
 <hr>
 
+<hr>
+
 <h2>🎯 Objetivo</h2>
 
 <p>Proveer una API RESTful robusta, segura y escalable que actúe como el cerebro de <strong>Sysacad Next</strong>, gestionando la lógica de negocio compleja (correlatividades, actas, inscripciones, auditoría) y asegurando la integridad de los datos académicos.</p>
+
+> **Nota:** Este proyecto ha sido desarrollado mediante **ingeniería inversa**, analizando el sitio y flujos originales para replicar y mejorar la lógica de negocio.
 
 <h2>🧠 Arquitectura y Diseño</h2>
 
