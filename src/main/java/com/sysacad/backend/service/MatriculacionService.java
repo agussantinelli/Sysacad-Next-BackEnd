@@ -80,6 +80,13 @@ public class MatriculacionService {
                 // Integer nroCarrera = plan.getCarrera().getId().getNroCarrera(); // Removed
                 java.util.UUID idCarrera = plan.getCarrera().getId();
                 String nombreCarrera = plan.getCarrera().getNombre();
+                
+                java.util.UUID idFacultad = matricula.getId().getIdFacultad();
+                String nombreFacultad = "Desconocida";
+                if(matricula.getFacultad() != null) {
+                    nombreFacultad = matricula.getFacultad().getCiudad();
+                }
+
                 String nombrePlan = plan.getNombre();
 
                 // Obtener las materias del plan
@@ -116,7 +123,7 @@ public class MatriculacionService {
                 materiasDTO.sort(Comparator.comparing(EstudianteMateriaDTO::getNivel)
                         .thenComparing(EstudianteMateriaDTO::getNombre));
 
-                resultado.add(new CarreraMateriasDTO(idCarrera, nombreCarrera, nombrePlan, materiasDTO));
+                resultado.add(new CarreraMateriasDTO(idCarrera, nombreCarrera, idFacultad, nombreFacultad, nombrePlan, materiasDTO));
             }
         }
 
