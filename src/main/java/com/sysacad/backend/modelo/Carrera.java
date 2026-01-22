@@ -12,8 +12,10 @@ import java.util.UUID;
 @Table(name = "carreras")
 public class Carrera {
 
-    @EmbeddedId
-    private CarreraId id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id_carrera")
+    private UUID id;
 
     @Column(name = "nombre", nullable = false, length = 100)
     private String nombre;
@@ -21,19 +23,11 @@ public class Carrera {
     @Column(name = "alias", length = 20, nullable = false)
     private String alias;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_facultad", insertable = false, updatable = false)
-    private FacultadRegional facultad;
-
-    @Embeddable
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class CarreraId implements Serializable {
-        @Column(name = "id_facultad")
-        private UUID idFacultad;
-
-        @Column(name = "nro_carrera")
-        private Integer nroCarrera;
-    }
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "facultades_carreras",
+        joinColumns = @JoinColumn(name = "id_carrera"),
+        inverseJoinColumns = @JoinColumn(name = "id_facultad")
+    )
+    private java.util.Set<FacultadRegional> facultades;
 }
