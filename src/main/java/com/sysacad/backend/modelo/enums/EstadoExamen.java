@@ -4,5 +4,6 @@ public enum EstadoExamen {
     PENDIENTE,
     APROBADO,
     DESAPROBADO,
-    AUSENTE
+    AUSENTE,
+    EQUIVALENCIA
 }
