@@ -24,16 +24,19 @@ public class MatriculacionService {
     private final UsuarioRepository usuarioRepository;
     private final com.sysacad.backend.repository.InscripcionCursadoRepository inscripcionCursadoRepository;
     private final com.sysacad.backend.repository.InscripcionExamenRepository inscripcionExamenRepository;
+    private final EquivalenciaService equivalenciaService;
 
     @Autowired
     public MatriculacionService(MatriculacionRepository matriculacionRepository,
             UsuarioRepository usuarioRepository,
             com.sysacad.backend.repository.InscripcionCursadoRepository inscripcionCursadoRepository,
-            com.sysacad.backend.repository.InscripcionExamenRepository inscripcionExamenRepository) {
+            com.sysacad.backend.repository.InscripcionExamenRepository inscripcionExamenRepository,
+            EquivalenciaService equivalenciaService) {
         this.matriculacionRepository = matriculacionRepository;
         this.usuarioRepository = usuarioRepository;
         this.inscripcionCursadoRepository = inscripcionCursadoRepository;
         this.inscripcionExamenRepository = inscripcionExamenRepository;
+        this.equivalenciaService = equivalenciaService;
     }
 
     @Transactional
@@ -47,7 +50,17 @@ public class MatriculacionService {
 
         matricula.setFechaInscripcion(LocalDate.now());
         matricula.setEstado("ACTIVO");
-        return matriculacionRepository.save(matricula);
+        Matriculacion guardada = matriculacionRepository.save(matricula);
+        
+        // Procesar equivalencias automáticas
+        try {
+            equivalenciaService.procesarEquivalencias(alumno, guardada);
+        } catch (Exception e) {
+            // Log y continuar, no bloquear matriculación si falla esto
+            System.err.println("Error procesando equivalencias para el alumno " + alumno.getId() + ": " + e.getMessage());
+        }
+
+        return guardada;
     }
 
     @Transactional(readOnly = true)
