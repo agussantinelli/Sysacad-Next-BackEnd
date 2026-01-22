@@ -14,7 +14,9 @@ Este documento detalla las reglas de negocio y consideraciones técnicas derivad
     - Se identifican por un año (ej. 2008, 2023) dentro de una Carrera.
 
 3.  **Matriculación**:
-    - Un alumno se matricula en una Carrera en una Facultad específica, bajo un Plan de Estudio determinado.
+3.  **Matriculación**:
+    - Un alumno se matricula en una Carrera en una **Facultad específica** (seleccionada de las disponibles para esa carrera), bajo un Plan de Estudio determinado. 
+    - La **Facultad** forma parte de la clave primaria de la matriculación, permitiendo que un alumno curse la misma carrera en facultades distintas si fuera necesario (aunque no es común) o distinguiendo administrativamente dónde está inscripto.
 
 4.  **Cursado y Exámenes**:
     - Las inscripciones a cursado y exámenes están vinculadas a la matriculación del alumno.
