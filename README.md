@@ -97,7 +97,7 @@
         </tr>
         <tr>
             <td><strong>📚 Curricular</strong></td>
-            <td><code>materias</code>, <code>plan_materias</code>, <code>correlativas</code></td>
+            <td><code>materias</code>, <code>plan_materias</code>, <code>correlativas</code>, <code>equivalencias</code></td>
             <td>Asignaturas con tipología (Básica/Específica/Compartida) y <strong>nueva gestión de Modalidad (Presencial/Virtual/Mixto)</strong>.</td>
         </tr>
         <tr>
