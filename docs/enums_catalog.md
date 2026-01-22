@@ -47,6 +47,7 @@ Used in `InscripcionExamen`.
 - `APROBADO`
 - `DESAPROBADO`
 - `AUSENTE`
+- `EQUIVALENCIA`
 
 ---
 
