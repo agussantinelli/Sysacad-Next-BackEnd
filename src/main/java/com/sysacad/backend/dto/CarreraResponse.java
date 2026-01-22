@@ -9,20 +9,20 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 public class CarreraResponse {
-    private UUID idFacultad;
-    private Integer nroCarrera;
+    private UUID id;
     private String alias;
     private String nombre;
-    private String nombreFacultad;
+    private java.util.List<String> facultades;
 
     public CarreraResponse(Carrera carrera) {
-        this.idFacultad = carrera.getId().getIdFacultad();
-        this.nroCarrera = carrera.getId().getNroCarrera();
+        this.id = carrera.getId();
         this.alias = carrera.getAlias();
         this.nombre = carrera.getNombre();
 
-        if (carrera.getFacultad() != null) {
-            this.nombreFacultad = carrera.getFacultad().getCiudad();
+        if (carrera.getFacultades() != null) {
+            this.facultades = carrera.getFacultades().stream()
+                    .map(com.sysacad.backend.modelo.FacultadRegional::getCiudad)
+                    .collect(java.util.stream.Collectors.toList());
         }
     }
 }

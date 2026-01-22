@@ -8,15 +8,14 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class CarreraMateriasDTO {
-    // Usamos String para IDs de carrera según tu entidad CarreraId
-    private Integer nroCarrera;
+    private java.util.UUID idCarrera;
     private String nombreCarrera;
     private String nombrePlan;
     private List<EstudianteMateriaDTO> materias;
 
-    public CarreraMateriasDTO(Integer nroCarrera, String nombreCarrera, String nombrePlan,
+    public CarreraMateriasDTO(java.util.UUID idCarrera, String nombreCarrera, String nombrePlan,
             List<EstudianteMateriaDTO> materias) {
-        this.nroCarrera = nroCarrera;
+        this.idCarrera = idCarrera;
         this.nombreCarrera = nombreCarrera;
         this.nombrePlan = nombrePlan;
         this.materias = materias;
