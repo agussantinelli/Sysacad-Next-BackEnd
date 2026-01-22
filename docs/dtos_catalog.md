@@ -240,6 +240,8 @@ Standard user response.
 Response structure for `/api/alumnos/mis-carreras-materias`.
 - `idCarrera` (UUID)
 - `nombreCarrera` (String)
+- `idFacultad` (UUID)
+- `nombreFacultad` (String)
 - `nombrePlan` (String)
 - `materias` (List<EstudianteMateriaDTO>)
 
