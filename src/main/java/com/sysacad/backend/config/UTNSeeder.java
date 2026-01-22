@@ -74,15 +74,20 @@ public class UTNSeeder {
 
         // Crear Carrera
         Carrera carrera = new Carrera();
-        carrera.setId(new Carrera.CarreraId(facu.getId(), nroCarrera));
+        // carrera.setId(new Carrera.CarreraId(facu.getId(), nroCarrera)); // Removed
         carrera.setNombre(nombreCarrera);
         carrera.setAlias(aliasCarrera);
-        carrera.setFacultad(facu);
+        
+        // Relación Muchos a Muchos
+        Set<FacultadRegional> facultades = new HashSet<>();
+        facultades.add(facu);
+        carrera.setFacultades(facultades);
+        
         carrera = carreraRepository.save(carrera);
 
         // Crear Plan
         PlanDeEstudio plan = new PlanDeEstudio();
-        plan.setId(new PlanDeEstudio.PlanId(facu.getId(), nroCarrera, 2023));
+        plan.setId(new PlanDeEstudio.PlanId(carrera.getId(), 2023));
         plan.setNombre("Plan 2023");
         plan.setFechaInicio(LocalDate.of(2023, 3, 1));
         plan.setEsVigente(true);
@@ -109,11 +114,11 @@ public class UTNSeeder {
                 }
             }
 
-            // Guardar en mapa para correlativas
+            // Guardar en mapa para correlativas (Usamos nroCarrera como key simulada para aislamiento en seeder)
             mapaCodigoMateria.put(nroCarrera + "-" + def.codigo, materia);
 
             PlanMateria pm = new PlanMateria();
-            pm.setId(new PlanMateria.PlanMateriaId(facu.getId(), nroCarrera, 2023, materia.getId()));
+            pm.setId(new PlanMateria.PlanMateriaId(carrera.getId(), 2023, materia.getId()));
             pm.setMateria(materia);
             pm.setPlan(plan);
             pm.setCodigoMateria(def.codigo);

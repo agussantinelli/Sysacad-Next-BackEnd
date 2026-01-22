@@ -30,6 +30,7 @@ public class DbSeeder {
                         UTNSeeder utnSeeder,
                         UsuarioRepository usuarioRepository,
                         MatriculacionRepository matriculacionRepository, // Agregado para matricular alumnos
+                        CarreraRepository carreraRepository, // NEW injected
                         PasswordEncoder passwordEncoder,
                         FacultadRegionalRepository facultadRepository,
                         SalonRepository salonRepository,
@@ -162,11 +163,7 @@ public class DbSeeder {
                                 alumnoMartin = usuarioRepository.findByLegajo("60003").orElse(null);
                                 alumnoFlavia = usuarioRepository.findByLegajo("60004").orElse(null);
                         }
-
-                        // -----------------------------------------------------------------------------------------
-                        // NUEVO: MATRICULACIÓN DE ALUMNOS EN CARRERAS (Esencial para que vean sus
-                        // materias)
-                        // -----------------------------------------------------------------------------------------
+                        
                         if (matriculacionRepository.count() == 0) {
                                 System.out.println(">> DbSeeder: Matriculando alumnos de prueba en carreras...");
 
@@ -177,17 +174,29 @@ public class DbSeeder {
                                                 .orElseThrow(() -> new RuntimeException(
                                                                 "Error: Facultad Rosario no encontrada (UTNSeeder falló?)."));
 
-                                // Matriculamos a la mayoría en Sistemas (ISI) - Plan 2023
-                                matricularAlumno(matriculacionRepository, alumnoAgustin, frro, 1, 2023);
-                                matricularAlumno(matriculacionRepository, alumnoSofia, frro, 1, 2023);
-                                matricularAlumno(matriculacionRepository, alumnoCarlos, frro, 1, 2023);
-                                matricularAlumno(matriculacionRepository, alumnoMaria, frro, 1, 2023);
+                                // Recuperar Carreras por Alias (asumiendo unicidad por alias en seeder)
+                                List<Carrera> todasCarreras = carreraRepository.findAll();
+                                Carrera carreraISI = todasCarreras.stream().filter(c -> "ISI".equals(c.getAlias())).findFirst().orElse(null);
+                                Carrera carreraCivil = todasCarreras.stream().filter(c -> "IC".equals(c.getAlias())).findFirst().orElse(null);
+                                Carrera carreraElectrica = todasCarreras.stream().filter(c -> "IEE".equals(c.getAlias())).findFirst().orElse(null);
 
-                                // Matriculamos a algunos en otras carreras para variedad
-                                matricularAlumno(matriculacionRepository, alumnoJuan, frro, 2, 2023); // Civil
-                                matricularAlumno(matriculacionRepository, alumnoMiguel, frro, 5, 2023); // Electrica
-                                matricularAlumno(matriculacionRepository, alumnoMartin, frro, 1, 2023);
-                                matricularAlumno(matriculacionRepository, alumnoFlavia, frro, 1, 2023);
+                                if (carreraISI != null) {
+                                    // Matriculamos a la mayoría en Sistemas (ISI) - Plan 2023
+                                    matricularAlumno(matriculacionRepository, alumnoAgustin, frro, carreraISI.getId(), 2023);
+                                    matricularAlumno(matriculacionRepository, alumnoSofia, frro, carreraISI.getId(), 2023);
+                                    matricularAlumno(matriculacionRepository, alumnoCarlos, frro, carreraISI.getId(), 2023);
+                                    matricularAlumno(matriculacionRepository, alumnoMaria, frro, carreraISI.getId(), 2023);
+                                    matricularAlumno(matriculacionRepository, alumnoMartin, frro, carreraISI.getId(), 2023);
+                                    matricularAlumno(matriculacionRepository, alumnoFlavia, frro, carreraISI.getId(), 2023);
+                                }
+                                
+                                if (carreraCivil != null) {
+                                    matricularAlumno(matriculacionRepository, alumnoJuan, frro, carreraCivil.getId(), 2023); // Civil
+                                }
+                                
+                                if (carreraElectrica != null) {
+                                    matricularAlumno(matriculacionRepository, alumnoMiguel, frro, carreraElectrica.getId(), 2023); // Electrica
+                                }
 
                                 System.out.println(">> Alumnos matriculados exitosamente.");
                         }
@@ -488,12 +497,12 @@ public class DbSeeder {
         }
 
         private void matricularAlumno(MatriculacionRepository repo, Usuario alumno, FacultadRegional facu,
-                        Integer nroCarrera, Integer nroPlan) {
+                        java.util.UUID idCarrera, Integer nroPlan) {
                 if (alumno == null)
                         return;
                 Matriculacion eu = new Matriculacion();
                 Matriculacion.MatriculacionId id = new Matriculacion.MatriculacionId(alumno.getId(), facu.getId(),
-                                nroCarrera, nroPlan);
+                                idCarrera, nroPlan);
                 eu.setId(id);
                 eu.setFechaInscripcion(LocalDate.now());
                 eu.setEstado("ACTIVO");
