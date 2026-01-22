@@ -20,10 +20,14 @@ public class InscripcionExamen {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
-            @JoinColumn(name = "id_mesa_examen", referencedColumnName = "id_mesa_examen", nullable = false),
-            @JoinColumn(name = "nro_detalle", referencedColumnName = "nro_detalle", nullable = false)
+            @JoinColumn(name = "id_mesa_examen", referencedColumnName = "id_mesa_examen"),
+            @JoinColumn(name = "nro_detalle", referencedColumnName = "nro_detalle")
     })
     private DetalleMesaExamen detalleMesaExamen;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_materia")
+    private Materia materia;
 
     @Column(name = "fecha_inscripcion", nullable = false)
     private LocalDateTime fechaInscripcion;
