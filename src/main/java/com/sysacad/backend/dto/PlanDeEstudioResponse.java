@@ -14,6 +14,7 @@ public class PlanDeEstudioResponse {
     private LocalDate fechaInicio;
     private LocalDate fechaFin;
     private Boolean esVigente;
+    private java.util.UUID idCarrera;
     private String nombreCarrera;
 
     public PlanDeEstudioResponse(PlanDeEstudio plan) {
@@ -24,6 +25,7 @@ public class PlanDeEstudioResponse {
         this.esVigente = plan.getEsVigente();
 
         if (plan.getCarrera() != null) {
+            this.idCarrera = plan.getCarrera().getId();
             this.nombreCarrera = plan.getCarrera().getNombre();
         }
     }
