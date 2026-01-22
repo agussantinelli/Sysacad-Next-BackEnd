@@ -21,15 +21,16 @@ public class CarreraService {
 
     @Transactional
     public Carrera registrarCarrera(Carrera carrera) {
-        // Validación: Evitar duplicados lógicos
-        if (carreraRepository.existsById(carrera.getId())) {
-            throw new RuntimeException("La carrera ya existe en esta facultad.");
-        }
+        // Validación: Evitar duplicados lógicos (por Alias o Nombre)
+        // Ejemplo: Si ya existe una carrera con el mismo Alias
+//        if (carreraRepository.existsByAlias(carrera.getAlias())) { 
+//            throw new RuntimeException("Ya existe una carrera con ese alias.");
+//        }
         return carreraRepository.save(carrera);
     }
 
     @Transactional(readOnly = true)
     public List<Carrera> listarCarrerasPorFacultad(UUID idFacultad) {
-        return carreraRepository.findByIdIdFacultad(idFacultad);
+        return carreraRepository.findByFacultades_Id(idFacultad);
     }
 }

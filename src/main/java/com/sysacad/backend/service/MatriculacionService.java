@@ -77,7 +77,8 @@ public class MatriculacionService {
             PlanDeEstudio plan = matricula.getPlan();
 
             if (plan != null) {
-                Integer nroCarrera = plan.getCarrera().getId().getNroCarrera();
+                // Integer nroCarrera = plan.getCarrera().getId().getNroCarrera(); // Removed
+                java.util.UUID idCarrera = plan.getCarrera().getId();
                 String nombreCarrera = plan.getCarrera().getNombre();
                 String nombrePlan = plan.getNombre();
 
@@ -115,7 +116,7 @@ public class MatriculacionService {
                 materiasDTO.sort(Comparator.comparing(EstudianteMateriaDTO::getNivel)
                         .thenComparing(EstudianteMateriaDTO::getNombre));
 
-                resultado.add(new CarreraMateriasDTO(nroCarrera, nombreCarrera, nombrePlan, materiasDTO));
+                resultado.add(new CarreraMateriasDTO(idCarrera, nombreCarrera, nombrePlan, materiasDTO));
             }
         }
 

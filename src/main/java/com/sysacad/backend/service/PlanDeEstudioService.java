@@ -31,25 +31,21 @@ public class PlanDeEstudioService {
     @Transactional
     public PlanDeEstudio crearPlanDeEstudio(PlanDeEstudio plan) {
         // Validación: Verificar que la carrera padre exista antes de crear el plan
-        Carrera.CarreraId carreraId = new Carrera.CarreraId(
-                plan.getId().getIdFacultad(),
-                plan.getId().getNroCarrera());
-
-        if (!carreraRepository.existsById(carreraId)) {
-            throw new RuntimeException("No se puede crear el plan: La carrera especificada no existe.");
+        if (!carreraRepository.existsById(plan.getId().getIdCarrera())) {
+             throw new RuntimeException("No se puede crear el plan: La carrera especificada no existe.");
         }
 
         return planRepository.save(plan);
     }
 
     @Transactional(readOnly = true)
-    public List<PlanDeEstudio> listarPlanesVigentes(Integer nroCarrera) {
-        return planRepository.findByIdNroCarreraAndEsVigenteTrue(nroCarrera);
+    public List<PlanDeEstudio> listarPlanesVigentes(java.util.UUID idCarrera) {
+        return planRepository.findByIdIdCarreraAndEsVigenteTrue(idCarrera);
     }
 
     @Transactional(readOnly = true)
-    public List<PlanDeEstudio> listarTodosPorCarrera(Integer nroCarrera) {
-        return planRepository.findByIdNroCarrera(nroCarrera);
+    public List<PlanDeEstudio> listarTodosPorCarrera(java.util.UUID idCarrera) {
+        return planRepository.findByIdIdCarrera(idCarrera);
     }
 
     @Transactional
@@ -57,8 +53,7 @@ public class PlanDeEstudioService {
         // Validación: Verificar que el plan de estudios exista
         // Se usa la clase estática PlanId definida en la entidad PlanDeEstudio
         PlanDeEstudio.PlanId planId = new PlanDeEstudio.PlanId(
-                planMateria.getId().getIdFacultad(),
-                planMateria.getId().getNroCarrera(),
+                planMateria.getId().getIdCarrera(),
                 planMateria.getId().getNroPlan());
 
         if (!planRepository.existsById(planId)) {
