@@ -26,20 +26,33 @@ public class CarreraController {
 
     private final CarreraService carreraService;
     private final PlanDeEstudioService planService;
+    private final com.sysacad.backend.repository.FacultadRegionalRepository facultadRepository;
 
     @Autowired
-    public CarreraController(CarreraService carreraService, PlanDeEstudioService planService) {
+    public CarreraController(CarreraService carreraService, PlanDeEstudioService planService,
+                             com.sysacad.backend.repository.FacultadRegionalRepository facultadRepository) {
         this.carreraService = carreraService;
         this.planService = planService;
+        this.facultadRepository = facultadRepository;
     }
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CarreraResponse> registrarCarrera(@RequestBody CarreraRequest request) {
         Carrera carrera = new Carrera();
-        Carrera.CarreraId id = new Carrera.CarreraId(request.getIdFacultad(), request.getNroCarrera());
-        carrera.setId(id);
         carrera.setNombre(request.getNombre());
+        carrera.setAlias(request.getAlias());
+
+        // Buscar facultad y asociar (ahora es M:N)
+        // Nota: Asumimos que al crear, se asocia a la facultad del request.
+        // Si la carrera ya existe (mismo ID/Alias), deberíamos solo asociarla, pero aquí asumimos creación nueva.
+        if (request.getIdFacultad() != null) {
+             com.sysacad.backend.modelo.FacultadRegional facultad = facultadRepository.findById(request.getIdFacultad())
+                     .orElseThrow(() -> new RuntimeException("Facultad no encontrada"));
+             java.util.Set<com.sysacad.backend.modelo.FacultadRegional> facultades = new java.util.HashSet<>();
+             facultades.add(facultad);
+             carrera.setFacultades(facultades);
+        }
 
         Carrera guardada = carreraService.registrarCarrera(carrera);
         return new ResponseEntity<>(new CarreraResponse(guardada), HttpStatus.CREATED);
@@ -62,7 +75,7 @@ public class CarreraController {
     public ResponseEntity<PlanDeEstudioResponse> crearPlan(@RequestBody PlanDeEstudioRequest request) {
         PlanDeEstudio plan = new PlanDeEstudio();
         PlanDeEstudio.PlanId id = new PlanDeEstudio.PlanId(
-                request.getIdFacultad(), request.getNroCarrera(), request.getNroPlan());
+                request.getIdCarrera(), request.getNroPlan());
         plan.setId(id);
         plan.setNombre(request.getNombrePlan());
         plan.setFechaInicio(request.getFechaInicio());
@@ -83,7 +96,7 @@ public class CarreraController {
     @GetMapping("/{idCarrera}/planes/vigentes")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<PlanDeEstudioResponse>> listarPlanesVigentes(
-            @PathVariable Integer idCarrera,
+            @PathVariable UUID idCarrera,
             @RequestParam(required = false) UUID idFacultad) {
 
         List<PlanDeEstudio> planes = planService.listarPlanesVigentes(idCarrera);

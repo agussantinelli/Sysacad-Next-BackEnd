@@ -31,7 +31,7 @@ public class PlanDeEstudioController {
     public ResponseEntity<PlanDeEstudioResponse> crearPlan(@RequestBody PlanDeEstudioRequest request) {
         PlanDeEstudio plan = new PlanDeEstudio();
         PlanDeEstudio.PlanId id = new PlanDeEstudio.PlanId(
-                request.getIdFacultad(), request.getNroCarrera(), request.getNroPlan());
+                request.getIdCarrera(), request.getNroPlan());
         plan.setId(id);
         plan.setNombre(request.getNombrePlan());
         plan.setFechaInicio(request.getFechaInicio());
@@ -49,19 +49,19 @@ public class PlanDeEstudioController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @GetMapping("/vigentes/{nroCarrera}")
+    @GetMapping("/vigentes/{idCarrera}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<PlanDeEstudioResponse>> listarPlanesVigentes(@PathVariable Integer nroCarrera) {
-        List<PlanDeEstudio> planes = planService.listarPlanesVigentes(nroCarrera);
+    public ResponseEntity<List<PlanDeEstudioResponse>> listarPlanesVigentes(@PathVariable java.util.UUID idCarrera) {
+        List<PlanDeEstudio> planes = planService.listarPlanesVigentes(idCarrera);
         return ResponseEntity.ok(planes.stream()
                 .map(PlanDeEstudioResponse::new)
                 .collect(Collectors.toList()));
     }
 
-    @GetMapping("/carrera/{nroCarrera}")
+    @GetMapping("/carrera/{idCarrera}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<PlanDeEstudioResponse>> listarTodosPorCarrera(@PathVariable Integer nroCarrera) {
-        List<PlanDeEstudio> planes = planService.listarTodosPorCarrera(nroCarrera);
+    public ResponseEntity<List<PlanDeEstudioResponse>> listarTodosPorCarrera(@PathVariable java.util.UUID idCarrera) {
+        List<PlanDeEstudio> planes = planService.listarTodosPorCarrera(idCarrera);
         return ResponseEntity.ok(planes.stream()
                 .map(PlanDeEstudioResponse::new)
                 .collect(Collectors.toList()));

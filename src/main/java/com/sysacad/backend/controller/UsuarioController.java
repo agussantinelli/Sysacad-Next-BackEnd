@@ -162,8 +162,10 @@ public class UsuarioController {
             List<UsuarioResponse.InfoCarrera> carrerasInfo = estudios.stream()
                     .map(e -> new UsuarioResponse.InfoCarrera(
                             e.getPlan().getCarrera().getNombre(),
-                            e.getPlan().getCarrera().getFacultad().getCiudad() + ", " +
-                                    e.getPlan().getCarrera().getFacultad().getProvincia()))
+                            e.getPlan().getCarrera().getFacultades().stream()
+                                    .findFirst()
+                                    .map(f -> f.getCiudad() + ", " + f.getProvincia())
+                                    .orElse("Sin Facultad")))
                     .collect(Collectors.toList());
             dto.setCarreras(carrerasInfo);
             estudios.stream()
