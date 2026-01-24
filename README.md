@@ -24,6 +24,7 @@
     <img src="https://img.shields.io/badge/Apache%20Maven-3.8+-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white" alt="Maven Badge"/>
     <img src="https://img.shields.io/badge/Project%20Lombok-Enables-BC0230?style=for-the-badge&logo=lombok&logoColor=white" alt="Lombok Badge"/>
     <img src="https://img.shields.io/badge/JUnit-5-25A162?style=for-the-badge&logo=junit5&logoColor=white" alt="JUnit Badge"/>
+    <img src="https://img.shields.io/badge/MapStruct-Mapping-000000?style=for-the-badge&logo=mapstruct&logoColor=white" alt="MapStruct Badge"/>
 </div>
 
 <div align="center">
@@ -175,6 +176,12 @@
             <td>Lombok</td>
             <td>Latest</td>
             <td>Reducción de código (Data, Builder, Slf4j).</td>
+        </tr>
+        <tr>
+            <td><strong>Mappers</strong></td>
+            <td>MapStruct</td>
+            <td>1.5.5</td>
+            <td>Mapeo DTO-Entity en tiempo de compilación.</td>
         </tr>
     </tbody>
 </table>
