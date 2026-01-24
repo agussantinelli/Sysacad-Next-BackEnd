@@ -23,34 +23,31 @@ public class SalonController {
 
     private final SalonService salonService;
     private final FacultadService facultadService;
+    private final com.sysacad.backend.mapper.SalonMapper salonMapper;
 
     @Autowired
-    public SalonController(SalonService salonService, FacultadService facultadService) {
+    public SalonController(SalonService salonService, FacultadService facultadService, com.sysacad.backend.mapper.SalonMapper salonMapper) {
         this.salonService = salonService;
         this.facultadService = facultadService;
+        this.salonMapper = salonMapper;
     }
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<SalonResponse> crearSalon(@RequestBody SalonRequest request) {
-        Salon salon = new Salon();
-        salon.setNombre(request.getNombre());
-        salon.setPiso(request.getPiso());
-
+        Salon salon = salonMapper.toEntity(request);
+        
         FacultadRegional facultad = facultadService.buscarPorId(request.getIdFacultad());
         salon.setFacultad(facultad);
 
         Salon nuevo = salonService.crearSalon(salon);
-        return new ResponseEntity<>(new SalonResponse(nuevo), HttpStatus.CREATED);
+        return new ResponseEntity<>(salonMapper.toDTO(nuevo), HttpStatus.CREATED);
     }
 
     @GetMapping("/facultad/{idFacultad}")
     @PreAuthorize("hasAnyRole('ADMIN', 'PROFESOR', 'ESTUDIANTE')")
     public ResponseEntity<List<SalonResponse>> listarPorFacultad(@PathVariable UUID idFacultad) {
         List<Salon> salones = salonService.listarPorFacultad(idFacultad);
-        List<SalonResponse> response = salones.stream()
-                .map(SalonResponse::new)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(salonMapper.toDTOs(salones));
     }
 }

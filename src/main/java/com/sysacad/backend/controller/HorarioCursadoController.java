@@ -29,13 +29,15 @@ public class HorarioCursadoController {
     private final HorarioCursadoService horarioService;
     private final ComisionService comisionService;
     private final MateriaService materiaService;
+    private final com.sysacad.backend.mapper.HorarioMapper horarioMapper;
 
     @Autowired
     public HorarioCursadoController(HorarioCursadoService horarioService, ComisionService comisionService,
-            MateriaService materiaService) {
+            MateriaService materiaService, com.sysacad.backend.mapper.HorarioMapper horarioMapper) {
         this.horarioService = horarioService;
         this.comisionService = comisionService;
         this.materiaService = materiaService;
+        this.horarioMapper = horarioMapper;
     }
 
     @PostMapping
@@ -47,20 +49,28 @@ public class HorarioCursadoController {
 
             Materia materia = materiaService.buscarPorId(request.getIdMateria())
                     .orElseThrow(() -> new RuntimeException("Materia no encontrada"));
-
-            HorarioCursado horario = new HorarioCursado();
+            
+            // Usamos el mapper para la estructura base pero el ID compuesto requiere seteo manual 
+            // porque no estamos mapeando del todo bien IDs compuestos en el mapper básico
+            // Pero el mapper `toEntity` ya ignoraba ID y seteabamos manual.
+            HorarioCursado horario = horarioMapper.toEntity(request);
+            
             HorarioCursadoId id = new HorarioCursadoId(
                     request.getIdComision(),
                     request.getIdMateria(),
                     request.getDia(),
                     request.getHoraDesde());
             horario.setId(id);
-            horario.setHoraHasta(request.getHoraHasta());
+            // El mapper no setea comision y materia porque lo ignoramos (o no encuentra coincidencia simple)
+            // asi que mantenemos el seteo manual de relaciones
             horario.setComision(comision);
             horario.setMateria(materia);
+            // horaHasta deberia ser mapeada por el mapper si coinciden nombres (ambos son horaHasta?)
+            // En request es horaHasta, en entity es horaHasta. Si.
+            if (horario.getHoraHasta() == null) horario.setHoraHasta(request.getHoraHasta());
 
             HorarioCursado nuevo = horarioService.registrarHorario(horario);
-            return new ResponseEntity<>(new HorarioResponse(nuevo), HttpStatus.CREATED);
+            return new ResponseEntity<>(horarioMapper.toDTO(nuevo), HttpStatus.CREATED);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -70,10 +80,7 @@ public class HorarioCursadoController {
     @PreAuthorize("hasAnyRole('ADMIN', 'PROFESOR', 'ESTUDIANTE')")
     public ResponseEntity<List<HorarioResponse>> obtenerPorComision(@PathVariable UUID idComision) {
         List<HorarioCursado> horarios = horarioService.obtenerPorComision(idComision);
-        List<HorarioResponse> response = horarios.stream()
-                .map(HorarioResponse::new)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(horarioMapper.toDTOs(horarios));
     }
 
     @DeleteMapping

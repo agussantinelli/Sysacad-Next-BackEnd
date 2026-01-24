@@ -20,6 +20,7 @@ public interface PlanDeEstudioMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "carrera", ignore = true)
+    @Mapping(source = "nombrePlan", target = "nombre") // Fix: map request.nombrePlan to entity.nombre
     PlanDeEstudio toEntity(PlanDeEstudioRequest request);
 
     List<PlanDeEstudioResponse> toDTOs(List<PlanDeEstudio> planes);

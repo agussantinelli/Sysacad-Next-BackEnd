@@ -20,26 +20,30 @@ import java.util.stream.Collectors;
 public class PlanDeEstudioController {
 
     private final PlanDeEstudioService planService;
+    private final com.sysacad.backend.mapper.PlanDeEstudioMapper planMapper;
 
     @Autowired
-    public PlanDeEstudioController(PlanDeEstudioService planService) {
+    public PlanDeEstudioController(PlanDeEstudioService planService, com.sysacad.backend.mapper.PlanDeEstudioMapper planMapper) {
         this.planService = planService;
+        this.planMapper = planMapper;
     }
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<PlanDeEstudioResponse> crearPlan(@RequestBody PlanDeEstudioRequest request) {
-        PlanDeEstudio plan = new PlanDeEstudio();
+        // Mapeo inicial
+        PlanDeEstudio plan = planMapper.toEntity(request);
+        
+        // ID compuesto
         PlanDeEstudio.PlanId id = new PlanDeEstudio.PlanId(
                 request.getIdCarrera(), request.getNroPlan());
         plan.setId(id);
-        plan.setNombre(request.getNombrePlan());
-        plan.setFechaInicio(request.getFechaInicio());
-        plan.setFechaFin(request.getFechaFin());
-        plan.setEsVigente(request.getEsVigente());
+        
+        // Si nombrePlan no se mapeo (aunque lo arregle en mapper), asegurar
+        if (plan.getNombre() == null) plan.setNombre(request.getNombrePlan());
 
         PlanDeEstudio guardado = planService.crearPlanDeEstudio(plan);
-        return new ResponseEntity<>(new PlanDeEstudioResponse(guardado), HttpStatus.CREATED);
+        return new ResponseEntity<>(planMapper.toDTO(guardado), HttpStatus.CREATED);
     }
 
     @PostMapping("/materias")
@@ -53,17 +57,13 @@ public class PlanDeEstudioController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<PlanDeEstudioResponse>> listarPlanesVigentes(@PathVariable java.util.UUID idCarrera) {
         List<PlanDeEstudio> planes = planService.listarPlanesVigentes(idCarrera);
-        return ResponseEntity.ok(planes.stream()
-                .map(PlanDeEstudioResponse::new)
-                .collect(Collectors.toList()));
+        return ResponseEntity.ok(planMapper.toDTOs(planes));
     }
 
     @GetMapping("/carrera/{idCarrera}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<PlanDeEstudioResponse>> listarTodosPorCarrera(@PathVariable java.util.UUID idCarrera) {
         List<PlanDeEstudio> planes = planService.listarTodosPorCarrera(idCarrera);
-        return ResponseEntity.ok(planes.stream()
-                .map(PlanDeEstudioResponse::new)
-                .collect(Collectors.toList()));
+        return ResponseEntity.ok(planMapper.toDTOs(planes));
     }
 }

@@ -34,21 +34,35 @@ public class MesaExamenService {
     @Autowired
     private com.sysacad.backend.repository.UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private com.sysacad.backend.mapper.MesaExamenMapper mesaExamenMapper;
+
+    @Autowired
+    private com.sysacad.backend.mapper.DetalleMesaExamenMapper detalleMesaExamenMapper;
+
     @Transactional
     public MesaExamenResponse createMesa(MesaExamenRequest request) {
-        MesaExamen mesa = new MesaExamen();
-        mesa.setNombre(request.getNombre());
-        mesa.setFechaInicio(request.getFechaInicio());
-        mesa.setFechaFin(request.getFechaFin());
-
+        MesaExamen mesa = mesaExamenMapper.toEntity(request);
         mesa = mesaExamenRepository.save(mesa);
-        return mapToResponse(mesa);
+        return mesaExamenMapper.toDTO(mesa);
     }
 
     @Transactional(readOnly = true)
     public List<MesaExamenResponse> getAllMesas() {
         return mesaExamenRepository.findAll().stream()
-                .map(this::mapToResponse)
+                .map(mesa -> {
+                    MesaExamenResponse dto = mesaExamenMapper.toDTO(mesa);
+                    // Cargar detalles manualmente si el mapper no lo hace por FetchType.LAZY o si MesaExamenMapper ignoraba detalles
+                    // En mi definicion de mapper, MesaExamenMapper usa DetalleMesaExamenMapper pero la relación en Entity debe estar bien.
+                    // Si MesaExamen tiene lista de DetalleMesaExamen, y el mapper lo mapea, genial.
+                    // Pero `mapToResponse` anterior hacia una consulta extra: detalleMesaExamenRepository.findByMesaExamenId(mesa.getId())
+                    // Si la entidad MesaExamen no tiene la lista mapeada (OneToMany), entonces el mapper no puede hacerlo solo magicamente.
+                    // Revisando MesaExamen.java en memoria: no recuerdo si tiene @OneToMany mappedBy.
+                    // Si no tiene, debo setear los detalles aqui.
+                    List<DetalleMesaExamen> detalles = detalleMesaExamenRepository.findByMesaExamenId(mesa.getId());
+                    dto.setDetalles(detalleMesaExamenMapper.toDTOs(detalles));
+                    return dto;
+                })
                 .collect(Collectors.toList());
     }
 
@@ -63,45 +77,20 @@ public class MesaExamenService {
         com.sysacad.backend.modelo.Usuario presidente = usuarioRepository.findById(request.getIdPresidente())
                 .orElseThrow(() -> new ResourceNotFoundException("Presidente de mesa no encontrado con ID: " + request.getIdPresidente()));
 
-        DetalleMesaExamen detalle = new DetalleMesaExamen();
+        // El mapper para entity ignora ID compuesto y objs.
+        // Usamos el entity directo o mapper ignorando esos campos.
+        DetalleMesaExamen detalle = detalleMesaExamenMapper.toEntity(request);
+        
         detalle.setId(new DetalleMesaExamen.DetalleId(mesa.getId(), request.getNroDetalle()));
         detalle.setMesaExamen(mesa);
         detalle.setMateria(materia);
         detalle.setPresidente(presidente);
-        detalle.setDiaExamen(request.getDiaExamen());
-        detalle.setHoraExamen(request.getHoraExamen());
+        // dia y hora mapeados por mapper si coinciden
+        if(detalle.getDiaExamen() == null) detalle.setDiaExamen(request.getDiaExamen());
+        if(detalle.getHoraExamen() == null) detalle.setHoraExamen(request.getHoraExamen());
 
         detalle = detalleMesaExamenRepository.save(detalle);
-        return mapToResponse(detalle);
+        return detalleMesaExamenMapper.toDTO(detalle);
     }
 
-    private MesaExamenResponse mapToResponse(MesaExamen mesa) {
-        MesaExamenResponse response = new MesaExamenResponse();
-        response.setId(mesa.getId());
-        response.setNombre(mesa.getNombre());
-        response.setFechaInicio(mesa.getFechaInicio());
-        response.setFechaFin(mesa.getFechaFin());
-
-        // Cargar detalles
-        List<DetalleMesaExamen> detalles = detalleMesaExamenRepository.findByMesaExamenId(mesa.getId());
-        response.setDetalles(detalles.stream().map(this::mapToResponse).collect(Collectors.toList()));
-
-        return response;
-    }
-
-    private DetalleMesaExamenResponse mapToResponse(DetalleMesaExamen detalle) {
-        DetalleMesaExamenResponse response = new DetalleMesaExamenResponse();
-        response.setIdMesaExamen(detalle.getId().getIdMesaExamen());
-        response.setNroDetalle(detalle.getId().getNroDetalle());
-        response.setNombreMateria(detalle.getMateria().getNombre());
-        response.setIdMateria(detalle.getMateria().getId());
-        if (detalle.getPresidente() != null) {
-            response.setNombrePresidente(
-                    detalle.getPresidente().getNombre() + " " + detalle.getPresidente().getApellido());
-            response.setIdPresidente(detalle.getPresidente().getId());
-        }
-        response.setDiaExamen(detalle.getDiaExamen());
-        response.setHoraExamen(detalle.getHoraExamen());
-        return response;
-    }
 }

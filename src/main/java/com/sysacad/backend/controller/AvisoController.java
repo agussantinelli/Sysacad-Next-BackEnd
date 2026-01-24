@@ -19,32 +19,27 @@ import java.util.stream.Collectors;
 public class AvisoController {
 
     private final AvisoService avisoService;
+    private final com.sysacad.backend.mapper.AvisoMapper avisoMapper;
 
     @Autowired
-    public AvisoController(AvisoService avisoService) {
+    public AvisoController(AvisoService avisoService, com.sysacad.backend.mapper.AvisoMapper avisoMapper) {
         this.avisoService = avisoService;
+        this.avisoMapper = avisoMapper;
     }
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<AvisoResponse> publicarAviso(@RequestBody AvisoRequest request) {
-        Aviso aviso = new Aviso();
-        aviso.setTitulo(request.getTitulo());
-        aviso.setDescripcion(request.getDescripcion());
+        Aviso aviso = avisoMapper.toEntity(request);
         // El servicio setea fecha y estado por defecto, o usamos el request si aplica
         // El request tiene estado, pero el servicio lo sobreescribe a 'PUBLICADO'.
-        // Vamos a dejar que el servicio maneje la lógica por defecto.
-
         Aviso nuevo = avisoService.publicarAviso(aviso);
-        return new ResponseEntity<>(new AvisoResponse(nuevo), HttpStatus.CREATED);
+        return new ResponseEntity<>(avisoMapper.toDTO(nuevo), HttpStatus.CREATED);
     }
 
     @GetMapping
     public ResponseEntity<List<AvisoResponse>> obtenerUltimosAvisos() {
         List<Aviso> avisos = avisoService.obtenerUltimosAvisos();
-        List<AvisoResponse> response = avisos.stream()
-                .map(AvisoResponse::new)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(avisoMapper.toDTOs(avisos));
     }
 }

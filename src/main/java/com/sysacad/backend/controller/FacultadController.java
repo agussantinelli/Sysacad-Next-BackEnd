@@ -20,36 +20,31 @@ import java.util.stream.Collectors;
 public class FacultadController {
 
     private final FacultadService facultadService;
+    private final com.sysacad.backend.mapper.FacultadMapper facultadMapper;
 
     @Autowired
-    public FacultadController(FacultadService facultadService) {
+    public FacultadController(FacultadService facultadService, com.sysacad.backend.mapper.FacultadMapper facultadMapper) {
         this.facultadService = facultadService;
+        this.facultadMapper = facultadMapper;
     }
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<FacultadResponse> crearFacultad(@RequestBody FacultadRequest request) {
         // DTO -> Entidad
-        FacultadRegional facultad = new FacultadRegional();
-        facultad.setCiudad(request.getCiudad());
-        facultad.setProvincia(request.getProvincia());
+        FacultadRegional facultad = facultadMapper.toEntity(request);
 
         FacultadRegional guardada = facultadService.crearFacultad(facultad);
 
         // Entidad -> DTO
-        return new ResponseEntity<>(new FacultadResponse(guardada), HttpStatus.CREATED);
+        return new ResponseEntity<>(facultadMapper.toDTO(guardada), HttpStatus.CREATED);
     }
 
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<FacultadResponse>> listarTodas() {
         List<FacultadRegional> facultades = facultadService.listarTodas();
-
-        List<FacultadResponse> response = facultades.stream()
-                .map(FacultadResponse::new)
-                .collect(Collectors.toList());
-
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(facultadMapper.toDTOs(facultades));
     }
 
     @GetMapping("/{id}")
@@ -57,7 +52,7 @@ public class FacultadController {
     public ResponseEntity<FacultadResponse> buscarPorId(@PathVariable UUID id) {
         try {
             FacultadRegional facultad = facultadService.buscarPorId(id);
-            return ResponseEntity.ok(new FacultadResponse(facultad));
+            return ResponseEntity.ok(facultadMapper.toDTO(facultad));
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }

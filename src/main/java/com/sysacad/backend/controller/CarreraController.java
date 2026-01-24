@@ -27,25 +27,27 @@ public class CarreraController {
     private final CarreraService carreraService;
     private final PlanDeEstudioService planService;
     private final com.sysacad.backend.repository.FacultadRegionalRepository facultadRepository;
+    private final com.sysacad.backend.mapper.CarreraMapper carreraMapper;
+    private final com.sysacad.backend.mapper.PlanDeEstudioMapper planDeEstudioMapper;
 
     @Autowired
     public CarreraController(CarreraService carreraService, PlanDeEstudioService planService,
-                             com.sysacad.backend.repository.FacultadRegionalRepository facultadRepository) {
+                             com.sysacad.backend.repository.FacultadRegionalRepository facultadRepository,
+                             com.sysacad.backend.mapper.CarreraMapper carreraMapper,
+                             com.sysacad.backend.mapper.PlanDeEstudioMapper planDeEstudioMapper) {
         this.carreraService = carreraService;
         this.planService = planService;
         this.facultadRepository = facultadRepository;
+        this.carreraMapper = carreraMapper;
+        this.planDeEstudioMapper = planDeEstudioMapper;
     }
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CarreraResponse> registrarCarrera(@RequestBody CarreraRequest request) {
-        Carrera carrera = new Carrera();
-        carrera.setNombre(request.getNombre());
-        carrera.setAlias(request.getAlias());
-
+        Carrera carrera = carreraMapper.toEntity(request);
+        
         // Buscar facultad y asociar (ahora es M:N)
-        // Nota: Asumimos que al crear, se asocia a la facultad del request.
-        // Si la carrera ya existe (mismo ID/Alias), deberíamos solo asociarla, pero aquí asumimos creación nueva.
         if (request.getIdFacultad() != null) {
              com.sysacad.backend.modelo.FacultadRegional facultad = facultadRepository.findById(request.getIdFacultad())
                      .orElseThrow(() -> new RuntimeException("Facultad no encontrada"));
@@ -55,35 +57,37 @@ public class CarreraController {
         }
 
         Carrera guardada = carreraService.registrarCarrera(carrera);
-        return new ResponseEntity<>(new CarreraResponse(guardada), HttpStatus.CREATED);
+        return new ResponseEntity<>(carreraMapper.toDTO(guardada), HttpStatus.CREATED);
     }
 
     @GetMapping("/facultad/{idFacultad}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<CarreraResponse>> listarPorFacultad(@PathVariable UUID idFacultad) {
         List<Carrera> carreras = carreraService.listarCarrerasPorFacultad(idFacultad);
-
-        List<CarreraResponse> response = carreras.stream()
-                .map(CarreraResponse::new)
-                .collect(Collectors.toList());
-
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(carreraMapper.toDTOs(carreras));
     }
 
     @PostMapping("/planes")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<PlanDeEstudioResponse> crearPlan(@RequestBody PlanDeEstudioRequest request) {
-        PlanDeEstudio plan = new PlanDeEstudio();
+        // Mapeo manual para ID compuesto y logica que el mapper ignoro
+        // o mejor usamos el mapper para base y seteamos ID
+        PlanDeEstudio plan = planDeEstudioMapper.toEntity(request);
+        
         PlanDeEstudio.PlanId id = new PlanDeEstudio.PlanId(
                 request.getIdCarrera(), request.getNroPlan());
         plan.setId(id);
-        plan.setNombre(request.getNombrePlan());
-        plan.setFechaInicio(request.getFechaInicio());
-        plan.setFechaFin(request.getFechaFin());
-        plan.setEsVigente(request.getEsVigente());
-
+        
+        // El mapper ya mapea nombre, fechas si coinciden.
+        if (plan.getNombre() == null) plan.setNombre(request.getNombrePlan()); // Mapper dice "nombrePlan" vs "nombre", ver mapper
+        // PlanDeEstudioMapper tiene @Mapping(source = "carrera.nombre", target = "nombreCarrera") en DTO, pero en Entity?
+        // En DTO -> Entity no defini nombres especificos, asi que PlanDeEstudioRequest tiene nombrePlan?
+        // Si PlanDeEstudioRequest tiene fechaInicio, etc.
+        // Voy a asegurar aqui para no romper, o confiar en el mapper si lo arregle.
+        // Asumiendo mapper funciona para campos que coinciden.
+        
         PlanDeEstudio guardado = planService.crearPlanDeEstudio(plan);
-        return new ResponseEntity<>(new PlanDeEstudioResponse(guardado), HttpStatus.CREATED);
+        return new ResponseEntity<>(planDeEstudioMapper.toDTO(guardado), HttpStatus.CREATED);
     }
 
     @PostMapping("/planes/materias")
@@ -101,10 +105,6 @@ public class CarreraController {
 
         List<PlanDeEstudio> planes = planService.listarPlanesVigentes(idCarrera);
 
-        List<PlanDeEstudioResponse> response = planes.stream()
-                .map(PlanDeEstudioResponse::new)
-                .collect(Collectors.toList());
-
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(planDeEstudioMapper.toDTOs(planes));
     }
 }

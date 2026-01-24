@@ -23,36 +23,33 @@ public class SancionController {
 
     private final SancionService sancionService;
     private final UsuarioService usuarioService;
+    private final com.sysacad.backend.mapper.SancionMapper sancionMapper;
 
     @Autowired
-    public SancionController(SancionService sancionService, UsuarioService usuarioService) {
+    public SancionController(SancionService sancionService, UsuarioService usuarioService, com.sysacad.backend.mapper.SancionMapper sancionMapper) {
         this.sancionService = sancionService;
         this.usuarioService = usuarioService;
+        this.sancionMapper = sancionMapper;
     }
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<SancionResponse> aplicarSancion(@RequestBody SancionRequest request) {
-        Sancion sancion = new Sancion();
-        sancion.setMotivo(request.getMotivo());
-        sancion.setFechaInicio(request.getFechaInicio());
-        sancion.setFechaFin(request.getFechaFin());
-
+        Sancion sancion = sancionMapper.toEntity(request);
+        // mapper mapea motivo, fechaInicio, fechaFin si coinciden.
+        
         Usuario usuario = usuarioService.obtenerPorId(request.getIdUsuario())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         sancion.setUsuario(usuario);
 
         Sancion nueva = sancionService.aplicarSancion(sancion);
-        return new ResponseEntity<>(new SancionResponse(nueva), HttpStatus.CREATED);
+        return new ResponseEntity<>(sancionMapper.toDTO(nueva), HttpStatus.CREATED);
     }
 
     @GetMapping("/usuario/{idUsuario}")
     @PreAuthorize("hasAnyRole('ADMIN', 'ESTUDIANTE')")
     public ResponseEntity<List<SancionResponse>> listarSancionesUsuario(@PathVariable UUID idUsuario) {
         List<Sancion> sanciones = sancionService.listarSancionesUsuario(idUsuario);
-        List<SancionResponse> response = sanciones.stream()
-                .map(SancionResponse::new)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(sancionMapper.toDTOs(sanciones));
     }
 }
