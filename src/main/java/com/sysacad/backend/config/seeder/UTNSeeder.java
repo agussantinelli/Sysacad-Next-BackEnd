@@ -1,4 +1,4 @@
-package com.sysacad.backend.config;
+package com.sysacad.backend.config.seeder;
 
 import com.sysacad.backend.modelo.*;
 import com.sysacad.backend.modelo.enums.*;
