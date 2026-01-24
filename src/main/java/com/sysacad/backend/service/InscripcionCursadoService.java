@@ -6,6 +6,8 @@ import com.sysacad.backend.dto.calificacion_cursada.CalificacionCursadaRequest;
 import com.sysacad.backend.dto.calificacion_cursada.CalificacionCursadaResponse;
 import com.sysacad.backend.modelo.*;
 import com.sysacad.backend.repository.*;
+import com.sysacad.backend.exception.BusinessLogicException;
+import com.sysacad.backend.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,26 +40,26 @@ public class InscripcionCursadoService {
     public InscripcionCursadoResponse inscribir(InscripcionCursadoRequest request) {
         // 1. Validar Usuario
         Usuario alumno = usuarioRepository.findById(request.getIdUsuario())
-                .orElseThrow(() -> new RuntimeException("Alumno no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Alumno no encontrado con ID: " + request.getIdUsuario()));
 
         // 2. Validar Materia
         Materia materia = materiaRepository.findById(request.getIdMateria())
-                .orElseThrow(() -> new RuntimeException("Materia no encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Materia no encontrada con ID: " + request.getIdMateria()));
 
         // 3. Validar Comision
         Comision comision = comisionRepository.findById(request.getIdComision())
-                .orElseThrow(() -> new RuntimeException("Comisión no encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Comisión no encontrada con ID: " + request.getIdComision()));
 
         // 4. Validar que la Comisión dicte esa materia
         boolean dictaMateria = comision.getMaterias().stream()
                 .anyMatch(m -> m.getId().equals(materia.getId()));
         if (!dictaMateria) {
-            throw new RuntimeException("La comisión seleccionada no dicta la materia indicada.");
+            throw new BusinessLogicException("La comisión seleccionada no dicta la materia indicada.");
         }
 
         // 5. Validar si ya está inscripto
         if (inscripcionCursadoRepository.findByUsuarioIdAndMateriaId(alumno.getId(), materia.getId()).isPresent()) {
-            throw new RuntimeException("El alumno ya está inscripto a cursar esta materia.");
+            throw new BusinessLogicException("El alumno ya está inscripto a cursar esta materia.");
         }
 
         // 6. Crear Inscripción
@@ -80,7 +82,7 @@ public class InscripcionCursadoService {
 
     public CalificacionCursadaResponse cargarNota(UUID idInscripcion, CalificacionCursadaRequest request) {
         InscripcionCursado insc = inscripcionCursadoRepository.findById(idInscripcion)
-                .orElseThrow(() -> new RuntimeException("Inscripción no encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Inscripción no encontrada con ID: " + idInscripcion));
 
         CalificacionCursada calif = new CalificacionCursada();
         calif.setInscripcionCursado(insc);

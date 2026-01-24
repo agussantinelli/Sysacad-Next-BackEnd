@@ -10,6 +10,7 @@ import com.sysacad.backend.modelo.Materia;
 import com.sysacad.backend.repository.DetalleMesaExamenRepository;
 import com.sysacad.backend.repository.MesaExamenRepository;
 import com.sysacad.backend.repository.MateriaRepository;
+import com.sysacad.backend.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,13 +55,13 @@ public class MesaExamenService {
     @Transactional
     public DetalleMesaExamenResponse addDetalle(DetalleMesaExamenRequest request) {
         MesaExamen mesa = mesaExamenRepository.findById(request.getIdMesaExamen())
-                .orElseThrow(() -> new RuntimeException("Mesa de examen no encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Mesa de examen no encontrada con ID: " + request.getIdMesaExamen()));
 
         Materia materia = materiaRepository.findById(request.getIdMateria())
-                .orElseThrow(() -> new RuntimeException("Materia no encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Materia no encontrada con ID: " + request.getIdMateria()));
 
         com.sysacad.backend.modelo.Usuario presidente = usuarioRepository.findById(request.getIdPresidente())
-                .orElseThrow(() -> new RuntimeException("Presidente de mesa no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Presidente de mesa no encontrado con ID: " + request.getIdPresidente()));
 
         DetalleMesaExamen detalle = new DetalleMesaExamen();
         detalle.setId(new DetalleMesaExamen.DetalleId(mesa.getId(), request.getNroDetalle()));

@@ -9,6 +9,8 @@ import com.sysacad.backend.modelo.Usuario;
 import com.sysacad.backend.repository.DetalleMesaExamenRepository;
 import com.sysacad.backend.repository.InscripcionExamenRepository;
 import com.sysacad.backend.repository.UsuarioRepository;
+import com.sysacad.backend.exception.BusinessLogicException;
+import com.sysacad.backend.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,17 +39,17 @@ public class InscripcionExamenService {
                 request.getNroDetalle());
 
         DetalleMesaExamen detalle = detalleMesaExamenRepository.findById(detalleId)
-                .orElseThrow(() -> new RuntimeException("Mesa de examen no encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Mesa de examen (detalle) no encontrada"));
 
         Usuario usuario = usuarioRepository.findById(request.getIdUsuario())
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con ID: " + request.getIdUsuario()));
 
         // Validar si ya está inscripto
         Optional<InscripcionExamen> existente = inscripcionExamenRepository
                 .findByUsuarioIdAndDetalleMesaExamenId(usuario.getId(), detalle.getId());
 
         if (existente.isPresent()) {
-            throw new RuntimeException("El alumno ya está inscripto a este examen");
+            throw new BusinessLogicException("El alumno ya está inscripto a este examen");
         }
 
         InscripcionExamen inscripcion = new InscripcionExamen();
@@ -70,7 +72,7 @@ public class InscripcionExamenService {
     @Transactional
     public void darDeBaja(UUID idInscripcion) {
         InscripcionExamen insc = inscripcionExamenRepository.findById(idInscripcion)
-                .orElseThrow(() -> new RuntimeException("Inscripción no encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Inscripción no encontrada con ID: " + idInscripcion));
 
         // Aquí se podrían agregar validaciones de fecha (e.g. 48hs antes)
 
@@ -80,7 +82,7 @@ public class InscripcionExamenService {
     @Transactional
     public InscripcionExamenResponse calificarExamen(UUID idInscripcion, CargaNotaExamenRequest request) {
         InscripcionExamen insc = inscripcionExamenRepository.findById(idInscripcion)
-                .orElseThrow(() -> new RuntimeException("Inscripción no encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Inscripción no encontrada con ID: " + idInscripcion));
 
         insc.setNota(request.getNota());
         insc.setEstado(request.getEstado()); // APROBADO, DESAPROBADO, etc.

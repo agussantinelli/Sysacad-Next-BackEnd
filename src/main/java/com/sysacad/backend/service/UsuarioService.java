@@ -1,6 +1,8 @@
 package com.sysacad.backend.service;
 
 import com.sysacad.backend.dto.usuario.UsuarioRequest;
+import com.sysacad.backend.exception.BusinessLogicException;
+import com.sysacad.backend.exception.ResourceNotFoundException;
 import com.sysacad.backend.modelo.AsignacionMateria;
 import com.sysacad.backend.modelo.Usuario;
 import com.sysacad.backend.modelo.enums.RolUsuario;
@@ -44,10 +46,10 @@ public class UsuarioService {
 
     public Usuario autenticar(String identificador, String password) {
         Usuario usuario = usuarioRepository.findByLegajoOrMail(identificador, identificador)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con identificador: " + identificador));
 
         if (!passwordEncoder.matches(password, usuario.getPassword())) {
-            throw new RuntimeException("Contraseña incorrecta");
+            throw new BusinessLogicException("Contraseña incorrecta");
         }
         return usuario;
     }
@@ -55,10 +57,10 @@ public class UsuarioService {
     @Transactional
     public Usuario registrarUsuario(Usuario usuario) {
         if (usuarioRepository.existsByMail(usuario.getMail())) {
-            throw new RuntimeException("El email ya está registrado");
+            throw new BusinessLogicException("El email ya está registrado");
         }
         if (usuarioRepository.existsByLegajo(usuario.getLegajo())) {
-            throw new RuntimeException("El legajo ya existe");
+            throw new BusinessLogicException("El legajo ya existe");
         }
 
         usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
@@ -68,10 +70,9 @@ public class UsuarioService {
     @Transactional
     public Usuario actualizarUsuario(UUID id, UsuarioRequest request) {
         Usuario usuario = usuarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con ID: " + id));
 
-        // validarPermisoModificacion(usuario.getLegajo()); // Seguridad desactivada a
-        // pedido
+        // validarPermisoModificacion(usuario.getLegajo()); // Seguridad desactivada a pedido
 
         usuario.setNombre(request.getNombre());
         usuario.setApellido(request.getApellido());
@@ -85,10 +86,6 @@ public class UsuarioService {
 
         if (request.getFotoPerfil() != null) {
             // Si viene una URL externa o vacío, actualizamos.
-            // Si el usuario quiere borrar la foto anterior del disco al poner una URL
-            // externa,
-            // podríamos llamar a fileStorageService.borrarArchivo(usuario.getFotoPerfil())
-            // aquí.
             usuario.setFotoPerfil(request.getFotoPerfil());
         }
 
@@ -102,7 +99,7 @@ public class UsuarioService {
     @Transactional
     public void subirFoto(UUID id, MultipartFile archivo) {
         Usuario usuario = usuarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con ID: " + id));
 
         // Delegamos TODA la lógica de archivos al servicio especializado
         String rutaGuardada = fileStorageService.guardarFotoPerfil(
@@ -165,7 +162,7 @@ public class UsuarioService {
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
 
         if (!isAdmin && !legajoAutenticado.equals(legajoObjetivo)) {
-            throw new RuntimeException("No tiene permisos para modificar este perfil.");
+            throw new BusinessLogicException("No tiene permisos para modificar este perfil.");
         }
     }
 }

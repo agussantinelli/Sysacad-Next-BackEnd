@@ -7,6 +7,8 @@ import com.sysacad.backend.modelo.Materia;
 import com.sysacad.backend.modelo.PlanDeEstudio;
 import com.sysacad.backend.modelo.Usuario;
 import com.sysacad.backend.modelo.enums.RolUsuario;
+import com.sysacad.backend.exception.BusinessLogicException;
+import com.sysacad.backend.exception.ResourceNotFoundException;
 import com.sysacad.backend.repository.MatriculacionRepository;
 import com.sysacad.backend.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,10 +45,10 @@ public class MatriculacionService {
     @Transactional
     public Matriculacion matricularAlumno(Matriculacion matricula) {
         Usuario alumno = usuarioRepository.findById(matricula.getId().getIdUsuario())
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con ID: " + matricula.getId().getIdUsuario()));
 
         if (alumno.getRol() != RolUsuario.ESTUDIANTE) {
-            throw new RuntimeException("Solo se pueden matricular usuarios con rol ESTUDIANTE");
+            throw new BusinessLogicException("Solo se pueden matricular usuarios con rol ESTUDIANTE");
         }
 
         matricula.setFechaInscripcion(LocalDate.now());
@@ -73,7 +75,7 @@ public class MatriculacionService {
     public List<CarreraMateriasDTO> obtenerMateriasPorCarreraDelAlumno(String legajo) {
         // 1. Obtener usuario real
         Usuario alumno = usuarioRepository.findByLegajo(legajo)
-                .orElseThrow(() -> new RuntimeException("Alumno no encontrado con legajo: " + legajo));
+                .orElseThrow(() -> new ResourceNotFoundException("Alumno no encontrado con legajo: " + legajo));
 
         // 2. Obtener inscripciones (Matriculacion - Matriculación en carreras)
         List<Matriculacion> matriculaciones = matriculacionRepository.findByIdIdUsuario(alumno.getId());

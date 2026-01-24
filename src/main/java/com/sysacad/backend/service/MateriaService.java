@@ -5,6 +5,8 @@ import com.sysacad.backend.modelo.Materia;
 import com.sysacad.backend.modelo.Usuario;
 import com.sysacad.backend.modelo.enums.RolCargo;
 import com.sysacad.backend.modelo.enums.TipoMateria;
+import com.sysacad.backend.exception.BusinessLogicException;
+import com.sysacad.backend.exception.ResourceNotFoundException;
 import com.sysacad.backend.repository.AsignacionMateriaRepository;
 import com.sysacad.backend.repository.MateriaRepository;
 import com.sysacad.backend.repository.UsuarioRepository;
@@ -38,7 +40,7 @@ public class MateriaService {
     public Materia crearMateria(Materia materia) {
         // Validación extra: Verificar si ya existe materia con mismo nombre exacto
         if (materiaRepository.findByNombre(materia.getNombre()).isPresent()) {
-            throw new RuntimeException("Ya existe una materia con ese nombre.");
+            throw new BusinessLogicException("Ya existe una materia con ese nombre.");
         }
         return materiaRepository.save(materia);
     }
@@ -46,7 +48,7 @@ public class MateriaService {
     @Transactional
     public Materia actualizarMateria(UUID id, Materia materiaNueva) {
         Materia materiaExistente = materiaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Materia no encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Materia no encontrada con ID: " + id));
 
         validarPermisoEdicion(materiaExistente);
 
@@ -54,7 +56,7 @@ public class MateriaService {
         materiaExistente.setDescripcion(materiaNueva.getDescripcion());
         materiaExistente.setTipoMateria(materiaNueva.getTipoMateria());
         materiaExistente.setDuracion(materiaNueva.getDuracion());
-        materiaExistente.setCuatrimestreDictado(materiaNueva.getCuatrimestreDictado()); // Faltaba este campo
+        materiaExistente.setCuatrimestreDictado(materiaNueva.getCuatrimestreDictado());
         materiaExistente.setHorasCursado(materiaNueva.getHorasCursado());
         materiaExistente.setRendirLibre(materiaNueva.getRendirLibre());
         materiaExistente.setOptativa(materiaNueva.getOptativa());
@@ -97,7 +99,7 @@ public class MateriaService {
 
         String legajoUsuario = auth.getName(); // Asumiendo que el principal es el legajo
         Usuario profesor = usuarioRepository.findByLegajo(legajoUsuario)
-                .orElseThrow(() -> new RuntimeException("Usuario autenticado no encontrado en base de datos"));
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario autenticado no encontrado en base de datos"));
 
         List<AsignacionMateria> misJefaturas = asignacionMateriaRepository
                 .findByIdIdUsuarioAndCargo(profesor.getId(), RolCargo.JEFE_CATEDRA);
@@ -106,7 +108,7 @@ public class MateriaService {
                 .anyMatch(asignacion -> asignacion.getMateria().getId().equals(materia.getId()));
 
         if (!esJefeDeEstaMateria) {
-            throw new RuntimeException("Acceso denegado: Solo el Jefe de Cátedra puede editar esta materia.");
+            throw new BusinessLogicException("Acceso denegado: Solo el Jefe de Cátedra puede editar esta materia.");
         }
     }
 }

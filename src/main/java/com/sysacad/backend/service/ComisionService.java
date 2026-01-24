@@ -5,6 +5,8 @@ import com.sysacad.backend.modelo.Comision;
 import com.sysacad.backend.modelo.Usuario;
 import com.sysacad.backend.modelo.enums.RolCargo;
 import com.sysacad.backend.modelo.enums.RolUsuario;
+import com.sysacad.backend.exception.BusinessLogicException;
+import com.sysacad.backend.exception.ResourceNotFoundException;
 import com.sysacad.backend.repository.AsignacionMateriaRepository;
 import com.sysacad.backend.repository.ComisionRepository;
 import com.sysacad.backend.repository.UsuarioRepository;
@@ -44,11 +46,11 @@ public class ComisionService {
         // 1. Validar que el usuario a asignar sea PROFESOR
         // (Nota: Si viene solo el ID, habría que buscarlo primero en la BD)
         if (profesor.getRol() != RolUsuario.PROFESOR) {
-            throw new RuntimeException("El usuario a asignar debe tener rol de PROFESOR");
+            throw new BusinessLogicException("El usuario a asignar debe tener rol de PROFESOR");
         }
 
         Comision comision = comisionRepository.findById(idComision)
-                .orElseThrow(() -> new RuntimeException("Comisión no encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Comisión no encontrada con ID: " + idComision));
 
         // 2. VALIDACIÓN DE SEGURIDAD (Jefe de Cátedra)
         validarPermisoAsignacion(comision);
@@ -79,7 +81,7 @@ public class ComisionService {
         // Si es PROFESOR, verificar si es JEFE de alguna materia de esta comisión
         String legajoUsuario = auth.getName();
         Usuario solicitante = usuarioRepository.findByLegajo(legajoUsuario)
-                .orElseThrow(() -> new RuntimeException("Usuario autenticado no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario autenticado no encontrado"));
 
         // Buscamos todas las materias donde el solicitante es JEFE
         List<AsignacionMateria> misJefaturas = asignacionMateriaRepository
@@ -91,7 +93,7 @@ public class ComisionService {
                         .anyMatch(jefatura -> jefatura.getMateria().getId().equals(materiaComision.getId())));
 
         if (!esJefeDeEstaComision) {
-            throw new RuntimeException("Acceso denegado: Solo un Admin o Jefe de Cátedra de las materias de esta comisión puede asignar profesores.");
+            throw new BusinessLogicException("Acceso denegado: Solo un Admin o Jefe de Cátedra de las materias de esta comisión puede asignar profesores.");
         }
     }
 }
