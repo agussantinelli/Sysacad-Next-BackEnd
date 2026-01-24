@@ -33,6 +33,9 @@ public class InscripcionExamenService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private com.sysacad.backend.mapper.InscripcionExamenMapper inscripcionExamenMapper;
+
     @Transactional
     public InscripcionExamenResponse inscribirAlumno(InscripcionExamenRequest request) {
         DetalleMesaExamen.DetalleId detalleId = new DetalleMesaExamen.DetalleId(request.getIdMesaExamen(),
@@ -59,14 +62,12 @@ public class InscripcionExamenService {
         inscripcion.setEstado(com.sysacad.backend.modelo.enums.EstadoExamen.PENDIENTE);
 
         inscripcion = inscripcionExamenRepository.save(inscripcion);
-        return mapToResponse(inscripcion);
+        return inscripcionExamenMapper.toDTO(inscripcion);
     }
 
     @Transactional(readOnly = true)
     public List<InscripcionExamenResponse> getInscripcionesByAlumno(UUID idAlumno) {
-        return inscripcionExamenRepository.findByUsuarioId(idAlumno).stream()
-                .map(this::mapToResponse)
-                .collect(Collectors.toList());
+        return inscripcionExamenMapper.toDTOs(inscripcionExamenRepository.findByUsuarioId(idAlumno));
     }
 
     @Transactional
@@ -88,20 +89,7 @@ public class InscripcionExamenService {
         insc.setEstado(request.getEstado()); // APROBADO, DESAPROBADO, etc.
 
         insc = inscripcionExamenRepository.save(insc);
-        return mapToResponse(insc);
+        return inscripcionExamenMapper.toDTO(insc);
     }
 
-    private InscripcionExamenResponse mapToResponse(InscripcionExamen insc) {
-        InscripcionExamenResponse response = new InscripcionExamenResponse();
-        response.setId(insc.getId());
-        response.setNombreAlumno(insc.getUsuario().getNombre() + " " + insc.getUsuario().getApellido());
-        response.setLegajoAlumno(insc.getUsuario().getLegajo());
-        response.setNombreMateria(insc.getDetalleMesaExamen().getMateria().getNombre());
-        response.setFechaExamen(insc.getDetalleMesaExamen().getDiaExamen());
-        response.setHoraExamen(insc.getDetalleMesaExamen().getHoraExamen());
-        response.setFechaInscripcion(insc.getFechaInscripcion());
-        response.setEstado(insc.getEstado().toString());
-        response.setNota(insc.getNota());
-        return response;
-    }
 }

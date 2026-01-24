@@ -21,41 +21,34 @@ import java.util.stream.Collectors;
 public class ComisionController {
 
     private final ComisionService comisionService;
+    private final com.sysacad.backend.mapper.ComisionMapper comisionMapper;
 
     @Autowired
-    public ComisionController(ComisionService comisionService) {
+    public ComisionController(ComisionService comisionService, com.sysacad.backend.mapper.ComisionMapper comisionMapper) {
         this.comisionService = comisionService;
+        this.comisionMapper = comisionMapper;
     }
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ComisionResponse> crearComision(@RequestBody ComisionRequest request) {
-        Comision nueva = new Comision();
-        nueva.setNombre(request.getNombre());
-        nueva.setTurno(request.getTurno());
-        nueva.setAnio(request.getAnio());
-
+        Comision nueva = comisionMapper.toEntity(request);
         Comision guardada = comisionService.crearComision(nueva);
-        return new ResponseEntity<>(new ComisionResponse(guardada), HttpStatus.CREATED);
+        return new ResponseEntity<>(comisionMapper.toDTO(guardada), HttpStatus.CREATED);
     }
 
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'PROFESOR')")
     public ResponseEntity<List<ComisionResponse>> listarPorAnio(@RequestParam Integer anio) {
         List<Comision> comisiones = comisionService.listarPorAnio(anio);
-
-        List<ComisionResponse> dtos = comisiones.stream()
-                .map(ComisionResponse::new)
-                .collect(Collectors.toList());
-
-        return ResponseEntity.ok(dtos);
+        return ResponseEntity.ok(comisionMapper.toDTOs(comisiones));
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ComisionResponse> buscarPorId(@PathVariable UUID id) {
         return comisionService.buscarPorId(id)
-                .map(c -> ResponseEntity.ok(new ComisionResponse(c)))
+                .map(c -> ResponseEntity.ok(comisionMapper.toDTO(c)))
                 .orElse(ResponseEntity.notFound().build());
     }
 
@@ -64,7 +57,7 @@ public class ComisionController {
     public ResponseEntity<ComisionResponse> asignarProfesor(@PathVariable UUID id, @RequestBody Usuario profesor) {
         try {
             Comision actualizada = comisionService.asignarProfesor(id, profesor);
-            return ResponseEntity.ok(new ComisionResponse(actualizada));
+            return ResponseEntity.ok(comisionMapper.toDTO(actualizada));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().build();
         }

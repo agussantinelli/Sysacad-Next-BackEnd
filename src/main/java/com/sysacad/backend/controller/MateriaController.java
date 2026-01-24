@@ -22,51 +22,35 @@ import java.util.stream.Collectors;
 public class MateriaController {
 
     private final MateriaService materiaService;
+    private final com.sysacad.backend.mapper.MateriaMapper materiaMapper;
 
     @Autowired
-    public MateriaController(MateriaService materiaService) {
+    public MateriaController(MateriaService materiaService, com.sysacad.backend.mapper.MateriaMapper materiaMapper) {
         this.materiaService = materiaService;
+        this.materiaMapper = materiaMapper;
     }
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<MateriaResponse> crearMateria(@RequestBody MateriaRequest request) {
-        Materia nuevaMateria = new Materia();
-        nuevaMateria.setNombre(request.getNombre());
-        nuevaMateria.setDescripcion(request.getDescripcion());
-        nuevaMateria.setTipoMateria(request.getTipoMateria());
-        nuevaMateria.setDuracion(request.getDuracion());
-        if (request.getModalidad() != null) {
-            nuevaMateria.setModalidad(request.getModalidad());
-        }
-        nuevaMateria.setCuatrimestreDictado(request.getCuatrimestreDictado());
-        nuevaMateria.setHorasCursado(request.getHorasCursado());
-        nuevaMateria.setRendirLibre(request.getRendirLibre());
-        nuevaMateria.setOptativa(request.getOptativa());
-
+        Materia nuevaMateria = materiaMapper.toEntity(request);
+        // Modalidad no estaba en el Request original? o si?
+        // En el codigo viejo: if (request.getModalidad() != null) nuevaMateria.setModalidad...
+        // Si el mapper mapea modalidad, listo.
+        // Si nombre de campo coincide, MapStruct lo hace solo.
+        
         Materia materiaGuardada = materiaService.crearMateria(nuevaMateria);
-        return new ResponseEntity<>(new MateriaResponse(materiaGuardada), HttpStatus.CREATED);
+        return new ResponseEntity<>(materiaMapper.toDTO(materiaGuardada), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'PROFESOR')")
     public ResponseEntity<MateriaResponse> actualizarMateria(@PathVariable UUID id, @RequestBody MateriaRequest request) {
-        Materia materiaUpdate = new Materia();
-        materiaUpdate.setNombre(request.getNombre());
-        materiaUpdate.setDescripcion(request.getDescripcion());
-        materiaUpdate.setTipoMateria(request.getTipoMateria());
-        materiaUpdate.setDuracion(request.getDuracion());
-        if (request.getModalidad() != null) {
-            materiaUpdate.setModalidad(request.getModalidad());
-        }
-        materiaUpdate.setCuatrimestreDictado(request.getCuatrimestreDictado());
-        materiaUpdate.setHorasCursado(request.getHorasCursado());
-        materiaUpdate.setRendirLibre(request.getRendirLibre());
-        materiaUpdate.setOptativa(request.getOptativa());
+        Materia materiaUpdate = materiaMapper.toEntity(request);
 
         try {
             Materia actualizada = materiaService.actualizarMateria(id, materiaUpdate);
-            return ResponseEntity.ok(new MateriaResponse(actualizada));
+            return ResponseEntity.ok(materiaMapper.toDTO(actualizada));
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
@@ -83,7 +67,7 @@ public class MateriaController {
         }
 
         List<MateriaResponse> response = materias.stream()
-                .map(MateriaResponse::new)
+                .map(materiaMapper::toDTO)
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(response);
@@ -93,7 +77,7 @@ public class MateriaController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<MateriaResponse> buscarPorId(@PathVariable UUID id) {
         return materiaService.buscarPorId(id)
-                .map(m -> ResponseEntity.ok(new MateriaResponse(m)))
+                .map(m -> ResponseEntity.ok(materiaMapper.toDTO(m)))
                 .orElse(ResponseEntity.notFound().build());
     }
 

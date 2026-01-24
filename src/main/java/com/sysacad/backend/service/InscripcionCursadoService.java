@@ -37,7 +37,11 @@ public class InscripcionCursadoService {
     @Autowired
     private ComisionRepository comisionRepository;
 
+    @Autowired
+    private com.sysacad.backend.mapper.InscripcionCursadoMapper inscripcionCursadoMapper;
+
     public InscripcionCursadoResponse inscribir(InscripcionCursadoRequest request) {
+
         // 1. Validar Usuario
         Usuario alumno = usuarioRepository.findById(request.getIdUsuario())
                 .orElseThrow(() -> new ResourceNotFoundException("Alumno no encontrado con ID: " + request.getIdUsuario()));
@@ -71,13 +75,11 @@ public class InscripcionCursadoService {
         insc.setEstado(com.sysacad.backend.modelo.enums.EstadoCursada.CURSANDO); // Estado inicial
 
         insc = inscripcionCursadoRepository.save(insc);
-        return mapToResponse(insc);
+        return inscripcionCursadoMapper.toDTO(insc);
     }
 
     public List<InscripcionCursadoResponse> obtenerHistorial(UUID idUsuario) {
-        return inscripcionCursadoRepository.findByUsuarioId(idUsuario).stream()
-                .map(this::mapToResponse)
-                .collect(Collectors.toList());
+        return inscripcionCursadoMapper.toDTOs(inscripcionCursadoRepository.findByUsuarioId(idUsuario));
     }
 
     public CalificacionCursadaResponse cargarNota(UUID idInscripcion, CalificacionCursadaRequest request) {
@@ -91,27 +93,17 @@ public class InscripcionCursadoService {
         calif.setFecha(LocalDate.now());
 
         calif = calificacionCursadaRepository.save(calif);
-        return mapToCalificacionResponse(calif);
-    }
-
-    // Mapper methods
-    private InscripcionCursadoResponse mapToResponse(InscripcionCursado insc) {
-        InscripcionCursadoResponse dto = new InscripcionCursadoResponse();
-        dto.setId(insc.getId());
-        dto.setNombreMateria(insc.getMateria().getNombre());
-        dto.setNombreComision(insc.getComision().getNombre());
-        dto.setAnioCursado(insc.getComision().getAnio());
-        dto.setEstado(insc.getEstado().toString());
-        dto.setNotaFinal(insc.getNotaFinal());
-        dto.setFechaPromocion(insc.getFechaPromocion());
-        dto.setFechaInscripcion(insc.getFechaInscripcion());
-        dto.setCalificaciones(insc.getCalificaciones().stream()
-                .map(this::mapToCalificacionResponse)
-                .collect(Collectors.toList()));
-        return dto;
-    }
-
-    private CalificacionCursadaResponse mapToCalificacionResponse(CalificacionCursada calif) {
+        // Nota: Si queremos mapear CalificacionCursadaResponse, deberíamos agregar un método al mapper o crear CalificacionCursadaMapper.
+        // Por consistencia, por ahora lo dejamos "semi-manual" o definimos un mapper rápido.
+        // Pero el usuario pidió refactorizar. Usaré un método auxiliar simple o un mapper interno si es necesario, 
+        // pero idealmente InscripcionCursadoMapper maneja la respuesta principal.
+        
+        // Como eliminamos el metodo manual mapToCalificacionResponse, necesitamos una forma de devolver CalificacionCursadaResponse.
+        // Lo correcto: Agregar un CalificacionCursadaMapper o agregarlo a InscripcionCursadoMapper.
+        // Voy a asumir que puedo agregarlo a InscripcionCursadoMapper en el siguiente paso o usar un builder aqui para no romper.
+        // Sin embargo, para ser limpio, crearé un CalificacionCursadaMapper pronto.
+        // Por ahora, lo haré manual aquí para no bloquear y en el siguiente paso lo paso al mapper si es posible.
+        
         CalificacionCursadaResponse dto = new CalificacionCursadaResponse();
         dto.setId(calif.getId());
         dto.setDescripcion(calif.getDescripcion());
@@ -120,3 +112,4 @@ public class InscripcionCursadoService {
         return dto;
     }
 }
+
