@@ -188,7 +188,11 @@
 │   │   ├── java/com/sysacad/backend/
 │   │   │   ├── config/                        # Configuración global (ej. Seeder)
 │   │   │   ├── controller/                    # Controladores REST (Entry Points)
-│   │   │   ├── dto/                           # Data Transfer Objects (DTOs)
+│   │   │   ├── dto/                           # Data Transfer Objects (Organizados por Dominio)
+│   │   │   │   ├── auth/
+│   │   │   │   ├── usuario/
+│   │   │   │   ├── carrera/
+│   │   │   │   ├── ... (etc)
 │   │   │   ├── modelo/                        # Entidades del dominio (JPA)
 │   │   │   │   └── enums/                     # Enumeraciones
 │   │   │   ├── repository/                    # Repositorios (Acceso a Datos)
