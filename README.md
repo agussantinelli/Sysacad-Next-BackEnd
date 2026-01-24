@@ -218,6 +218,7 @@
 │   │   │   │   ├── carrera_materias/
 │   │   │   │   └── estudiante_materia/
 │   │   │   ├── exception/                     # Manejo centralizado de excepciones
+│   │   │   ├── mapper/                        # Mappers (MapStruct) Entity <-> DTO
 │   │   │   ├── modelo/                        # Entidades del dominio (JPA)
 │   │   │   │   └── enums/                     # Enumeraciones
 │   │   │   ├── repository/                    # Repositorios (Acceso a Datos)
