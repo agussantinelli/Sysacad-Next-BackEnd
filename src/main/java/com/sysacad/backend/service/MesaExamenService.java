@@ -1,6 +1,9 @@
 package com.sysacad.backend.service;
 
-import com.sysacad.backend.dto.*;
+import com.sysacad.backend.dto.mesa_examen.MesaExamenRequest;
+import com.sysacad.backend.dto.mesa_examen.MesaExamenResponse;
+import com.sysacad.backend.dto.detalle_mesa_examen.DetalleMesaExamenRequest;
+import com.sysacad.backend.dto.detalle_mesa_examen.DetalleMesaExamenResponse;
 import com.sysacad.backend.modelo.DetalleMesaExamen;
 import com.sysacad.backend.modelo.MesaExamen;
 import com.sysacad.backend.modelo.Materia;

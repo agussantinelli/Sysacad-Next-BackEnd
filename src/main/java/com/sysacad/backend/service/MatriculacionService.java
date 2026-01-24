@@ -1,6 +1,7 @@
 package com.sysacad.backend.service;
 
-import com.sysacad.backend.dto.CarreraMateriasDTO;
+import com.sysacad.backend.dto.carrera_materias.CarreraMateriasDTO;
+import com.sysacad.backend.dto.estudiante_materia.EstudianteMateriaDTO;
 import com.sysacad.backend.modelo.Matriculacion;
 import com.sysacad.backend.modelo.Materia;
 import com.sysacad.backend.modelo.PlanDeEstudio;
@@ -12,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.sysacad.backend.modelo.PlanMateria;
-import com.sysacad.backend.dto.EstudianteMateriaDTO;
+
 
 import java.time.LocalDate;
 import java.util.*;

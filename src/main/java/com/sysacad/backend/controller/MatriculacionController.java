@@ -1,6 +1,6 @@
 package com.sysacad.backend.controller;
 
-import com.sysacad.backend.dto.CarreraMateriasDTO;
+import com.sysacad.backend.dto.carrera_materias.CarreraMateriasDTO;
 import com.sysacad.backend.service.MatriculacionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

@@ -1,6 +1,9 @@
 package com.sysacad.backend.controller;
 
-import com.sysacad.backend.dto.*;
+import com.sysacad.backend.dto.inscripcion_cursado.InscripcionCursadoRequest;
+import com.sysacad.backend.dto.inscripcion_cursado.InscripcionCursadoResponse;
+import com.sysacad.backend.dto.calificacion_cursada.CalificacionCursadaRequest;
+import com.sysacad.backend.dto.calificacion_cursada.CalificacionCursadaResponse;
 import com.sysacad.backend.modelo.Usuario;
 import com.sysacad.backend.repository.UsuarioRepository;
 import com.sysacad.backend.service.InscripcionCursadoService;

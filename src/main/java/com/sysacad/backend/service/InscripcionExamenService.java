@@ -1,6 +1,8 @@
 package com.sysacad.backend.service;
 
-import com.sysacad.backend.dto.*;
+import com.sysacad.backend.dto.inscripcion_examen.InscripcionExamenRequest;
+import com.sysacad.backend.dto.inscripcion_examen.InscripcionExamenResponse;
+import com.sysacad.backend.dto.inscripcion_examen.CargaNotaExamenRequest;
 import com.sysacad.backend.modelo.DetalleMesaExamen;
 import com.sysacad.backend.modelo.InscripcionExamen;
 import com.sysacad.backend.modelo.Usuario;

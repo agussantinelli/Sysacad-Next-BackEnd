@@ -1,7 +1,7 @@
 package com.sysacad.backend.controller;
 
-import com.sysacad.backend.dto.PlanDeEstudioRequest;
-import com.sysacad.backend.dto.PlanDeEstudioResponse;
+import com.sysacad.backend.dto.plan.PlanDeEstudioRequest;
+import com.sysacad.backend.dto.plan.PlanDeEstudioResponse;
 import com.sysacad.backend.modelo.PlanDeEstudio;
 import com.sysacad.backend.modelo.PlanMateria;
 import com.sysacad.backend.service.PlanDeEstudioService;

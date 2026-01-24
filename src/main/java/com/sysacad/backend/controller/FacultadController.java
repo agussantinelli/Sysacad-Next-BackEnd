@@ -1,7 +1,7 @@
 package com.sysacad.backend.controller;
 
-import com.sysacad.backend.dto.FacultadRequest;
-import com.sysacad.backend.dto.FacultadResponse;
+import com.sysacad.backend.dto.facultad.FacultadRequest;
+import com.sysacad.backend.dto.facultad.FacultadResponse;
 import com.sysacad.backend.modelo.FacultadRegional;
 import com.sysacad.backend.service.FacultadService;
 import org.springframework.beans.factory.annotation.Autowired;

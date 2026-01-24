@@ -1,7 +1,7 @@
 package com.sysacad.backend.controller;
 
-import com.sysacad.backend.dto.ComisionRequest;
-import com.sysacad.backend.dto.ComisionResponse;
+import com.sysacad.backend.dto.comision.ComisionRequest;
+import com.sysacad.backend.dto.comision.ComisionResponse;
 import com.sysacad.backend.modelo.Comision;
 import com.sysacad.backend.modelo.Usuario;
 import com.sysacad.backend.service.ComisionService;

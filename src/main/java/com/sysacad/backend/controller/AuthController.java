@@ -1,9 +1,9 @@
 package com.sysacad.backend.controller;
 
 import com.sysacad.backend.config.JwtService;
-import com.sysacad.backend.dto.AuthResponse;
-import com.sysacad.backend.dto.LoginRequest;
-import com.sysacad.backend.dto.UsuarioResponse;
+import com.sysacad.backend.dto.auth.AuthResponse;
+import com.sysacad.backend.dto.auth.LoginRequest;
+import com.sysacad.backend.dto.usuario.UsuarioResponse;
 import com.sysacad.backend.modelo.Matriculacion;
 import com.sysacad.backend.modelo.Usuario;
 import com.sysacad.backend.modelo.enums.RolUsuario;

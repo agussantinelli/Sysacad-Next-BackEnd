@@ -1,7 +1,7 @@
 package com.sysacad.backend.controller;
 
-import com.sysacad.backend.dto.MateriaRequest;
-import com.sysacad.backend.dto.MateriaResponse;
+import com.sysacad.backend.dto.materia.MateriaRequest;
+import com.sysacad.backend.dto.materia.MateriaResponse;
 import com.sysacad.backend.modelo.Materia;
 import com.sysacad.backend.modelo.enums.ModalidadMateria;
 import com.sysacad.backend.modelo.enums.TipoMateria;

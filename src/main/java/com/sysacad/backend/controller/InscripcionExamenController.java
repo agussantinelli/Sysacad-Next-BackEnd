@@ -1,6 +1,8 @@
 package com.sysacad.backend.controller;
 
-import com.sysacad.backend.dto.*;
+import com.sysacad.backend.dto.inscripcion_examen.InscripcionExamenRequest;
+import com.sysacad.backend.dto.inscripcion_examen.InscripcionExamenResponse;
+import com.sysacad.backend.dto.inscripcion_examen.CargaNotaExamenRequest;
 import com.sysacad.backend.service.InscripcionExamenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

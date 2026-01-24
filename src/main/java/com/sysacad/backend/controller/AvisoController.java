@@ -1,7 +1,7 @@
 package com.sysacad.backend.controller;
 
-import com.sysacad.backend.dto.AvisoRequest;
-import com.sysacad.backend.dto.AvisoResponse;
+import com.sysacad.backend.dto.aviso.AvisoRequest;
+import com.sysacad.backend.dto.aviso.AvisoResponse;
 import com.sysacad.backend.modelo.Aviso;
 import com.sysacad.backend.service.AvisoService;
 import org.springframework.beans.factory.annotation.Autowired;

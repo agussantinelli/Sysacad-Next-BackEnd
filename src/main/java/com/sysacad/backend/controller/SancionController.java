@@ -1,7 +1,7 @@
 package com.sysacad.backend.controller;
 
-import com.sysacad.backend.dto.SancionRequest;
-import com.sysacad.backend.dto.SancionResponse;
+import com.sysacad.backend.dto.sancion.SancionRequest;
+import com.sysacad.backend.dto.sancion.SancionResponse;
 import com.sysacad.backend.modelo.Sancion;
 import com.sysacad.backend.modelo.Usuario;
 import com.sysacad.backend.service.SancionService;

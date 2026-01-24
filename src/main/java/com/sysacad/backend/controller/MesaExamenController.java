@@ -1,6 +1,9 @@
 package com.sysacad.backend.controller;
 
-import com.sysacad.backend.dto.*;
+import com.sysacad.backend.dto.mesa_examen.MesaExamenRequest;
+import com.sysacad.backend.dto.mesa_examen.MesaExamenResponse;
+import com.sysacad.backend.dto.detalle_mesa_examen.DetalleMesaExamenRequest;
+import com.sysacad.backend.dto.detalle_mesa_examen.DetalleMesaExamenResponse;
 import com.sysacad.backend.service.MesaExamenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

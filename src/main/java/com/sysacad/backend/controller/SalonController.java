@@ -1,7 +1,7 @@
 package com.sysacad.backend.controller;
 
-import com.sysacad.backend.dto.SalonRequest;
-import com.sysacad.backend.dto.SalonResponse;
+import com.sysacad.backend.dto.salon.SalonRequest;
+import com.sysacad.backend.dto.salon.SalonResponse;
 import com.sysacad.backend.modelo.FacultadRegional;
 import com.sysacad.backend.modelo.Salon;
 import com.sysacad.backend.service.FacultadService;

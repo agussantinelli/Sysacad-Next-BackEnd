@@ -1,6 +1,6 @@
 package com.sysacad.backend.service;
 
-import com.sysacad.backend.dto.UsuarioRequest;
+import com.sysacad.backend.dto.usuario.UsuarioRequest;
 import com.sysacad.backend.modelo.AsignacionMateria;
 import com.sysacad.backend.modelo.Usuario;
 import com.sysacad.backend.modelo.enums.RolUsuario;

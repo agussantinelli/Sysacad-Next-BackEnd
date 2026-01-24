@@ -1,7 +1,7 @@
 package com.sysacad.backend.controller;
 
-import com.sysacad.backend.dto.HorarioRequest;
-import com.sysacad.backend.dto.HorarioResponse;
+import com.sysacad.backend.dto.horario.HorarioRequest;
+import com.sysacad.backend.dto.horario.HorarioResponse;
 import com.sysacad.backend.modelo.Comision;
 import com.sysacad.backend.modelo.HorarioCursado;
 import com.sysacad.backend.modelo.HorarioCursado.HorarioCursadoId;
