@@ -192,7 +192,21 @@
 │   │   │   │   ├── auth/
 │   │   │   │   ├── usuario/
 │   │   │   │   ├── carrera/
-│   │   │   │   ├── ... (etc)
+│   │   │   │   ├── plan/
+│   │   │   │   ├── materia/
+│   │   │   │   ├── facultad/
+│   │   │   │   ├── comision/
+│   │   │   │   ├── horario/
+│   │   │   │   ├── inscripcion_cursado/
+│   │   │   │   ├── calificacion_cursada/
+│   │   │   │   ├── mesa_examen/
+│   │   │   │   ├── detalle_mesa_examen/
+│   │   │   │   ├── inscripcion_examen/
+│   │   │   │   ├── aviso/
+│   │   │   │   ├── salon/
+│   │   │   │   ├── sancion/
+│   │   │   │   ├── carrera_materias/
+│   │   │   │   └── estudiante_materia/
 │   │   │   ├── modelo/                        # Entidades del dominio (JPA)
 │   │   │   │   └── enums/                     # Enumeraciones
 │   │   │   ├── repository/                    # Repositorios (Acceso a Datos)
