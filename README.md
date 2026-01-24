@@ -196,7 +196,9 @@
 ├── src/
 │   ├── main/
 │   │   ├── java/com/sysacad/backend/
-│   │   │   ├── config/                        # Configuración global (ej. Seeder)
+│   │   │   ├── config/                        # Configuración global
+│   │   │   │   ├── security/                  # Seguridad (JWT, Filters)
+│   │   │   │   └── seeder/                    # Seeders de Base de Datos
 │   │   │   ├── controller/                    # Controladores REST (Entry Points)
 │   │   │   ├── dto/                           # Data Transfer Objects (Organizados por Dominio)
 │   │   │   │   ├── auth/
@@ -260,7 +262,7 @@
 
 <h3>🌱 Base de Datos y Seeding Automático</h3>
 
-El sistema cuenta con un `DbSeeder` (`src/main/java/com/sysacad/backend/config/DbSeeder.java`) que pobla la base de datos automáticamente al inicio si detecta tablas vacías.
+El sistema cuenta con un `DbSeeder` (`src/main/java/com/sysacad/backend/config/seeder/DbSeeder.java`) que pobla la base de datos automáticamente al inicio si detecta tablas vacías.
 *   **Carga Estructural:** Crea la UTN Facultad Regional Rosario, carreras (ISI, IM, IQ, IE, IC) y la estructura de materias real.
 *   **Simulación de Cursada y Exámenes:** Genera comisiones en distintos turnos, asigna docentes, define horarios, inscribe alumnos, carga notas y **crea mesas de examen en Febrero, Julio y Diciembre con alumnos inscriptos**.
 *   **Usuarios:** Crea una población diversa de usuarios (Admin, Profesores, Estudiantes) para pruebas.
