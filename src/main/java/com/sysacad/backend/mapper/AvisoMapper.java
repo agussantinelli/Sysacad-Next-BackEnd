@@ -18,12 +18,12 @@ public interface AvisoMapper {
     AvisoResponse toDTO(Aviso aviso);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "fechaAlta", ignore = true) // Generalmente se setea en el servicio
+    @Mapping(target = "fechaEmision", ignore = true) // Generalmente se setea en el servicio
     Aviso toEntity(AvisoRequest request);
 
     List<AvisoResponse> toDTOs(List<Aviso> avisos);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "fechaAlta", ignore = true)
+    @Mapping(target = "fechaEmision", ignore = true)
     void updateEntityFromRequest(AvisoRequest request, @MappingTarget Aviso aviso);
 }

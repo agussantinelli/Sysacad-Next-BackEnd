@@ -1,7 +1,7 @@
 package com.sysacad.backend.mapper;
 
-import com.sysacad.backend.dto.facultad.FacultadRegionalRequest;
-import com.sysacad.backend.dto.facultad.FacultadRegionalResponse;
+import com.sysacad.backend.dto.facultad.FacultadRequest;
+import com.sysacad.backend.dto.facultad.FacultadResponse;
 import com.sysacad.backend.modelo.FacultadRegional;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -15,13 +15,13 @@ public interface FacultadMapper {
 
     FacultadMapper INSTANCE = Mappers.getMapper(FacultadMapper.class);
 
-    FacultadRegionalResponse toDTO(FacultadRegional facultad);
+    FacultadResponse toDTO(FacultadRegional facultad);
 
     @Mapping(target = "id", ignore = true)
-    FacultadRegional toEntity(FacultadRegionalRequest request);
+    FacultadRegional toEntity(FacultadRequest request);
 
-    List<FacultadRegionalResponse> toDTOs(List<FacultadRegional> facultades);
+    List<FacultadResponse> toDTOs(List<FacultadRegional> facultades);
 
     @Mapping(target = "id", ignore = true)
-    void updateEntityFromRequest(FacultadRegionalRequest request, @MappingTarget FacultadRegional facultad);
+    void updateEntityFromRequest(FacultadRequest request, @MappingTarget FacultadRegional facultad);
 }

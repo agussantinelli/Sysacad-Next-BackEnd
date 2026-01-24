@@ -1,7 +1,7 @@
 package com.sysacad.backend.mapper;
 
-import com.sysacad.backend.dto.horario.HorarioCursadoRequest;
-import com.sysacad.backend.dto.horario.HorarioCursadoResponse;
+import com.sysacad.backend.dto.horario.HorarioRequest;
+import com.sysacad.backend.dto.horario.HorarioResponse;
 import com.sysacad.backend.modelo.HorarioCursado;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -15,16 +15,16 @@ public interface HorarioMapper {
 
     HorarioMapper INSTANCE = Mappers.getMapper(HorarioMapper.class);
 
-    HorarioCursadoResponse toDTO(HorarioCursado horario);
+    HorarioResponse toDTO(HorarioCursado horario);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "comision", ignore = true)
     @Mapping(target = "materia", ignore = true)
     @Mapping(target = "salon", ignore = true)
-    HorarioCursado toEntity(HorarioCursadoRequest request);
+    HorarioCursado toEntity(HorarioRequest request);
 
-    List<HorarioCursadoResponse> toDTOs(List<HorarioCursado> horarios);
+    List<HorarioResponse> toDTOs(List<HorarioCursado> horarios);
     
     @Mapping(target = "id", ignore = true)
-    void updateEntityFromRequest(HorarioCursadoRequest request, @MappingTarget HorarioCursado horario);
+    void updateEntityFromRequest(HorarioRequest request, @MappingTarget HorarioCursado horario);
 }
