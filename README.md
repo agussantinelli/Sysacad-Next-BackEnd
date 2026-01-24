@@ -40,7 +40,7 @@
     <a href="docs/enums_catalog.md" target="_blank">
         <img src="https://img.shields.io/badge/📄%20Catálogo%20Enums-4285F4?style=for-the-badge&logo=markdown&logoColor=white" alt="Enums Badge"/>
     </a>
-    <a href="docs/Consideraciones.md" target="_blank">
+    <a href="docs/business_rules.md" target="_blank">
         <img src="https://img.shields.io/badge/📄%20Consideraciones%20Negocio-FF8800?style=for-the-badge&logo=markdown&logoColor=white" alt="Consideraciones Badge"/>
     </a>
 </div>
@@ -53,7 +53,7 @@
 
 <p>Proveer una API RESTful robusta, segura y escalable que actúe como el cerebro de <strong>Sysacad Next</strong>, gestionando la lógica de negocio compleja (correlatividades, actas, inscripciones, auditoría) y asegurando la integridad de los datos académicos.</p>
 
-> **Nota:** Este proyecto ha sido desarrollado mediante **ingeniería inversa**, analizando el sitio y flujos originales para replicar y mejorar la lógica de negocio. Para más detalles sobre las reglas deducidas, consulta las [Consideraciones del Negocio](docs/Consideraciones.md).
+> **Nota:** Este proyecto ha sido desarrollado mediante **ingeniería inversa**, analizando el sitio y flujos originales para replicar y mejorar la lógica de negocio. Para más detalles sobre las reglas deducidas, consulta las [Consideraciones del Negocio](docs/business_rules.md).
 
 <h2>🧠 Arquitectura y Diseño</h2>
 
@@ -272,7 +272,7 @@ El sistema cuenta con un `DbSeeder` (`src/main/java/com/sysacad/backend/config/D
     <a href="docs/enums_catalog.md" target="_blank">
         <img src="https://img.shields.io/badge/📄%20Catálogo%20Enums-4285F4?style=for-the-badge&logo=markdown&logoColor=white" alt="Enums Badge"/>
     </a>
-    <a href="docs/Consideraciones.md" target="_blank">
+    <a href="docs/business_rules.md" target="_blank">
         <img src="https://img.shields.io/badge/📄%20Consideraciones%20Negocio-FF8800?style=for-the-badge&logo=markdown&logoColor=white" alt="Consideraciones Badge"/>
     </a>
 </div>
