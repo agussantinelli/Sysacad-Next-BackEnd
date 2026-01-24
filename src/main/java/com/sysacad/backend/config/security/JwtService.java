@@ -1,4 +1,4 @@
-package com.sysacad.backend.config;
+package com.sysacad.backend.config.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

@@ -1,4 +1,4 @@
-package com.sysacad.backend.config;
+package com.sysacad.backend.config.security;
 
 import com.sysacad.backend.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;

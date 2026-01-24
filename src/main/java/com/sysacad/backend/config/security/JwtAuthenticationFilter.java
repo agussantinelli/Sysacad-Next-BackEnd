@@ -1,4 +1,4 @@
-package com.sysacad.backend.config;
+package com.sysacad.backend.config.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

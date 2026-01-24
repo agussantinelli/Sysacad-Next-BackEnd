@@ -1,4 +1,4 @@
-package com.sysacad.backend.config;
+package com.sysacad.backend.config.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
