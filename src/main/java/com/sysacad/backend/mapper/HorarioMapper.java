@@ -20,7 +20,6 @@ public interface HorarioMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "comision", ignore = true)
     @Mapping(target = "materia", ignore = true)
-    @Mapping(target = "salon", ignore = true)
     HorarioCursado toEntity(HorarioRequest request);
 
     List<HorarioResponse> toDTOs(List<HorarioCursado> horarios);
