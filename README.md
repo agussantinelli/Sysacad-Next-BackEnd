@@ -41,7 +41,10 @@
         <img src="https://img.shields.io/badge/📄%20Catálogo%20Enums-4285F4?style=for-the-badge&logo=markdown&logoColor=white" alt="Enums Badge"/>
     </a>
     <a href="docs/business_rules.md" target="_blank">
-        <img src="https://img.shields.io/badge/📄%20Consideraciones%20Negocio-FF8800?style=for-the-badge&logo=markdown&logoColor=white" alt="Consideraciones Badge"/>
+        <img src="https://img.shields.io/badge/📄%20Consideraciones%20Negocio-FF8800?style=for-the-badge&logo=markdown&logoColor=white" alt="Business Rules Badge"/>
+    </a>
+    <a href="docs/error_handling.md" target="_blank">
+        <img src="https://img.shields.io/badge/🚨%20Manejo%20de%20Errores-D00000?style=for-the-badge&logo=markdown&logoColor=white" alt="Error Handling Badge"/>
     </a>
 </div>
 
@@ -293,6 +296,9 @@ El sistema cuenta con un `DbSeeder` (`src/main/java/com/sysacad/backend/config/D
     </a>
     <a href="docs/business_rules.md" target="_blank">
         <img src="https://img.shields.io/badge/📄%20Consideraciones%20Negocio-FF8800?style=for-the-badge&logo=markdown&logoColor=white" alt="Consideraciones Badge"/>
+    </a>
+    <a href="docs/error_handling.md" target="_blank">
+        <img src="https://img.shields.io/badge/🚨%20Manejo%20de%20Errores-D00000?style=for-the-badge&logo=markdown&logoColor=white" alt="Error Handling Badge"/>
     </a>
 </div>
 
