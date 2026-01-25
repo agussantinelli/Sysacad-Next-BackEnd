@@ -14,4 +14,6 @@ public class DetalleCursadaDTO {
     private String comision;
     private String estado;
     private String nota;
+    private String tomo;
+    private String folio;
 }
