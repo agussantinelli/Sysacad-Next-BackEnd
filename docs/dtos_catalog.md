@@ -270,6 +270,8 @@ Response for `/api/alumnos/mis-carreras-materias/historial/{idMateria}`.
 - `comision` (String): Name and year of the commission.
 - `estado` (String)
 - `nota` (String)
+- `tomo` (String)
+- `folio` (String)
 
 ### `DetalleFinalDTO`
 - `fechaExamen` (LocalDate)
