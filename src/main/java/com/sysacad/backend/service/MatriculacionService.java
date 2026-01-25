@@ -29,17 +29,70 @@ public class MatriculacionService {
     private final com.sysacad.backend.repository.InscripcionExamenRepository inscripcionExamenRepository;
     private final EquivalenciaService equivalenciaService;
 
+    private final com.sysacad.backend.repository.MateriaRepository materiaRepository;
+
     @Autowired
     public MatriculacionService(MatriculacionRepository matriculacionRepository,
             UsuarioRepository usuarioRepository,
             com.sysacad.backend.repository.InscripcionCursadoRepository inscripcionCursadoRepository,
             com.sysacad.backend.repository.InscripcionExamenRepository inscripcionExamenRepository,
-            EquivalenciaService equivalenciaService) {
+            EquivalenciaService equivalenciaService,
+            com.sysacad.backend.repository.MateriaRepository materiaRepository) {
         this.matriculacionRepository = matriculacionRepository;
         this.usuarioRepository = usuarioRepository;
         this.inscripcionCursadoRepository = inscripcionCursadoRepository;
         this.inscripcionExamenRepository = inscripcionExamenRepository;
         this.equivalenciaService = equivalenciaService;
+        this.materiaRepository = materiaRepository;
+    }
+
+    @Transactional(readOnly = true)
+    public com.sysacad.backend.dto.historial.HistorialMateriaDTO obtenerHistorialMateria(String legajo, UUID idMateria) {
+        Usuario alumno = usuarioRepository.findByLegajo(legajo)
+                .orElseThrow(() -> new ResourceNotFoundException("Alumno no encontrado"));
+
+        Materia materia = materiaRepository.findById(idMateria)
+                .orElseThrow(() -> new ResourceNotFoundException("Materia no encontrada"));
+
+        // Obtener historial de Cursadas
+        var todasCursadas = inscripcionCursadoRepository.findByUsuarioId(alumno.getId());
+        List<com.sysacad.backend.dto.historial.DetalleCursadaDTO> cursadasDTO = todasCursadas.stream()
+                .filter(ic -> ic.getMateria().getId().equals(idMateria))
+                .sorted(Comparator.comparing(com.sysacad.backend.modelo.InscripcionCursado::getFechaInscripcion).reversed())
+                .map(ic -> new com.sysacad.backend.dto.historial.DetalleCursadaDTO(
+                        ic.getFechaInscripcion().toLocalDate(), // Asumiendo que es LocalDateTime o LocalDate, ajustar si es necesario
+                        ic.getComision() != null ? ic.getComision().getNombre() + " (" + ic.getComision().getAnio() + "°)" : "-",
+                        ic.getEstado().toString(),
+                        ic.getNotaFinal() != null ? ic.getNotaFinal().toString() : "-"
+                ))
+                .collect(java.util.stream.Collectors.toList());
+
+        // Obtener historial de Exámenes
+        var todosExamenes = inscripcionExamenRepository.findByUsuarioId(alumno.getId());
+        List<com.sysacad.backend.dto.historial.DetalleFinalDTO> finalesDTO = todosExamenes.stream()
+                .filter(ie -> ie.getDetalleMesaExamen().getMateria().getId().equals(idMateria))
+                .sorted(Comparator.comparing(com.sysacad.backend.modelo.InscripcionExamen::getFechaInscripcion).reversed())
+                .map(ie -> {
+                    String turno = ie.getDetalleMesaExamen().getMesaExamen().getNombre();
+                    // O fecha del examen específico
+                    LocalDate fechaExamen = ie.getDetalleMesaExamen().getDiaExamen();
+                    
+                    return new com.sysacad.backend.dto.historial.DetalleFinalDTO(
+                        fechaExamen,
+                        turno,
+                        ie.getEstado().toString(),
+                        ie.getNota() != null ? ie.getNota().toString() : "-",
+                        ie.getTomo() != null ? ie.getTomo() : "-",
+                        ie.getFolio() != null ? ie.getFolio() : "-"
+                    );
+                })
+                .collect(java.util.stream.Collectors.toList());
+
+        return new com.sysacad.backend.dto.historial.HistorialMateriaDTO(
+                materia.getNombre(),
+                cursadasDTO,
+                finalesDTO
+        );
     }
 
     @Transactional
