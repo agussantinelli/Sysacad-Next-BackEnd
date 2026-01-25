@@ -306,8 +306,8 @@ public class DbSeeder {
                                         insc.setNotaFinal(new BigDecimal("9.00"));
                                         insc.setEstado(EstadoCursada.PROMOCIONADO);
                                         insc.setFechaPromocion(LocalDate.now());
-                                        insc.setTomo("LIB-001");
-                                        insc.setFolio("123");
+                                        insc.setTomo(getRandomTomo());
+                                        insc.setFolio(getRandomFolio());
                                         inscripcionCursadoRepository.save(insc);
 
                                         var inscSist = inscribirCursado(inscripcionCursadoRepository, alumnoAgustin,
@@ -315,8 +315,8 @@ public class DbSeeder {
                                         inscSist.setNotaFinal(new BigDecimal("8.00"));
                                         inscSist.setEstado(EstadoCursada.PROMOCIONADO);
                                         inscSist.setFechaPromocion(LocalDate.now());
-                                        inscSist.setTomo("LIB-001");
-                                        inscSist.setFolio("124");
+                                        inscSist.setTomo(getRandomTomo());
+                                        inscSist.setFolio(getRandomFolio());
                                         inscripcionCursadoRepository.save(inscSist);
 
                                         var inscEng = inscribirCursado(inscripcionCursadoRepository, alumnoAgustin,
@@ -324,8 +324,8 @@ public class DbSeeder {
                                         inscEng.setNotaFinal(new BigDecimal("10.00"));
                                         inscEng.setEstado(EstadoCursada.PROMOCIONADO);
                                         inscEng.setFechaPromocion(LocalDate.now());
-                                        inscEng.setTomo("LIB-001");
-                                        inscEng.setFolio("125");
+                                        inscEng.setTomo(getRandomTomo());
+                                        inscEng.setFolio(getRandomFolio());
                                         inscripcionCursadoRepository.save(inscEng);
 
                                         // 2K1 -> Analisis II, Sintaxis, Paradigmas, Sistemas Op
@@ -357,32 +357,32 @@ public class DbSeeder {
                                         inscAlgo.setNotaFinal(new BigDecimal("9.00"));
                                         inscAlgo.setEstado(EstadoCursada.PROMOCIONADO);
                                         inscAlgo.setFechaPromocion(LocalDate.now());
-                                        inscAlgo.setTomo("LIB-002");
-                                        inscAlgo.setFolio("201");
+                                        inscAlgo.setTomo(getRandomTomo());
+                                        inscAlgo.setFolio(getRandomFolio());
                                         inscripcionCursadoRepository.save(inscAlgo);
 
                                         var inscSis = inscribirCursado(inscripcionCursadoRepository, alumnoSofia, c1k1,
                                                         sistemas);
                                         inscSis.setNotaFinal(new BigDecimal("8.00"));
                                         inscSis.setEstado(EstadoCursada.PROMOCIONADO);
-                                        inscSis.setTomo("LIB-002");
-                                        inscSis.setFolio("202");
+                                        inscSis.setTomo(getRandomTomo());
+                                        inscSis.setFolio(getRandomFolio());
                                         inscripcionCursadoRepository.save(inscSis);
 
                                         var inscIng = inscribirCursado(inscripcionCursadoRepository, alumnoSofia, c1k1,
                                                         ingles1);
                                         inscIng.setNotaFinal(new BigDecimal("10.00"));
                                         inscIng.setEstado(EstadoCursada.PROMOCIONADO);
-                                        inscIng.setTomo("LIB-002");
-                                        inscIng.setFolio("203");
+                                        inscIng.setTomo(getRandomTomo());
+                                        inscIng.setFolio(getRandomFolio());
                                         inscripcionCursadoRepository.save(inscIng);
 
                                         var inscAlg = inscribirCursado(inscripcionCursadoRepository, alumnoSofia, c1k1,
                                                         algebra);
                                         inscAlg.setNotaFinal(new BigDecimal("7.50"));
                                         inscAlg.setEstado(EstadoCursada.PROMOCIONADO);
-                                        inscAlg.setTomo("LIB-002");
-                                        inscAlg.setFolio("204");
+                                        inscAlg.setTomo(getRandomTomo());
+                                        inscAlg.setFolio(getRandomFolio());
                                         inscripcionCursadoRepository.save(inscAlg);
 
                                         // 1K2 -> Analisis 1, Fisica 1
@@ -396,8 +396,8 @@ public class DbSeeder {
                                                         fisica1);
                                         inscFis1.setNotaFinal(new BigDecimal("9.50"));
                                         inscFis1.setEstado(EstadoCursada.PROMOCIONADO);
-                                        inscFis1.setTomo("LIB-002");
-                                        inscFis1.setFolio("205");
+                                        inscFis1.setTomo(getRandomTomo());
+                                        inscFis1.setFolio(getRandomFolio());
                                         inscripcionCursadoRepository.save(inscFis1);
 
                                         // 2K1
@@ -516,8 +516,8 @@ public class DbSeeder {
                                         // Simulamos corrección
                                         insc.setNota(new BigDecimal("9.00"));
                                         insc.setEstado(EstadoExamen.APROBADO);
-                                        insc.setTomo("ACTA-feb");
-                                        insc.setFolio("042");
+                                        insc.setTomo(getRandomTomo());
+                                        insc.setFolio(getRandomFolio());
                                         inscripcionExamenRepository.save(insc);
                                 }
 
@@ -669,5 +669,13 @@ public class DbSeeder {
                 insc.setFechaInscripcion(LocalDateTime.now());
                 insc.setEstado(EstadoExamen.PENDIENTE);
                 return repo.save(insc);
+        }
+
+        private String getRandomTomo() {
+                return String.valueOf(100 + (int) (Math.random() * 900));
+        }
+
+        private String getRandomFolio() {
+                return String.valueOf(10 + (int) (Math.random() * 900));
         }
 }
