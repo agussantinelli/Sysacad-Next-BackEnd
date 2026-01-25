@@ -63,7 +63,9 @@ public class MatriculacionService {
                         ic.getFechaInscripcion().toLocalDate(), // Asumiendo que es LocalDateTime o LocalDate, ajustar si es necesario
                         ic.getComision() != null ? ic.getComision().getNombre() + " (" + ic.getComision().getAnio() + "°)" : "-",
                         ic.getEstado().toString(),
-                        ic.getNotaFinal() != null ? ic.getNotaFinal().toString() : "-"
+                        ic.getNotaFinal() != null ? ic.getNotaFinal().toString() : "-",
+                        ic.getTomo() != null ? ic.getTomo() : "-",
+                        ic.getFolio() != null ? ic.getFolio() : "-"
                 ))
                 .collect(java.util.stream.Collectors.toList());
 
