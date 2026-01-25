@@ -27,6 +27,7 @@ public class AuthController {
         private final UsuarioService usuarioService;
         private final JwtService jwtService;
         private final MatriculacionService matriculacionService;
+        private final com.sysacad.backend.mapper.UsuarioMapper usuarioMapper;
 
         @PostMapping("/login")
         public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
@@ -37,7 +38,7 @@ public class AuthController {
                 String jwtToken = jwtService.generateToken(usuario);
 
                 // 3. Response Base
-                UsuarioResponse usuarioResponse = new UsuarioResponse(usuario);
+                UsuarioResponse usuarioResponse = usuarioMapper.toDTO(usuario);
                 usuarioResponse.setTipoIdentificador(request.getTipoIdentificador());
 
                 // 4. Enriquecer si es estudiante

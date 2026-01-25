@@ -39,27 +39,6 @@ public class UsuarioResponse {
 
     private List<InfoCarrera> carreras;
 
-    public UsuarioResponse(Usuario usuario) {
-        this.id = usuario.getId();
-        this.legajo = usuario.getLegajo();
-        this.tipoDocumento = usuario.getTipoDocumento();
-        this.dni = usuario.getDni();
-        this.nombre = usuario.getNombre();
-        this.apellido = usuario.getApellido();
-        this.mail = usuario.getMail();
-        this.fechaNacimiento = usuario.getFechaNacimiento();
-        this.genero = usuario.getGenero();
-        this.telefono = usuario.getTelefono();
-        this.direccion = usuario.getDireccion();
-        this.ciudad = usuario.getCiudad();
-        this.fotoPerfil = usuario.getFotoPerfil();
-        this.fechaIngreso = usuario.getFechaIngreso();
-        this.tituloAcademico = usuario.getTituloAcademico();
-        this.rol = usuario.getRol();
-        this.estado = usuario.getEstado();
-        this.passwordChangeRequired = usuario.getPasswordChangeRequired();
-    }
-
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
