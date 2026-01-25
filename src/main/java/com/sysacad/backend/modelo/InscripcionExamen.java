@@ -38,4 +38,10 @@ public class InscripcionExamen {
 
     @Column(precision = 4, scale = 2)
     private java.math.BigDecimal nota;
+
+    @Column(length = 10)
+    private String tomo;
+
+    @Column(length = 10)
+    private String folio;
 }
