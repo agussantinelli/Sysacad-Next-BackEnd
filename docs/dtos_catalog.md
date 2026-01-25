@@ -257,6 +257,30 @@ Enriched subject details for a specific student.
 
 ---
 
+## Historial
+
+### `HistorialMateriaDTO`
+Response for `/api/alumnos/mis-carreras-materias/historial/{idMateria}`.
+- `nombreMateria` (String)
+- `cursadas` (List<DetalleCursadaDTO>)
+- `finales` (List<DetalleFinalDTO>)
+
+### `DetalleCursadaDTO`
+- `fechaInscripcion` (LocalDate)
+- `comision` (String): Name and year of the commission.
+- `estado` (String)
+- `nota` (String)
+
+### `DetalleFinalDTO`
+- `fechaExamen` (LocalDate)
+- `turno` (String): Exam table name (e.g., "Turno Febrero").
+- `estado` (String)
+- `nota` (String)
+- `tomo` (String)
+- `folio` (String)
+
+---
+
 ## MesaExamen
 
 ### `MesaExamenRequest`
