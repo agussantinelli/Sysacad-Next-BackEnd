@@ -40,4 +40,14 @@ public class MatriculacionController {
 
         return ResponseEntity.ok(response);
     }
+    @GetMapping("/mis-carreras-materias/historial/{idMateria}")
+    @PreAuthorize("hasRole('ESTUDIANTE')")
+    public ResponseEntity<com.sysacad.backend.dto.historial.HistorialMateriaDTO> obtenerHistorialMateria(@org.springframework.web.bind.annotation.PathVariable java.util.UUID idMateria) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String legajo = auth.getName();
+
+        com.sysacad.backend.dto.historial.HistorialMateriaDTO response = matriculacionService.obtenerHistorialMateria(legajo, idMateria);
+
+        return ResponseEntity.ok(response);
+    }
 }
