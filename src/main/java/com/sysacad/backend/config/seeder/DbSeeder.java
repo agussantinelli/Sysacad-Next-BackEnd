@@ -326,6 +326,22 @@ public class DbSeeder {
                                         inscribirCursado(inscripcionCursadoRepository, alumnoAgustin, c2k1, analisis2);
                                         // inscribirCursado(inscripcionCursadoRepository, alumnoAgustin, c2k1, ingles1);
                                         // // NO ES DE 2K1
+
+                                        // Algebra (1K1)
+                                        var inscAlg = inscribirCursado(inscripcionCursadoRepository, alumnoAgustin,
+                                                        c1k1, algebra);
+                                        inscAlg.setNotaFinal(new BigDecimal("6.00"));
+                                        inscAlg.setEstado(EstadoCursada.REGULAR);
+                                        inscAlg.setFechaRegularidad(LocalDate.now()); // Asumimos regularidad obtenida hoy o antes
+                                        inscripcionCursadoRepository.save(inscAlg);
+
+                                        // Analisis 1 (1K2 - aunque sea de otro turno, lo inscribimos para que tenga la materia)
+                                        var inscAn1 = inscribirCursado(inscripcionCursadoRepository, alumnoAgustin,
+                                                        c1k2, analisis1);
+                                        inscAn1.setNotaFinal(new BigDecimal("6.00"));
+                                        inscAn1.setEstado(EstadoCursada.REGULAR);
+                                        inscAn1.setFechaRegularidad(LocalDate.now());
+                                        inscripcionCursadoRepository.save(inscAn1);
                                 }
 
                                 if (alumnoSofia != null) {
