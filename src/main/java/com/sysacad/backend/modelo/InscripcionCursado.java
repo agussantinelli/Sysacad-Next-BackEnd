@@ -48,6 +48,9 @@ public class InscripcionCursado {
     @Column(name = "fecha_promocion")
     private LocalDate fechaPromocion;
 
+    @Column(name = "fecha_regularidad")
+    private LocalDate fechaRegularidad;
+
     @OneToMany(mappedBy = "inscripcionCursado", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CalificacionCursada> calificaciones = new ArrayList<>();
 }
