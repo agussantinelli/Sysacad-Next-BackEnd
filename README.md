@@ -202,23 +202,24 @@
 │   │   │   ├── controller/                    # Controladores REST (Entry Points)
 │   │   │   ├── dto/                           # Data Transfer Objects (Organizados por Dominio)
 │   │   │   │   ├── auth/
-│   │   │   │   ├── usuario/
+│   │   │   │   ├── aviso/
+│   │   │   │   ├── calificacion_cursada/
 │   │   │   │   ├── carrera/
-│   │   │   │   ├── plan/
-│   │   │   │   ├── materia/
-│   │   │   │   ├── facultad/
+│   │   │   │   ├── carrera_materias/
 │   │   │   │   ├── comision/
+│   │   │   │   ├── detalle_mesa_examen/
+│   │   │   │   ├── estudiante_materia/
+│   │   │   │   ├── facultad/
+│   │   │   │   ├── historial/
 │   │   │   │   ├── horario/
 │   │   │   │   ├── inscripcion_cursado/
-│   │   │   │   ├── calificacion_cursada/
-│   │   │   │   ├── mesa_examen/
-│   │   │   │   ├── detalle_mesa_examen/
 │   │   │   │   ├── inscripcion_examen/
-│   │   │   │   ├── aviso/
+│   │   │   │   ├── materia/
+│   │   │   │   ├── mesa_examen/
+│   │   │   │   ├── plan/
 │   │   │   │   ├── salon/
 │   │   │   │   ├── sancion/
-│   │   │   │   ├── carrera_materias/
-│   │   │   │   └── estudiante_materia/
+│   │   │   │   └── usuario/
 │   │   │   ├── exception/                     # Manejo centralizado de excepciones
 │   │   │   ├── mapper/                        # Mappers (MapStruct) Entity <-> DTO
 │   │   │   ├── modelo/                        # Entidades del dominio (JPA)
@@ -328,7 +329,7 @@ El sistema cuenta con un `DbSeeder` (`src/main/java/com/sysacad/backend/config/s
 | **/salones** | `POST`, `GET` | Gestión de aulas físicas y asignación a facultades. |
 | **/sanciones** | `POST`, `GET` | Registro disciplinario de estudiantes. |
 | **/horarios** | `POST`, `GET`, `DELETE` | Gestión de agenda semanal por comisión y materia. |
-| **/alumnos** | `POST`, `GET` | Matriculación en carreras y consulta de plan de estudio personal. |
+| **/alumnos** | `POST`, `GET` | Matriculación en carreras, consulta de plan y **historial académico**. |
 | **/mesas** | `POST`, `GET` | Gestión de Turnos de Examen y cronograma de fechas. |
 | **/inscripciones-examen** | `POST`, `GET`, `DELETE` | Inscripción específica a finales y consulta de inscripciones. |
 
