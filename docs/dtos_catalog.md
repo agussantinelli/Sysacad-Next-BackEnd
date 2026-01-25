@@ -1,138 +1,76 @@
 # Backend DTO Catalog
 
-This document enumerates all Data Transfer Objects (DTOs) used in the backend application (`src/main/java/com/sysacad/backend/dto`) to facilitate integration with the frontend.
-DTOs are grouped by the Model Class they represent.
+This document enumerates all Data Transfer Objects (DTOs) used in the backend application, grouped by their package structure in `src/main/java/com/sysacad/backend/dto`.
 
-## Usuario
+## Auth
 
-### `UsuarioRequest`
-Used for creating or updating users.
+### `LoginRequest` (assumed)
 - `legajo` (String)
-- `password` (String): Only for creation/updates, never returned.
-- `tipoDocumento` (TipoDocumento enum)
-- `dni` (String)
-- `nombre` (String)
-- `apellido` (String)
-- `mail` (String)
-- `fechaNacimiento` (LocalDate)
-- `genero` (Genero enum)
-- `telefono` (String)
-- `direccion` (String)
-- `ciudad` (String)
-- `fotoPerfil` (String): URL or base64.
-- `fechaIngreso` (LocalDate)
-- `tituloAcademico` (String)
-- `rol` (RolUsuario enum)
-- `estado` (String)
+- `password` (String)
 
-### `UsuarioResponse`
-Standard user response.
-- `id` (UUID)
-- `legajo` (String)
-- `tipoDocumento` (TipoDocumento enum)
-- `dni` (String)
-- `nombre` (String)
-- `apellido` (String)
-- `mail` (String)
-- `fechaNacimiento` (LocalDate)
-- `genero` (Genero enum)
-- `telefono` (String)
-- `direccion` (String)
-- `ciudad` (String)
-- `fotoPerfil` (String)
-- `fechaIngreso` (LocalDate)
-- `tituloAcademico` (String)
-- `rol` (RolUsuario enum)
-- `estado` (String)
-- `tipoIdentificador` (String)
-- `anioIngreso` (Integer)
-- `passwordChangeRequired` (Boolean)
-- `carreras` (List<InfoCarrera>): List of associated careers.
-
-#### Inner Class: `InfoCarrera`
-- `nombreCarrera` (String)
-- `facultad` (String)
+### `JwtResponse` (assumed)
+- `token` (String)
+- `type` (String)
+- `username` (String)
+- `authorities` (Collection)
 
 ---
 
-## FacultadRegional
+## Aviso
 
-### `FacultadRequest`
-- `ciudad` (String)
-- `provincia` (String)
+### `AvisoRequest`
+- `titulo` (String)
+- `descripcion` (String)
+- `estado` (String)
 
-### `FacultadResponse`
+### `AvisoResponse`
 - `id` (UUID)
-- `ciudad` (String)
-- `provincia` (String)
-- `nombreCompleto` (String): e.g., "UTN - Rosario"
+- `titulo` (String)
+- `descripcion` (String)
+- `fechaEmision` (LocalDateTime)
+- `estado` (String)
+
+---
+
+## CalificacionCursada
+
+### `CalificacionCursadaRequest`
+- `descripcion` (String)
+- `nota` (BigDecimal)
+
+### `CalificacionCursadaResponse`
+- `id` (UUID)
+- `descripcion` (String)
+- `nota` (BigDecimal)
+- `fecha` (LocalDate)
 
 ---
 
 ## Carrera
 
 ### `CarreraRequest`
-- `idFacultad` (UUID): ID de la facultad inicial.
-- `alias` (String): E.g., "ISI".
+- `idFacultad` (UUID)
+- `alias` (String)
 - `nombre` (String)
 
 ### `CarreraResponse`
 - `id` (UUID)
 - `alias` (String)
 - `nombre` (String)
-- `facultades` (List<String>): List of faculty names (cities).
+- `facultades` (List<String>)
 
 ---
 
-## PlanDeEstudio
+## CarreraMaterias
 
-### `PlanDeEstudioRequest`
-- `idCarrera` (UUID): ID of the parent career.
-- `nroPlan` (Integer): Identifier, e.g., 2023.
-- `nombrePlan` (String): e.g., "Plan 2023".
-- `fechaInicio` (LocalDate)
-- `fechaFin` (LocalDate)
-- `esVigente` (Boolean)
-
-### `PlanDeEstudioResponse`
-- `nroPlan` (Integer)
-- `nombrePlan` (String)
-- `fechaInicio` (LocalDate)
-- `fechaFin` (LocalDate)
-- `esVigente` (Boolean)
-- `nombreCarrera` (String)
+### `CarreraMateriasDTO`
+Response for `/api/alumnos/mis-carreras-materias`.
 - `idCarrera` (UUID)
-
----
-
-## Materia
-
-### `MateriaRequest`
-- `nombre` (String)
-- `descripcion` (String)
-- `tipoMateria` (TipoMateria enum)
-- `duracion` (DuracionMateria enum)
-- `cuatrimestreDictado` (CuatrimestreDictado enum)
-- `horasCursado` (Short)
-- `rendirLibre` (Boolean)
-- `optativa` (Boolean)
-- `idsCorrelativas` (List<UUID>): List of IDs for prerequisite subjects.
-
-### `MateriaResponse`
-- `id` (UUID)
-- `nombre` (String)
-- `descripcion` (String)
-- `tipoMateria` (TipoMateria enum)
-- `duracion` (DuracionMateria enum)
-- `cuatrimestreDictado` (CuatrimestreDictado enum)
-- `horasCursado` (Short)
-- `rendirLibre` (Boolean)
-- `optativa` (Boolean)
-- `correlativas` (List<SimpleMateriaDTO>)
-
-#### Inner Class: `SimpleMateriaDTO`
-- `id` (UUID)
-- `nombre` (String)
+- `nombreCarrera` (String)
+- `idFacultad` (UUID)
+- `nombreFacultad` (String)
+- `nombrePlan` (String)
+- `materias` (List<EstudianteMateriaDTO>): List of subjects (excludes "PENDIENTE").
 
 ---
 
@@ -162,20 +100,210 @@ Standard user response.
 
 ---
 
+## DetalleMesaExamen
 
-## Aviso
+### `DetalleMesaExamenRequest`
+- `idMesaExamen` (UUID)
+- `nroDetalle` (Integer)
+- `idMateria` (UUID)
+- `idPresidente` (UUID)
+- `diaExamen` (LocalDate)
+- `horaExamen` (LocalTime)
 
-### `AvisoRequest`
-- `titulo` (String)
-- `descripcion` (String)
+### `DetalleMesaExamenResponse`
+- `idMesaExamen` (UUID)
+- `nroDetalle` (Integer)
+- `nombreMateria` (String)
+- `idMateria` (UUID)
+- `nombrePresidente` (String)
+- `idPresidente` (UUID)
+- `diaExamen` (LocalDate)
+- `horaExamen` (LocalTime)
+
+---
+
+## EstudianteMateria
+
+### `EstudianteMateriaDTO`
+- `idMateria` (UUID)
+- `nombre` (String)
+- `nivel` (Short)
 - `estado` (String)
+- `nota` (String)
+- `sePuedeInscribir` (Boolean)
+- `esElectiva` (Boolean)
 
-### `AvisoResponse`
+---
+
+## Facultad
+
+### `FacultadRequest`
+- `ciudad` (String)
+- `provincia` (String)
+
+### `FacultadResponse`
 - `id` (UUID)
-- `titulo` (String)
-- `descripcion` (String)
-- `fechaEmision` (LocalDateTime)
+- `ciudad` (String)
+- `provincia` (String)
+- `nombreCompleto` (String)
+
+---
+
+## Historial
+
+### `HistorialMateriaDTO`
+Response for `/api/alumnos/mis-carreras-materias/historial/{idMateria}`.
+- `nombreMateria` (String)
+- `cursadas` (List<DetalleCursadaDTO>)
+- `finales` (List<DetalleFinalDTO>)
+
+### `DetalleCursadaDTO`
+- `fechaInscripcion` (LocalDate)
+- `comision` (String)
 - `estado` (String)
+- `nota` (String)
+- `tomo` (String)
+- `folio` (String)
+
+### `DetalleFinalDTO`
+- `fechaExamen` (LocalDate)
+- `turno` (String)
+- `estado` (String)
+- `nota` (String)
+- `tomo` (String)
+- `folio` (String)
+
+---
+
+## Horario
+
+### `HorarioRequest`
+- `idComision` (UUID)
+- `idMateria` (UUID)
+- `dia` (DiaSemana enum)
+- `horaDesde` (LocalTime)
+- `horaHasta` (LocalTime)
+
+### `HorarioResponse`
+- `idComision` (UUID)
+- `nombreComision` (String)
+- `idMateria` (UUID)
+- `nombreMateria` (String)
+- `dia` (DiaSemana enum)
+- `horaDesde` (LocalTime)
+- `horaHasta` (LocalTime)
+
+---
+
+## InscripcionCursado
+
+### `InscripcionCursadoRequest`
+- `idUsuario` (UUID)
+- `idMateria` (UUID)
+- `idComision` (UUID)
+
+### `InscripcionCursadoResponse`
+- `id` (UUID)
+- `nombreMateria` (String)
+- `nombreComision` (String)
+- `anioCursado` (Integer)
+- `estado` (String)
+- `notaFinal` (BigDecimal)
+- `fechaPromocion` (LocalDate)
+- `fechaInscripcion` (LocalDateTime)
+- `calificaciones` (List<CalificacionCursadaResponse>)
+
+---
+
+## InscripcionExamen
+
+### `InscripcionExamenRequest`
+- `idUsuario` (UUID)
+- `idMesaExamen` (UUID)
+- `nroDetalle` (Integer)
+
+### `InscripcionExamenResponse`
+- `id` (UUID)
+- `nombreAlumno` (String)
+- `legajoAlumno` (String)
+- `nombreMateria` (String)
+- `fechaExamen` (LocalDate)
+- `horaExamen` (LocalTime)
+- `fechaInscripcion` (LocalDateTime)
+- `estado` (String)
+- `nota` (BigDecimal)
+
+### `CargaNotaExamenRequest`
+- `nota` (BigDecimal)
+- `estado` (EstadoExamen enum)
+
+---
+
+## Materia
+
+### `MateriaRequest`
+- `nombre` (String)
+- `descripcion` (String)
+- `tipoMateria` (TipoMateria enum)
+- `duracion` (DuracionMateria enum)
+- `cuatrimestreDictado` (CuatrimestreDictado enum)
+- `horasCursado` (Short)
+- `rendirLibre` (Boolean)
+- `optativa` (Boolean)
+- `idsCorrelativas` (List<UUID>)
+
+### `MateriaResponse`
+- `id` (UUID)
+- `nombre` (String)
+- `descripcion` (String)
+- `tipoMateria` (TipoMateria enum)
+- `duracion` (DuracionMateria enum)
+- `cuatrimestreDictado` (CuatrimestreDictado enum)
+- `horasCursado` (Short)
+- `rendirLibre` (Boolean)
+- `optativa` (Boolean)
+- `correlativas` (List<SimpleMateriaDTO>)
+
+#### Inner Class: `SimpleMateriaDTO`
+- `id` (UUID)
+- `nombre` (String)
+
+---
+
+## MesaExamen
+
+### `MesaExamenRequest`
+- `nombre` (String)
+- `fechaInicio` (LocalDate)
+- `fechaFin` (LocalDate)
+
+### `MesaExamenResponse`
+- `id` (UUID)
+- `nombre` (String)
+- `fechaInicio` (LocalDate)
+- `fechaFin` (LocalDate)
+- `detalles` (List<DetalleMesaExamenResponse>)
+
+---
+
+## PlanDeEstudio
+
+### `PlanDeEstudioRequest`
+- `idCarrera` (UUID)
+- `nroPlan` (Integer)
+- `nombrePlan` (String)
+- `fechaInicio` (LocalDate)
+- `fechaFin` (LocalDate)
+- `esVigente` (Boolean)
+
+### `PlanDeEstudioResponse`
+- `nroPlan` (Integer)
+- `nombrePlan` (String)
+- `fechaInicio` (LocalDate)
+- `fechaFin` (LocalDate)
+- `esVigente` (Boolean)
+- `nombreCarrera` (String)
+- `idCarrera` (UUID)
 
 ---
 
@@ -214,159 +342,50 @@ Standard user response.
 
 ---
 
-## Horario
+## Usuario
 
-### `HorarioRequest`
-- `idComision` (UUID)
-- `idMateria` (UUID)
-- `dia` (DiaSemana enum)
-- `horaDesde` (LocalTime)
-- `horaHasta` (LocalTime)
+### `UsuarioRequest`
+- `legajo` (String)
+- `password` (String): Only for creation/updates, never returned.
+- `tipoDocumento` (TipoDocumento enum)
+- `dni` (String)
+- `nombre` (String)
+- `apellido` (String)
+- `mail` (String)
+- `fechaNacimiento` (LocalDate)
+- `genero` (Genero enum)
+- `telefono` (String)
+- `direccion` (String)
+- `ciudad` (String)
+- `fotoPerfil` (String): URL or base64.
+- `fechaIngreso` (LocalDate)
+- `tituloAcademico` (String)
+- `rol` (RolUsuario enum)
+- `estado` (String)
 
-### `HorarioResponse`
-- `idComision` (UUID)
-- `nombreComision` (String)
-- `idMateria` (UUID)
-- `nombreMateria` (String)
-- `dia` (DiaSemana enum)
-- `horaDesde` (LocalTime)
-- `horaHasta` (LocalTime)
+### `UsuarioResponse`
+- `id` (UUID)
+- `legajo` (String)
+- `tipoDocumento` (TipoDocumento enum)
+- `dni` (String)
+- `nombre` (String)
+- `apellido` (String)
+- `mail` (String)
+- `fechaNacimiento` (LocalDate)
+- `genero` (Genero enum)
+- `telefono` (String)
+- `direccion` (String)
+- `ciudad` (String)
+- `fotoPerfil` (String)
+- `fechaIngreso` (LocalDate)
+- `tituloAcademico` (String)
+- `rol` (RolUsuario enum)
+- `estado` (String)
+- `tipoIdentificador` (String)
+- `anioIngreso` (Integer)
+- `passwordChangeRequired` (Boolean)
+- `carreras` (List<InfoCarrera>): List of associated careers.
 
----
-
-## Matriculacion / Academico
-
-### `CarreraMateriasDTO`
-Response structure for `/api/alumnos/mis-carreras-materias`.
-- `idCarrera` (UUID)
+#### Inner Class: `InfoCarrera`
 - `nombreCarrera` (String)
-- `idFacultad` (UUID)
-- `nombreFacultad` (String)
-- `nombrePlan` (String)
-- `materias` (List<EstudianteMateriaDTO>)
-
-### `EstudianteMateriaDTO`
-Enriched subject details for a specific student.
-- `idMateria` (UUID)
-- `nombre` (String)
-- `nivel` (Short): Year/Level of the subject in the plan.
-- `estado` (String): "PENDIENTE", "CURSANDO", "REGULAR", "APROBADA", "LIBRE".
-- `nota` (String): Final grade or "-" if not approved.
-- `sePuedeInscribir` (Boolean): Calculated based on correlatives and current status.
-- `esElectiva` (Boolean)
-
----
-
-## Historial
-
-### `HistorialMateriaDTO`
-Response for `/api/alumnos/mis-carreras-materias/historial/{idMateria}`.
-- `nombreMateria` (String)
-- `cursadas` (List<DetalleCursadaDTO>)
-- `finales` (List<DetalleFinalDTO>)
-
-### `DetalleCursadaDTO`
-- `fechaInscripcion` (LocalDate)
-- `comision` (String): Name and year of the commission.
-- `estado` (String)
-- `nota` (String)
-- `tomo` (String)
-- `folio` (String)
-
-### `DetalleFinalDTO`
-- `fechaExamen` (LocalDate)
-- `turno` (String): Exam table name (e.g., "Turno Febrero").
-- `estado` (String)
-- `nota` (String)
-- `tomo` (String)
-- `folio` (String)
-
----
-
-## MesaExamen
-
-### `MesaExamenRequest`
-- `nombre` (String): e.g., "Turno Febrero 2026".
-- `fechaInicio` (LocalDate)
-- `fechaFin` (LocalDate)
-
-### `MesaExamenResponse`
-- `id` (UUID)
-- `nombre` (String)
-- `fechaInicio` (LocalDate)
-- `fechaFin` (LocalDate)
-- `detalles` (List<DetalleMesaExamenResponse>)
-
-### `DetalleMesaExamenRequest`
-- `idMesaExamen` (UUID)
-- `nroDetalle` (Integer): Sequential number for the detail within the exam table.
-- `idMateria` (UUID)
-- `idPresidente` (UUID)
-- `diaExamen` (LocalDate)
-- `horaExamen` (LocalTime)
-
-### `DetalleMesaExamenResponse`
-- `idMesaExamen` (UUID)
-- `nroDetalle` (Integer)
-- `nombreMateria` (String)
-- `idMateria` (UUID)
-- `nombrePresidente` (String)
-- `idPresidente` (UUID)
-- `diaExamen` (LocalDate)
-- `horaExamen` (LocalTime)
-
----
-
-## InscripcionExamen
-
-### `InscripcionExamenRequest`
-- `idUsuario` (UUID): Optional (inferred from token if missing).
-- `idMesaExamen` (UUID)
-- `nroDetalle` (Integer)
-
-### `InscripcionExamenResponse`
-- `id` (UUID)
-- `nombreAlumno` (String)
-- `legajoAlumno` (String)
-- `nombreMateria` (String)
-- `fechaExamen` (LocalDate)
-- `horaExamen` (LocalTime)
-- `fechaInscripcion` (LocalDateTime)
-- `fechaInscripcion` (LocalDateTime)
-- `estado` (String): e.g., "PENDIENTE" (mapped from EstadoExamen).
-- `nota` (BigDecimal)
-
-### `CargaNotaExamenRequest`
-- `nota` (BigDecimal)
-- `estado` (EstadoExamen enum)
-
----
-
-## InscripcionCursado
-
-### `InscripcionCursadoRequest`
-- `idUsuario` (UUID): Optional if token used.
-- `idMateria` (UUID)
-- `idComision` (UUID)
-
-### `InscripcionCursadoResponse`
-- `id` (UUID)
-- `nombreMateria` (String)
-- `nombreComision` (String)
-- `anioCursado` (Integer)
-- `estado` (String): e.g., "CURSANDO" (mapped from EstadoCursada).
-- `notaFinal` (BigDecimal)
-- `fechaPromocion` (LocalDate)
-- `fechaInscripcion` (LocalDateTime)
-- `calificaciones` (List<CalificacionCursadaResponse>)
-
-### `CalificacionCursadaRequest`
-- `descripcion` (String)
-- `nota` (BigDecimal)
-
-### `CalificacionCursadaResponse`
-- `id` (UUID)
-- `descripcion` (String)
-- `nota` (BigDecimal)
-- `fecha` (LocalDate)
-
+- `facultad` (String)
