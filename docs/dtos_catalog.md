@@ -132,6 +132,9 @@ Response for `/api/alumnos/mis-carreras-materias`.
 - `nota` (String)
 - `sePuedeInscribir` (Boolean)
 - `esElectiva` (Boolean)
+- `horasCursado` (Short)
+- `cuatrimestre` (String)
+- `correlativas` (List<String>)
 
 ---
 
