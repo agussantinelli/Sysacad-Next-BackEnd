@@ -171,6 +171,14 @@ Response for `/api/alumnos/mis-carreras-materias`.
 - `idUsuario` (UUID)
 - `rol` (RolGrupo enum)
 
+### `MiembroGrupoResponse`
+- `idUsuario` (UUID)
+- `nombre` (String)
+- `apellido` (String)
+- `rol` (RolGrupo enum)
+- `fechaUnion` (LocalDateTime)
+- `ultimoAcceso` (LocalDateTime)
+
 ### `MensajeGrupoRequest`
 - `contenido` (String)
 - `idUsuarioRemitente` (UUID): Optional/Ignored (inferred from token).
