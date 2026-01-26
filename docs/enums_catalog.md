@@ -113,3 +113,9 @@ Status of a notification for a specific user.
 Role of a user within a communication group.
 - `ADMIN`
 - `MIEMBRO`
+
+### `EstadoGrupo`
+Status of a group.
+- `ACTIVO`
+- `ARCHIVADO`
+- `ELIMINADO`
