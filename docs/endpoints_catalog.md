@@ -96,6 +96,8 @@ Base URL: `/api/grupos`
 | `DELETE` | `/{id}/miembros/{idUsuario}` | Authenticated | Eliminar miembro de un grupo. |
 | `POST` | `/{id}/mensajes` | Authenticated | Enviar un mensaje al grupo. |
 | `GET` | `/{id}/mensajes` | Authenticated | Leer historial de mensajes (paginado). |
+| `POST` | `/{id}/marcar-leido` | Authenticated | Marcar el grupo como leído por el usuario. |
+| `GET` | `/{id}/miembros` | Authenticated | Obtener miembros con fecha de último acceso. |
 
 ## HorarioCursadoController
 Base URL: `/api/horarios`
