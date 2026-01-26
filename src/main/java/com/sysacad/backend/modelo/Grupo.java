@@ -25,5 +25,9 @@ public class Grupo {
 
     @Column(name = "fecha_creacion")
     private LocalDateTime fechaCreacion = LocalDateTime.now();
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private com.sysacad.backend.modelo.enums.EstadoGrupo estado = com.sysacad.backend.modelo.enums.EstadoGrupo.ACTIVO;
     
 }
