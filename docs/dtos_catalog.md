@@ -149,6 +149,41 @@ Response for `/api/alumnos/mis-carreras-materias`.
 
 ---
 
+---
+
+## Grupo
+
+### `GrupoRequest`
+- `nombre` (String)
+- `descripcion` (String)
+- `tipo` (String)
+- `idsIntegrantes` (List<UUID>): Initial list of members to add.
+
+### `GrupoResponse`
+- `id` (UUID)
+- `nombre` (String)
+- `descripcion` (String)
+- `tipo` (String)
+- `fechaCreacion` (LocalDateTime)
+
+### `MiembroGrupoRequest`
+- `idUsuario` (UUID)
+- `rol` (RolGrupo enum)
+
+### `MensajeGrupoRequest`
+- `contenido` (String)
+- `idUsuarioRemitente` (UUID): Optional/Ignored (inferred from token).
+
+### `MensajeGrupoResponse`
+- `id` (UUID)
+- `idGrupo` (UUID)
+- `idUsuarioRemitente` (UUID)
+- `nombreRemitente` (String)
+- `contenido` (String)
+- `fechaEnvio` (LocalDateTime)
+
+---
+
 ## Historial
 
 ### `HistorialMateriaDTO`
