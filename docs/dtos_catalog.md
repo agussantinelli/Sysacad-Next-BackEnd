@@ -164,6 +164,7 @@ Response for `/api/alumnos/mis-carreras-materias`.
 - `nombre` (String)
 - `descripcion` (String)
 - `tipo` (String)
+- `estado` (EstadoGrupo enum)
 - `fechaCreacion` (LocalDateTime)
 
 ### `MiembroGrupoRequest`
@@ -180,6 +181,7 @@ Response for `/api/alumnos/mis-carreras-materias`.
 - `idUsuarioRemitente` (UUID)
 - `nombreRemitente` (String)
 - `contenido` (String)
+- `editado` (Boolean)
 - `fechaEnvio` (LocalDateTime)
 
 ---
