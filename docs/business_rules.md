@@ -20,6 +20,9 @@ Este documento detalla las reglas de negocio y consideraciones técnicas derivad
 4.  **Cursado y Exámenes**:
     - Las inscripciones a cursado y exámenes están vinculadas a la matriculación del alumno.
 
+5.  **Notificaciones**:
+    - Los avisos pueden ser dirigidos a todos o a personas específicas, con seguimiento de estado (Leído, Enviado, etc.).
+
 ## Consideraciones de Diseño
 
 - **Ingeniería Inversa**: El modelo de datos y la lógica han sido deducidos analizando el comportamiento del sistema original ("Sysacad").
