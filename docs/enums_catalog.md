@@ -104,3 +104,12 @@ Status of a notification for a specific user.
 - `BORRADO`
 - `ELIMINADO`
 - `EN_BORRADOR`
+
+---
+
+## Grupo
+
+### `RolGrupo`
+Role of a user within a communication group.
+- `ADMIN`
+- `MIEMBRO`
