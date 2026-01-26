@@ -35,6 +35,9 @@ public class MiembroGrupo {
     @Column(name = "fecha_union")
     private LocalDateTime fechaUnion = LocalDateTime.now();
 
+    @Column(name = "ultimo_acceso")
+    private LocalDateTime ultimoAcceso = LocalDateTime.now();
+
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
