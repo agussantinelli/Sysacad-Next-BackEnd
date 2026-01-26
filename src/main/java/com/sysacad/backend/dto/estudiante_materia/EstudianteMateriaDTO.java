@@ -17,4 +17,7 @@ public class EstudianteMateriaDTO {
     private String nota; // "8", "9.50", "-"
     private Boolean sePuedeInscribir; // flag booleano
     private Boolean esElectiva;
+    private Short horasCursado;
+    private String cuatrimestre;
+    private java.util.List<String> correlativas;
 }

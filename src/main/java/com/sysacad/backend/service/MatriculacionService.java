@@ -186,7 +186,10 @@ public class MatriculacionService {
                             estadoActual.estado,
                             estadoActual.nota,
                             sePuedeInscribir,
-                            materia.getOptativa());
+                            materia.getOptativa(),
+                            materia.getHorasCursado(),
+                            materia.getCuatrimestreDictado() != null ? materia.getCuatrimestreDictado().name() : null,
+                            materia.getCorrelativas().stream().map(com.sysacad.backend.modelo.Materia::getNombre).collect(java.util.stream.Collectors.toList()));
                     materiasDTO.add(dto);
                 }
 
