@@ -91,8 +91,8 @@
         </tr>
         <tr>
             <td><strong>👤 Actores y Comunicación</strong></td>
-            <td><code>usuarios</code>, <code>sanciones</code>, <code>avisos</code></td>
-            <td>Gestión de perfiles, roles (Admin/Estudiante/Profesor), registro disciplinario y cartelera.</td>
+            <td><code>usuarios</code>, <code>sanciones</code>, <code>avisos</code>, <code>avisos_personas</code></td>
+            <td>Gestión de perfiles, roles, registro disciplinario y <strong>notificaciones leídas/enviadas</strong>.</td>
         </tr>
         <tr>
             <td><strong>📜 Jerarquía Académica</strong></td>
