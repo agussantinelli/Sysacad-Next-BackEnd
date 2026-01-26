@@ -25,6 +25,9 @@ public class MensajeGrupo {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String contenido;
 
+    @Column(nullable = false)
+    private Boolean editado = false;
+
     @Column(name = "fecha_envio")
     private LocalDateTime fechaEnvio = LocalDateTime.now();
 }
