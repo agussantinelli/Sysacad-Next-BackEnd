@@ -260,3 +260,33 @@ CREATE TABLE avisos_personas (
     CONSTRAINT fk_ap_persona FOREIGN KEY (id_persona) REFERENCES usuarios(id)
 );
 
+CREATE TABLE grupos (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    nombre VARCHAR(100) NOT NULL,
+    descripcion TEXT,
+    tipo VARCHAR(50), -- Opcional: 'CATEDRA', 'ESTUDIO', etc.
+    estado VARCHAR(20) NOT NULL DEFAULT 'ACTIVO',
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE miembros_grupo (
+    id_grupo UUID NOT NULL,
+    id_usuario UUID NOT NULL,
+    rol_interno VARCHAR(20) NOT NULL DEFAULT 'MIEMBRO', -- 'ADMIN', 'MIEMBRO'
+    fecha_union TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id_grupo, id_usuario),
+    CONSTRAINT fk_mg_grupo FOREIGN KEY (id_grupo) REFERENCES grupos(id),
+    CONSTRAINT fk_mg_usuario FOREIGN KEY (id_usuario) REFERENCES usuarios(id)
+);
+
+CREATE TABLE mensajes_grupo (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id_grupo UUID NOT NULL,
+    id_usuario UUID NOT NULL, -- El remitente
+    contenido TEXT NOT NULL,
+    editado BOOLEAN NOT NULL DEFAULT FALSE,
+    fecha_envio TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_msg_grupo FOREIGN KEY (id_grupo) REFERENCES grupos(id),
+    CONSTRAINT fk_msg_usuario FOREIGN KEY (id_usuario) REFERENCES usuarios(id)
+);
+
