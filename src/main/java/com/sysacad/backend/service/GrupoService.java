@@ -64,7 +64,7 @@ public class GrupoService {
         Usuario usuario = usuarioRepository.findById(idUsuario)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
 
-        if (miembroGrupoRepository.existsByIdGrupoAndIdUsuario(idGrupo, idUsuario)) {
+        if (miembroGrupoRepository.existsByGrupo_IdAndUsuario_Id(idGrupo, idUsuario)) {
             // Ya es miembro, no hacemos nada (o podríamos lanzar error)
             return;
         }
@@ -90,7 +90,7 @@ public class GrupoService {
 
     @Transactional(readOnly = true)
     public List<Grupo> obtenerMisGrupos(UUID idUsuario) {
-        return miembroGrupoRepository.findByIdUsuario(idUsuario).stream()
+        return miembroGrupoRepository.findByUsuario_Id(idUsuario).stream()
                 .map(MiembroGrupo::getGrupo)
                 .collect(Collectors.toList());
     }
@@ -106,7 +106,7 @@ public class GrupoService {
     @Transactional
     public MensajeGrupo enviarMensaje(UUID idGrupo, MensajeGrupoRequest request, UUID idRemitente) {
         // Validar que el remitente sea miembro del grupo
-        if (!miembroGrupoRepository.existsByIdGrupoAndIdUsuario(idGrupo, idRemitente)) {
+        if (!miembroGrupoRepository.existsByGrupo_IdAndUsuario_Id(idGrupo, idRemitente)) {
             throw new BusinessLogicException("El remitente no pertenece al grupo");
         }
 
@@ -144,6 +144,6 @@ public class GrupoService {
         if (!grupoRepository.existsById(idGrupo)) {
             throw new ResourceNotFoundException("Grupo no encontrado");
         }
-        return miembroGrupoRepository.findByIdGrupo(idGrupo);
+        return miembroGrupoRepository.findByGrupo_Id(idGrupo);
     }
 }

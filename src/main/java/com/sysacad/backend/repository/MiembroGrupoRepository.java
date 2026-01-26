@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @Repository
 public interface MiembroGrupoRepository extends JpaRepository<MiembroGrupo, MiembroGrupo.MiembroGrupoId> {
-    List<MiembroGrupo> findByIdUsuario(UUID idUsuario);
-    List<MiembroGrupo> findByIdGrupo(UUID idGrupo);
-    boolean existsByIdGrupoAndIdUsuario(UUID idGrupo, UUID idUsuario);
+    List<MiembroGrupo> findByUsuario_Id(UUID idUsuario);
+    List<MiembroGrupo> findByGrupo_Id(UUID idGrupo);
+    boolean existsByGrupo_IdAndUsuario_Id(UUID idGrupo, UUID idUsuario);
 }
