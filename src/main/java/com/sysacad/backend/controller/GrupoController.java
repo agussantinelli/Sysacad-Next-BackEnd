@@ -5,8 +5,10 @@ import com.sysacad.backend.dto.grupo.GrupoResponse;
 import com.sysacad.backend.dto.grupo.MensajeGrupoRequest;
 import com.sysacad.backend.dto.grupo.MensajeGrupoResponse;
 import com.sysacad.backend.dto.grupo.MiembroGrupoRequest;
+import com.sysacad.backend.dto.grupo.MiembroGrupoResponse;
 import com.sysacad.backend.modelo.Grupo;
 import com.sysacad.backend.modelo.MensajeGrupo;
+import com.sysacad.backend.modelo.MiembroGrupo;
 import com.sysacad.backend.modelo.Usuario;
 import com.sysacad.backend.service.GrupoService;
 import com.sysacad.backend.service.UsuarioService;
@@ -92,6 +94,20 @@ public class GrupoController {
         return ResponseEntity.ok(mensajes.map(this::toDTO));
     }
 
+    @PostMapping("/{id}/marcar-leido")
+    public ResponseEntity<Void> marcarComoLeido(@PathVariable UUID id) {
+        UUID idUsuario = getAuthenticatedUserId();
+        grupoService.marcarComoLeido(id, idUsuario);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{id}/miembros")
+    public ResponseEntity<List<MiembroGrupoResponse>> obtenerMiembros(@PathVariable UUID id) {
+        // TODO: Validar que el usuario sea miembro
+        List<MiembroGrupo> miembros = grupoService.obtenerMiembros(id);
+        return ResponseEntity.ok(miembros.stream().map(this::toDTO).collect(Collectors.toList()));
+    }
+
     // --- Mappers simples ---
     private GrupoResponse toDTO(Grupo grupo) {
         return new GrupoResponse(
@@ -113,6 +129,18 @@ public class GrupoController {
                 mensaje.getContenido(),
                 mensaje.getEditado(),
                 mensaje.getFechaEnvio()
+        );
+    }
+
+    private MiembroGrupoResponse toDTO(MiembroGrupo miembro) {
+        Usuario u = miembro.getUsuario();
+        return new MiembroGrupoResponse(
+                u.getId(),
+                u.getNombre(),
+                u.getApellido(),
+                miembro.getRol(),
+                miembro.getFechaUnion(),
+                miembro.getUltimoAcceso()
         );
     }
 }

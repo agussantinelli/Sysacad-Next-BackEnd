@@ -73,6 +73,7 @@ public class GrupoService {
         miembro.setGrupo(grupo);
         miembro.setUsuario(usuario);
         miembro.setRol(rol != null ? rol : RolGrupo.MIEMBRO);
+        miembro.setUltimoAcceso(LocalDateTime.now());
         
         miembroGrupoRepository.save(miembro);
     }
@@ -125,5 +126,23 @@ public class GrupoService {
              throw new ResourceNotFoundException("Grupo no encontrado");
          }
          return mensajeGrupoRepository.findByGrupoIdOrderByFechaEnvioDesc(idGrupo, pageable);
+    }
+
+    @Transactional
+    public void marcarComoLeido(UUID idGrupo, UUID idUsuario) {
+        MiembroGrupo.MiembroGrupoId id = new MiembroGrupo.MiembroGrupoId(idGrupo, idUsuario);
+        MiembroGrupo miembro = miembroGrupoRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no es miembro del grupo"));
+        
+        miembro.setUltimoAcceso(LocalDateTime.now());
+        miembroGrupoRepository.save(miembro);
+    }
+
+    @Transactional(readOnly = true)
+    public List<MiembroGrupo> obtenerMiembros(UUID idGrupo) {
+        if (!grupoRepository.existsById(idGrupo)) {
+            throw new ResourceNotFoundException("Grupo no encontrado");
+        }
+        return miembroGrupoRepository.findByIdGrupo(idGrupo);
     }
 }
