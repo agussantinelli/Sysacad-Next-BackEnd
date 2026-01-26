@@ -251,3 +251,12 @@ CREATE TABLE calificaciones_cursada (
     CONSTRAINT fk_cc_inscripcion FOREIGN KEY (id_inscripcion_cursado) REFERENCES inscripciones_cursado(id) ON DELETE CASCADE
 );
 
+CREATE TABLE avisos_personas (
+    id_aviso UUID NOT NULL,
+    id_persona UUID NOT NULL,
+    estado VARCHAR(20) NOT NULL,
+    PRIMARY KEY (id_aviso, id_persona),
+    CONSTRAINT fk_ap_aviso FOREIGN KEY (id_aviso) REFERENCES avisos(id),
+    CONSTRAINT fk_ap_persona FOREIGN KEY (id_persona) REFERENCES usuarios(id)
+);
+
