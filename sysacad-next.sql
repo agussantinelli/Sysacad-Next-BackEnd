@@ -274,6 +274,7 @@ CREATE TABLE miembros_grupo (
     id_usuario UUID NOT NULL,
     rol_interno VARCHAR(20) NOT NULL DEFAULT 'MIEMBRO', -- 'ADMIN', 'MIEMBRO'
     fecha_union TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    ultimo_acceso TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id_grupo, id_usuario),
     CONSTRAINT fk_mg_grupo FOREIGN KEY (id_grupo) REFERENCES grupos(id),
     CONSTRAINT fk_mg_usuario FOREIGN KEY (id_usuario) REFERENCES usuarios(id)
