@@ -92,3 +92,15 @@ Days of the week.
 - `JUEVES`
 - `VIERNES`
 - `SABADO`
+
+---
+
+## Aviso
+
+### `EstadoAvisoPersona`
+Status of a notification for a specific user.
+- `LEIDO`
+- `ENVIADO`
+- `BORRADO`
+- `ELIMINADO`
+- `EN_BORRADOR`
