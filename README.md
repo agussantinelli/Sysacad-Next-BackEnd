@@ -91,8 +91,8 @@
         </tr>
         <tr>
             <td><strong>👤 Actores y Comunicación</strong></td>
-            <td><code>usuarios</code>, <code>sanciones</code>, <code>avisos</code>, <code>avisos_personas</code></td>
-            <td>Gestión de perfiles, roles, registro disciplinario y <strong>notificaciones leídas/enviadas</strong>.</td>
+            <td><code>usuarios</code>, <code>sanciones</code>, <code>avisos</code>, <code>avisos_personas</code>, <code>grupos</code>, <code>miembros_grupo</code>, <code>mensajes_grupo</code></td>
+            <td>Gestión de perfiles, roles, disciplina, notificaciones y <strong>chat grupal (mensajería)</strong>.</td>
         </tr>
         <tr>
             <td><strong>📜 Jerarquía Académica</strong></td>
@@ -326,6 +326,7 @@ El sistema cuenta con un `DbSeeder` (`src/main/java/com/sysacad/backend/config/s
 | **/comisiones** | `POST`, `GET`, `PUT` | Comisiones anuales, asignación de docentes y horarios. |
 | **/inscripciones** | `POST`, `GET` | Inscripción a cursada/finales y consulta de historia académica. |
 | **/avisos** | `POST`, `GET` | Cartelera de novedades (Admin publica, todos leen). |
+| **/grupos** | `POST`, `GET` | **Chat Grupal**: Creación de grupos, gestión de miembros y envío de mensajes. |
 | **/salones** | `POST`, `GET` | Gestión de aulas físicas y asignación a facultades. |
 | **/sanciones** | `POST`, `GET` | Registro disciplinario de estudiantes. |
 | **/horarios** | `POST`, `GET`, `DELETE` | Gestión de agenda semanal por comisión y materia. |
