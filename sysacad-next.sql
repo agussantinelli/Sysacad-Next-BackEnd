@@ -207,6 +207,8 @@ CREATE TABLE inscripciones_examen (
     fecha_inscripcion TIMESTAMP NOT NULL,
     estado VARCHAR(50) NOT NULL,
     nota DECIMAL(4, 2),
+    tomo VARCHAR(20),
+    folio VARCHAR(20),
     CONSTRAINT fk_ie_usuario FOREIGN KEY (id_usuario) REFERENCES usuarios(id),
     CONSTRAINT fk_ie_detalle FOREIGN KEY (id_mesa_examen, nro_detalle) REFERENCES detalle_mesa_examen(id_mesa_examen, nro_detalle),
     CONSTRAINT fk_ie_materia FOREIGN KEY (id_materia) REFERENCES materias(id)
@@ -233,6 +235,8 @@ CREATE TABLE inscripciones_cursado (
     estado VARCHAR(50) NOT NULL,
     nota_final DECIMAL(4, 2),
     fecha_promocion DATE,
+    tomo VARCHAR(20),
+    folio VARCHAR(20),
     CONSTRAINT fk_ic_usuario FOREIGN KEY (id_usuario) REFERENCES usuarios(id),
     CONSTRAINT fk_ic_materia FOREIGN KEY (id_materia) REFERENCES materias(id),
     CONSTRAINT fk_ic_comision FOREIGN KEY (id_comision) REFERENCES comisiones(id)
