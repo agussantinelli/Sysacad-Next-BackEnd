@@ -84,6 +84,19 @@ Base URL: `/api/avisos`
 | `POST` | `/` | ADMIN | Publicar un nuevo aviso. |
 | `GET` | `/` | Authenticated | Obtener listado de últimos avisos. |
 
+## GrupoController
+Base URL: `/api/grupos`
+
+| Método | Endpoint | Roles / Acceso | Descripción |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/` | Authenticated | Crear un nuevo grupo de chat. |
+| `GET` | `/mis-grupos` | Authenticated | Listar grupos a los que pertenece el usuario. |
+| `GET` | `/{id}` | Authenticated | Ver detalle de un grupo. |
+| `POST` | `/{id}/miembros` | Authenticated | Agregar miembro a un grupo. |
+| `DELETE` | `/{id}/miembros/{idUsuario}` | Authenticated | Eliminar miembro de un grupo. |
+| `POST` | `/{id}/mensajes` | Authenticated | Enviar un mensaje al grupo. |
+| `GET` | `/{id}/mensajes` | Authenticated | Leer historial de mensajes (paginado). |
+
 ## HorarioCursadoController
 Base URL: `/api/horarios`
 
