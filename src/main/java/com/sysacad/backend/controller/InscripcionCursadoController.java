@@ -57,4 +57,16 @@ public class InscripcionCursadoController {
             @RequestBody CalificacionCursadaRequest request) {
         return ResponseEntity.ok(inscripcionCursadoService.cargarNota(id, request));
     }
+    @GetMapping("/actuales")
+    @PreAuthorize("hasAnyRole('ADMIN', 'ESTUDIANTE')")
+    public ResponseEntity<List<InscripcionCursadoResponse>> getCursadasActuales(Authentication auth, @RequestParam(required = false) UUID idUsuario) {
+        UUID id = idUsuario;
+        if (id == null) {
+            String email = auth.getName();
+            Usuario usuario = usuarioRepository.findByMail(email)
+                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+            id = usuario.getId();
+        }
+        return ResponseEntity.ok(inscripcionCursadoService.obtenerCursadasActuales(id));
+    }
 }
