@@ -111,5 +111,9 @@ public class InscripcionCursadoService {
         dto.setFecha(calif.getFecha());
         return dto;
     }
+
+    public List<InscripcionCursadoResponse> obtenerCursadasActuales(UUID idUsuario) {
+        return inscripcionCursadoMapper.toDTOs(inscripcionCursadoRepository.findByUsuarioIdAndEstado(idUsuario, com.sysacad.backend.modelo.enums.EstadoCursada.CURSANDO));
+    }
 }
 

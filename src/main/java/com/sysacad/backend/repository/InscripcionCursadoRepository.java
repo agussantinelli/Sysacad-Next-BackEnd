@@ -17,4 +17,6 @@ public interface InscripcionCursadoRepository extends JpaRepository<InscripcionC
     List<InscripcionCursado> findByComisionId(UUID idComision);
 
     List<InscripcionCursado> findByMateriaId(UUID idMateria);
+
+    List<InscripcionCursado> findByUsuarioIdAndEstado(UUID idUsuario, com.sysacad.backend.modelo.enums.EstadoCursada estado);
 }
