@@ -300,54 +300,80 @@ public class DbSeeder {
                                 // INSCRIPCIONES Y NOTAS (NUEVO SISTEMA)
 
                                 if (alumnoAgustin != null) {
-                                        // 1K1 -> Algoritmos, Sistemas, Ingles, Algebra
-                                        var insc = inscribirCursado(inscripcionCursadoRepository, alumnoAgustin, c1k1,
-                                                        algoritmos);
+                                        // --- PRIMER AÑO COMPLETO (PROMOCIONADO) ---
+                                        
+                                        // 1K1: Algoritmos, Sistemas, Ingles, Algebra
+                                        var insc = inscribirCursado(inscripcionCursadoRepository, alumnoAgustin, c1k1, algoritmos);
                                         insc.setNotaFinal(new BigDecimal("9.00"));
                                         insc.setEstado(EstadoCursada.PROMOCIONADO);
-                                        insc.setFechaPromocion(LocalDate.now());
+                                        insc.setFechaPromocion(LocalDate.of(2025, 12, 1));
                                         insc.setTomo(getRandomTomo());
                                         insc.setFolio(getRandomFolio());
                                         inscripcionCursadoRepository.save(insc);
 
-                                        var inscSist = inscribirCursado(inscripcionCursadoRepository, alumnoAgustin,
-                                                        c1k1, sistemas);
+                                        var inscSist = inscribirCursado(inscripcionCursadoRepository, alumnoAgustin, c1k1, sistemas);
                                         inscSist.setNotaFinal(new BigDecimal("8.00"));
                                         inscSist.setEstado(EstadoCursada.PROMOCIONADO);
-                                        inscSist.setFechaPromocion(LocalDate.now());
+                                        inscSist.setFechaPromocion(LocalDate.of(2025, 12, 1));
                                         inscSist.setTomo(getRandomTomo());
                                         inscSist.setFolio(getRandomFolio());
                                         inscripcionCursadoRepository.save(inscSist);
 
-                                        var inscEng = inscribirCursado(inscripcionCursadoRepository, alumnoAgustin,
-                                                        c1k1, ingles1);
+                                        var inscEng = inscribirCursado(inscripcionCursadoRepository, alumnoAgustin, c1k1, ingles1);
                                         inscEng.setNotaFinal(new BigDecimal("10.00"));
                                         inscEng.setEstado(EstadoCursada.PROMOCIONADO);
-                                        inscEng.setFechaPromocion(LocalDate.now());
+                                        inscEng.setFechaPromocion(LocalDate.of(2025, 12, 1));
                                         inscEng.setTomo(getRandomTomo());
                                         inscEng.setFolio(getRandomFolio());
                                         inscripcionCursadoRepository.save(inscEng);
 
-                                        // 2K1 -> Analisis II, Sintaxis, Paradigmas, Sistemas Op
-                                        inscribirCursado(inscripcionCursadoRepository, alumnoAgustin, c2k1, analisis2);
-                                        // inscribirCursado(inscripcionCursadoRepository, alumnoAgustin, c2k1, ingles1);
-                                        // // NO ES DE 2K1
-
-                                        // Algebra (1K1)
-                                        var inscAlg = inscribirCursado(inscripcionCursadoRepository, alumnoAgustin,
-                                                        c1k1, algebra);
-                                        inscAlg.setNotaFinal(new BigDecimal("6.00"));
-                                        inscAlg.setEstado(EstadoCursada.REGULAR);
-                                        inscAlg.setFechaRegularidad(LocalDate.now()); // Asumimos regularidad obtenida hoy o antes
+                                        var inscAlg = inscribirCursado(inscripcionCursadoRepository, alumnoAgustin, c1k1, algebra);
+                                        inscAlg.setNotaFinal(new BigDecimal("8.50"));
+                                        inscAlg.setEstado(EstadoCursada.PROMOCIONADO);
+                                        inscAlg.setFechaPromocion(LocalDate.of(2025, 12, 5));
+                                        inscAlg.setTomo(getRandomTomo());
+                                        inscAlg.setFolio(getRandomFolio());
                                         inscripcionCursadoRepository.save(inscAlg);
 
-                                        // Analisis 1 (1K2 - aunque sea de otro turno, lo inscribimos para que tenga la materia)
-                                        var inscAn1 = inscribirCursado(inscripcionCursadoRepository, alumnoAgustin,
-                                                        c1k2, analisis1);
-                                        inscAn1.setNotaFinal(new BigDecimal("6.00"));
-                                        inscAn1.setEstado(EstadoCursada.REGULAR);
-                                        inscAn1.setFechaRegularidad(LocalDate.now());
+                                        // 1K2: Analisis I, Fisica I, Arquitectura (Aunque sea noche, lo usamos para completar nivel 1)
+                                        var inscAn1 = inscribirCursado(inscripcionCursadoRepository, alumnoAgustin, c1k2, analisis1);
+                                        inscAn1.setNotaFinal(new BigDecimal("7.00"));
+                                        inscAn1.setEstado(EstadoCursada.PROMOCIONADO);
+                                        inscAn1.setFechaPromocion(LocalDate.of(2025, 12, 10));
+                                        inscAn1.setTomo(getRandomTomo());
+                                        inscAn1.setFolio(getRandomFolio());
                                         inscripcionCursadoRepository.save(inscAn1);
+
+                                        var inscFis = inscribirCursado(inscripcionCursadoRepository, alumnoAgustin, c1k2, fisica1);
+                                        inscFis.setNotaFinal(new BigDecimal("7.50"));
+                                        inscFis.setEstado(EstadoCursada.PROMOCIONADO);
+                                        inscFis.setFechaPromocion(LocalDate.of(2025, 12, 12));
+                                        inscFis.setTomo(getRandomTomo());
+                                        inscFis.setFolio(getRandomFolio());
+                                        inscripcionCursadoRepository.save(inscFis);
+
+                                        var inscArq = inscribirCursado(inscripcionCursadoRepository, alumnoAgustin, c1k2, arquitectura);
+                                        inscArq.setNotaFinal(new BigDecimal("9.00"));
+                                        inscArq.setEstado(EstadoCursada.PROMOCIONADO);
+                                        inscArq.setFechaPromocion(LocalDate.of(2025, 12, 15));
+                                        inscArq.setTomo(getRandomTomo());
+                                        inscArq.setFolio(getRandomFolio());
+                                        inscripcionCursadoRepository.save(inscArq);
+                                                                                
+                                        
+                                        // 2K1: Analisis II, Sintaxis, Paradigmas, Sist. Operativos
+                                        var inscAn2 = inscribirCursado(inscripcionCursadoRepository, alumnoAgustin, c2k1, analisis2);
+                                        cargarNotaCursada(calificacionCursadaRepository, inscAn2, "1er Parcial", "6.00");
+                                        cargarNotaCursada(calificacionCursadaRepository, inscAn2, "TP Laboratorio", "7.50");
+
+                                        var inscSin = inscribirCursado(inscripcionCursadoRepository, alumnoAgustin, c2k1, sintaxis);
+                                        cargarNotaCursada(calificacionCursadaRepository, inscSin, "1er Parcial", "8.00");
+
+                                        var inscPara = inscribirCursado(inscripcionCursadoRepository, alumnoAgustin, c2k1, paradigmas); 
+                                        cargarNotaCursada(calificacionCursadaRepository, inscPara, "TP Funcional", "9.00");
+
+                                        var inscSO = inscribirCursado(inscripcionCursadoRepository, alumnoAgustin, c2k1, sistemasOp);
+                                        cargarNotaCursada(calificacionCursadaRepository, inscSO, "TP Shell", "8.50");
                                 }
 
                                 if (alumnoSofia != null) {
