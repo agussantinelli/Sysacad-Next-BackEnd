@@ -159,5 +159,6 @@ Base URL: `/api/inscripciones-cursado`
 | `POST` | `/` | ADMIN, ESTUDIANTE | Inscribirse a cursar una materia en una comisión. |
 | `GET` | `/mis-cursadas` | ESTUDIANTE | Obtener historial de materias cursadas y notas parciales. |
 | `POST` | `/{id}/notas` | ADMIN, PROFESOR | Cargar una nota parcial a una cursada. |
+| `GET` | `/actuales` | ESTUDIANTE, ADMIN | Obtener materias que cursa actualmente (Admin puede usar `?idUsuario=UUID`). |
 
 
