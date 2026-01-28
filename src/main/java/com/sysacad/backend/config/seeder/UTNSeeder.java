@@ -45,20 +45,20 @@ public class UTNSeeder {
         System.out
                 .println(">> UTNSeeder: Iniciando carga masiva de planes y correlativas (Dataset Definitivo Final)...");
 
-        // 1. Facultad
+        // Facultad
         FacultadRegional frro = new FacultadRegional();
         frro.setCiudad("Rosario");
         frro.setProvincia("Santa Fe");
         frro = facultadRepository.save(frro);
 
-        // 2. Cargar Datos
+        // Cargar Datos
         cargarCarrera(frro, 1, "ISI", "Ingeniería en Sistemas de Información", getDatasetISI());
         cargarCarrera(frro, 2, "IC", "Ingeniería Civil", getDatasetCivil());
         cargarCarrera(frro, 3, "IQ", "Ingeniería Química", getDatasetQuimica());
         cargarCarrera(frro, 4, "IM", "Ingeniería Mecánica", getDatasetMecanica());
         cargarCarrera(frro, 5, "IEE", "Ingeniería en Energía Eléctrica", getDatasetElectrica());
 
-        // 3. Conectar Correlativas
+        // Conectar Correlativas
         conectarCorrelativas(1, getDatasetISI());
         conectarCorrelativas(2, getDatasetCivil());
         conectarCorrelativas(3, getDatasetQuimica());
@@ -74,11 +74,9 @@ public class UTNSeeder {
 
         // Crear Carrera
         Carrera carrera = new Carrera();
-        // carrera.setId(new Carrera.CarreraId(facu.getId(), nroCarrera)); // Removed
         carrera.setNombre(nombreCarrera);
         carrera.setAlias(aliasCarrera);
         
-        // Relación Muchos a Muchos
         Set<FacultadRegional> facultades = new HashSet<>();
         facultades.add(facu);
         carrera.setFacultades(facultades);
@@ -114,7 +112,6 @@ public class UTNSeeder {
                 }
             }
 
-            // Guardar en mapa para correlativas (Usamos nroCarrera como key simulada para aislamiento en seeder)
             mapaCodigoMateria.put(nroCarrera + "-" + def.codigo, materia);
 
             PlanMateria pm = new PlanMateria();
@@ -172,9 +169,6 @@ public class UTNSeeder {
         boolean esElectiva;
         List<String> correlativas;
 
-        // Constructor inteligente que deduce el cuatrimestre basado en el string
-        // "dictadoInfo"
-        // dictadoInfo ejemplos: "ANUAL", "1 C", "2 C", "1 y 2 C" (Ambos)
         public MateriaDef(String codigo, String nombre, int horas, String dictadoInfo, int nivel, boolean esElectiva,
                 List<String> correlativas) {
             this.codigo = codigo;
@@ -196,8 +190,7 @@ public class UTNSeeder {
                 } else if (infoUpper.contains("2")) {
                     this.cuatrimestreDictado = CuatrimestreDictado.SEGUNDO;
                 } else {
-                    // Por defecto si es cuatrimestral y no se especifica, asumimos AMBOS para mayor
-                    // disponibilidad
+                    // Por defecto si es cuatrimestral y no se especifica, asumimos AMBOS para mayor disponibilidad
                     this.cuatrimestreDictado = CuatrimestreDictado.AMBOS;
                 }
             }
@@ -370,9 +363,7 @@ public class UTNSeeder {
                         true, List.of()));
     }
 
-    // ------------------------------------------------------------------------------------------------
     // INGENIERÍA QUÍMICA (IQ)
-    // ------------------------------------------------------------------------------------------------
     private List<MateriaDef> getDatasetQuimica() {
         return List.of(
                 new MateriaDef("1", "Introducción a la Ingeniería Química", 3, "ANUAL", 1, false, List.of()),

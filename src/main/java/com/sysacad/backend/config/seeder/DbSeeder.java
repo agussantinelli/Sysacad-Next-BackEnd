@@ -29,8 +29,8 @@ public class DbSeeder {
         CommandLineRunner initDatabase(
                         UTNSeeder utnSeeder,
                         UsuarioRepository usuarioRepository,
-                        MatriculacionRepository matriculacionRepository, // Agregado para matricular alumnos
-                        CarreraRepository carreraRepository, // NEW injected
+                        MatriculacionRepository matriculacionRepository, 
+                        CarreraRepository carreraRepository,
                         PasswordEncoder passwordEncoder,
                         FacultadRegionalRepository facultadRepository,
                         SalonRepository salonRepository,
@@ -41,13 +41,13 @@ public class DbSeeder {
                         MesaExamenRepository mesaExamenRepository,
                         DetalleMesaExamenRepository detalleMesaExamenRepository,
                         InscripcionExamenRepository inscripcionExamenRepository,
-                        InscripcionCursadoRepository inscripcionCursadoRepository, // NEW
-                        CalificacionCursadaRepository calificacionCursadaRepository // NEW
+                        InscripcionCursadoRepository inscripcionCursadoRepository,
+                        CalificacionCursadaRepository calificacionCursadaRepository
         ) {
 
                 return args -> {
 
-                        // 1. Carga Estructural (Materias, Planes, Carreras)
+                        // Carga Estructural (Materias, Planes, Carreras)
                         utnSeeder.seed();
 
                         Usuario profeNicolas = null;
@@ -71,16 +71,16 @@ public class DbSeeder {
                         if (usuarioRepository.count() == 0) {
                                 System.out.println(">> DbSeeder: Creando población de usuarios...");
 
-                                // --- ADMIN ---
+                                // ADMIN
                                 createUsuario(usuarioRepository, passwordEncoder, "1", "Homero", "Simpson", "11111111",
                                                 "admin@sysacad.com", RolUsuario.ADMIN, Genero.M, "Rector",
                                                 LocalDate.of(1980, 5, 12));
 
-                                // --- PROFESORES ---
+                                // PROFESORES
                                 profeNicolas = createUsuario(usuarioRepository, passwordEncoder, "51111", "Nicolas",
                                                 "Cabello",
                                                 "22222222", "nic@sysacad.com", RolUsuario.PROFESOR, Genero.M,
-                                                "Dr. en Ciencias de la Computación", LocalDate.of(1990, 6, 23));
+                                                "Doctor en Ciencias de la Computación", LocalDate.of(1990, 6, 23));
                                 profeLaura = createUsuario(usuarioRepository, passwordEncoder, "52222", "Laura",
                                                 "Gomez", "22222223",
                                                 "laura@sysacad.com", RolUsuario.PROFESOR, Genero.F,
@@ -88,7 +88,7 @@ public class DbSeeder {
                                                 LocalDate.of(1985, 3, 15));
                                 profeRoberto = createUsuario(usuarioRepository, passwordEncoder, "53333", "Roberto",
                                                 "Diaz", "22222224",
-                                                "roberto@sysacad.com", RolUsuario.PROFESOR, Genero.M, "Lic. en Física",
+                                                "roberto@sysacad.com", RolUsuario.PROFESOR, Genero.M, "Licenciado en Física",
                                                 LocalDate.of(1978, 9, 10));
                                 profeAna = createUsuario(usuarioRepository, passwordEncoder, "54444", "Ana", "Martinez",
                                                 "22222225",
@@ -130,8 +130,8 @@ public class DbSeeder {
                                                 "Fernandez",
                                                 "33333338", "lucia@sysacad.com", RolUsuario.ESTUDIANTE, Genero.F, null,
                                                 LocalDate.of(2002, 12, 12));
-                                alumnoCarlos = createUsuario(usuarioRepository, passwordEncoder, "60002", "Carlos",
-                                                "Tevez", "33333339",
+                                alumnoCarlos = createUsuario(usuarioRepository, passwordEncoder, "60002", "Carlos Alberto",
+                                                "Tevez Martinez", "33333339",
                                                 "carlos@sysacad.com", RolUsuario.ESTUDIANTE, Genero.M, null,
                                                 LocalDate.of(2003, 2, 5));
                                 alumnoMartin = createUsuario(usuarioRepository, passwordEncoder, "60003", "Martin",
@@ -167,7 +167,6 @@ public class DbSeeder {
                         if (matriculacionRepository.count() == 0) {
                                 System.out.println(">> DbSeeder: Matriculando alumnos de prueba en carreras...");
 
-                                // Necesitamos la facultad creada por UTNSeeder
                                 FacultadRegional frro = facultadRepository.findAll().stream()
                                                 .filter(f -> f.getCiudad().equalsIgnoreCase("Rosario"))
                                                 .findFirst()
@@ -214,7 +213,7 @@ public class DbSeeder {
                                 Salon lab305 = createSalon(salonRepository, frro, "Lab. Computación 305", "3");
                                 Salon aula401 = createSalon(salonRepository, frro, "Aula 401", "4");
                                 Salon aula402 = createSalon(salonRepository, frro, "Aula 402", "4");
-                                Salon aula101 = createSalon(salonRepository, frro, "Aula 101", "1"); // PB
+                                Salon aula101 = createSalon(salonRepository, frro, "Aula 101", "1"); 
                                 Salon aula301 = createSalon(salonRepository, frro, "Aula 301", "3");
                                 Salon sum = createSalon(salonRepository, frro, "SUM", "1");
                                 Salon aula201 = createSalon(salonRepository, frro, "Aula 201", "2");
@@ -295,12 +294,11 @@ public class DbSeeder {
                                 crearHorario(horarioCursadoRepository, c3k1, basesDatos, DiaSemana.MARTES, 18, 22);
                                 crearHorario(horarioCursadoRepository, c3k1, disenio, DiaSemana.JUEVES, 18, 22);
                                 crearHorario(horarioCursadoRepository, c3k1, analisisNumerico, DiaSemana.VIERNES, 18,
-                                                21); // Cristian
+                                                21);
 
                                 // INSCRIPCIONES Y NOTAS (NUEVO SISTEMA)
 
                                 if (alumnoAgustin != null) {
-                                        // --- PRIMER AÑO COMPLETO (PROMOCIONADO) ---
                                         
                                         // 1K1: Algoritmos, Sistemas, Ingles, Algebra
                                         var insc = inscribirCursado(inscripcionCursadoRepository, alumnoAgustin, c1k1, algoritmos);
@@ -335,7 +333,6 @@ public class DbSeeder {
                                         inscAlg.setFolio(getRandomFolio());
                                         inscripcionCursadoRepository.save(inscAlg);
 
-                                        // 1K2: Analisis I, Fisica I, Arquitectura (Aunque sea noche, lo usamos para completar nivel 1)
                                         var inscAn1 = inscribirCursado(inscripcionCursadoRepository, alumnoAgustin, c1k2, analisis1);
                                         inscAn1.setNotaFinal(new BigDecimal("7.00"));
                                         inscAn1.setEstado(EstadoCursada.PROMOCIONADO);
@@ -359,7 +356,6 @@ public class DbSeeder {
                                         inscArq.setTomo(getRandomTomo());
                                         inscArq.setFolio(getRandomFolio());
                                         inscripcionCursadoRepository.save(inscArq);
-                                                                                
                                         
                                         // 2K1: Analisis II, Sintaxis, Paradigmas, Sist. Operativos
                                         var inscAn2 = inscribirCursado(inscripcionCursadoRepository, alumnoAgustin, c2k1, analisis2);
@@ -411,8 +407,7 @@ public class DbSeeder {
                                         inscAlg.setFolio(getRandomFolio());
                                         inscripcionCursadoRepository.save(inscAlg);
 
-                                        // 1K2 -> Analisis 1, Fisica 1
-                                        var inscAn1 = inscribirCursado(inscripcionCursadoRepository, alumnoSofia, c1k2,
+}                                        var inscAn1 = inscribirCursado(inscripcionCursadoRepository, alumnoSofia, c1k2,
                                                         analisis1);
                                         inscAn1.setNotaFinal(new BigDecimal("8.00"));
                                         inscAn1.setEstado(EstadoCursada.REGULAR);
@@ -495,7 +490,7 @@ public class DbSeeder {
                         if (mesaExamenRepository.count() == 0) {
                                 System.out.println(">> DbSeeder: Desplegando Mesas de Examen...");
 
-                                // 1. Crear Turnos (Mesas)
+                                // Crear Mesas
                                 MesaExamen mesaFeb = createMesa(mesaExamenRepository, "Turno Febrero 2026",
                                                 LocalDate.of(2026, 2, 1), LocalDate.of(2026, 2, 28));
                                 MesaExamen mesaJul = createMesa(mesaExamenRepository, "Turno Julio 2026",
@@ -503,7 +498,7 @@ public class DbSeeder {
                                 MesaExamen mesaDic = createMesa(mesaExamenRepository, "Turno Diciembre 2026",
                                                 LocalDate.of(2026, 12, 1), LocalDate.of(2026, 12, 22));
 
-                                // 2. Agregar Materias a las Mesas (Detalles)
+                                // Agregar Materias a las Mesas (Detalles)
                                 Materia algoritmos = getMateria(materiaRepository, "Algoritmos y Estructuras de Datos");
                                 Materia sistemas = getMateria(materiaRepository, "Sistemas y Procesos de Negocio");
                                 Materia analisis1 = getMateria(materiaRepository, "Análisis Matemático I");
@@ -529,7 +524,7 @@ public class DbSeeder {
                                 DetalleMesaExamen julFisica = createDetalleMesa(detalleMesaExamenRepository, mesaJul, 2,
                                                 fisica1, profeRoberto, LocalDate.of(2026, 7, 15), LocalTime.of(16, 0));
 
-                                // 3. Inscribir Alumnos a Examenes
+                                // Inscribir Alumnos a Examenes
                                 if (alumnoAgustin != null) {
                                         inscribirExamen(inscripcionExamenRepository, alumnoAgustin, febAlgo);
                                         inscribirExamen(inscripcionExamenRepository, alumnoAgustin, julSintaxis);
@@ -539,7 +534,6 @@ public class DbSeeder {
                                         inscribirExamen(inscripcionExamenRepository, alumnoSofia, febSistemas);
                                         var insc = inscribirExamen(inscripcionExamenRepository, alumnoSofia,
                                                         febAnalisis);
-                                        // Simulamos corrección
                                         insc.setNota(new BigDecimal("9.00"));
                                         insc.setEstado(EstadoExamen.APROBADO);
                                         insc.setTomo(getRandomTomo());
@@ -635,11 +629,11 @@ public class DbSeeder {
                 repo.save(asignacion);
         }
 
-        // --- NUEVOS HELPERS PARA INSCRIPCION CURSADO ---
+        // HELPERS PARA INSCRIPCION CURSADO
 
         private InscripcionCursado inscribirCursado(InscripcionCursadoRepository repo, Usuario alumno,
                         Comision comision, Materia materia) {
-                // Verificar que la comisión tenga esa materia (simple check)
+                // Verificar que la comisión tenga esa materia
                 boolean materiaEnComision = comision.getMaterias().stream()
                                 .anyMatch(m -> m.getId().equals(materia.getId()));
                 if (!materiaEnComision) {
