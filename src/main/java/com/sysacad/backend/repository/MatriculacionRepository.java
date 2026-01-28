@@ -10,5 +10,6 @@ import java.util.UUID;
 
 @Repository
 public interface MatriculacionRepository extends JpaRepository<Matriculacion, MatriculacionId> {
+    
     List<Matriculacion> findByIdIdUsuario(UUID idUsuario);
 }

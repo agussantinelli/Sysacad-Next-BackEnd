@@ -8,4 +8,6 @@ import java.util.UUID;
 
 @Repository
 public interface CalificacionCursadaRepository extends JpaRepository<CalificacionCursada, UUID> {
+
+    // Vacio Aún
 }

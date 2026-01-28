@@ -8,4 +8,6 @@ import java.util.UUID;
 
 @Repository
 public interface MesaExamenRepository extends JpaRepository<MesaExamen, UUID> {
+
+    // Vacio Aún
 }

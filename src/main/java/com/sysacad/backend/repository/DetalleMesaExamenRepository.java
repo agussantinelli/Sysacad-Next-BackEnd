@@ -9,6 +9,7 @@ import java.util.List;
 
 @Repository
 public interface DetalleMesaExamenRepository extends JpaRepository<DetalleMesaExamen, DetalleMesaExamen.DetalleId> {
+    
     List<DetalleMesaExamen> findByMesaExamenId(UUID mesaExamenId);
 
     List<DetalleMesaExamen> findByMateriaId(UUID materiaId);

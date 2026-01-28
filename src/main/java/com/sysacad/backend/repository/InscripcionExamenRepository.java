@@ -12,6 +12,7 @@ import com.sysacad.backend.modelo.DetalleMesaExamen;
 
 @Repository
 public interface InscripcionExamenRepository extends JpaRepository<InscripcionExamen, UUID> {
+    
     List<InscripcionExamen> findByUsuarioId(UUID usuarioId);
 
     Optional<InscripcionExamen> findByUsuarioIdAndDetalleMesaExamenId(UUID usuarioId,

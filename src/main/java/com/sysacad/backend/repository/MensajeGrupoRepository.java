@@ -10,5 +10,6 @@ import java.util.UUID;
 
 @Repository
 public interface MensajeGrupoRepository extends JpaRepository<MensajeGrupo, UUID> {
+    
     Page<MensajeGrupo> findByGrupoIdOrderByFechaEnvioDesc(UUID idGrupo, Pageable pageable);
 }

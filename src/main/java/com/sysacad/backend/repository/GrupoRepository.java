@@ -8,4 +8,6 @@ import java.util.UUID;
 
 @Repository
 public interface GrupoRepository extends JpaRepository<Grupo, UUID> {
+
+    // Vacio Aún
 }

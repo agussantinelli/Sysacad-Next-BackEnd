@@ -10,6 +10,7 @@ import java.util.UUID;
 
 @Repository
 public interface InscripcionCursadoRepository extends JpaRepository<InscripcionCursado, UUID> {
+    
     List<InscripcionCursado> findByUsuarioId(UUID idUsuario);
 
     Optional<InscripcionCursado> findByUsuarioIdAndMateriaId(UUID idUsuario, UUID idMateria);

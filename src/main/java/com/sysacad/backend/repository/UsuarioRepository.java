@@ -15,7 +15,9 @@ public interface UsuarioRepository extends JpaRepository<Usuario, UUID> {
     Optional<Usuario> findByLegajoOrMail(String legajo, String mail);
 
     Optional<Usuario> findByLegajo(String legajo);
+
     Optional<Usuario> findByMail(String mail);
+
     Optional<Usuario> findByDni(String dni);
 
     List<Usuario> findByRol(RolUsuario rol);
@@ -23,5 +25,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, UUID> {
     List<Usuario> findByApellidoContainingIgnoreCase(String apellido);
 
     boolean existsByMail(String mail);
+    
     boolean existsByLegajo(String legajo);
 }

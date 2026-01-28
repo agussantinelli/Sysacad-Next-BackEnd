@@ -8,5 +8,6 @@ import java.util.UUID;
 
 @Repository
 public interface FacultadRegionalRepository extends JpaRepository<FacultadRegional, UUID> {
+    
     boolean existsByCiudadAndProvincia(String ciudad, String provincia);
 }
