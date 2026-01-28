@@ -47,7 +47,7 @@ public class CarreraController {
     public ResponseEntity<CarreraResponse> registrarCarrera(@RequestBody CarreraRequest request) {
         Carrera carrera = carreraMapper.toEntity(request);
         
-        // Buscar facultad y asociar (ahora es M:N)
+        // Buscar facultad y asociar
         if (request.getIdFacultad() != null) {
              com.sysacad.backend.modelo.FacultadRegional facultad = facultadRepository.findById(request.getIdFacultad())
                      .orElseThrow(() -> new RuntimeException("Facultad no encontrada"));
@@ -70,21 +70,13 @@ public class CarreraController {
     @PostMapping("/planes")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<PlanDeEstudioResponse> crearPlan(@RequestBody PlanDeEstudioRequest request) {
-        // Mapeo manual para ID compuesto y logica que el mapper ignoro
-        // o mejor usamos el mapper para base y seteamos ID
         PlanDeEstudio plan = planDeEstudioMapper.toEntity(request);
         
         PlanDeEstudio.PlanId id = new PlanDeEstudio.PlanId(
                 request.getIdCarrera(), request.getNroPlan());
         plan.setId(id);
         
-        // El mapper ya mapea nombre, fechas si coinciden.
-        if (plan.getNombre() == null) plan.setNombre(request.getNombrePlan()); // Mapper dice "nombrePlan" vs "nombre", ver mapper
-        // PlanDeEstudioMapper tiene @Mapping(source = "carrera.nombre", target = "nombreCarrera") en DTO, pero en Entity?
-        // En DTO -> Entity no defini nombres especificos, asi que PlanDeEstudioRequest tiene nombrePlan?
-        // Si PlanDeEstudioRequest tiene fechaInicio, etc.
-        // Voy a asegurar aqui para no romper, o confiar en el mapper si lo arregle.
-        // Asumiendo mapper funciona para campos que coinciden.
+        if (plan.getNombre() == null) plan.setNombre(request.getNombrePlan()); 
         
         PlanDeEstudio guardado = planService.crearPlanDeEstudio(plan);
         return new ResponseEntity<>(planDeEstudioMapper.toDTO(guardado), HttpStatus.CREATED);

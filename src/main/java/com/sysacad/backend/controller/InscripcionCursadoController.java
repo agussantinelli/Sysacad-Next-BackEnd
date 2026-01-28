@@ -31,7 +31,7 @@ public class InscripcionCursadoController {
     @PreAuthorize("hasAnyRole('ADMIN', 'ESTUDIANTE')")
     public ResponseEntity<InscripcionCursadoResponse> inscribir(@RequestBody InscripcionCursadoRequest request,
             Authentication auth) {
-        // Auto-detect user if not provided (for Students)
+                
         if (request.getIdUsuario() == null && auth != null) {
             String email = auth.getName();
             Usuario usuario = usuarioRepository.findByMail(email)

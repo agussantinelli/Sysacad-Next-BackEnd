@@ -39,7 +39,6 @@ public class PlanDeEstudioController {
                 request.getIdCarrera(), request.getNroPlan());
         plan.setId(id);
         
-        // Si nombrePlan no se mapeo (aunque lo arregle en mapper), asegurar
         if (plan.getNombre() == null) plan.setNombre(request.getNombrePlan());
 
         PlanDeEstudio guardado = planService.crearPlanDeEstudio(plan);

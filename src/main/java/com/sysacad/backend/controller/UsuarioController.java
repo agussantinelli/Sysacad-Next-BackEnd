@@ -40,20 +40,8 @@ public class UsuarioController {
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UsuarioResponse> crearUsuario(@RequestBody UsuarioRequest request) {
-        // Usamos el mapper para convertir request a entity (ignorando id, etc)
+
         Usuario usuario = usuarioMapper.toEntity(request);
-        // seteamos valores por defecto o logica que el mapper ignora si es necesario
-        // (En este caso el mapper ya ignora id, password, etc, pero aqui se setean manualmente igual)
-        // Podriamos simplificar esto usando el mapper para todo lo que coincida
-        
-        // Mantengo la logica manual explicita del controller original para no romper nada, 
-        // pero idealmente request -> entity deberia ser : 
-        // Usuario usuario = usuarioMapper.toEntity(request);
-        // usuario.setRol(request.getRol()); ... etc
-        
-        // Para ser seguro, usare el mapper para crear la instancia y luego sobreescribo lo critico
-        // O mejor, dejo la asignacion manual del request que ya funcionaba y solo uso mapper para RESPONSE
-        // El usuario pidio refactorizar, asi que usare el mapper para el response seguro.
         
         Usuario usuarioManual = new Usuario();
         usuarioManual.setLegajo(request.getLegajo());
@@ -115,7 +103,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("isAuthenticated()") // Permitimos a cualquiera autenticado intentar, el servicio o lógica UI filtra
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<UsuarioResponse> obtenerPorId(@PathVariable UUID id) {
         return usuarioService.obtenerPorId(id)
                 .map(u -> ResponseEntity.ok(convertirADTO(u)))
@@ -154,12 +142,11 @@ public class UsuarioController {
     private UsuarioResponse convertirADTO(Usuario usuario) {
         UsuarioResponse dto = usuarioMapper.toDTO(usuario);
 
-        // Logica para URL absoluta de la foto
         if (dto.getFotoPerfil() != null && !dto.getFotoPerfil().isEmpty()) {
             String fotoPath = dto.getFotoPerfil();
-            // Si no es una URL externa (http/https), asumimos que es local
+
             if (!fotoPath.startsWith("http")) {
-                // Normalizar separadores (Windows usa backslash, URL necesita slash)
+                // Normalizo Path
                 String pathNormalizado = fotoPath.replace("\\", "/");
 
                 // Asegurar que no empiece con slash si vamos a unirlo
@@ -167,7 +154,6 @@ public class UsuarioController {
                     pathNormalizado = pathNormalizado.substring(1);
                 }
 
-                // Obtener URL base actual (ej: http://localhost:8080)
                 String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
 
                 dto.setFotoPerfil(baseUrl + "/" + pathNormalizado);

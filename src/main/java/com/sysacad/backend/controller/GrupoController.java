@@ -32,14 +32,12 @@ import java.util.stream.Collectors;
 public class GrupoController {
 
     private final GrupoService grupoService;
-    private final UsuarioService usuarioService; // Para buscar ID por legajo si hiciera falta en utility
+    private final UsuarioService usuarioService;
 
     // Helper para obtener ID del usuario autenticado
     private UUID getAuthenticatedUserId() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String legajo = auth.getName();
-        // Asumiendo que tenemos un método rápido o el servicio lo cachea. 
-        // Idealmente el ID vendría en el Principal, pero por ahora buscamos por legajo.
          return usuarioService.obtenerPorLegajo(legajo)
                  .map(Usuario::getId)
                  .orElseThrow(() -> new RuntimeException("Usuario autenticado no encontrado"));
@@ -62,20 +60,17 @@ public class GrupoController {
     @GetMapping("/{id}")
     public ResponseEntity<GrupoResponse> obtenerGrupo(@PathVariable UUID id) {
         Grupo grupo = grupoService.obtenerPorId(id);
-        // TODO: Validar que el usuario sea miembro si es privado
         return ResponseEntity.ok(toDTO(grupo));
     }
 
     @PostMapping("/{id}/miembros")
     public ResponseEntity<Void> agregarMiembro(@PathVariable UUID id, @RequestBody MiembroGrupoRequest request) {
-        // TODO: Validar permisos (solo admin del grupo debería poder agregar)
         grupoService.agregarMiembro(id, request.getIdUsuario(), request.getRol());
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}/miembros/{idUsuario}")
     public ResponseEntity<Void> eliminarMiembro(@PathVariable UUID id, @PathVariable UUID idUsuario) {
-        // TODO: Validar permisos
         grupoService.eliminarMiembro(id, idUsuario);
         return ResponseEntity.noContent().build();
     }
@@ -89,7 +84,6 @@ public class GrupoController {
 
     @GetMapping("/{id}/mensajes")
     public ResponseEntity<Page<MensajeGrupoResponse>> obtenerMensajes(@PathVariable UUID id, Pageable pageable) {
-        // TODO: Validar que el usuario sea miembro
         Page<MensajeGrupo> mensajes = grupoService.obtenerMensajes(id, pageable);
         return ResponseEntity.ok(mensajes.map(this::toDTO));
     }
@@ -103,12 +97,12 @@ public class GrupoController {
 
     @GetMapping("/{id}/miembros")
     public ResponseEntity<List<MiembroGrupoResponse>> obtenerMiembros(@PathVariable UUID id) {
-        // TODO: Validar que el usuario sea miembro
         List<MiembroGrupo> miembros = grupoService.obtenerMiembros(id);
         return ResponseEntity.ok(miembros.stream().map(this::toDTO).collect(Collectors.toList()));
     }
 
-    // --- Mappers simples ---
+    // Mappers simples
+    // Averiguar si es posible incorporar los mappers con MapStruct como con las otras clases.
     private GrupoResponse toDTO(Grupo grupo) {
         return new GrupoResponse(
                 grupo.getId(),

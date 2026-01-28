@@ -31,12 +31,8 @@ public class FacultadController {
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<FacultadResponse> crearFacultad(@RequestBody FacultadRequest request) {
-        // DTO -> Entidad
         FacultadRegional facultad = facultadMapper.toEntity(request);
-
         FacultadRegional guardada = facultadService.crearFacultad(facultad);
-
-        // Entidad -> DTO
         return new ResponseEntity<>(facultadMapper.toDTO(guardada), HttpStatus.CREATED);
     }
 

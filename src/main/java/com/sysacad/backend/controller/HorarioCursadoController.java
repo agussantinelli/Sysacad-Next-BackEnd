@@ -50,9 +50,6 @@ public class HorarioCursadoController {
             Materia materia = materiaService.buscarPorId(request.getIdMateria())
                     .orElseThrow(() -> new RuntimeException("Materia no encontrada"));
             
-            // Usamos el mapper para la estructura base pero el ID compuesto requiere seteo manual 
-            // porque no estamos mapeando del todo bien IDs compuestos en el mapper básico
-            // Pero el mapper `toEntity` ya ignoraba ID y seteabamos manual.
             HorarioCursado horario = horarioMapper.toEntity(request);
             
             HorarioCursadoId id = new HorarioCursadoId(
@@ -61,12 +58,8 @@ public class HorarioCursadoController {
                     request.getDia(),
                     request.getHoraDesde());
             horario.setId(id);
-            // El mapper no setea comision y materia porque lo ignoramos (o no encuentra coincidencia simple)
-            // asi que mantenemos el seteo manual de relaciones
             horario.setComision(comision);
             horario.setMateria(materia);
-            // horaHasta deberia ser mapeada por el mapper si coinciden nombres (ambos son horaHasta?)
-            // En request es horaHasta, en entity es horaHasta. Si.
             if (horario.getHoraHasta() == null) horario.setHoraHasta(request.getHoraHasta());
 
             HorarioCursado nuevo = horarioService.registrarHorario(horario);

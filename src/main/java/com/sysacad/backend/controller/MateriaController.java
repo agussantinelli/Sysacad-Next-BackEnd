@@ -34,11 +34,6 @@ public class MateriaController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<MateriaResponse> crearMateria(@RequestBody MateriaRequest request) {
         Materia nuevaMateria = materiaMapper.toEntity(request);
-        // Modalidad no estaba en el Request original? o si?
-        // En el codigo viejo: if (request.getModalidad() != null) nuevaMateria.setModalidad...
-        // Si el mapper mapea modalidad, listo.
-        // Si nombre de campo coincide, MapStruct lo hace solo.
-        
         Materia materiaGuardada = materiaService.crearMateria(nuevaMateria);
         return new ResponseEntity<>(materiaMapper.toDTO(materiaGuardada), HttpStatus.CREATED);
     }

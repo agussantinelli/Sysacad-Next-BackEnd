@@ -31,17 +31,17 @@ public class AuthController {
 
         @PostMapping("/login")
         public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
-                // 1. Autenticar
+                // Autenticar
                 Usuario usuario = usuarioService.autenticar(request.getIdentificador(), request.getPassword());
 
-                // 2. Token
+                // Token
                 String jwtToken = jwtService.generateToken(usuario);
 
-                // 3. Response Base
+                // Respuesta Base
                 UsuarioResponse usuarioResponse = usuarioMapper.toDTO(usuario);
                 usuarioResponse.setTipoIdentificador(request.getTipoIdentificador());
 
-                // 4. Enriquecer si es estudiante
+                // Enriquecer si es estudiante
                 if (usuario.getRol() == RolUsuario.ESTUDIANTE) {
                         List<Matriculacion> estudios = matriculacionService.obtenerCarrerasPorAlumno(usuario.getId());
 

@@ -28,9 +28,9 @@ public class InscripcionExamenController {
     @PostMapping
     public ResponseEntity<InscripcionExamenResponse> inscribir(@RequestBody InscripcionExamenRequest request,
             Authentication authentication) {
-        // Security check: if user ID is missing, try to get from token
+
         if (request.getIdUsuario() == null && authentication != null) {
-            String email = authentication.getName(); // email from token
+            String email = authentication.getName();
             Usuario usuario = usuarioRepository.findByMail(email)
                     .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
             request.setIdUsuario(usuario.getId());

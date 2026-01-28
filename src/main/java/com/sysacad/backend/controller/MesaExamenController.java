@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/mesas")
-@CrossOrigin(origins = "*") // Adjust for production
+@CrossOrigin(origins = "*") 
 public class MesaExamenController {
 
     @Autowired

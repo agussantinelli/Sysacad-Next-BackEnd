@@ -36,7 +36,6 @@ public class SancionController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<SancionResponse> aplicarSancion(@RequestBody SancionRequest request) {
         Sancion sancion = sancionMapper.toEntity(request);
-        // mapper mapea motivo, fechaInicio, fechaFin si coinciden.
         
         Usuario usuario = usuarioService.obtenerPorId(request.getIdUsuario())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
