@@ -13,7 +13,6 @@ public class Salon {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    // Relación ManyToOne: Muchos salones pertenecen a una Facultad
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_facultad", nullable = false)
     private FacultadRegional facultad;

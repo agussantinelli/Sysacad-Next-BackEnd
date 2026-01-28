@@ -25,7 +25,7 @@ public class CalificacionCursada {
     private InscripcionCursado inscripcionCursado;
 
     @Column(nullable = false, length = 100)
-    private String descripcion; // e.g., "1er Parcial"
+    private String descripcion; // Por ej. "1er Parcial"
 
     @Column(nullable = false, precision = 4, scale = 2)
     private BigDecimal nota;

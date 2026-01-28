@@ -28,7 +28,6 @@ public class PlanMateria {
     })
     private PlanDeEstudio plan;
 
-    // Relación con Materia (FK Simple)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_materia", insertable = false, updatable = false)
     private Materia materia;

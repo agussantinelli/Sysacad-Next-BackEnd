@@ -35,7 +35,7 @@ public class Materia {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "modalidad", nullable = false, length = 20)
-    private ModalidadMateria modalidad = ModalidadMateria.PRESENCIAL; // Default en Java
+    private ModalidadMateria modalidad = ModalidadMateria.PRESENCIAL; // Por default es Presencial 
 
     @Enumerated(EnumType.STRING)
     @Column(name = "cuatrimestre_dictado", length = 20)
