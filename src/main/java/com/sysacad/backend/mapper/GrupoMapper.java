@@ -15,7 +15,6 @@ public interface GrupoMapper {
 
     GrupoMapper INSTANCE = Mappers.getMapper(GrupoMapper.class);
 
-    @Mapping(target = "miembros", ignore = true)
     GrupoResponse toDTO(Grupo grupo);
 
     List<GrupoResponse> toDTOs(List<Grupo> grupos);

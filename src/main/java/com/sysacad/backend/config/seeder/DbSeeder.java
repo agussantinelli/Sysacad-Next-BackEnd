@@ -407,7 +407,7 @@ public class DbSeeder {
                                         inscAlg.setFolio(getRandomFolio());
                                         inscripcionCursadoRepository.save(inscAlg);
 
-}                                        var inscAn1 = inscribirCursado(inscripcionCursadoRepository, alumnoSofia, c1k2,
+                                        var inscAn1 = inscribirCursado(inscripcionCursadoRepository, alumnoSofia, c1k2,
                                                         analisis1);
                                         inscAn1.setNotaFinal(new BigDecimal("8.00"));
                                         inscAn1.setEstado(EstadoCursada.REGULAR);

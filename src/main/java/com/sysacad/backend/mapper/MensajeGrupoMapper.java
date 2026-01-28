@@ -14,9 +14,8 @@ public interface MensajeGrupoMapper {
     MensajeGrupoMapper INSTANCE = Mappers.getMapper(MensajeGrupoMapper.class);
 
     @Mapping(source = "grupo.id", target = "idGrupo")
-    @Mapping(source = "usuario.id", target = "idRemitente")
-    @Mapping(source = "usuario.nombre", target = "nombreRemitente")
-    @Mapping(source = "usuario.apellido", target = "apellidoRemitente")
+    @Mapping(source = "usuario.id", target = "idUsuarioRemitente")
+    @Mapping(target = "nombreRemitente", expression = "java(mensaje.getUsuario().getNombre() + \" \" + mensaje.getUsuario().getApellido())")
     @Mapping(source = "fechaEnvio", target = "fechaEnvio")
     MensajeGrupoResponse toDTO(MensajeGrupo mensaje);
 

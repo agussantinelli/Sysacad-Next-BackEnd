@@ -51,7 +51,7 @@ public class PlanDeEstudioService {
     @Transactional
     public void agregarMateriaAPlan(PlanMateria planMateria) {
         // Validación: Verificar que el plan de estudios exista
-}        PlanDeEstudio.PlanId planId = new PlanDeEstudio.PlanId(
+        PlanDeEstudio.PlanId planId = new PlanDeEstudio.PlanId(
                 planMateria.getId().getIdCarrera(),
                 planMateria.getId().getNroPlan());
 
