@@ -23,8 +23,7 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST, request);
     }
 
-    // Fallback for generic RuntimeExceptions usually thrown in services before refactor is complete
-    @ExceptionHandler(RuntimeException.class)
++    @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Object> handleRuntimeException(RuntimeException ex, WebRequest request) {
         return buildErrorResponse(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
@@ -34,6 +33,7 @@ public class GlobalExceptionHandler {
         return buildErrorResponse("Ocurrió un error inesperado", HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
 
+    // Armado del Cuerpo de la Excepcion y Envio Error al Front
     private ResponseEntity<Object> buildErrorResponse(String message, HttpStatus status, WebRequest request) {
         Map<String, Object> body = new HashMap<>();
         body.put("timestamp", LocalDateTime.now());
