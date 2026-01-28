@@ -33,6 +33,8 @@ public class GrupoController {
 
     private final GrupoService grupoService;
     private final UsuarioService usuarioService;
+    private final com.sysacad.backend.mapper.GrupoMapper grupoMapper;
+    private final com.sysacad.backend.mapper.MensajeGrupoMapper mensajeGrupoMapper;
 
     // Helper para obtener ID del usuario autenticado
     private UUID getAuthenticatedUserId() {
@@ -47,20 +49,20 @@ public class GrupoController {
     public ResponseEntity<GrupoResponse> crearGrupo(@RequestBody GrupoRequest request) {
         UUID idUsuario = getAuthenticatedUserId();
         Grupo grupo = grupoService.crearGrupo(request, idUsuario);
-        return new ResponseEntity<>(toDTO(grupo), HttpStatus.CREATED);
+        return new ResponseEntity<>(grupoMapper.toDTO(grupo), HttpStatus.CREATED);
     }
 
     @GetMapping("/mis-grupos")
     public ResponseEntity<List<GrupoResponse>> listarMisGrupos() {
         UUID idUsuario = getAuthenticatedUserId();
         List<Grupo> grupos = grupoService.obtenerMisGrupos(idUsuario);
-        return ResponseEntity.ok(grupos.stream().map(this::toDTO).collect(Collectors.toList()));
+        return ResponseEntity.ok(grupoMapper.toDTOs(grupos));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<GrupoResponse> obtenerGrupo(@PathVariable UUID id) {
         Grupo grupo = grupoService.obtenerPorId(id);
-        return ResponseEntity.ok(toDTO(grupo));
+        return ResponseEntity.ok(grupoMapper.toDTO(grupo));
     }
 
     @PostMapping("/{id}/miembros")
@@ -78,14 +80,14 @@ public class GrupoController {
     @PostMapping("/{id}/mensajes")
     public ResponseEntity<MensajeGrupoResponse> enviarMensaje(@PathVariable UUID id, @RequestBody MensajeGrupoRequest request) {
         UUID idRemitente = getAuthenticatedUserId();
-        MensajeGrupo mensaje = grupoService.enviarMensaje(id, request, idRemitente);
-        return ResponseEntity.ok(toDTO(mensaje));
+        MensajeGrupoResponse mensaje = grupoService.enviarMensaje(id, request, idRemitente);
+        return ResponseEntity.ok(mensaje);
     }
 
     @GetMapping("/{id}/mensajes")
     public ResponseEntity<Page<MensajeGrupoResponse>> obtenerMensajes(@PathVariable UUID id, Pageable pageable) {
-        Page<MensajeGrupo> mensajes = grupoService.obtenerMensajes(id, pageable);
-        return ResponseEntity.ok(mensajes.map(this::toDTO));
+        Page<MensajeGrupoResponse> mensajes = grupoService.obtenerMensajes(id, pageable);
+        return ResponseEntity.ok(mensajes);
     }
 
     @PostMapping("/{id}/marcar-leido")
@@ -97,44 +99,7 @@ public class GrupoController {
 
     @GetMapping("/{id}/miembros")
     public ResponseEntity<List<MiembroGrupoResponse>> obtenerMiembros(@PathVariable UUID id) {
-        List<MiembroGrupo> miembros = grupoService.obtenerMiembros(id);
-        return ResponseEntity.ok(miembros.stream().map(this::toDTO).collect(Collectors.toList()));
-    }
-
-    // Mappers simples
-    // Averiguar si es posible incorporar los mappers con MapStruct como con las otras clases.
-    private GrupoResponse toDTO(Grupo grupo) {
-        return new GrupoResponse(
-                grupo.getId(),
-                grupo.getNombre(),
-                grupo.getDescripcion(),
-                grupo.getTipo(),
-                grupo.getEstado().name(),
-                grupo.getFechaCreacion()
-        );
-    }
-
-    private MensajeGrupoResponse toDTO(MensajeGrupo mensaje) {
-        return new MensajeGrupoResponse(
-                mensaje.getId(),
-                mensaje.getGrupo().getId(),
-                mensaje.getUsuario().getId(),
-                mensaje.getUsuario().getNombre() + " " + mensaje.getUsuario().getApellido(),
-                mensaje.getContenido(),
-                mensaje.getEditado(),
-                mensaje.getFechaEnvio()
-        );
-    }
-
-    private MiembroGrupoResponse toDTO(MiembroGrupo miembro) {
-        Usuario u = miembro.getUsuario();
-        return new MiembroGrupoResponse(
-                u.getId(),
-                u.getNombre(),
-                u.getApellido(),
-                miembro.getRol(),
-                miembro.getFechaUnion(),
-                miembro.getUltimoAcceso()
-        );
+        List<MiembroGrupoResponse> miembros = grupoService.obtenerMiembros(id);
+        return ResponseEntity.ok(miembros);
     }
 }
