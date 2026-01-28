@@ -25,6 +25,6 @@ Este documento detalla las reglas de negocio y consideraciones técnicas derivad
 
 ## Consideraciones de Diseño
 
-- **Ingeniería Inversa**: El modelo de datos y la lógica han sido deducidos analizando el comportamiento del sistema original ("Sysacad").
+- **Ingeniería Inversa**: El modelo de datos y la lógica han sido deducidos analizando el comportamiento del sistema original ("Sysacad") de la **FRRO (Facultad Regional Rosario) de la UTN**.
 - **Identificadores**: Se migra hacia el uso de IDs únicos (UUID) para entidades principales como Carrera, desacoplándolas de claves compuestas rígidas dependientes de la Facultad.
 - **Equivalencias Automáticas**: Se introduce la entidad `Equivalencia` para gestionar la homologación automática de materias entre planes. Al matricularse un alumno en un nuevo plan, el sistema detecta materias aprobadas en planes anteriores y genera créditos equivalentes sin nota numérica.
