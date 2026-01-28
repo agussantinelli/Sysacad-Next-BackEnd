@@ -288,6 +288,11 @@ El sistema cuenta con un `DbSeeder` (`src/main/java/com/sysacad/backend/config/s
 | **ESTUDIANTE** | `60002` | Carlos Tevez | `carlos@sysacad.com` | `123456` |
 | **ESTUDIANTE** | `60003` | Martin Palermo | `martin@sysacad.com` | `123456` |
 | **ESTUDIANTE** | `60004` | Flavia Avara | `flavia@sysacad.com` | `123456` |
+| **ESTUDIANTE** | `60010` | Pedro Pascal | `pedro@sysacad.com` | `123456` |
+| **ESTUDIANTE** | `60011` | Lionel Messi | `lio@sysacad.com` | `123456` |
+| **ESTUDIANTE** | `60012` | Alex Morgan | `alex@sysacad.com` | `123456` |
+| **ESTUDIANTE** | `60013` | Diego Maradona | `diego@sysacad.com` | `123456` |
+| **ESTUDIANTE** | `60014` | Enzo Fernandez | `enzo@sysacad.com` | `123456` |
 
 ---
 
