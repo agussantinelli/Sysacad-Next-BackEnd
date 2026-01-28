@@ -38,7 +38,7 @@ public class MateriaService {
 
     @Transactional
     public Materia crearMateria(Materia materia) {
-        // Validación extra: Verificar si ya existe materia con mismo nombre exacto
+
         if (materiaRepository.findByNombre(materia.getNombre()).isPresent()) {
             throw new BusinessLogicException("Ya existe una materia con ese nombre.");
         }

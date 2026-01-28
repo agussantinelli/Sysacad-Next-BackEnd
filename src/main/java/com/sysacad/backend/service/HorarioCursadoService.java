@@ -26,12 +26,12 @@ public class HorarioCursadoService {
     public HorarioCursado registrarHorario(HorarioCursado horario) {
         HorarioCursadoId id = horario.getId();
 
-        // 1. Validación de coherencia temporal
+        // Validación de coherencia temporal
         if (!horario.getHoraHasta().isAfter(id.getHoraDesde())) {
             throw new RuntimeException("La hora de finalización debe ser posterior a la hora de inicio");
         }
 
-        // 2. Validación de solapamiento (Regla de Negocio Crítica)
+        // Validación de solapamiento (Regla de Negocio)
         List<HorarioCursado> solapamientos = horarioCursadoRepository.encontrarSolapamientos(
                 id.getIdComision(),
                 id.getDia(),
@@ -40,7 +40,6 @@ public class HorarioCursadoService {
         );
 
         if (!solapamientos.isEmpty()) {
-            // Podrías devolver detalles del conflicto si quisieras mejorar el error
             throw new RuntimeException("Conflicto de horarios: El horario ingresado se superpone con otro existente en esta comisión.");
         }
 

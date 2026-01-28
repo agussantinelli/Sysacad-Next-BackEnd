@@ -22,19 +22,18 @@ public class FileStorageService {
         }
 
         try {
-            // 1. Asegurar que el directorio existe
+            // Asegurar que el directorio existe
             Path directorioPath = Paths.get(DIRECTORIO_PERFILES);
             if (!Files.exists(directorioPath)) {
                 Files.createDirectories(directorioPath);
             }
 
-            // 2. Limpieza: Borrar foto anterior si existe para no llenar el disco
+            // Limpieza: Borrar foto anterior si existe para no llenar el disco
             borrarArchivo(rutaFotoAnterior);
 
-            // 3. Generar NOMBRE ÚNICO: {Identificador}-{Hash}.ext
-            // Esto evita problemas de caché en navegadores
+            // Generar NOMBRE ÚNICO: {Identificador}-{Hash}.ext
             String nombreOriginal = archivo.getOriginalFilename();
-            String extension = ".jpg"; // Default
+            String extension = ".jpg";
             if (nombreOriginal != null && nombreOriginal.lastIndexOf(".") > 0) {
                 extension = nombreOriginal.substring(nombreOriginal.lastIndexOf("."));
             }
@@ -43,7 +42,7 @@ public class FileStorageService {
             String nombreArchivo = identificador + "-" + hash + extension;
             Path rutaDestino = directorioPath.resolve(nombreArchivo);
 
-            // 4. Guardar archivo (Reemplaza si existe casualmente el mismo nombre)
+            // Guardar archivo (Reemplaza si existe casualmente el mismo nombre)
             Files.copy(archivo.getInputStream(), rutaDestino, StandardCopyOption.REPLACE_EXISTING);
 
             return rutaDestino.toString();

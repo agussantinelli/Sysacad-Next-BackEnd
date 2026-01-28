@@ -41,14 +41,14 @@ public class CorrelatividadService {
         // Obtener IDs de materias aprobadas (Promocionadas o Examen Final Aprobado)
         List<UUID> idsAprobadas = new java.util.ArrayList<>();
 
-        // 1. Promocionadas
+        // Promocionadas
         idsAprobadas.addAll(inscripcionCursadoRepository.findByUsuarioId(idAlumno).stream()
                 .filter(i -> i.getEstado() == com.sysacad.backend.modelo.enums.EstadoCursada.PROMOCIONADO ||
                         i.getEstado() == com.sysacad.backend.modelo.enums.EstadoCursada.APROBADO)
                 .map(i -> i.getMateria().getId())
                 .collect(Collectors.toList()));
 
-        // 2. Finales Aprobados
+        // Finales Aprobados
         idsAprobadas.addAll(inscripcionExamenRepository.findByUsuarioId(idAlumno).stream()
                 .filter(i -> i.getEstado() == com.sysacad.backend.modelo.enums.EstadoExamen.APROBADO)
                 .map(i -> i.getDetalleMesaExamen().getMateria().getId())

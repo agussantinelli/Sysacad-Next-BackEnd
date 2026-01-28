@@ -39,30 +39,17 @@ public class EquivalenciaService {
         UUID idCarreraDestino = nuevaMatricula.getPlan().getCarrera().getId();
         Integer nroPlanDestino = nuevaMatricula.getPlan().getId().getNroPlan();
 
-        // 1. Obtener todas las materias APROBADAS por el alumno en CUALQUIER plan
-        // (Exámenes finales aprobados)
+        // Obtener todas las materias APROBADAS por el alumno en CUALQUIER plan
+        // AGREGAR LA LOGICA DE PROMOCIONES EN CURSADA -> FUNDAMENTAL
         List<InscripcionExamen> finalesAprobados = inscripcionExamenRepository.findByUsuarioId(alumno.getId());
-        
-        // (También podríamos buscar promociones en Cursadas, pero asumimos que promoción genera acta de examen)
-        // Por simplicidad, buscamos en inscripcionExamenRepository con estado APROBADO o PROMOCIONADO(si existe).
-        
-        // 2. Buscar reglas de equivalencia para este Plan de Destino
+                
+        // Buscar reglas de equivalencia para este Plan de Destino
         List<Equivalencia> reglasDestino = equivalenciaRepository.findByIdCarreraDestinoAndNroPlanDestino(
                 idCarreraDestino, nroPlanDestino);
 
         for (InscripcionExamen examen : finalesAprobados) {
             if (examen.getEstado() != EstadoExamen.APROBADO) continue;
 
-            // Datos de la materia aprobada origen
-            // Necesitamos saber el Plan de Origen. InscripcionExamen no tiene Plan directo, 
-            // pero la materia pertenece a un plan en el contexto de la carrera del alumno.
-            // PERO una materia puede estar en múltiples planes.
-            // Asumimos que la equivalencia se define por ID MATERIA ORIGEN -> ID MATERIA DESTINO
-            // y filtramos por si la regla aplica. 
-            // La entidad Equivalencia tiene plan origen. Debemos verificar si el alumno rindió esa materia
-            // bajo ese plan. Esto es complejo si InscripcionExamen no guarda el plan.
-            // Simplificación: Si el alumno aprobó la materia X, y existe regla X -> Y para el plan destino, aplicamos.
-            
             UUID idMateriaAprobada;
             // Verificar si es un examen regular (con detalle) o una equivalencia previa (con materia directa)
             if (examen.getDetalleMesaExamen() != null) {
@@ -70,14 +57,14 @@ public class EquivalenciaService {
             } else if (examen.getMateria() != null) {
                 idMateriaAprobada = examen.getMateria().getId();
             } else {
-                continue; // Integridad corrupta
+                continue;
             }
 
             for (Equivalencia regla : reglasDestino) {
                 if (regla.getIdMateriaOrigen().equals(idMateriaAprobada)) {
                     // Match encontrado: Materia Aprobada == Materia Origen de la Regla
                     
-                    // 3. Verificar si ya tiene la materia destino aprobada
+                    // Verificar si ya tiene la materia destino aprobada
                     boolean yaAprobada = tieneMateriaAprobada(alumno.getId(), regla.getIdMateriaDestino());
                     
                     if (!yaAprobada) {
@@ -113,7 +100,7 @@ public class EquivalenciaService {
             .orElseThrow(() -> new RuntimeException("Materia destino de equivalencia no encontrada"));
             
         equiv.setMateria(materiaDestino);
-        equiv.setDetalleMesaExamen(null); // Explícito
+        equiv.setDetalleMesaExamen(null); 
 
         inscripcionExamenRepository.save(equiv);
     }

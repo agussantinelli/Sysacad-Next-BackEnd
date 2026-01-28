@@ -43,8 +43,8 @@ public class ComisionService {
 
     @Transactional
     public Comision asignarProfesor(UUID idComision, Usuario profesor) {
-        // 1. Validar que el usuario a asignar sea PROFESOR
-        // (Nota: Si viene solo el ID, habría que buscarlo primero en la BD)
+        // Validar que el usuario a asignar sea PROFESOR
+
         if (profesor.getRol() != RolUsuario.PROFESOR) {
             throw new BusinessLogicException("El usuario a asignar debe tener rol de PROFESOR");
         }
@@ -52,7 +52,7 @@ public class ComisionService {
         Comision comision = comisionRepository.findById(idComision)
                 .orElseThrow(() -> new ResourceNotFoundException("Comisión no encontrada con ID: " + idComision));
 
-        // 2. VALIDACIÓN DE SEGURIDAD (Jefe de Cátedra)
+        // VALIDACIÓN DE SEGURIDAD (Jefe de Cátedra)
         validarPermisoAsignacion(comision);
 
         comision.getProfesores().add(profesor);
@@ -69,7 +69,6 @@ public class ComisionService {
         return comisionRepository.findById(id);
     }
 
-    // --- SEGURIDAD: Validar si es Admin o Jefe de Cátedra vinculado ---
     private void validarPermisoAsignacion(Comision comision) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 

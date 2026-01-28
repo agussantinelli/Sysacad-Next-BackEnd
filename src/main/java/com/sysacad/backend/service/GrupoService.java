@@ -101,7 +101,7 @@ public class GrupoService {
             .orElseThrow(() -> new ResourceNotFoundException("Grupo no encontrado con ID: " + id));
     }
 
-    // --- Mensajes ---
+    // Lógica Mensajes
 
     @Transactional
     public MensajeGrupo enviarMensaje(UUID idGrupo, MensajeGrupoRequest request, UUID idRemitente) {

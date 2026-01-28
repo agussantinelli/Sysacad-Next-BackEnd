@@ -52,13 +52,7 @@ public class MesaExamenService {
         return mesaExamenRepository.findAll().stream()
                 .map(mesa -> {
                     MesaExamenResponse dto = mesaExamenMapper.toDTO(mesa);
-                    // Cargar detalles manualmente si el mapper no lo hace por FetchType.LAZY o si MesaExamenMapper ignoraba detalles
-                    // En mi definicion de mapper, MesaExamenMapper usa DetalleMesaExamenMapper pero la relación en Entity debe estar bien.
-                    // Si MesaExamen tiene lista de DetalleMesaExamen, y el mapper lo mapea, genial.
-                    // Pero `mapToResponse` anterior hacia una consulta extra: detalleMesaExamenRepository.findByMesaExamenId(mesa.getId())
-                    // Si la entidad MesaExamen no tiene la lista mapeada (OneToMany), entonces el mapper no puede hacerlo solo magicamente.
-                    // Revisando MesaExamen.java en memoria: no recuerdo si tiene @OneToMany mappedBy.
-                    // Si no tiene, debo setear los detalles aqui.
+
                     List<DetalleMesaExamen> detalles = detalleMesaExamenRepository.findByMesaExamenId(mesa.getId());
                     dto.setDetalles(detalleMesaExamenMapper.toDTOs(detalles));
                     return dto;

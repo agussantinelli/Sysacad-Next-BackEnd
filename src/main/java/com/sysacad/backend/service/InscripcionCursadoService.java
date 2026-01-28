@@ -42,31 +42,31 @@ public class InscripcionCursadoService {
 
     public InscripcionCursadoResponse inscribir(InscripcionCursadoRequest request) {
 
-        // 1. Validar Usuario
+        // Validar Usuario
         Usuario alumno = usuarioRepository.findById(request.getIdUsuario())
                 .orElseThrow(() -> new ResourceNotFoundException("Alumno no encontrado con ID: " + request.getIdUsuario()));
 
-        // 2. Validar Materia
+        // Validar Materia
         Materia materia = materiaRepository.findById(request.getIdMateria())
                 .orElseThrow(() -> new ResourceNotFoundException("Materia no encontrada con ID: " + request.getIdMateria()));
 
-        // 3. Validar Comision
+        // Validar Comision
         Comision comision = comisionRepository.findById(request.getIdComision())
                 .orElseThrow(() -> new ResourceNotFoundException("Comisión no encontrada con ID: " + request.getIdComision()));
 
-        // 4. Validar que la Comisión dicte esa materia
+        // Validar que la Comisión dicte esa materia
         boolean dictaMateria = comision.getMaterias().stream()
                 .anyMatch(m -> m.getId().equals(materia.getId()));
         if (!dictaMateria) {
             throw new BusinessLogicException("La comisión seleccionada no dicta la materia indicada.");
         }
 
-        // 5. Validar si ya está inscripto
+        // Validar si ya está inscripto
         if (inscripcionCursadoRepository.findByUsuarioIdAndMateriaId(alumno.getId(), materia.getId()).isPresent()) {
             throw new BusinessLogicException("El alumno ya está inscripto a cursar esta materia.");
         }
 
-        // 6. Crear Inscripción
+        // Finalmente Crea la Inscripción
         InscripcionCursado insc = new InscripcionCursado();
         insc.setUsuario(alumno);
         insc.setMateria(materia);
@@ -92,18 +92,9 @@ public class InscripcionCursadoService {
         calif.setNota(request.getNota());
         calif.setFecha(LocalDate.now());
 
+        // Agregar Mapper Calificacion
         calif = calificacionCursadaRepository.save(calif);
-        // Nota: Si queremos mapear CalificacionCursadaResponse, deberíamos agregar un método al mapper o crear CalificacionCursadaMapper.
-        // Por consistencia, por ahora lo dejamos "semi-manual" o definimos un mapper rápido.
-        // Pero el usuario pidió refactorizar. Usaré un método auxiliar simple o un mapper interno si es necesario, 
-        // pero idealmente InscripcionCursadoMapper maneja la respuesta principal.
-        
-        // Como eliminamos el metodo manual mapToCalificacionResponse, necesitamos una forma de devolver CalificacionCursadaResponse.
-        // Lo correcto: Agregar un CalificacionCursadaMapper o agregarlo a InscripcionCursadoMapper.
-        // Voy a asumir que puedo agregarlo a InscripcionCursadoMapper en el siguiente paso o usar un builder aqui para no romper.
-        // Sin embargo, para ser limpio, crearé un CalificacionCursadaMapper pronto.
-        // Por ahora, lo haré manual aquí para no bloquear y en el siguiente paso lo paso al mapper si es posible.
-        
+
         CalificacionCursadaResponse dto = new CalificacionCursadaResponse();
         dto.setId(calif.getId());
         dto.setDescripcion(calif.getDescripcion());

@@ -72,8 +72,6 @@ public class UsuarioService {
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con ID: " + id));
 
-        // validarPermisoModificacion(usuario.getLegajo()); // Seguridad desactivada a pedido
-
         usuario.setNombre(request.getNombre());
         usuario.setApellido(request.getApellido());
         usuario.setDni(request.getDni());
@@ -148,8 +146,7 @@ public class UsuarioService {
 
     @Transactional
     public void eliminarUsuario(UUID id) {
-        // Antes de eliminar el usuario, limpiamos su foto del disco para no dejar
-        // basura
+        // Antes de eliminar el usuario, limpiamos su foto del disco para no dejar basura
         usuarioRepository.findById(id).ifPresent(u -> fileStorageService.borrarArchivo(u.getFotoPerfil()));
         usuarioRepository.deleteById(id);
     }

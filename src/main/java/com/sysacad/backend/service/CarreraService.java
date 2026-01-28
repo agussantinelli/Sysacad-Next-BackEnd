@@ -21,11 +21,6 @@ public class CarreraService {
 
     @Transactional
     public Carrera registrarCarrera(Carrera carrera) {
-        // Validación: Evitar duplicados lógicos (por Alias o Nombre)
-        // Ejemplo: Si ya existe una carrera con el mismo Alias
-//        if (carreraRepository.existsByAlias(carrera.getAlias())) { 
-//            throw new RuntimeException("Ya existe una carrera con ese alias.");
-//        }
         return carreraRepository.save(carrera);
     }
 

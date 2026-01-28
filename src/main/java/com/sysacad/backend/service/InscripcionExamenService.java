@@ -75,8 +75,6 @@ public class InscripcionExamenService {
         InscripcionExamen insc = inscripcionExamenRepository.findById(idInscripcion)
                 .orElseThrow(() -> new ResourceNotFoundException("Inscripción no encontrada con ID: " + idInscripcion));
 
-        // Aquí se podrían agregar validaciones de fecha (e.g. 48hs antes)
-
         inscripcionExamenRepository.delete(insc);
     }
 
