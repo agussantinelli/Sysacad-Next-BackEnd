@@ -80,14 +80,14 @@ public class GrupoController {
     @PostMapping("/{id}/mensajes")
     public ResponseEntity<MensajeGrupoResponse> enviarMensaje(@PathVariable UUID id, @RequestBody MensajeGrupoRequest request) {
         UUID idRemitente = getAuthenticatedUserId();
-        MensajeGrupoResponse mensaje = grupoService.enviarMensaje(id, request, idRemitente);
-        return ResponseEntity.ok(mensaje);
+        MensajeGrupo mensaje = grupoService.enviarMensaje(id, request, idRemitente);
+        return ResponseEntity.ok(mensajeGrupoMapper.toDTO(mensaje));
     }
 
     @GetMapping("/{id}/mensajes")
     public ResponseEntity<Page<MensajeGrupoResponse>> obtenerMensajes(@PathVariable UUID id, Pageable pageable) {
-        Page<MensajeGrupoResponse> mensajes = grupoService.obtenerMensajes(id, pageable);
-        return ResponseEntity.ok(mensajes);
+        Page<MensajeGrupo> mensajes = grupoService.obtenerMensajes(id, pageable);
+        return ResponseEntity.ok(mensajes.map(mensajeGrupoMapper::toDTO));
     }
 
     @PostMapping("/{id}/marcar-leido")
@@ -99,7 +99,9 @@ public class GrupoController {
 
     @GetMapping("/{id}/miembros")
     public ResponseEntity<List<MiembroGrupoResponse>> obtenerMiembros(@PathVariable UUID id) {
-        List<MiembroGrupoResponse> miembros = grupoService.obtenerMiembros(id);
-        return ResponseEntity.ok(miembros);
+        List<MiembroGrupo> miembros = grupoService.obtenerMiembros(id);
+        return ResponseEntity.ok(miembros.stream()
+                .map(grupoMapper::toMiembroDTO)
+                .collect(Collectors.toList()));
     }
 }
