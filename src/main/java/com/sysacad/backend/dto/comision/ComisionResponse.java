@@ -16,7 +16,6 @@ public class ComisionResponse {
     private String turno;
     private Integer anio;
 
-    // Información aplanada del salón
     private String nombreSalon;
     private String ubicacionSalon; // Ej: "Aula 302 - Facultad Rosario"
 

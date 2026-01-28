@@ -17,7 +17,7 @@ public class MateriaRequest {
     private String descripcion;
     private TipoMateria tipoMateria;
     private DuracionMateria duracion;
-    private ModalidadMateria modalidad; // Opcional en el JSON (si es null, el controller o la entidad usan default)
+    private ModalidadMateria modalidad;
     private CuatrimestreDictado cuatrimestreDictado;
     private Short horasCursado;
     private Boolean rendirLibre;

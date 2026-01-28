@@ -5,7 +5,7 @@ import java.util.UUID;
 
 @Data
 public class InscripcionCursadoRequest {
-    private UUID idUsuario; // Optional if token is used
+    private UUID idUsuario; 
     private UUID idMateria;
     private UUID idComision;
 }

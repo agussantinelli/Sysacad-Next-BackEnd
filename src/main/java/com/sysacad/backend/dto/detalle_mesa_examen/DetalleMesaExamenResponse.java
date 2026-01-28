@@ -10,7 +10,7 @@ public class DetalleMesaExamenResponse {
     private UUID idMesaExamen;
     private Integer nroDetalle;
     private String nombreMateria;
-    private UUID idMateria; // added for convenience
+    private UUID idMateria; 
     private String nombrePresidente;
     private UUID idPresidente;
     private LocalDate diaExamen;
