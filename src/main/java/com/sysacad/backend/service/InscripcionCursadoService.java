@@ -40,6 +40,9 @@ public class InscripcionCursadoService {
     @Autowired
     private com.sysacad.backend.mapper.InscripcionCursadoMapper inscripcionCursadoMapper;
 
+    @Autowired
+    private com.sysacad.backend.mapper.CalificacionCursadaMapper calificacionCursadaMapper;
+
     public InscripcionCursadoResponse inscribir(InscripcionCursadoRequest request) {
 
         // Validar Usuario
@@ -92,15 +95,10 @@ public class InscripcionCursadoService {
         calif.setNota(request.getNota());
         calif.setFecha(LocalDate.now());
 
-        // Agregar Mapper Calificacion
         calif = calificacionCursadaRepository.save(calif);
 
-        CalificacionCursadaResponse dto = new CalificacionCursadaResponse();
-        dto.setId(calif.getId());
-        dto.setDescripcion(calif.getDescripcion());
-        dto.setNota(calif.getNota());
-        dto.setFecha(calif.getFecha());
-        return dto;
+        return calificacionCursadaMapper.toDTO(calif);
+
     }
 
     public List<InscripcionCursadoResponse> obtenerCursadasActuales(UUID idUsuario) {
