@@ -39,7 +39,6 @@ Used in `InscripcionCursado`.
 - `REGULAR`
 - `PROMOCIONADO`
 - `LIBRE`
-- `APROBADO`
 
 ### `EstadoExamen`
 Used in `InscripcionExamen`.
