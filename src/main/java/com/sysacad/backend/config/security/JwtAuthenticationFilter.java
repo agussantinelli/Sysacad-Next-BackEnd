@@ -34,21 +34,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String jwt;
         final String userLegajo;
 
-        // 1. Validar que la cabecera exista y tenga el formato correcto
-        // FIX: Agregamos validación de longitud para evitar "Bearer " vacío
         if (authHeader == null || !authHeader.startsWith("Bearer ") || authHeader.length() <= 7) {
             filterChain.doFilter(request, response);
             return;
         }
 
         try {
-            // 2. Extraer token
+            // Extraer token
             jwt = authHeader.substring(7);
 
-            // 3. Extraer usuario (Lanzará excepción si el token está mal formado, la capturamos abajo)
+            // Extraer usuario (Lanzará excepción si el token está mal formado, la capturamos abajo)
             userLegajo = jwtService.extractUsername(jwt);
 
-            // 4. Validar seguridad
+            // Validar seguridad
             if (userLegajo != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = this.userDetailsService.loadUserByUsername(userLegajo);
 
@@ -63,9 +61,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 }
             }
         } catch (Exception e) {
-            // Logueamos el error pero NO detenemos la cadena violentamente.
-            // Si el token es inválido, simplemente el usuario seguirá como "no autenticado" (null)
-            // y Spring Security devolverá 403 Forbidden más adelante.
             System.out.println("Error procesando JWT: " + e.getMessage());
         }
 
