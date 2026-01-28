@@ -60,7 +60,7 @@ public class MatriculacionService {
                 .filter(ic -> ic.getMateria().getId().equals(idMateria))
                 .sorted(Comparator.comparing(com.sysacad.backend.modelo.InscripcionCursado::getFechaInscripcion).reversed())
                 .map(ic -> new com.sysacad.backend.dto.historial.DetalleCursadaDTO(
-                        ic.getFechaInscripcion().toLocalDate(), // Asumiendo que es LocalDateTime o LocalDate, ajustar si es necesario
+                        ic.getFechaInscripcion().toLocalDate(),
                         ic.getComision() != null ? ic.getComision().getNombre() + " (" + ic.getComision().getAnio() + "°)" : "-",
                         ic.getEstado().toString(),
                         ic.getNotaFinal() != null ? ic.getNotaFinal().toString() : "-",
@@ -76,7 +76,7 @@ public class MatriculacionService {
                 .sorted(Comparator.comparing(com.sysacad.backend.modelo.InscripcionExamen::getFechaInscripcion).reversed())
                 .map(ie -> {
                     String turno = ie.getDetalleMesaExamen().getMesaExamen().getNombre();
-                    // O fecha del examen específico
+
                     LocalDate fechaExamen = ie.getDetalleMesaExamen().getDiaExamen();
                     
                     return new com.sysacad.backend.dto.historial.DetalleFinalDTO(
@@ -114,7 +114,6 @@ public class MatriculacionService {
         try {
             equivalenciaService.procesarEquivalencias(alumno, guardada);
         } catch (Exception e) {
-            // Log y continuar, no bloquear matriculación si falla esto
             System.err.println("Error procesando equivalencias para el alumno " + alumno.getId() + ": " + e.getMessage());
         }
 
@@ -128,27 +127,27 @@ public class MatriculacionService {
 
     @Transactional(readOnly = true)
     public List<CarreraMateriasDTO> obtenerMateriasPorCarreraDelAlumno(String legajo) {
-        // 1. Obtener usuario real
+        // Obtener usuario real
         Usuario alumno = usuarioRepository.findByLegajo(legajo)
                 .orElseThrow(() -> new ResourceNotFoundException("Alumno no encontrado con legajo: " + legajo));
 
-        // 2. Obtener inscripciones (Matriculacion - Matriculación en carreras)
+        // Obtener inscripciones (Matriculacion - Matriculación en carreras)
         List<Matriculacion> matriculaciones = matriculacionRepository.findByIdIdUsuario(alumno.getId());
         List<CarreraMateriasDTO> resultado = new ArrayList<>();
 
-        // 3. Pre-cargar el historial académico completo (NUEVO SISTEMA)
+        // Pre-cargar el historial académico completo (NUEVO SISTEMA)
         var cursadas = inscripcionCursadoRepository.findByUsuarioId(alumno.getId());
         var examenes = inscripcionExamenRepository.findByUsuarioId(alumno.getId());
 
-        // 3.1 Construir mapa de ESTADO por Materia ID
+        // Construir mapa de ESTADO por Materia ID
         Map<UUID, EstadoMateria> mapaEstadoMaterias = construirMapaEstadoMaterias(cursadas, examenes);
 
-        // 4. Iterar sobre cada carrera
+        // Iterar sobre cada carrera
         for (Matriculacion matricula : matriculaciones) {
             PlanDeEstudio plan = matricula.getPlan();
 
             if (plan != null) {
-                // Integer nroCarrera = plan.getCarrera().getId().getNroCarrera(); // Removed
+
                 java.util.UUID idCarrera = plan.getCarrera().getId();
                 String nombreCarrera = plan.getCarrera().getNombre();
                 
@@ -204,7 +203,7 @@ public class MatriculacionService {
         return resultado;
     }
 
-    // --- Helpers de Lógica de Negocio ---
+    // Helpers de Lógica de Negocio 
 
     private Map<UUID, EstadoMateria> construirMapaEstadoMaterias(
             List<com.sysacad.backend.modelo.InscripcionCursado> cursadas,
@@ -212,25 +211,21 @@ public class MatriculacionService {
 
         Map<UUID, EstadoMateria> mapa = new HashMap<>();
 
-        // 1. Procesar Cursadas
+        // Procesar Cursadas
         for (com.sysacad.backend.modelo.InscripcionCursado cur : cursadas) {
             String estadoStr = cur.getEstado().toString();
             // CURSANDO, REGULAR, PROMOCIONADO, LIBRE, APROBADO
             String notaStr = cur.getNotaFinal() != null ? cur.getNotaFinal().toString() : "-";
 
-            // Normalizar estado 'PROMOCIONADO' -> 'APROBADA' visualmente, o mantener
-            // logica?
-            // El DTO espera: "PENDIENTE", "CURSANDO", "REGULAR", "APROBADA", "LIBRE"
             String estadoFinal = estadoStr;
-            if (cur.getEstado() == com.sysacad.backend.modelo.enums.EstadoCursada.PROMOCIONADO ||
-                    cur.getEstado() == com.sysacad.backend.modelo.enums.EstadoCursada.APROBADO) {
+            if (cur.getEstado() == com.sysacad.backend.modelo.enums.EstadoCursada.PROMOCIONADO) {
                 estadoFinal = "APROBADA";
             }
 
             mapa.put(cur.getMateria().getId(), new EstadoMateria(estadoFinal, notaStr));
         }
 
-        // 2. Procesar Exámenes (Sobreescribe si aprobó final)
+        // Procesar Exámenes (Sobreescribe si aprobó final)
         for (com.sysacad.backend.modelo.InscripcionExamen ex : examenes) {
             if (ex.getEstado() == com.sysacad.backend.modelo.enums.EstadoExamen.APROBADO) {
                 // Aprobó final -> APROBADA
@@ -249,8 +244,7 @@ public class MatriculacionService {
 
         for (Materia correlativa : materia.getCorrelativas()) {
             EstadoMateria estadoCorr = historial.get(correlativa.getId());
-            // Regla: Para cursar, correlativa debe estar REGULAR o APROBADA (PROMOCIONADA
-            // cae en APROBADA)
+
             boolean correlativaOk = estadoCorr != null &&
                     (estadoCorr.estado.equals("REGULAR") || estadoCorr.estado.equals("APROBADA"));
 
