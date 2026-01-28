@@ -45,7 +45,7 @@ public class ComisionController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESOR')")
     public ResponseEntity<ComisionResponse> buscarPorId(@PathVariable UUID id) {
         return comisionService.buscarPorId(id)
                 .map(c -> ResponseEntity.ok(comisionMapper.toDTO(c)))
