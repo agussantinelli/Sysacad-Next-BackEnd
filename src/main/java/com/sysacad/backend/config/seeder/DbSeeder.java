@@ -66,6 +66,11 @@ public class DbSeeder {
                         Usuario alumnoCarlos = null;
                         Usuario alumnoMartin = null;
                         Usuario alumnoFlavia = null;
+                        Usuario alumnoPedro = null;
+                        Usuario alumnoLionel = null;
+                        Usuario alumnoAlex = null;
+                        Usuario alumnoDiego = null;
+                        Usuario alumnoEnzo = null;
 
                         // Cargar Usuarios
                         if (usuarioRepository.count() == 0) {
@@ -142,6 +147,16 @@ public class DbSeeder {
                                                 "Avara", "33333341",
                                                 "flavia@sysacad.com", RolUsuario.ESTUDIANTE, Genero.F, null,
                                                 LocalDate.of(2004, 11, 24));
+                                alumnoPedro = createUsuario(usuarioRepository, passwordEncoder, "60010", "Pedro",
+                                        "Pascal", "33333350", "pedro@sysacad.com", RolUsuario.ESTUDIANTE, Genero.M, null, LocalDate.of(2003, 4, 2));
+                                alumnoLionel = createUsuario(usuarioRepository, passwordEncoder, "60011", "Lionel",
+                                        "Messi", "33333351", "lio@sysacad.com", RolUsuario.ESTUDIANTE, Genero.M, null, LocalDate.of(1987, 6, 24));
+                                alumnoAlex = createUsuario(usuarioRepository, passwordEncoder, "60012", "Alex",
+                                        "Morgan", "33333352", "alex@sysacad.com", RolUsuario.ESTUDIANTE, Genero.F, null, LocalDate.of(2002, 5, 3));
+                                alumnoDiego = createUsuario(usuarioRepository, passwordEncoder, "60013", "Diego",
+                                        "Maradona", "33333353", "diego@sysacad.com", RolUsuario.ESTUDIANTE, Genero.M, null, LocalDate.of(1960, 10, 30));
+                                alumnoEnzo = createUsuario(usuarioRepository, passwordEncoder, "60014", "Enzo",
+                                        "Fernandez", "33333354", "enzo@sysacad.com", RolUsuario.ESTUDIANTE, Genero.M, null, LocalDate.of(2001, 1, 17));
 
                                 System.out.println(">> Usuarios creados con éxito.");
                         } else {
@@ -162,6 +177,11 @@ public class DbSeeder {
                                 alumnoCarlos = usuarioRepository.findByLegajo("60002").orElse(null);
                                 alumnoMartin = usuarioRepository.findByLegajo("60003").orElse(null);
                                 alumnoFlavia = usuarioRepository.findByLegajo("60004").orElse(null);
+                                alumnoPedro = usuarioRepository.findByLegajo("60010").orElse(null);
+                                alumnoLionel = usuarioRepository.findByLegajo("60011").orElse(null);
+                                alumnoAlex = usuarioRepository.findByLegajo("60012").orElse(null);
+                                alumnoDiego = usuarioRepository.findByLegajo("60013").orElse(null);
+                                alumnoEnzo = usuarioRepository.findByLegajo("60014").orElse(null);
                         }
                         
                         if (matriculacionRepository.count() == 0) {
@@ -187,6 +207,11 @@ public class DbSeeder {
                                     matricularAlumno(matriculacionRepository, alumnoMaria, frro, carreraISI.getId(), 2023);
                                     matricularAlumno(matriculacionRepository, alumnoMartin, frro, carreraISI.getId(), 2023);
                                     matricularAlumno(matriculacionRepository, alumnoFlavia, frro, carreraISI.getId(), 2023);
+                                    matricularAlumno(matriculacionRepository, alumnoPedro, frro, carreraISI.getId(), 2023);
+                                    matricularAlumno(matriculacionRepository, alumnoLionel, frro, carreraISI.getId(), 2023);
+                                    matricularAlumno(matriculacionRepository, alumnoAlex, frro, carreraISI.getId(), 2023);
+                                    matricularAlumno(matriculacionRepository, alumnoDiego, frro, carreraISI.getId(), 2023);
+                                    matricularAlumno(matriculacionRepository, alumnoEnzo, frro, carreraISI.getId(), 2023);
                                 }
                                 
                                 if (carreraCivil != null) {
@@ -296,11 +321,8 @@ public class DbSeeder {
                                 crearHorario(horarioCursadoRepository, c3k1, analisisNumerico, DiaSemana.VIERNES, 18,
                                                 21);
 
-                                // INSCRIPCIONES Y NOTAS (NUEVO SISTEMA)
-
                                 if (alumnoAgustin != null) {
                                         
-                                        // 1K1: Algoritmos, Sistemas, Ingles, Algebra
                                         var insc = inscribirCursado(inscripcionCursadoRepository, alumnoAgustin, c1k1, algoritmos);
                                         insc.setNotaFinal(new BigDecimal("9.00"));
                                         insc.setEstado(EstadoCursada.PROMOCIONADO);
@@ -483,6 +505,54 @@ public class DbSeeder {
                                         inscribirCursado(inscripcionCursadoRepository, alumnoFlavia, c1k1, sistemas);
                                 }
 
+                                if (alumnoPedro != null) {
+                                    var i1 = inscribirCursado(inscripcionCursadoRepository, alumnoPedro, c1k2, algoritmos);
+                                    i1.setEstado(EstadoCursada.REGULAR); i1.setNotaFinal(new BigDecimal("7")); inscripcionCursadoRepository.save(i1);
+                                    var i2 = inscribirCursado(inscripcionCursadoRepository, alumnoPedro, c1k2, analisis1);
+                                    i2.setEstado(EstadoCursada.REGULAR); i2.setNotaFinal(new BigDecimal("6")); inscripcionCursadoRepository.save(i2);
+                                    var i3 = inscribirCursado(inscripcionCursadoRepository, alumnoPedro, c1k2, fisica1); // Libre esta? no, regular.
+                                    i3.setEstado(EstadoCursada.REGULAR); i3.setNotaFinal(new BigDecimal("6")); inscripcionCursadoRepository.save(i3);
+                                    var i4 = inscribirCursado(inscripcionCursadoRepository, alumnoPedro, c1k2, arquitectura);
+                                    i4.setEstado(EstadoCursada.REGULAR); i4.setNotaFinal(new BigDecimal("8")); inscripcionCursadoRepository.save(i4);
+                                }
+
+                                if (alumnoLionel != null) {
+                                    var p1 = inscribirCursado(inscripcionCursadoRepository, alumnoLionel, c1k1, algoritmos);
+                                    p1.setEstado(EstadoCursada.PROMOCIONADO); p1.setNotaFinal(new BigDecimal("10")); p1.setFechaPromocion(LocalDate.of(2024, 12, 1)); inscripcionCursadoRepository.save(p1);
+                                    var p2 = inscribirCursado(inscripcionCursadoRepository, alumnoLionel, c1k1, sistemas);
+                                    p2.setEstado(EstadoCursada.PROMOCIONADO); p2.setNotaFinal(new BigDecimal("9")); p2.setFechaPromocion(LocalDate.of(2024, 12, 1)); inscripcionCursadoRepository.save(p2);
+                                    var p3 = inscribirCursado(inscripcionCursadoRepository, alumnoLionel, c1k1, ingles1);
+                                    p3.setEstado(EstadoCursada.PROMOCIONADO); p3.setNotaFinal(new BigDecimal("10")); p3.setFechaPromocion(LocalDate.of(2024, 12, 1)); inscripcionCursadoRepository.save(p3);
+                                    var p4 = inscribirCursado(inscripcionCursadoRepository, alumnoLionel, c1k1, algebra);
+                                    p4.setEstado(EstadoCursada.PROMOCIONADO); p4.setNotaFinal(new BigDecimal("10")); p4.setFechaPromocion(LocalDate.of(2024, 12, 1)); inscripcionCursadoRepository.save(p4);
+                                    
+                                    var c1 = inscribirCursado(inscripcionCursadoRepository, alumnoLionel, c2k1, analisis2);
+                                    cargarNotaCursada(calificacionCursadaRepository, c1, "1er Parcial", "10");
+                                    var c2 = inscribirCursado(inscripcionCursadaRepository, alumnoLionel, c2k1, sintaxis);
+                                    cargarNotaCursada(calificacionCursadaRepository, c2, "TP", "10");
+                                }
+
+                                if (alumnoAlex != null) {
+                                    var m1 = inscribirCursado(inscripcionCursadoRepository, alumnoAlex, c1k2, algoritmos);
+                                    cargarNotaCursada(calificacionCursadaRepository, m1, "1er Parcial", "2");
+                                    
+                                    var m2 = inscribirCursado(inscripcionCursadoRepository, alumnoAlex, c1k1, sistemas);
+                                    m2.setEstado(EstadoCursada.REGULAR); m2.setNotaFinal(new BigDecimal("7")); inscripcionCursadoRepository.save(m2);
+                                }
+                                
+                                if (alumnoDiego != null) {
+                                    var d1 = inscribirCursado(inscripcionCursadoRepository, alumnoDiego, c1k1, algoritmos);
+                                    d1.setEstado(EstadoCursada.LIBRE); d1.setNotaFinal(new BigDecimal("2")); inscripcionCursadoRepository.save(d1);
+                                    var d2 = inscribirCursado(inscripcionCursadoRepository, alumnoDiego, c1k1, algebra);
+                                    cargarNotaCursada(calificacionCursadaRepository, d2, "1er Parcial", "2");
+                                }
+
+                                if (alumnoEnzo != null) {
+                                    inscribirCursado(inscripcionCursadoRepository, alumnoEnzo, c1k1, algoritmos);
+                                    inscribirCursado(inscripcionCursadoRepository, alumnoEnzo, c1k1, sistemas);
+                                    inscribirCursado(inscripcionCursadoRepository, alumnoEnzo, c1k1, ingles1);
+                                }
+
                                 System.out
                                                 .println(">> Seeding Académico Finalizado: 4 Comisiones, Múltiples Horarios y Notas cargadas (Nueva Estructura).");
                         }
@@ -497,8 +567,12 @@ public class DbSeeder {
                                                 LocalDate.of(2026, 7, 1), LocalDate.of(2026, 7, 31));
                                 MesaExamen mesaDic = createMesa(mesaExamenRepository, "Turno Diciembre 2026",
                                                 LocalDate.of(2026, 12, 1), LocalDate.of(2026, 12, 22));
+                                
+                                MesaExamen mesaMay = createMesa(mesaExamenRepository, "Turno Mayo 2026", 
+                                                LocalDate.of(2026, 5, 20), LocalDate.of(2026, 5, 30));
+                                MesaExamen mesaSep = createMesa(mesaExamenRepository, "Turno Septiembre 2026", 
+                                                LocalDate.of(2026, 9, 15), LocalDate.of(2026, 9, 25));
 
-                                // Agregar Materias a las Mesas (Detalles)
                                 Materia algoritmos = getMateria(materiaRepository, "Algoritmos y Estructuras de Datos");
                                 Materia sistemas = getMateria(materiaRepository, "Sistemas y Procesos de Negocio");
                                 Materia analisis1 = getMateria(materiaRepository, "Análisis Matemático I");
