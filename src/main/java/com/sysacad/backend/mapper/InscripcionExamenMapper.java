@@ -13,7 +13,7 @@ public interface InscripcionExamenMapper {
 
     InscripcionExamenMapper INSTANCE = Mappers.getMapper(InscripcionExamenMapper.class);
 
-    @Mapping(source = "usuario.nombre", target = "nombreAlumno") // Mapping complejo mejor en expresión o default method si es concatenación
+    @Mapping(source = "usuario.nombre", target = "nombreAlumno") 
     @Mapping(source = "usuario.legajo", target = "legajoAlumno")
     @Mapping(source = "detalleMesaExamen.materia.nombre", target = "nombreMateria")
     @Mapping(source = "detalleMesaExamen.diaExamen", target = "fechaExamen")

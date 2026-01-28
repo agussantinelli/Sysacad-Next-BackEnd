@@ -18,7 +18,7 @@ public interface ComisionMapper {
     ComisionResponse toDTO(Comision comision);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "materias", ignore = true) // Se asignan por lógica
+    @Mapping(target = "materias", ignore = true) 
     @Mapping(target = "profesores", ignore = true)
     Comision toEntity(ComisionRequest request);
 

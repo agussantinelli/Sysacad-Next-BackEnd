@@ -19,7 +19,7 @@ public interface UsuarioMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "password", ignore = true) // La contraseña se maneja aparte
-    @Mapping(target = "rol", ignore = true) // El rol suele asignarse por lógica separada o por defecto
+    @Mapping(target = "rol", ignore = true) // El rol suele asigna por lógica
     @Mapping(target = "fotoPerfil", ignore = true)
     Usuario toEntity(UsuarioRequest request);
     
