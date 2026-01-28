@@ -57,7 +57,7 @@
 
 <p>Proveer una API RESTful robusta, segura y escalable que actúe como el cerebro de <strong>Sysacad Next</strong>, gestionando la lógica de negocio compleja (correlatividades, actas, inscripciones, auditoría) y asegurando la integridad de los datos académicos.</p>
 
-> **Nota:** Este proyecto ha sido desarrollado mediante **ingeniería inversa**, analizando el sitio y flujos originales para replicar y mejorar la lógica de negocio. Para más detalles sobre las reglas deducidas, consulta las [Consideraciones del Negocio](docs/business_rules.md).
+> **Nota:** Este proyecto ha sido desarrollado mediante **ingeniería inversa**, analizando el sitio y flujos originales del sistema de la **FRRO (Facultad Regional Rosario) de la UTN** para replicar y mejorar la lógica de negocio. Para más detalles sobre las reglas deducidas, consulta las [Consideraciones del Negocio](docs/business_rules.md).
 
 <h2>🧠 Arquitectura y Diseño</h2>
 
