@@ -44,7 +44,7 @@ public class CorrelatividadService {
         // Promocionadas
         idsAprobadas.addAll(inscripcionCursadoRepository.findByUsuarioId(idAlumno).stream()
                 .filter(i -> i.getEstado() == com.sysacad.backend.modelo.enums.EstadoCursada.PROMOCIONADO ||
-                        i.getEstado() == com.sysacad.backend.modelo.enums.EstadoCursada.APROBADO)
+                        i.getEstado() == com.sysacad.backend.modelo.enums.EstadoCursada.PROMOCIONADO)
                 .map(i -> i.getMateria().getId())
                 .collect(Collectors.toList()));
 
