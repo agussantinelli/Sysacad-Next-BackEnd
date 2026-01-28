@@ -528,7 +528,7 @@ public class DbSeeder {
                                     
                                     var c1 = inscribirCursado(inscripcionCursadoRepository, alumnoLionel, c2k1, analisis2);
                                     cargarNotaCursada(calificacionCursadaRepository, c1, "1er Parcial", "10");
-                                    var c2 = inscribirCursado(inscripcionCursadaRepository, alumnoLionel, c2k1, sintaxis);
+                                    var c2 = inscribirCursado(inscripcionCursadoRepository, alumnoLionel, c2k1, sintaxis);
                                     cargarNotaCursada(calificacionCursadaRepository, c2, "TP", "10");
                                 }
 
