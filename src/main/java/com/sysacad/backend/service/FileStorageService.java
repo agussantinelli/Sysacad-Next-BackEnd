@@ -64,4 +64,23 @@ public class FileStorageService {
             System.out.println("Advertencia: No se pudo borrar el archivo anterior (" + ruta + "): " + e.getMessage());
         }
     }
+
+    public void deleteAllPerfiles() {
+        try {
+            Path root = Paths.get(DIRECTORIO_PERFILES);
+            if (Files.exists(root)) {
+                Files.walk(root)
+                    .filter(Files::isRegularFile)
+                    .forEach(path -> {
+                        try {
+                            Files.delete(path);
+                        } catch (IOException e) {
+                            System.out.println("No se pudo borrar imagen: " + path + " " + e.getMessage());
+                        }
+                    });
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("No se pudo inicializar la carpeta de uploads para limpieza");
+        }
+    }
 }
