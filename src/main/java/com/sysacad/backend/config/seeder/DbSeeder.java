@@ -42,7 +42,8 @@ public class DbSeeder {
                         DetalleMesaExamenRepository detalleMesaExamenRepository,
                         InscripcionExamenRepository inscripcionExamenRepository,
                         InscripcionCursadoRepository inscripcionCursadoRepository,
-                        CalificacionCursadaRepository calificacionCursadaRepository
+                        CalificacionCursadaRepository calificacionCursadaRepository,
+                        com.sysacad.backend.service.FileStorageService fileStorageService
         ) {
 
                 return args -> {
@@ -75,6 +76,9 @@ public class DbSeeder {
                         // Cargar Usuarios
                         if (usuarioRepository.count() == 0) {
                                 System.out.println(">> DbSeeder: Creando población de usuarios...");
+                                
+                                // Limpiar imágenes anteriores
+                                fileStorageService.deleteAllPerfiles();
 
                                 // ADMIN
                                 createUsuario(usuarioRepository, passwordEncoder, "1", "Homero", "Simpson", "11111111",
