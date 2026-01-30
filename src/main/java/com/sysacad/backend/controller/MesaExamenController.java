@@ -33,4 +33,23 @@ public class MesaExamenController {
     public ResponseEntity<DetalleMesaExamenResponse> addDetalle(@RequestBody DetalleMesaExamenRequest request) {
         return ResponseEntity.ok(mesaExamenService.addDetalle(request));
     }
+
+    @Autowired
+    private com.sysacad.backend.repository.UsuarioRepository usuarioRepository;
+
+    @GetMapping("/disponibles")
+    public ResponseEntity<List<DetalleMesaExamenResponse>> getExamenesDisponibles(org.springframework.security.core.Authentication authentication) {
+        if (authentication == null) return ResponseEntity.status(401).build();
+
+        String email = authentication.getName();
+        com.sysacad.backend.modelo.Usuario usuario = usuarioRepository.findByMail(email)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        return ResponseEntity.ok(mesaExamenService.getExamenesDisponibles(usuario.getId()));
+    }
+
+    @GetMapping("/detalles/{id}/{nroDetalle}")
+    public ResponseEntity<DetalleMesaExamenResponse> getDetalleMesa(@PathVariable java.util.UUID id, @PathVariable Integer nroDetalle) {
+        return ResponseEntity.ok(mesaExamenService.getDetalleMesa(id, nroDetalle));
+    }
 }
