@@ -184,6 +184,39 @@ public class UTNSeeder {
 
         public MateriaDef(String codigo, String nombre, int horas, String dictadoInfo, int nivel, boolean esElectiva,
                 List<String> correlativasRegulares, List<String> correlativasPromocionadas) {
+            this.codigo = codigo;
+            this.nombre = nombre;
+            this.horas = (short) horas;
+
+            // Determinar Duración y Cuatrimestre
+            String infoUpper = dictadoInfo != null ? dictadoInfo.toUpperCase() : "ANUAL";
+
+            if (infoUpper.contains("ANUAL")) {
+                this.duracion = DuracionMateria.ANUAL;
+                this.cuatrimestreDictado = CuatrimestreDictado.ANUAL;
+            } else {
+                 this.duracion = DuracionMateria.CUATRIMESTRAL;
+                 if(infoUpper.contains("1 C") || infoUpper.contains("1ER")) {
+                     this.cuatrimestreDictado = CuatrimestreDictado.PRIMER_CUATRIMESTRE;
+                 } else if(infoUpper.contains("2 C") || infoUpper.contains("2DO")) {
+                     this.cuatrimestreDictado = CuatrimestreDictado.SEGUNDO_CUATRIMESTRE;
+                 } else {
+                     this.cuatrimestreDictado = CuatrimestreDictado.ANUAL; // Default fallback
+                 }
+            }
+
+            this.nivel = (short) nivel;
+
+            if (esElectiva) {
+                this.tipo = TipoMateria.ESPECIFICA;
+            } else {
+                this.tipo = nivel <= 2 ? TipoMateria.BASICA : TipoMateria.ESPECIFICA;
+            }
+
+            this.esElectiva = esElectiva;
+            this.correlativasRegulares = correlativasRegulares;
+            this.correlativasPromocionadas = correlativasPromocionadas;
+        }
 
         public MateriaDef(String codigo, String nombre, int horas, String dictadoInfo, int nivel, boolean esElectiva,
                 List<String> correlativas) {
