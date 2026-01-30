@@ -188,7 +188,7 @@ public class MatriculacionService {
                             materia.getOptativa(),
                             materia.getHorasCursado(),
                             materia.getCuatrimestreDictado() != null ? materia.getCuatrimestreDictado().name() : null,
-                            materia.getCorrelativas().stream().map(com.sysacad.backend.modelo.Materia::getNombre).collect(java.util.stream.Collectors.toList()));
+                            materia.getCorrelativas().stream().map(c -> c.getCorrelativa().getNombre()).collect(java.util.stream.Collectors.toList()));
                     materiasDTO.add(dto);
                 }
 
@@ -242,14 +242,21 @@ public class MatriculacionService {
             return true;
         }
 
-        for (Materia correlativa : materia.getCorrelativas()) {
-            EstadoMateria estadoCorr = historial.get(correlativa.getId());
+        for (com.sysacad.backend.modelo.Correlatividad correlatividad : materia.getCorrelativas()) {
+            Materia matCorr = correlatividad.getCorrelativa();
+            EstadoMateria estadoCorr = historial.get(matCorr.getId());
 
-            boolean correlativaOk = estadoCorr != null &&
-                    (estadoCorr.estado.equals("REGULAR") || estadoCorr.estado.equals("APROBADA"));
+            // Check if status exists
+            if(estadoCorr == null) return false;
 
-            if (!correlativaOk) {
-                return false;
+            boolean aprobado = estadoCorr.estado.equals("APROBADA") || estadoCorr.estado.equals("PROMOCIONADO"); // APROBADA covers PROMOCIONADO usually but checking both
+            boolean regular = estadoCorr.estado.equals("REGULAR") || aprobado;
+
+            if(correlatividad.getTipo() == com.sysacad.backend.modelo.enums.TipoCorrelatividad.REGULAR) {
+                if(!regular) return false;
+            } else {
+                // PROMOCIONADA
+                if(!aprobado) return false;
             }
         }
         return true;
