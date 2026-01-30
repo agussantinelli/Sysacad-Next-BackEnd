@@ -51,5 +51,7 @@ public class Materia {
     private Boolean optativa = false;
 
     @OneToMany(mappedBy = "materia", cascade = CascadeType.ALL, orphanRemoval = true)
+    @lombok.ToString.Exclude
+    @lombok.EqualsAndHashCode.Exclude
     private java.util.Set<Correlatividad> correlativas = new java.util.HashSet<>();
 }

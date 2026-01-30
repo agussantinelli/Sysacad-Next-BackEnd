@@ -21,10 +21,14 @@ public class Correlatividad implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "id_materia", nullable = false)
+    @lombok.ToString.Exclude
+    @lombok.EqualsAndHashCode.Exclude
     private Materia materia;
 
     @ManyToOne
     @JoinColumn(name = "id_correlativa", nullable = false)
+    @lombok.ToString.Exclude
+    @lombok.EqualsAndHashCode.Exclude
     private Materia correlativa;
 
     @Enumerated(EnumType.STRING)
