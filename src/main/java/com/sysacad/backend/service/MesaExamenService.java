@@ -87,4 +87,27 @@ public class MesaExamenService {
         return detalleMesaExamenMapper.toDTO(detalle);
     }
 
+    @Autowired
+    private com.sysacad.backend.service.CorrelatividadService correlatividadService;
+
+    @Transactional(readOnly = true)
+    public List<DetalleMesaExamenResponse> getExamenesDisponibles(UUID idAlumno) {
+        List<MesaExamen> mesas = mesaExamenRepository.findAll();
+        
+        return mesas.stream()
+            .flatMap(mesa -> detalleMesaExamenRepository.findByMesaExamenId(mesa.getId()).stream())
+            .filter(detalle -> {
+                return correlatividadService.puedeRendir(idAlumno, detalle.getMateria().getId());
+            })
+            .map(detalle -> detalleMesaExamenMapper.toDTO(detalle))
+            .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public DetalleMesaExamenResponse getDetalleMesa(UUID idMesa, Integer nroDetalle) {
+        DetalleMesaExamen.DetalleId id = new DetalleMesaExamen.DetalleId(idMesa, nroDetalle);
+        DetalleMesaExamen detalle = detalleMesaExamenRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Mesa de examen no encontrada"));
+        return detalleMesaExamenMapper.toDTO(detalle);
+    }
 }
