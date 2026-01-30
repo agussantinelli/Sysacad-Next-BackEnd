@@ -27,6 +27,11 @@ Classifies the type of subject.
 - `BASICA`
 - `ESPECIFICA`
 - `COMPARTIDA`
+    
+### `TipoCorrelatividad`
+Defines the requirement type for a prerequisite subject.
+- `REGULAR`: Requires the subject to be Regularized or Approved.
+- `PROMOCIONADA`: Requires the subject to be Promoted or Approved (Final).
 
 ---
 
