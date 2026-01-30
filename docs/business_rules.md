@@ -43,4 +43,5 @@ Este documento detalla las reglas de negocio y consideraciones técnicas derivad
     - **Validación de Correlativas**:
         - **REGULAR**: Para cursar, las correlativas de este tipo deben estar en estado `REGULAR` (Cursada Aprobada) o `APROBADO` (Final/Promoción).
         - **PROMOCIONADA**: Para cursar, las correlativas de este tipo deben estar en estado `PROMOCIONADO` o `APROBADO` (Final).
+        - **RENDIR FINAL**: Para rendir el examen final de una materia, el alumno debe tener la materia misma **Regularizada** (Cursada Aprobada) y **TODAS** sus correlativas (tanto Regulares como Promocionadas) **APROBADAS** (Final o Promoción).
         - Esta validación impide la inscripción si no se cumplen los requisitos específicos definidos en el Plan de Estudio.

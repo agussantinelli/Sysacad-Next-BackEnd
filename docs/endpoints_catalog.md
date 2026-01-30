@@ -140,6 +140,8 @@ Base URL: `/api/mesas`
 | `POST` | `/` | ADMIN | Crear una nueva mesa de examen (Turno). |
 | `GET` | `/` | Authenticated | Listar todos los turnos/mesas de examen disponibles. |
 | `POST` | `/detalles` | ADMIN | Agregar fecha y hora de examen para una materia en un turno. |
+| `GET` | `/disponibles` | ESTUDIANTE | Listar exámenes disponibles para inscribirse (Filtrados por `puedeRendir`). |
+| `GET` | `/detalles/{id}/{nroDetalle}` | ESTUDIANTE | Ver detalle de una mesa de examen específica. |
 
 ## InscripcionExamenController
 Base URL: `/api/inscripciones-examen`
