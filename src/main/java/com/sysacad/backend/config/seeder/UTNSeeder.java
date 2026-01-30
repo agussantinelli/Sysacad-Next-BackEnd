@@ -197,9 +197,9 @@ public class UTNSeeder {
             } else {
                  this.duracion = DuracionMateria.CUATRIMESTRAL;
                  if(infoUpper.contains("1 C") || infoUpper.contains("1ER")) {
-                     this.cuatrimestreDictado = CuatrimestreDictado.PRIMER_CUATRIMESTRE;
+                     this.cuatrimestreDictado = CuatrimestreDictado.PRIMERO;
                  } else if(infoUpper.contains("2 C") || infoUpper.contains("2DO")) {
-                     this.cuatrimestreDictado = CuatrimestreDictado.SEGUNDO_CUATRIMESTRE;
+                     this.cuatrimestreDictado = CuatrimestreDictado.SEGUNDO;
                  } else {
                      this.cuatrimestreDictado = CuatrimestreDictado.ANUAL; // Default fallback
                  }
