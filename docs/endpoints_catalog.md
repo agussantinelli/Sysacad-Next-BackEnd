@@ -20,6 +20,13 @@ Base URL: `/api/carreras`
 | `POST` | `/planes/materias` | ADMIN | Agregar una materia a un plan de estudio. |
 | `GET` | `/{idCarrera}/planes/vigentes` | Authenticated | Listar planes de estudio vigentes de una carrera. |
 
+## HealthController
+Base URL: `/api/health`
+
+| Método | Endpoint | Roles / Acceso | Descripción |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/` | Public | Verificar estado del servidor (Heartbeat). |
+
 ## ComisionController
 Base URL: `/api/comisiones`
 
