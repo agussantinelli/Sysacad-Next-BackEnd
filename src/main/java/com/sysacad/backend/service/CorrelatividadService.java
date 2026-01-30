@@ -76,4 +76,42 @@ public class CorrelatividadService {
 
         return true;
     }
+    public boolean puedeRendir(UUID idAlumno, UUID idMateriaAspirante) {
+        Materia materiaObjetivo = materiaRepository.findById(idMateriaAspirante)
+                .orElseThrow(() -> new RuntimeException("Materia no encontrada"));
+
+        boolean cursadaAprobada = inscripcionCursadoRepository.findByUsuarioIdAndMateriaId(idAlumno, idMateriaAspirante)
+                .stream()
+                .anyMatch(i -> i.getEstado() == com.sysacad.backend.modelo.enums.EstadoCursada.REGULAR ||
+                               i.getEstado() == com.sysacad.backend.modelo.enums.EstadoCursada.PROMOCIONADO);
+
+        if (!cursadaAprobada) {
+            return false;
+        }
+
+        if (materiaObjetivo.getCorrelativas() == null || materiaObjetivo.getCorrelativas().isEmpty()) {
+            return true;
+        }
+
+        java.util.Set<UUID> materiasAprobadas = inscripcionCursadoRepository.findByUsuarioId(idAlumno).stream()
+                .filter(i -> i.getEstado() == com.sysacad.backend.modelo.enums.EstadoCursada.PROMOCIONADO)
+                .map(i -> i.getMateria().getId())
+                .collect(Collectors.toSet());
+        
+        java.util.Set<UUID> finalesAprobados = inscripcionExamenRepository.findByUsuarioId(idAlumno).stream()
+                .filter(i -> i.getEstado() == com.sysacad.backend.modelo.enums.EstadoExamen.APROBADO)
+                .map(i -> i.getDetalleMesaExamen().getMateria().getId())
+                .collect(Collectors.toSet());
+        
+        materiasAprobadas.addAll(finalesAprobados);
+
+        for (com.sysacad.backend.modelo.Correlatividad correlatividad : materiaObjetivo.getCorrelativas()) {
+            UUID idCorrelativa = correlatividad.getCorrelativa().getId();
+            if (!materiasAprobadas.contains(idCorrelativa)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }
