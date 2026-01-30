@@ -29,36 +29,51 @@ public class CorrelatividadService {
 
     @Transactional(readOnly = true)
     public boolean puedeCursar(UUID idAlumno, UUID idMateriaAspirante) {
-        // Obtener la materia a la que se quiere anotar
         Materia materiaObjetivo = materiaRepository.findById(idMateriaAspirante)
                 .orElseThrow(() -> new RuntimeException("Materia no encontrada"));
 
-        // Si la materia no tiene correlativas, el alumno puede cursar libremente
         if (materiaObjetivo.getCorrelativas() == null || materiaObjetivo.getCorrelativas().isEmpty()) {
             return true;
         }
 
-        // Obtener IDs de materias aprobadas (Promocionadas o Examen Final Aprobado)
-        List<UUID> idsAprobadas = new java.util.ArrayList<>();
-
-        // Promocionadas
-        idsAprobadas.addAll(inscripcionCursadoRepository.findByUsuarioId(idAlumno).stream()
-                .filter(i -> i.getEstado() == com.sysacad.backend.modelo.enums.EstadoCursada.PROMOCIONADO ||
-                        i.getEstado() == com.sysacad.backend.modelo.enums.EstadoCursada.PROMOCIONADO)
+        // Obtener IDs de materias con cursada aprobada (Regular o Promocionado)
+        java.util.Set<UUID> materiasRegularizadas = inscripcionCursadoRepository.findByUsuarioId(idAlumno).stream()
+                .filter(i -> i.getEstado() == com.sysacad.backend.modelo.enums.EstadoCursada.REGULAR ||
+                             i.getEstado() == com.sysacad.backend.modelo.enums.EstadoCursada.PROMOCIONADO)
                 .map(i -> i.getMateria().getId())
-                .collect(Collectors.toList()));
-
-        // Finales Aprobados
-        idsAprobadas.addAll(inscripcionExamenRepository.findByUsuarioId(idAlumno).stream()
+                .collect(Collectors.toSet());
+        
+        // Agregar también las que tienen final aprobado (implica regularizada)
+        java.util.Set<UUID> finalesAprobados = inscripcionExamenRepository.findByUsuarioId(idAlumno).stream()
                 .filter(i -> i.getEstado() == com.sysacad.backend.modelo.enums.EstadoExamen.APROBADO)
                 .map(i -> i.getDetalleMesaExamen().getMateria().getId())
-                .collect(Collectors.toList()));
+                .collect(Collectors.toSet());
 
-        // Verificar requisitos
-        List<UUID> idsCorrelativasNecesarias = materiaObjetivo.getCorrelativas().stream()
-                .map(Materia::getId)
-                .collect(Collectors.toList());
+        materiasRegularizadas.addAll(finalesAprobados);
+        
+        // IDs de materias aprobadas definitivamente (Promocionadas o Final Aprobado)
+        java.util.Set<UUID> materiasAprobadas = inscripcionCursadoRepository.findByUsuarioId(idAlumno).stream()
+                .filter(i -> i.getEstado() == com.sysacad.backend.modelo.enums.EstadoCursada.PROMOCIONADO)
+                .map(i -> i.getMateria().getId())
+                .collect(Collectors.toSet());
+        
+        materiasAprobadas.addAll(finalesAprobados);
 
-        return idsAprobadas.containsAll(idsCorrelativasNecesarias);
+        for (com.sysacad.backend.modelo.Correlatividad correlatividad : materiaObjetivo.getCorrelativas()) {
+            UUID idCorrelativa = correlatividad.getCorrelativa().getId();
+            if (correlatividad.getTipo() == com.sysacad.backend.modelo.enums.TipoCorrelatividad.REGULAR) {
+                // Requiere estar regularizada (o aprobada)
+                if (!materiasRegularizadas.contains(idCorrelativa)) {
+                    return false;
+                }
+            } else {
+                // Requiere estar aprobada (Promocionada o Final)
+                if (!materiasAprobadas.contains(idCorrelativa)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 }
