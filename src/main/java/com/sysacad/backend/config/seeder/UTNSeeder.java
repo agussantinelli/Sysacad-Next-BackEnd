@@ -52,11 +52,11 @@ public class UTNSeeder {
         frro = facultadRepository.save(frro);
 
         // Cargar Datos
-        cargarCarrera(frro, 1, "ISI", "Ingeniería en Sistemas de Información", getDatasetISI());
-        cargarCarrera(frro, 2, "IC", "Ingeniería Civil", getDatasetCivil());
-        cargarCarrera(frro, 3, "IQ", "Ingeniería Química", getDatasetQuimica());
-        cargarCarrera(frro, 4, "IM", "Ingeniería Mecánica", getDatasetMecanica());
-        cargarCarrera(frro, 5, "IEE", "Ingeniería en Energía Eléctrica", getDatasetElectrica());
+        cargarCarrera(frro, 1, "ISI", "Ingeniería en Sistemas de Información", 20, getDatasetISI());
+        cargarCarrera(frro, 2, "IC", "Ingeniería Civil", 11, getDatasetCivil());
+        cargarCarrera(frro, 3, "IQ", "Ingeniería Química", 12, getDatasetQuimica());
+        cargarCarrera(frro, 4, "IM", "Ingeniería Mecánica", 10, getDatasetMecanica());
+        cargarCarrera(frro, 5, "IEE", "Ingeniería en Energía Eléctrica", 10, getDatasetElectrica());
 
         // Conectar Correlativas
         conectarCorrelativas(1, getDatasetISI());
@@ -68,7 +68,7 @@ public class UTNSeeder {
         System.out.println(">> UTNSeeder: Carga completa finalizada con éxito.");
     }
 
-    private void cargarCarrera(FacultadRegional facu, Integer nroCarrera, String aliasCarrera, String nombreCarrera,
+    private void cargarCarrera(FacultadRegional facu, Integer nroCarrera, String aliasCarrera, String nombreCarrera, Integer horasElectivas,
             List<MateriaDef> materias) {
         System.out.println("   -> Procesando Carrera: " + nombreCarrera);
 
@@ -76,6 +76,7 @@ public class UTNSeeder {
         Carrera carrera = new Carrera();
         carrera.setNombre(nombreCarrera);
         carrera.setAlias(aliasCarrera);
+        carrera.setHorasElectivasRequeridas(horasElectivas);
         
         Set<FacultadRegional> facultades = new HashSet<>();
         facultades.add(facu);
