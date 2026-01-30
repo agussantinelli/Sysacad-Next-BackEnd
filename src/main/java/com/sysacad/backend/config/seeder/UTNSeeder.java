@@ -162,7 +162,8 @@ public class UTNSeeder {
             }
             
             if(!correlatividades.isEmpty()) {
-                materiaActual.setCorrelativas(correlatividades);
+                materiaActual.getCorrelativas().clear();
+                materiaActual.getCorrelativas().addAll(correlatividades);
                 materiaRepository.save(materiaActual);
             }
         }
