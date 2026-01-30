@@ -32,6 +32,7 @@ public class SecurityConfig {
                                 .cors(Customizer.withDefaults()) 
                                 .authorizeHttpRequests(auth -> auth
                                                 .requestMatchers("/api/auth/**").permitAll()
+                                                .requestMatchers("/api/health").permitAll()
                                                 .requestMatchers("/uploads/**").permitAll() // Para ver las fotos
                                                 .anyRequest().authenticated())
                                 .sessionManagement(session -> session
