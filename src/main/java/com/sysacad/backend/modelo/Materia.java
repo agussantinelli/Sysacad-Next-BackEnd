@@ -50,11 +50,6 @@ public class Materia {
     @Column(nullable = false)
     private Boolean optativa = false;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "correlativas",
-            joinColumns = @JoinColumn(name = "id_materia"),
-            inverseJoinColumns = @JoinColumn(name = "id_correlativa")
-    )
-    private List<Materia> correlativas = new ArrayList<>();
+    @OneToMany(mappedBy = "materia", cascade = CascadeType.ALL, orphanRemoval = true)
+    private java.util.Set<Correlatividad> correlativas = new java.util.HashSet<>();
 }
