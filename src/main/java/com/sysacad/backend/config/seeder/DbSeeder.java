@@ -230,7 +230,7 @@ public class DbSeeder {
                         }
 
                         if (comisionRepository.count() == 0 && profeNicolas != null) {
-                                System.out.println(">> DbSeeder: Desplegando infraestructura de cursada completa...");
+                                System.out.println(">> DbSeeder: Desplegando infraestructura de cursada completa (Comisiones Completas)...");
 
                                 FacultadRegional frro = facultadRepository.findAll().stream()
                                                 .filter(f -> f.getCiudad().equalsIgnoreCase("Rosario"))
@@ -246,31 +246,133 @@ public class DbSeeder {
                                 Salon aula301 = createSalon(salonRepository, frro, "Aula 301", "3");
                                 Salon sum = createSalon(salonRepository, frro, "SUM", "1");
                                 Salon aula201 = createSalon(salonRepository, frro, "Aula 201", "2");
+                                Salon aulaMagna = createSalon(salonRepository, frro, "Aula Magna", "PB");
 
-                                // MATERIAS 1er AÑO
-                                Materia algoritmos = getMateria(materiaRepository, "Algoritmos y Estructuras de Datos");
-                                Materia sistemas = getMateria(materiaRepository, "Sistemas y Procesos de Negocio");
-                                Materia ingles1 = getMateria(materiaRepository, "Inglés I");
+                                // -------------------------------------------------------------------------
+                                // RECUPERAR TODAS LAS MATERIAS (ISI)
+                                // -------------------------------------------------------------------------
+                                // Nivel 1
                                 Materia analisis1 = getMateria(materiaRepository, "Análisis Matemático I");
-                                Materia fisica1 = getMateria(materiaRepository, "Física I");
                                 Materia algebra = getMateria(materiaRepository, "Álgebra y Geometría Analítica");
+                                Materia fisica1 = getMateria(materiaRepository, "Física I");
+                                Materia ingles1 = getMateria(materiaRepository, "Inglés I");
+                                Materia logica = getMateria(materiaRepository, "Lógica y Estructuras Discretas");
+                                Materia algoritmos = getMateria(materiaRepository, "Algoritmos y Estructuras de Datos");
                                 Materia arquitectura = getMateria(materiaRepository, "Arquitectura de Computadoras");
+                                Materia sistemas = getMateria(materiaRepository, "Sistemas y Procesos de Negocio");
 
-                                // MATERIAS 2do AÑO
+                                // Nivel 2
                                 Materia analisis2 = getMateria(materiaRepository, "Análisis Matemático II");
-                                Materia sintaxis = getMateria(materiaRepository,
-                                                "Sintaxis y Semántica de los Lenguajes");
+                                Materia fisica2 = getMateria(materiaRepository, "Física II");
+                                Materia ingSociedad = getMateria(materiaRepository, "Ingeniería y Sociedad");
+                                Materia ingles2 = getMateria(materiaRepository, "Inglés II");
+                                Materia sintaxis = getMateria(materiaRepository, "Sintaxis y Semántica de los Lenguajes");
                                 Materia paradigmas = getMateria(materiaRepository, "Paradigmas de Programación");
                                 Materia sistemasOp = getMateria(materiaRepository, "Sistemas Operativos");
+                                Materia analisisSist = getMateria(materiaRepository, "Análisis de Sistemas de Información");
 
-                                // MATERIAS 3er AÑO
-                                Materia disenio = getMateria(materiaRepository, "Diseño de Sistemas de Información");
+                                // Nivel 3
+                                Materia probEst = getMateria(materiaRepository, "Probabilidad y Estadística");
+                                Materia economia = getMateria(materiaRepository, "Economía");
                                 Materia basesDatos = getMateria(materiaRepository, "Bases de Datos");
-                                Materia analisisNumerico = getMateria(materiaRepository, "Análisis Numérico"); // Agregada
-                                                                                                               // para
-                                                                                                               // Cristian
+                                Materia desSoft = getMateria(materiaRepository, "Desarrollo de Software");
+                                Materia comDatos = getMateria(materiaRepository, "Comunicación de Datos");
+                                Materia analisisNumerico = getMateria(materiaRepository, "Análisis Numérico");
+                                Materia disenio = getMateria(materiaRepository, "Diseño de Sistemas de Información");
 
-                                // ASIGNACIONES DOCENTES
+                                // Nivel 4
+                                Materia legislacion = getMateria(materiaRepository, "Legislación");
+                                Materia ingCalidad = getMateria(materiaRepository, "Ingeniería y Calidad de Software");
+                                Materia redes = getMateria(materiaRepository, "Redes de Datos");
+                                Materia invOp = getMateria(materiaRepository, "Investigación Operativa");
+                                Materia simulacion = getMateria(materiaRepository, "Simulación");
+                                Materia tecAuto = getMateria(materiaRepository, "Tecnologías para la Automatización");
+                                Materia adminSist = getMateria(materiaRepository, "Administración de Sistemas de Información");
+
+                                // Nivel 5
+                                Materia ia = getMateria(materiaRepository, "Inteligencia Artificial");
+                                Materia dataScience = getMateria(materiaRepository, "Ciencia de Datos");
+                                Materia sistGestion = getMateria(materiaRepository, "Sistemas de Gestión");
+                                Materia gestionGer = getMateria(materiaRepository, "Gestión Gerencial");
+                                Materia seguridad = getMateria(materiaRepository, "Seguridad en los Sistemas de Información");
+                                Materia proyectoFinal = getMateria(materiaRepository, "Proyecto Final");
+
+                                // Electivas (Seleccion)
+                                Materia entornos = getMateria(materiaRepository, "Entornos Gráficos");
+                                Materia emprendedores = getMateria(materiaRepository, "Formación de Emprendedores"); // Existe en varios, tomamos el primero q venga
+                                Materia metAgiles = getMateria(materiaRepository, "Metodologías Ágiles");
+                                Materia mineria = getMateria(materiaRepository, "Minería de Datos");
+
+
+                                // -------------------------------------------------------------------------
+                                // CREACION DE COMISIONES (AGRUPADAS 1K1, 1K2...)
+                                // -------------------------------------------------------------------------
+                                
+                                // 1K1 (Todas las de Primero - Mañana)
+                                Comision c1k1 = createComision(comisionRepository, "1K1", 2025, "MAÑANA", lab305,
+                                                Arrays.asList(analisis1, algebra, fisica1, ingles1, logica, algoritmos, arquitectura, sistemas),
+                                                List.of(profeNicolas, profeAna, profeSandra, profeRoberto));
+
+                                // 1K2 (Todas las de Primero - Noche)
+                                Comision c1k2 = createComision(comisionRepository, "1K2", 2025, "NOCHE", aula401,
+                                                Arrays.asList(analisis1, algebra, fisica1, ingles1, logica, algoritmos, arquitectura, sistemas),
+                                                List.of(profeNicolas, profeSandra, profeRoberto));
+
+                                // 2K1 (Todas las de Segundo - Tarde) 
+                                // (Originalmente Tarde, mantenemos Tarde para compatibilidad o cambiamos. El usuario dijo "2K1 tiene 8 materias")
+                                Comision c2k1 = createComision(comisionRepository, "2K1", 2025, "TARDE", aula201,
+                                                Arrays.asList(analisis2, fisica2, ingSociedad, ingles2, sintaxis, paradigmas, sistemasOp, analisisSist),
+                                                List.of(profeCristian, profeNicolas, profeRoberto, profeAna));
+
+                                // 3K1 (Todas las de Tercero - Noche)
+                                Comision c3k1 = createComision(comisionRepository, "3K1", 2025, "NOCHE", lab305,
+                                                Arrays.asList(probEst, economia, basesDatos, desSoft, comDatos, analisisNumerico, disenio),
+                                                List.of(profeNicolas, profeCristian, profeSandra));
+
+                                // 4K1 (Todas las de Cuarto - Noche)
+                                Comision c4k1 = createComision(comisionRepository, "4K1", 2025, "NOCHE", aulaMagna,
+                                                Arrays.asList(legislacion, ingCalidad, redes, invOp, simulacion, tecAuto, adminSist),
+                                                List.of(profeNicolas, profeCristian));
+
+                                // 5K1 (Todas las de Quinto - Noche)
+                                Comision c5k1 = createComision(comisionRepository, "5K1", 2025, "NOCHE", aulaMagna,
+                                                Arrays.asList(ia, dataScience, sistGestion, gestionGer, seguridad, proyectoFinal),
+                                                List.of(profeNicolas));
+
+                                // Electivas
+                                Comision cElectivas = createComision(comisionRepository, "Electivas 2025", 2025, "NOCHE", aulaMagna,
+                                                Arrays.asList(entornos, emprendedores, metAgiles, mineria),
+                                                List.of(profeNicolas));
+
+
+                                // -------------------------------------------------------------------------
+                                // HORARIOS (Ejemplos Legacy + Nuevos)
+                                // -------------------------------------------------------------------------
+                                
+                                // 1K1
+                                crearHorario(horarioCursadoRepository, c1k1, algoritmos, DiaSemana.LUNES, 8, 12);
+                                crearHorario(horarioCursadoRepository, c1k1, sistemas, DiaSemana.MARTES, 10, 13);
+                                crearHorario(horarioCursadoRepository, c1k1, algebra, DiaSemana.JUEVES, 8, 12);
+                                crearHorario(horarioCursadoRepository, c1k1, ingles1, DiaSemana.VIERNES, 8, 10);
+                                
+                                // 1K2
+                                crearHorario(horarioCursadoRepository, c1k2, arquitectura, DiaSemana.LUNES, 18, 22);
+                                crearHorario(horarioCursadoRepository, c1k2, algoritmos, DiaSemana.MIERCOLES, 18, 22);
+                                crearHorario(horarioCursadoRepository, c1k2, analisis1, DiaSemana.JUEVES, 19, 23);
+                                crearHorario(horarioCursadoRepository, c1k2, fisica1, DiaSemana.VIERNES, 18, 22);
+
+                                // 2K1
+                                crearHorario(horarioCursadoRepository, c2k1, analisis2, DiaSemana.LUNES, 14, 18);
+                                crearHorario(horarioCursadoRepository, c2k1, sintaxis, DiaSemana.MARTES, 14, 18);
+                                crearHorario(horarioCursadoRepository, c2k1, paradigmas, DiaSemana.MIERCOLES, 14, 18);
+                                crearHorario(horarioCursadoRepository, c2k1, sistemasOp, DiaSemana.VIERNES, 14, 18);
+
+                                // 3K1
+                                crearHorario(horarioCursadoRepository, c3k1, basesDatos, DiaSemana.MARTES, 18, 22);
+                                crearHorario(horarioCursadoRepository, c3k1, disenio, DiaSemana.JUEVES, 18, 22);
+                                crearHorario(horarioCursadoRepository, c3k1, analisisNumerico, DiaSemana.VIERNES, 18, 21);
+
+                                // ASIGNACIONES DOCENTES (Legacy)
                                 asignarCargo(asignacionMateriaRepository, profeNicolas, algoritmos,
                                                 RolCargo.JEFE_CATEDRA);
                                 asignarCargo(asignacionMateriaRepository, profeNicolas, basesDatos,
@@ -286,44 +388,6 @@ public class DbSeeder {
                                                 RolCargo.JEFE_CATEDRA);
                                 asignarCargo(asignacionMateriaRepository, profeRoberto, fisica1, RolCargo.JEFE_CATEDRA);
                                 asignarCargo(asignacionMateriaRepository, profeAna, ingles1, RolCargo.JEFE_CATEDRA);
-
-                                // COMISIONES Y HORARIOS
-
-                                Comision c1k1 = createComision(comisionRepository, "1K1", 1, "MAÑANA", lab305,
-                                                Arrays.asList(algoritmos, sistemas, ingles1, algebra),
-                                                List.of(profeNicolas, profeAna, profeSandra));
-
-                                crearHorario(horarioCursadoRepository, c1k1, algoritmos, DiaSemana.LUNES, 8, 12);
-                                crearHorario(horarioCursadoRepository, c1k1, sistemas, DiaSemana.MARTES, 10, 13);
-                                crearHorario(horarioCursadoRepository, c1k1, algebra, DiaSemana.JUEVES, 8, 12);
-                                crearHorario(horarioCursadoRepository, c1k1, ingles1, DiaSemana.VIERNES, 8, 10);
-
-                                Comision c1k2 = createComision(comisionRepository, "1K2", 1, "NOCHE", aula401,
-                                                Arrays.asList(algoritmos, analisis1, fisica1, arquitectura),
-                                                List.of(profeNicolas, profeSandra, profeRoberto));
-
-                                crearHorario(horarioCursadoRepository, c1k2, arquitectura, DiaSemana.LUNES, 18, 22);
-                                crearHorario(horarioCursadoRepository, c1k2, algoritmos, DiaSemana.MIERCOLES, 18, 22);
-                                crearHorario(horarioCursadoRepository, c1k2, analisis1, DiaSemana.JUEVES, 19, 23);
-                                crearHorario(horarioCursadoRepository, c1k2, fisica1, DiaSemana.VIERNES, 18, 22);
-
-                                Comision c2k1 = createComision(comisionRepository, "2K1", 2, "TARDE", aula201,
-                                                Arrays.asList(analisis2, sintaxis, paradigmas, sistemasOp),
-                                                List.of(profeCristian, profeNicolas));
-
-                                crearHorario(horarioCursadoRepository, c2k1, analisis2, DiaSemana.LUNES, 14, 18);
-                                crearHorario(horarioCursadoRepository, c2k1, sintaxis, DiaSemana.MARTES, 14, 18);
-                                crearHorario(horarioCursadoRepository, c2k1, paradigmas, DiaSemana.MIERCOLES, 14, 18);
-                                crearHorario(horarioCursadoRepository, c2k1, sistemasOp, DiaSemana.VIERNES, 14, 18);
-
-                                Comision c3k1 = createComision(comisionRepository, "3K1", 3, "NOCHE", lab305,
-                                                Arrays.asList(disenio, basesDatos, analisisNumerico),
-                                                List.of(profeNicolas, profeCristian));
-
-                                crearHorario(horarioCursadoRepository, c3k1, basesDatos, DiaSemana.MARTES, 18, 22);
-                                crearHorario(horarioCursadoRepository, c3k1, disenio, DiaSemana.JUEVES, 18, 22);
-                                crearHorario(horarioCursadoRepository, c3k1, analisisNumerico, DiaSemana.VIERNES, 18,
-                                                21);
 
                                 if (alumnoAgustin != null) {
                                         
