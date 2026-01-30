@@ -47,6 +47,9 @@
     <a href="docs/error_handling.md" target="_blank">
         <img src="https://img.shields.io/badge/🚨%20Manejo%20de%20Errores-D00000?style=for-the-badge&logo=markdown&logoColor=white" alt="Error Handling Badge"/>
     </a>
+    <a href="docs/correlativity_model.md" target="_blank">
+        <img src="https://img.shields.io/badge/🔄%20Correlatividades-25A162?style=for-the-badge&logo=markdown&logoColor=white" alt="Correlatividades Badge"/>
+    </a>
 </div>
 
 <hr>
