@@ -23,6 +23,9 @@ public class Carrera {
     @Column(name = "alias", length = 20, nullable = false)
     private String alias;
 
+    @Column(name = "horas_electivas_requeridas")
+    private Integer horasElectivasRequeridas;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "facultades_carreras",
