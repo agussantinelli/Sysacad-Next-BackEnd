@@ -42,7 +42,7 @@ public class MateriaResponse {
 
         if (materia.getCorrelativas() != null) {
             this.correlativas = materia.getCorrelativas().stream()
-                    .map(m -> new SimpleMateriaDTO(m.getId(), m.getNombre()))
+                    .map(c -> new SimpleMateriaDTO(c.getCorrelativa().getId(), c.getCorrelativa().getNombre()))
                     .collect(Collectors.toList());
         }
     }
