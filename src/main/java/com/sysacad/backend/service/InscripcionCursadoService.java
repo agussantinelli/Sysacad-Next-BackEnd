@@ -43,6 +43,9 @@ public class InscripcionCursadoService {
     @Autowired
     private com.sysacad.backend.mapper.CalificacionCursadaMapper calificacionCursadaMapper;
 
+    @Autowired
+    private CorrelatividadService correlatividadService;
+
     public InscripcionCursadoResponse inscribir(InscripcionCursadoRequest request) {
 
         // Validar Usuario
@@ -67,6 +70,11 @@ public class InscripcionCursadoService {
         // Validar si ya está inscripto
         if (inscripcionCursadoRepository.findByUsuarioIdAndMateriaId(alumno.getId(), materia.getId()).isPresent()) {
             throw new BusinessLogicException("El alumno ya está inscripto a cursar esta materia.");
+        }
+
+        // Validar Correlativas
+        if (!correlatividadService.puedeCursar(alumno.getId(), materia.getId())) {
+            throw new BusinessLogicException("El alumno no cumple con las correlativas necesarias para cursar esta materia.");
         }
 
         // Finalmente Crea la Inscripción

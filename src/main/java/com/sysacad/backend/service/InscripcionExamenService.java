@@ -36,6 +36,9 @@ public class InscripcionExamenService {
     @Autowired
     private com.sysacad.backend.mapper.InscripcionExamenMapper inscripcionExamenMapper;
 
+    @Autowired
+    private CorrelatividadService correlatividadService;
+
     @Transactional
     public InscripcionExamenResponse inscribirAlumno(InscripcionExamenRequest request) {
         DetalleMesaExamen.DetalleId detalleId = new DetalleMesaExamen.DetalleId(request.getIdMesaExamen(),
@@ -46,6 +49,11 @@ public class InscripcionExamenService {
 
         Usuario usuario = usuarioRepository.findById(request.getIdUsuario())
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con ID: " + request.getIdUsuario()));
+
+        // Validar Correlativas para Rendir
+        if (!correlatividadService.puedeRendir(usuario.getId(), detalle.getMateria().getId())) {
+            throw new BusinessLogicException("El alumno no cumple con los requisitos (Regularidad + Correlativas) para rendir esta materia.");
+        }
 
         // Validar si ya está inscripto
         Optional<InscripcionExamen> existente = inscripcionExamenRepository
