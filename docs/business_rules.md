@@ -40,6 +40,7 @@ Este documento detalla las reglas de negocio y consideraciones técnicas derivad
     - **Equivalencias Automáticas**:
         - Al realizar una nueva matriculación, el sistema busca coincidencias entre las "Materias Aprobadas" históricas del alumno y las "Materias Origen" definidas en las reglas de equivalencia del nuevo plan.
         - Si existe coincidencia y la materia destino aún no está aprobada, se genera automáticamente un registro de examen con estado `EQUIVALENCIA` (sin nota numérica).
-    - **Validación de Correlativas (Visual)**:
-        - Para habilitar la inscripción a cursado, se verifica que todas las materias correlativas requeridas estén en estado `REGULAR` o `APROBADA`.
-        - Esta validación impide la selección de materias bloqueadas en la interfaz de usuario.
+    - **Validación de Correlativas**:
+        - **REGULAR**: Para cursar, las correlativas de este tipo deben estar en estado `REGULAR` (Cursada Aprobada) o `APROBADO` (Final/Promoción).
+        - **PROMOCIONADA**: Para cursar, las correlativas de este tipo deben estar en estado `PROMOCIONADO` o `APROBADO` (Final).
+        - Esta validación impide la inscripción si no se cumplen los requisitos específicos definidos en el Plan de Estudio.
