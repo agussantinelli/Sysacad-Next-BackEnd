@@ -105,7 +105,7 @@
         <tr>
             <td><strong>📚 Curricular</strong></td>
             <td><code>materias</code>, <code>plan_materias</code>, <code>correlativas</code>, <code>equivalencias</code></td>
-            <td>Asignaturas con tipología (Básica/Específica/Compartida) y <strong>nueva gestión de Modalidad (Presencial/Virtual/Mixto)</strong>.</td>
+            <td>Asignaturas con tipología (Básica/Específica/Compartida), gestión de Modalidad y <strong>Validación Estricta de Correlatividades (Regular/Promocionada)</strong>.</td>
         </tr>
         <tr>
             <td><strong>📅 Gestión de Cursada</strong></td>
