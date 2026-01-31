@@ -33,9 +33,9 @@ public class InscripcionCursadoController {
             Authentication auth) {
                 
         if (request.getIdUsuario() == null && auth != null) {
-            String email = auth.getName();
-            Usuario usuario = usuarioRepository.findByMail(email)
-                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+            String identifier = auth.getName();
+            Usuario usuario = usuarioRepository.findByLegajoOrMail(identifier, identifier)
+                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado: " + identifier));
             request.setIdUsuario(usuario.getId());
         }
         return ResponseEntity.ok(inscripcionCursadoService.inscribir(request));
@@ -44,9 +44,9 @@ public class InscripcionCursadoController {
     @GetMapping("/mis-cursadas")
     @PreAuthorize("hasRole('ESTUDIANTE')")
     public ResponseEntity<List<InscripcionCursadoResponse>> getMisCursadas(Authentication auth) {
-        String email = auth.getName();
-        Usuario usuario = usuarioRepository.findByMail(email)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        String identifier = auth.getName();
+        Usuario usuario = usuarioRepository.findByLegajoOrMail(identifier, identifier)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado: " + identifier));
 
         return ResponseEntity.ok(inscripcionCursadoService.obtenerHistorial(usuario.getId()));
     }
@@ -62,9 +62,9 @@ public class InscripcionCursadoController {
     public ResponseEntity<List<InscripcionCursadoResponse>> getCursadasActuales(Authentication auth, @RequestParam(required = false) UUID idUsuario) {
         UUID id = idUsuario;
         if (id == null) {
-            String email = auth.getName();
-            Usuario usuario = usuarioRepository.findByMail(email)
-                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+            String identifier = auth.getName();
+            Usuario usuario = usuarioRepository.findByLegajoOrMail(identifier, identifier)
+                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado: " + identifier));
             id = usuario.getId();
         }
         return ResponseEntity.ok(inscripcionCursadoService.obtenerCursadasActuales(id));
@@ -79,9 +79,9 @@ public class InscripcionCursadoController {
         
         UUID id = usuarioId;
         if (id == null) {
-            String email = auth.getName();
-            Usuario usuario = usuarioRepository.findByMail(email)
-                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+            String identifier = auth.getName();
+            Usuario usuario = usuarioRepository.findByLegajoOrMail(identifier, identifier)
+                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado: " + identifier));
             id = usuario.getId();
         }
         return ResponseEntity.ok(inscripcionCursadoService.obtenerOpcionesInscripcion(idMateria, id));
