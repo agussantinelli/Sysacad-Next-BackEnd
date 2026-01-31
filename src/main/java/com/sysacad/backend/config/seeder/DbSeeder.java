@@ -57,6 +57,10 @@ public class DbSeeder {
                         Usuario profeAna = null;
                         Usuario profeSandra = null;
                         Usuario profeCristian = null;
+                        Usuario profeGustavo = null;
+                        Usuario profeClaudia = null;
+                        Usuario profeJorge = null;
+                        Usuario profeValeria = null;
 
                         Usuario alumnoAgustin = null;
                         Usuario alumnoMaria = null;
@@ -113,6 +117,26 @@ public class DbSeeder {
                                                 "22222227", "cristian@sysacad.com", RolUsuario.PROFESOR, Genero.M,
                                                 "Ingeniero Electrónico",
                                                 LocalDate.of(1988, 8, 25));
+                                profeGustavo = createUsuario(usuarioRepository, passwordEncoder, "55553", "Gustavo",
+                                                "Perez",
+                                                "22222228", "gustavo@sysacad.com", RolUsuario.PROFESOR, Genero.M,
+                                                "Ingeniero en Sistemas",
+                                                LocalDate.of(1980, 2, 20));
+                                profeClaudia = createUsuario(usuarioRepository, passwordEncoder, "55554", "Claudia",
+                                                "Lopez",
+                                                "22222229", "claudia@sysacad.com", RolUsuario.PROFESOR, Genero.F,
+                                                "Licenciada en Educación",
+                                                LocalDate.of(1975, 5, 15));
+                                profeJorge = createUsuario(usuarioRepository, passwordEncoder, "55556", "Jorge",
+                                                "Garcia",
+                                                "22222230", "jorge@sysacad.com", RolUsuario.PROFESOR, Genero.M,
+                                                "Abogado",
+                                                LocalDate.of(1970, 10, 10));
+                                profeValeria = createUsuario(usuarioRepository, passwordEncoder, "55557", "Valeria",
+                                                "Martinez",
+                                                "22222231", "valeria@sysacad.com", RolUsuario.PROFESOR, Genero.F,
+                                                "Contadora",
+                                                LocalDate.of(1983, 12, 12));
 
                                 // ESTUDIANTES
                                 alumnoAgustin = createUsuario(usuarioRepository, passwordEncoder, "55555", "Agustin",
@@ -172,6 +196,10 @@ public class DbSeeder {
                                 profeAna = usuarioRepository.findByLegajo("54444").orElse(null);
                                 profeSandra = usuarioRepository.findByLegajo("55551").orElse(null);
                                 profeCristian = usuarioRepository.findByLegajo("55552").orElse(null);
+                                profeGustavo = usuarioRepository.findByLegajo("55553").orElse(null);
+                                profeClaudia = usuarioRepository.findByLegajo("55554").orElse(null);
+                                profeJorge = usuarioRepository.findByLegajo("55556").orElse(null);
+                                profeValeria = usuarioRepository.findByLegajo("55557").orElse(null);
                                 alumnoAgustin = usuarioRepository.findByLegajo("55555").orElse(null);
                                 alumnoMaria = usuarioRepository.findByLegajo("56666").orElse(null);
                                 alumnoJuan = usuarioRepository.findByLegajo("57777").orElse(null);
@@ -311,75 +339,75 @@ public class DbSeeder {
                                 // 1K1 (Todas las de Primero - Mañana)
                                 Comision c1k1 = createComision(comisionRepository, "1K1", 2025, "MAÑANA", lab305,
                                                 Arrays.asList(analisis1, algebra, fisica1, ingles1, logica, algoritmos, arquitectura, sistemas),
-                                                List.of(profeNicolas, profeAna, profeSandra, profeRoberto));
+                                                List.of(profeNicolas, profeAna, profeSandra, profeRoberto, profeGustavo, profeCristian, profeValeria));
 
                                 // 1K2 (Todas las de Primero - Noche)
                                 Comision c1k2 = createComision(comisionRepository, "1K2", 2025, "NOCHE", aula401,
                                                 Arrays.asList(analisis1, algebra, fisica1, ingles1, logica, algoritmos, arquitectura, sistemas),
-                                                List.of(profeNicolas, profeSandra, profeRoberto));
+                                                List.of(profeGustavo, profeClaudia, profeJorge, profeValeria));
 
                                 // 2K1 (Todas las de Segundo - Tarde) 
                                 // (Originalmente Tarde, mantenemos Tarde para compatibilidad o cambiamos. El usuario dijo "2K1 tiene 8 materias")
                                 Comision c2k1 = createComision(comisionRepository, "2K1", 2025, "TARDE", aula201,
                                                 Arrays.asList(analisis2, fisica2, ingSociedad, ingles2, sintaxis, paradigmas, sistemasOp, analisisSist),
-                                                List.of(profeCristian, profeNicolas, profeRoberto, profeAna));
+                                                List.of(profeCristian, profeRoberto, profeLaura, profeAna, profeNicolas, profeGustavo, profeClaudia, profeJorge));
 
                                 // 3K1 (Todas las de Tercero - Noche)
                                 Comision c3k1 = createComision(comisionRepository, "3K1", 2025, "NOCHE", lab305,
                                                 Arrays.asList(probEst, economia, basesDatos, desSoft, comDatos, analisisNumerico, disenio),
-                                                List.of(profeNicolas, profeCristian, profeSandra));
+                                                List.of(profeSandra, profeValeria, profeLaura, profeNicolas, profeCristian, profeRoberto));
 
                                 // 4K1 (Todas las de Cuarto - Noche)
                                 Comision c4k1 = createComision(comisionRepository, "4K1", 2025, "NOCHE", aulaMagna,
                                                 Arrays.asList(legislacion, ingCalidad, redes, invOp, simulacion, tecAuto, adminSist),
-                                                List.of(profeNicolas, profeCristian));
+                                                List.of(profeLaura, profeCristian, profeRoberto, profeSandra, profeGustavo));
 
                                 // 5K1 (Todas las de Quinto - Noche)
                                 Comision c5k1 = createComision(comisionRepository, "5K1", 2025, "NOCHE", aulaMagna,
                                                 Arrays.asList(ia, dataScience, sistGestion, gestionGer, seguridad, proyectoFinal),
-                                                List.of(profeNicolas));
+                                                List.of(profeNicolas, profeLaura, profeJorge, profeCristian));
 
                                 // Electivas
                                 Comision cElectivas = createComision(comisionRepository, "Electivas 2025 - Noche", 2025, "NOCHE", aulaMagna,
                                                 Arrays.asList(entornos, emprendedores, metAgiles, mineria),
-                                                List.of(profeNicolas));
+                                                List.of(profeNicolas, profeClaudia));
 
                                 // NUEVAS COMISIONES MASIVAS
                                 // Nivel 1
                                 Comision c1k3 = createComision(comisionRepository, "1K3", 2025, "TARDE", aula101,
                                         Arrays.asList(analisis1, algebra, fisica1, ingles1, logica, algoritmos, arquitectura, sistemas),
-                                        List.of(profeLaura, profeNicolas));
+                                        List.of(profeLaura, profeNicolas, profeSandra, profeRoberto, profeAna, profeCristian));
                                 Comision c1k4 = createComision(comisionRepository, "1K4", 2025, "MAÑANA", aula301,
                                         Arrays.asList(analisis1, algebra, fisica1, ingles1, logica, algoritmos, arquitectura, sistemas),
-                                        List.of(profeCristian));
+                                        List.of(profeCristian, profeGustavo, profeSandra, profeRoberto, profeAna));
 
                                 // Nivel 2
                                 Comision c2k2 = createComision(comisionRepository, "2K2", 2025, "NOCHE", aula402,
                                         Arrays.asList(analisis2, fisica2, ingSociedad, ingles2, sintaxis, paradigmas, sistemasOp, analisisSist),
-                                        List.of(profeRoberto, profeAna));
+                                        List.of(profeRoberto, profeAna, profeJorge, profeCristian, profeNicolas, profeLaura));
                                 Comision c2k3 = createComision(comisionRepository, "2K3", 2025, "MAÑANA", aulaMagna,
                                         Arrays.asList(analisis2, fisica2, ingSociedad, ingles2, sintaxis, paradigmas, sistemasOp, analisisSist),
-                                        List.of(profeSandra));
+                                        List.of(profeSandra, profeClaudia, profeRoberto, profeAna, profeCristian, profeNicolas, profeLaura));
 
                                 // Nivel 3
                                 Comision c3k2 = createComision(comisionRepository, "3K2", 2025, "NOCHE", sum,
                                         Arrays.asList(probEst, economia, basesDatos, desSoft, comDatos, analisisNumerico, disenio),
-                                        List.of(profeLaura, profeSandra));
+                                        List.of(profeLaura, profeSandra, profeValeria, profeCristian, profeRoberto, profeNicolas));
 
                                 // Nivel 4
                                 Comision c4k2 = createComision(comisionRepository, "4K2", 2025, "NOCHE", aula201,
                                         Arrays.asList(legislacion, ingCalidad, redes, invOp, simulacion, tecAuto, adminSist),
-                                        List.of(profeRoberto, profeLaura));
+                                        List.of(profeRoberto, profeLaura, profeGustavo, profeCristian, profeSandra));
 
                                 // Nivel 5
                                 Comision c5k2 = createComision(comisionRepository, "5K2", 2025, "NOCHE", aula402,
                                         Arrays.asList(ia, dataScience, sistGestion, gestionGer, seguridad, proyectoFinal),
-                                        List.of(profeCristian));
+                                        List.of(profeCristian, profeJorge, profeNicolas, profeLaura));
 
                                 // Electivas Mañana
                                 Comision cElec2 = createComision(comisionRepository, "Electivas 2025 - Mañana", 2025, "MAÑANA", aula101,
                                         Arrays.asList(entornos, emprendedores, metAgiles, mineria),
-                                        List.of(profeLaura));
+                                        List.of(profeLaura, profeClaudia, profeNicolas));
 
 
                                 // -------------------------------------------------------------------------
@@ -422,21 +450,93 @@ public class DbSeeder {
                                 crearHorario(horarioCursadoRepository, cElectivas, emprendedores, DiaSemana.MIERCOLES, 18, 22);
                                 crearHorario(horarioCursadoRepository, cElectivas, metAgiles, DiaSemana.JUEVES, 18, 22);
 
-                                asignarCargo(asignacionMateriaRepository, profeNicolas, algoritmos,
-                                                RolCargo.JEFE_CATEDRA);
-                                asignarCargo(asignacionMateriaRepository, profeNicolas, basesDatos,
-                                                RolCargo.JEFE_CATEDRA);
-                                asignarCargo(asignacionMateriaRepository, profeNicolas, sintaxis,
-                                                RolCargo.JEFE_CATEDRA);
-                                asignarCargo(asignacionMateriaRepository, profeSandra, analisis1,
-                                                RolCargo.JEFE_CATEDRA);
+                                // ------------------------------------------------------------------------------------
+                                // ASIGNACIONES MANUALES DE PROFESORES A MATERIAS (Mix JEFE_CATEDRA y DOCENTE)
+                                // ------------------------------------------------------------------------------------
+
+                                // NICOLAS (Core IT & Final)
+                                asignarCargo(asignacionMateriaRepository, profeNicolas, sistemas, RolCargo.JEFE_CATEDRA);
+                                asignarCargo(asignacionMateriaRepository, profeNicolas, logica, RolCargo.JEFE_CATEDRA);
+                                asignarCargo(asignacionMateriaRepository, profeNicolas, sistemasOp, RolCargo.JEFE_CATEDRA);
+                                asignarCargo(asignacionMateriaRepository, profeNicolas, ia, RolCargo.JEFE_CATEDRA);
+                                asignarCargo(asignacionMateriaRepository, profeNicolas, dataScience, RolCargo.JEFE_CATEDRA);
+                                asignarCargo(asignacionMateriaRepository, profeNicolas, basesDatos, RolCargo.JEFE_CATEDRA); // Added missing assignment
+                                asignarCargo(asignacionMateriaRepository, profeNicolas, algoritmos, RolCargo.JEFE_CATEDRA); // Added missing assignment
+                                asignarCargo(asignacionMateriaRepository, profeNicolas, proyectoFinal, RolCargo.JEFE_CATEDRA);
+                                asignarCargo(asignacionMateriaRepository, profeNicolas, ingSociedad, RolCargo.DOCENTE);
+                                asignarCargo(asignacionMateriaRepository, profeNicolas, entornos, RolCargo.JEFE_CATEDRA);
+                                asignarCargo(asignacionMateriaRepository, profeNicolas, metAgiles, RolCargo.JEFE_CATEDRA);
+                                asignarCargo(asignacionMateriaRepository, profeNicolas, mineria, RolCargo.JEFE_CATEDRA);
+                                asignarCargo(asignacionMateriaRepository, profeNicolas, emprendedores, RolCargo.DOCENTE);
+
+                                // SANDRA (Matemáticas)
+                                asignarCargo(asignacionMateriaRepository, profeSandra, analisis1, RolCargo.JEFE_CATEDRA);
                                 asignarCargo(asignacionMateriaRepository, profeSandra, algebra, RolCargo.JEFE_CATEDRA);
-                                asignarCargo(asignacionMateriaRepository, profeCristian, analisis2,
-                                                RolCargo.JEFE_CATEDRA);
-                                asignarCargo(asignacionMateriaRepository, profeCristian, analisisNumerico,
-                                                RolCargo.JEFE_CATEDRA);
+                                asignarCargo(asignacionMateriaRepository, profeSandra, probEst, RolCargo.JEFE_CATEDRA);
+                                asignarCargo(asignacionMateriaRepository, profeSandra, invOp, RolCargo.JEFE_CATEDRA);
+                                asignarCargo(asignacionMateriaRepository, profeSandra, analisisNumerico, RolCargo.JEFE_CATEDRA);
+                                asignarCargo(asignacionMateriaRepository, profeSandra, analisis2, RolCargo.DOCENTE);
+
+                                // ROBERTO (Física & Redes)
                                 asignarCargo(asignacionMateriaRepository, profeRoberto, fisica1, RolCargo.JEFE_CATEDRA);
+                                asignarCargo(asignacionMateriaRepository, profeRoberto, fisica2, RolCargo.JEFE_CATEDRA);
+                                asignarCargo(asignacionMateriaRepository, profeRoberto, comDatos, RolCargo.JEFE_CATEDRA);
+                                asignarCargo(asignacionMateriaRepository, profeRoberto, redes, RolCargo.JEFE_CATEDRA);
+                                asignarCargo(asignacionMateriaRepository, profeRoberto, tecAuto, RolCargo.JEFE_CATEDRA);
+                                asignarCargo(asignacionMateriaRepository, profeRoberto, sintaxis, RolCargo.DOCENTE);
+                                asignarCargo(asignacionMateriaRepository, profeRoberto, arquitectura, RolCargo.DOCENTE);
+
+                                // ANA (Idiomas)
                                 asignarCargo(asignacionMateriaRepository, profeAna, ingles1, RolCargo.JEFE_CATEDRA);
+                                asignarCargo(asignacionMateriaRepository, profeAna, ingles2, RolCargo.JEFE_CATEDRA);
+
+                                // CRISTIAN (Programación & Gestión Calidad)
+                                asignarCargo(asignacionMateriaRepository, profeCristian, arquitectura, RolCargo.JEFE_CATEDRA);
+                                asignarCargo(asignacionMateriaRepository, profeCristian, paradigmas, RolCargo.JEFE_CATEDRA);
+                                asignarCargo(asignacionMateriaRepository, profeCristian, desSoft, RolCargo.JEFE_CATEDRA);
+                                asignarCargo(asignacionMateriaRepository, profeCristian, ingCalidad, RolCargo.JEFE_CATEDRA);
+                                asignarCargo(asignacionMateriaRepository, profeCristian, simulacion, RolCargo.JEFE_CATEDRA);
+                                asignarCargo(asignacionMateriaRepository, profeCristian, seguridad, RolCargo.JEFE_CATEDRA);
+                                asignarCargo(asignacionMateriaRepository, profeCristian, analisis2, RolCargo.JEFE_CATEDRA);
+
+                                // LAURA (Sistemas & Gestión)
+                                asignarCargo(asignacionMateriaRepository, profeLaura, ingSociedad, RolCargo.JEFE_CATEDRA);
+                                asignarCargo(asignacionMateriaRepository, profeLaura, analisisSist, RolCargo.JEFE_CATEDRA);
+                                asignarCargo(asignacionMateriaRepository, profeLaura, economia, RolCargo.JEFE_CATEDRA);
+                                asignarCargo(asignacionMateriaRepository, profeLaura, disenio, RolCargo.JEFE_CATEDRA);
+                                asignarCargo(asignacionMateriaRepository, profeLaura, legislacion, RolCargo.JEFE_CATEDRA);
+                                asignarCargo(asignacionMateriaRepository, profeLaura, adminSist, RolCargo.JEFE_CATEDRA);
+                                asignarCargo(asignacionMateriaRepository, profeLaura, sistGestion, RolCargo.JEFE_CATEDRA);
+                                asignarCargo(asignacionMateriaRepository, profeLaura, gestionGer, RolCargo.JEFE_CATEDRA);
+                                asignarCargo(asignacionMateriaRepository, profeLaura, entornos, RolCargo.DOCENTE);
+                                asignarCargo(asignacionMateriaRepository, profeLaura, metAgiles, RolCargo.DOCENTE);
+                                asignarCargo(asignacionMateriaRepository, profeLaura, mineria, RolCargo.DOCENTE);
+                                asignarCargo(asignacionMateriaRepository, profeLaura, emprendedores, RolCargo.DOCENTE); // Ella es Adjunta en Electivas
+
+                                // GUSTAVO (Apoyo Técnico)
+                                asignarCargo(asignacionMateriaRepository, profeGustavo, algoritmos, RolCargo.DOCENTE);
+                                asignarCargo(asignacionMateriaRepository, profeGustavo, sistemas, RolCargo.DOCENTE);
+                                asignarCargo(asignacionMateriaRepository, profeGustavo, paradigmas, RolCargo.DOCENTE);
+                                asignarCargo(asignacionMateriaRepository, profeGustavo, simulacion, RolCargo.DOCENTE);
+                                asignarCargo(asignacionMateriaRepository, profeGustavo, logica, RolCargo.DOCENTE);
+
+                                // CLAUDIA (Apoyo General)
+                                asignarCargo(asignacionMateriaRepository, profeClaudia, analisis1, RolCargo.DOCENTE);
+                                asignarCargo(asignacionMateriaRepository, profeClaudia, algebra, RolCargo.DOCENTE);
+                                asignarCargo(asignacionMateriaRepository, profeClaudia, arquitectura, RolCargo.DOCENTE);
+                                asignarCargo(asignacionMateriaRepository, profeClaudia, sistemasOp, RolCargo.DOCENTE);
+                                asignarCargo(asignacionMateriaRepository, profeClaudia, emprendedores, RolCargo.JEFE_CATEDRA);
+
+                                // JORGE (Apoyo Gestión)
+                                asignarCargo(asignacionMateriaRepository, profeJorge, fisica1, RolCargo.DOCENTE);
+                                asignarCargo(asignacionMateriaRepository, profeJorge, analisisSist, RolCargo.DOCENTE);
+                                asignarCargo(asignacionMateriaRepository, profeJorge, gestionGer, RolCargo.DOCENTE);
+                                
+                                // VALERIA (Apoyo Cs. Básicas)
+                                asignarCargo(asignacionMateriaRepository, profeValeria, ingles1, RolCargo.DOCENTE);
+                                asignarCargo(asignacionMateriaRepository, profeValeria, logica, RolCargo.DOCENTE);
+                                asignarCargo(asignacionMateriaRepository, profeValeria, probEst, RolCargo.DOCENTE);
+                                asignarCargo(asignacionMateriaRepository, profeValeria, economia, RolCargo.DOCENTE);
 
                                 if (alumnoAgustin != null) {
                                         
