@@ -11,21 +11,26 @@ import org.mapstruct.factory.Mappers;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
-public interface ComisionMapper {
+public abstract class ComisionMapper {
 
-    ComisionMapper INSTANCE = Mappers.getMapper(ComisionMapper.class);
+    public static final ComisionMapper INSTANCE = Mappers.getMapper(ComisionMapper.class);
 
-    ComisionResponse toDTO(Comision comision);
+    public ComisionResponse toDTO(Comision comision) {
+        if (comision == null) {
+            return null;
+        }
+        return new ComisionResponse(comision);
+    }
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "materias", ignore = true) 
     @Mapping(target = "profesores", ignore = true)
-    Comision toEntity(ComisionRequest request);
+    public abstract Comision toEntity(ComisionRequest request);
 
-    List<ComisionResponse> toDTOs(List<Comision> comisiones);
+    public abstract List<ComisionResponse> toDTOs(List<Comision> comisiones);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "materias", ignore = true)
     @Mapping(target = "profesores", ignore = true)
-    void updateEntityFromRequest(ComisionRequest request, @MappingTarget Comision comision);
+    public abstract void updateEntityFromRequest(ComisionRequest request, @MappingTarget Comision comision);
 }
