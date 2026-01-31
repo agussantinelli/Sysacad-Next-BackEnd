@@ -71,11 +71,15 @@ public class MesaExamenService {
         com.sysacad.backend.modelo.Usuario presidente = usuarioRepository.findById(request.getIdPresidente())
                 .orElseThrow(() -> new ResourceNotFoundException("Presidente de mesa no encontrado con ID: " + request.getIdPresidente()));
 
-        // El mapper para entity ignora ID compuesto y objs.
-        // Usamos el entity directo o mapper ignorando esos campos.
+        List<DetalleMesaExamen> existentes = detalleMesaExamenRepository.findByMesaExamenId(mesa.getId());
+        int siguienteNro = existentes.stream()
+                .mapToInt(d -> d.getId().getNroDetalle())
+                .max()
+                .orElse(0) + 1;
+
         DetalleMesaExamen detalle = detalleMesaExamenMapper.toEntity(request);
         
-        detalle.setId(new DetalleMesaExamen.DetalleId(mesa.getId(), request.getNroDetalle()));
+        detalle.setId(new DetalleMesaExamen.DetalleId(mesa.getId(), siguienteNro));
         detalle.setMesaExamen(mesa);
         detalle.setMateria(materia);
         detalle.setPresidente(presidente);
