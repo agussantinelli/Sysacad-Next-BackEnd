@@ -112,5 +112,36 @@ public class InscripcionCursadoService {
     public List<InscripcionCursadoResponse> obtenerCursadasActuales(UUID idUsuario) {
         return inscripcionCursadoMapper.toDTOs(inscripcionCursadoRepository.findByUsuarioIdAndEstado(idUsuario, com.sysacad.backend.modelo.enums.EstadoCursada.CURSANDO));
     }
+
+    @Autowired
+    private com.sysacad.backend.mapper.ComisionMapper comisionMapper;
+
+    public List<com.sysacad.backend.dto.comision.ComisionResponse> obtenerComisionesDisponibles(UUID idMateria, UUID idUsuario) {
+        // 1. Validar Materia y Usuario
+        Materia materia = materiaRepository.findById(idMateria)
+                .orElseThrow(() -> new ResourceNotFoundException("Materia no encontrada"));
+        
+        Usuario alumno = usuarioRepository.findById(idUsuario)
+                .orElseThrow(() -> new ResourceNotFoundException("Alumno no encontrado"));
+
+        // 2. Validar Correlativas
+        if (!correlatividadService.puedeCursar(idUsuario, idMateria)) {
+            // Opcional: Lanzar excepción o devolver lista vacía. 
+            // Para "disponibles", devolver vacío tiene sentido, pero si el usuario preguntó por ESTA materia, mejor explicar por qué.
+            throw new BusinessLogicException("El alumno no cumple con las correlativas para cursar esta materia.");
+        }
+
+        // 3. Validar si ya está cursando o aprobada (si aplica)
+        boolean yaInscripto = inscripcionCursadoRepository.findByUsuarioIdAndMateriaId(idUsuario, idMateria).isPresent();
+        if (yaInscripto) {
+             throw new BusinessLogicException("El alumno ya está inscripto en esta materia.");
+        }
+        
+        // 4. Buscar Comisiones que dicten la materia
+        List<Comision> comisiones = comisionRepository.findByMateriasId(idMateria);
+
+        // 5. Filtrar (si tuviera cupos, etc) - Por ahora devolvemos todas las que dictan la materia
+        return comisionMapper.toDTOs(comisiones);
+    }
 }
 
