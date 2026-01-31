@@ -414,41 +414,147 @@ public class DbSeeder {
                                 // HORARIOS (Ejemplos Legacy + Nuevos)
                                 // -------------------------------------------------------------------------
                                 
-                                // 1K1
-                                crearHorario(horarioCursadoRepository, c1k1, algoritmos, DiaSemana.LUNES, 8, 12);
-                                crearHorario(horarioCursadoRepository, c1k1, sistemas, DiaSemana.MARTES, 10, 13);
-                                crearHorario(horarioCursadoRepository, c1k1, algebra, DiaSemana.JUEVES, 8, 12);
-                                crearHorario(horarioCursadoRepository, c1k1, ingles1, DiaSemana.VIERNES, 8, 10);
+                                // -------------------------------------------------------------------------
+                                // HORARIOS (Schedules - No Overlaps)
+                                // -------------------------------------------------------------------------
                                 
-                                // 1K2
-                                crearHorario(horarioCursadoRepository, c1k2, arquitectura, DiaSemana.LUNES, 18, 22);
-                                crearHorario(horarioCursadoRepository, c1k2, algoritmos, DiaSemana.MIERCOLES, 18, 22);
-                                crearHorario(horarioCursadoRepository, c1k2, analisis1, DiaSemana.JUEVES, 19, 23);
-                                crearHorario(horarioCursadoRepository, c1k2, fisica1, DiaSemana.VIERNES, 18, 22);
+                                // MAÑANA: 8-12 approx
+                                // TARDE: 14-18 approx
+                                // NOCHE: 18-22 approx
 
-                                // 2K1
+                                // 1K1 (Mañana 8 subjects) - L/V 8-12 (4 hrs) + extras
+                                crearHorario(horarioCursadoRepository, c1k1, analisis1, DiaSemana.LUNES, 8, 12);
+                                crearHorario(horarioCursadoRepository, c1k1, algebra, DiaSemana.MARTES, 8, 12);
+                                crearHorario(horarioCursadoRepository, c1k1, fisica1, DiaSemana.MIERCOLES, 8, 12);
+                                crearHorario(horarioCursadoRepository, c1k1, logica, DiaSemana.JUEVES, 8, 12);
+                                crearHorario(horarioCursadoRepository, c1k1, algoritmos, DiaSemana.VIERNES, 8, 12);
+                                crearHorario(horarioCursadoRepository, c1k1, arquitectura, DiaSemana.SABADO, 8, 12);
+                                crearHorario(horarioCursadoRepository, c1k1, sistemas, DiaSemana.LUNES, 12, 14); // Extended
+                                crearHorario(horarioCursadoRepository, c1k1, ingles1, DiaSemana.MIERCOLES, 12, 14); // Extended
+
+                                // 1K2 (Noche 8 subjects)
+                                crearHorario(horarioCursadoRepository, c1k2, analisis1, DiaSemana.LUNES, 18, 22);
+                                crearHorario(horarioCursadoRepository, c1k2, algebra, DiaSemana.MARTES, 18, 22);
+                                crearHorario(horarioCursadoRepository, c1k2, fisica1, DiaSemana.MIERCOLES, 18, 22);
+                                crearHorario(horarioCursadoRepository, c1k2, logica, DiaSemana.JUEVES, 18, 22);
+                                crearHorario(horarioCursadoRepository, c1k2, algoritmos, DiaSemana.VIERNES, 18, 22);
+                                crearHorario(horarioCursadoRepository, c1k2, arquitectura, DiaSemana.SABADO, 9, 13);
+                                crearHorario(horarioCursadoRepository, c1k2, sistemas, DiaSemana.LUNES, 22, 23); // Late
+                                crearHorario(horarioCursadoRepository, c1k2, ingles1, DiaSemana.MIERCOLES, 22, 23); // Late
+
+                                // 1K3 (Tarde 8 subjects)
+                                crearHorario(horarioCursadoRepository, c1k3, analisis1, DiaSemana.LUNES, 13, 17);
+                                crearHorario(horarioCursadoRepository, c1k3, algebra, DiaSemana.MARTES, 13, 17);
+                                crearHorario(horarioCursadoRepository, c1k3, fisica1, DiaSemana.MIERCOLES, 13, 17);
+                                crearHorario(horarioCursadoRepository, c1k3, logica, DiaSemana.JUEVES, 13, 17);
+                                crearHorario(horarioCursadoRepository, c1k3, algoritmos, DiaSemana.VIERNES, 13, 17);
+                                crearHorario(horarioCursadoRepository, c1k3, arquitectura, DiaSemana.SABADO, 9, 13);
+                                crearHorario(horarioCursadoRepository, c1k3, sistemas, DiaSemana.MARTES, 17, 19);
+                                crearHorario(horarioCursadoRepository, c1k3, ingles1, DiaSemana.JUEVES, 17, 19);
+
+                                // 1K4 (Mañana 8 subjects)
+                                crearHorario(horarioCursadoRepository, c1k4, analisis1, DiaSemana.LUNES, 8, 12);
+                                crearHorario(horarioCursadoRepository, c1k4, algebra, DiaSemana.MARTES, 8, 12);
+                                crearHorario(horarioCursadoRepository, c1k4, fisica1, DiaSemana.MIERCOLES, 8, 12);
+                                crearHorario(horarioCursadoRepository, c1k4, logica, DiaSemana.JUEVES, 8, 12);
+                                crearHorario(horarioCursadoRepository, c1k4, algoritmos, DiaSemana.VIERNES, 8, 12);
+                                crearHorario(horarioCursadoRepository, c1k4, arquitectura, DiaSemana.SABADO, 8, 12);
+                                crearHorario(horarioCursadoRepository, c1k4, sistemas, DiaSemana.VIERNES, 12, 14);
+                                crearHorario(horarioCursadoRepository, c1k4, ingles1, DiaSemana.MARTES, 12, 14);
+
+                                // 2K1 (Tarde 8 subjects) - L/V 14-18
                                 crearHorario(horarioCursadoRepository, c2k1, analisis2, DiaSemana.LUNES, 14, 18);
-                                crearHorario(horarioCursadoRepository, c2k1, sintaxis, DiaSemana.MARTES, 14, 18);
-                                crearHorario(horarioCursadoRepository, c2k1, paradigmas, DiaSemana.MIERCOLES, 14, 18);
+                                crearHorario(horarioCursadoRepository, c2k1, fisica2, DiaSemana.MARTES, 14, 18);
+                                crearHorario(horarioCursadoRepository, c2k1, sintaxis, DiaSemana.MIERCOLES, 14, 18);
+                                crearHorario(horarioCursadoRepository, c2k1, paradigmas, DiaSemana.JUEVES, 14, 18);
                                 crearHorario(horarioCursadoRepository, c2k1, sistemasOp, DiaSemana.VIERNES, 14, 18);
+                                crearHorario(horarioCursadoRepository, c2k1, analisisSist, DiaSemana.SABADO, 9, 13);
+                                crearHorario(horarioCursadoRepository, c2k1, ingSociedad, DiaSemana.LUNES, 18, 20);
+                                crearHorario(horarioCursadoRepository, c2k1, ingles2, DiaSemana.MIERCOLES, 18, 20);
 
-                                // 3K1
+                                // 2K2 (Noche 8 subjects)
+                                crearHorario(horarioCursadoRepository, c2k2, analisis2, DiaSemana.LUNES, 18, 22);
+                                crearHorario(horarioCursadoRepository, c2k2, fisica2, DiaSemana.MARTES, 18, 22);
+                                crearHorario(horarioCursadoRepository, c2k2, sintaxis, DiaSemana.MIERCOLES, 18, 22);
+                                crearHorario(horarioCursadoRepository, c2k2, paradigmas, DiaSemana.JUEVES, 18, 22);
+                                crearHorario(horarioCursadoRepository, c2k2, sistemasOp, DiaSemana.VIERNES, 18, 22);
+                                crearHorario(horarioCursadoRepository, c2k2, analisisSist, DiaSemana.SABADO, 9, 13);
+                                crearHorario(horarioCursadoRepository, c2k2, ingSociedad, DiaSemana.MARTES, 22, 23); // Late
+                                crearHorario(horarioCursadoRepository, c2k2, ingles2, DiaSemana.JUEVES, 22, 23); // Late
+
+                                // 2K3 (Mañana 8 subjects)
+                                crearHorario(horarioCursadoRepository, c2k3, analisis2, DiaSemana.LUNES, 8, 12);
+                                crearHorario(horarioCursadoRepository, c2k3, fisica2, DiaSemana.MARTES, 8, 12);
+                                crearHorario(horarioCursadoRepository, c2k3, sintaxis, DiaSemana.MIERCOLES, 8, 12);
+                                crearHorario(horarioCursadoRepository, c2k3, paradigmas, DiaSemana.JUEVES, 8, 12);
+                                crearHorario(horarioCursadoRepository, c2k3, sistemasOp, DiaSemana.VIERNES, 8, 12);
+                                crearHorario(horarioCursadoRepository, c2k3, analisisSist, DiaSemana.SABADO, 8, 12);
+                                crearHorario(horarioCursadoRepository, c2k3, ingSociedad, DiaSemana.LUNES, 12, 14);
+                                crearHorario(horarioCursadoRepository, c2k3, ingles2, DiaSemana.MIERCOLES, 12, 14);
+
+                                // 3K1 (Noche 7 subjects)
+                                crearHorario(horarioCursadoRepository, c3k1, disenio, DiaSemana.LUNES, 18, 22);
                                 crearHorario(horarioCursadoRepository, c3k1, basesDatos, DiaSemana.MARTES, 18, 22);
-                                crearHorario(horarioCursadoRepository, c3k1, disenio, DiaSemana.JUEVES, 18, 22);
-                                crearHorario(horarioCursadoRepository, c3k1, analisisNumerico, DiaSemana.VIERNES, 18, 21);
+                                crearHorario(horarioCursadoRepository, c3k1, comDatos, DiaSemana.MIERCOLES, 18, 22);
+                                crearHorario(horarioCursadoRepository, c3k1, desSoft, DiaSemana.JUEVES, 18, 22);
+                                crearHorario(horarioCursadoRepository, c3k1, analisisNumerico, DiaSemana.VIERNES, 18, 22);
+                                crearHorario(horarioCursadoRepository, c3k1, probEst, DiaSemana.SABADO, 9, 13);
+                                crearHorario(horarioCursadoRepository, c3k1, economia, DiaSemana.LUNES, 22, 23);
 
-                                crearHorario(horarioCursadoRepository, c1k2, logica, DiaSemana.MARTES, 18, 22);
-                                crearHorario(horarioCursadoRepository, c2k2, analisisSist, DiaSemana.LUNES, 18, 22);
-                                crearHorario(horarioCursadoRepository, c2k2, sintaxis, DiaSemana.MARTES, 18, 22);
-                                crearHorario(horarioCursadoRepository, c2k2, paradigmas, DiaSemana.MIERCOLES, 18, 22);
-                                crearHorario(horarioCursadoRepository, c2k2, sistemasOp, DiaSemana.JUEVES, 18, 22);
-                                crearHorario(horarioCursadoRepository, c2k2, analisis2, DiaSemana.VIERNES, 18, 22);
-                                crearHorario(horarioCursadoRepository, c2k2, fisica2, DiaSemana.SABADO, 8, 12);
-                                crearHorario(horarioCursadoRepository, c2k2, ingSociedad, DiaSemana.SABADO, 13, 15);
-                                crearHorario(horarioCursadoRepository, c2k2, ingles2, DiaSemana.SABADO, 15, 17);
+                                // 3K2 (Noche 7 subjects)
+                                crearHorario(horarioCursadoRepository, c3k2, disenio, DiaSemana.MARTES, 18, 22);
+                                crearHorario(horarioCursadoRepository, c3k2, basesDatos, DiaSemana.LUNES, 18, 22);
+                                crearHorario(horarioCursadoRepository, c3k2, comDatos, DiaSemana.JUEVES, 18, 22);
+                                crearHorario(horarioCursadoRepository, c3k2, desSoft, DiaSemana.MIERCOLES, 18, 22);
+                                crearHorario(horarioCursadoRepository, c3k2, analisisNumerico, DiaSemana.SABADO, 9, 13);
+                                crearHorario(horarioCursadoRepository, c3k2, probEst, DiaSemana.VIERNES, 18, 22);
+                                crearHorario(horarioCursadoRepository, c3k2, economia, DiaSemana.MARTES, 22, 23);
+
+                                // 4K1 (Noche 7 subjects)
+                                crearHorario(horarioCursadoRepository, c4k1, tecAuto, DiaSemana.LUNES, 18, 22);
+                                crearHorario(horarioCursadoRepository, c4k1, redes, DiaSemana.MARTES, 18, 22);
+                                crearHorario(horarioCursadoRepository, c4k1, adminSist, DiaSemana.MIERCOLES, 18, 22);
+                                crearHorario(horarioCursadoRepository, c4k1, invOp, DiaSemana.JUEVES, 18, 22);
+                                crearHorario(horarioCursadoRepository, c4k1, simulacion, DiaSemana.VIERNES, 18, 22);
+                                crearHorario(horarioCursadoRepository, c4k1, ingCalidad, DiaSemana.SABADO, 9, 13);
+                                crearHorario(horarioCursadoRepository, c4k1, legislacion, DiaSemana.MIERCOLES, 22, 23);
+
+                                // 4K2 (Noche 7 subjects)
+                                crearHorario(horarioCursadoRepository, c4k2, tecAuto, DiaSemana.MARTES, 18, 22);
+                                crearHorario(horarioCursadoRepository, c4k2, redes, DiaSemana.LUNES, 18, 22);
+                                crearHorario(horarioCursadoRepository, c4k2, adminSist, DiaSemana.JUEVES, 18, 22);
+                                crearHorario(horarioCursadoRepository, c4k2, invOp, DiaSemana.MIERCOLES, 18, 22);
+                                crearHorario(horarioCursadoRepository, c4k2, simulacion, DiaSemana.SABADO, 9, 13);
+                                crearHorario(horarioCursadoRepository, c4k2, ingCalidad, DiaSemana.VIERNES, 18, 22);
+                                crearHorario(horarioCursadoRepository, c4k2, legislacion, DiaSemana.JUEVES, 22, 23);
+
+                                // 5K1 (Noche 6 subjects)
+                                crearHorario(horarioCursadoRepository, c5k1, ia, DiaSemana.LUNES, 18, 22);
+                                crearHorario(horarioCursadoRepository, c5k1, dataScience, DiaSemana.MARTES, 18, 22);
+                                crearHorario(horarioCursadoRepository, c5k1, sistGestion, DiaSemana.MIERCOLES, 18, 22);
+                                crearHorario(horarioCursadoRepository, c5k1, gestionGer, DiaSemana.JUEVES, 18, 22);
+                                crearHorario(horarioCursadoRepository, c5k1, seguridad, DiaSemana.VIERNES, 18, 22);
+                                crearHorario(horarioCursadoRepository, c5k1, proyectoFinal, DiaSemana.SABADO, 9, 13);
+
+                                // 5K2 (Noche 6 subjects)
+                                crearHorario(horarioCursadoRepository, c5k2, ia, DiaSemana.MARTES, 18, 22);
+                                crearHorario(horarioCursadoRepository, c5k2, dataScience, DiaSemana.LUNES, 18, 22);
+                                crearHorario(horarioCursadoRepository, c5k2, sistGestion, DiaSemana.JUEVES, 18, 22);
+                                crearHorario(horarioCursadoRepository, c5k2, gestionGer, DiaSemana.MIERCOLES, 18, 22);
+                                crearHorario(horarioCursadoRepository, c5k2, seguridad, DiaSemana.SABADO, 9, 13);
+                                crearHorario(horarioCursadoRepository, c5k2, proyectoFinal, DiaSemana.VIERNES, 18, 22);
+
+                                // Electivas
                                 crearHorario(horarioCursadoRepository, cElectivas, entornos, DiaSemana.LUNES, 18, 22);
                                 crearHorario(horarioCursadoRepository, cElectivas, emprendedores, DiaSemana.MIERCOLES, 18, 22);
                                 crearHorario(horarioCursadoRepository, cElectivas, metAgiles, DiaSemana.JUEVES, 18, 22);
+                                crearHorario(horarioCursadoRepository, cElectivas, mineria, DiaSemana.VIERNES, 18, 22);
+
+                                // Electivas Mañana
+                                crearHorario(horarioCursadoRepository, cElec2, entornos, DiaSemana.LUNES, 8, 12);
+                                crearHorario(horarioCursadoRepository, cElec2, emprendedores, DiaSemana.MIERCOLES, 8, 12);
+                                crearHorario(horarioCursadoRepository, cElec2, metAgiles, DiaSemana.JUEVES, 8, 12);
+                                crearHorario(horarioCursadoRepository, cElec2, mineria, DiaSemana.VIERNES, 8, 12);
 
                                 // ------------------------------------------------------------------------------------
                                 // ASIGNACIONES MANUALES DE PROFESORES A MATERIAS (Mix JEFE_CATEDRA y DOCENTE)
