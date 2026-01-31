@@ -169,6 +169,7 @@ Base URL: `/api/inscripciones-cursado`
 | `GET` | `/mis-cursadas` | ESTUDIANTE | Obtener historial de materias cursadas y notas parciales. |
 | `POST` | `/{id}/notas` | ADMIN, PROFESOR | Cargar una nota parcial a una cursada. |
 | `GET` | `/actuales` | ESTUDIANTE, ADMIN | Obtener materias que cursa actualmente (Admin puede usar `?idUsuario=UUID`). |
-| `GET` | `/disponibles` | ESTUDIANTE, ADMIN | Obtener comisiones disponibles para una materia (Valida correlativas y no inscripción). Params: `materiaId`, `usuarioId` (opc). |
+| `GET` | `/actuales` | ESTUDIANTE, ADMIN | Obtener materias que cursa actualmente (Admin puede usar `?idUsuario=UUID`). |
+| `GET` | `/materias/{idMateria}/disponibles` | ESTUDIANTE, ADMIN | Obtener comisiones disponibles con horarios y profesores específicos para una materia. Valida correlativas y no inscripción. |
 
 
