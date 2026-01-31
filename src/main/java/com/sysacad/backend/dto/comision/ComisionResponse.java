@@ -22,6 +22,9 @@ public class ComisionResponse {
     // Listas simplificadas
     private List<String> materiasNombres;
     private List<ProfesorResumenDTO> profesores;
+    
+    // Lista detallada solicitada
+    private List<MateriaDetalleDTO> materiasDetalle;
 
     public ComisionResponse(Comision comision) {
         this.id = comision.getId();
@@ -57,6 +60,20 @@ public class ComisionResponse {
         public ProfesorResumenDTO(String legajo, String nombreCompleto) {
             this.legajo = legajo;
             this.nombreCompleto = nombreCompleto;
+        }
+    }
+    
+    @Data
+    @NoArgsConstructor
+    public static class MateriaDetalleDTO {
+        private String nombreMateria;
+        private UUID idMateria;
+        private List<ProfesorResumenDTO> profesores;
+        
+        public MateriaDetalleDTO(String nombre, UUID id, List<ProfesorResumenDTO> profes) {
+            this.nombreMateria = nombre;
+            this.idMateria = id;
+            this.profesores = profes;
         }
     }
 }
