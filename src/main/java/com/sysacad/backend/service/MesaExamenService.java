@@ -83,7 +83,6 @@ public class MesaExamenService {
         detalle.setMesaExamen(mesa);
         detalle.setMateria(materia);
         detalle.setPresidente(presidente);
-        // dia y hora mapeados por mapper si coinciden
         if(detalle.getDiaExamen() == null) detalle.setDiaExamen(request.getDiaExamen());
         if(detalle.getHoraExamen() == null) detalle.setHoraExamen(request.getHoraExamen());
 

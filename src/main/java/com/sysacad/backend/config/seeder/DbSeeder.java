@@ -409,7 +409,19 @@ public class DbSeeder {
                                 crearHorario(horarioCursadoRepository, c3k1, disenio, DiaSemana.JUEVES, 18, 22);
                                 crearHorario(horarioCursadoRepository, c3k1, analisisNumerico, DiaSemana.VIERNES, 18, 21);
 
-                                // ASIGNACIONES DOCENTES (Legacy)
+                                crearHorario(horarioCursadoRepository, c1k2, logica, DiaSemana.MARTES, 18, 22);
+                                crearHorario(horarioCursadoRepository, c2k2, analisisSist, DiaSemana.LUNES, 18, 22);
+                                crearHorario(horarioCursadoRepository, c2k2, sintaxis, DiaSemana.MARTES, 18, 22);
+                                crearHorario(horarioCursadoRepository, c2k2, paradigmas, DiaSemana.MIERCOLES, 18, 22);
+                                crearHorario(horarioCursadoRepository, c2k2, sistemasOp, DiaSemana.JUEVES, 18, 22);
+                                crearHorario(horarioCursadoRepository, c2k2, analisis2, DiaSemana.VIERNES, 18, 22);
+                                crearHorario(horarioCursadoRepository, c2k2, fisica2, DiaSemana.SABADO, 8, 12);
+                                crearHorario(horarioCursadoRepository, c2k2, ingSociedad, DiaSemana.SABADO, 13, 15);
+                                crearHorario(horarioCursadoRepository, c2k2, ingles2, DiaSemana.SABADO, 15, 17);
+                                crearHorario(horarioCursadoRepository, cElectivas, entornos, DiaSemana.LUNES, 18, 22);
+                                crearHorario(horarioCursadoRepository, cElectivas, emprendedores, DiaSemana.MIERCOLES, 18, 22);
+                                crearHorario(horarioCursadoRepository, cElectivas, metAgiles, DiaSemana.JUEVES, 18, 22);
+
                                 asignarCargo(asignacionMateriaRepository, profeNicolas, algoritmos,
                                                 RolCargo.JEFE_CATEDRA);
                                 asignarCargo(asignacionMateriaRepository, profeNicolas, basesDatos,
