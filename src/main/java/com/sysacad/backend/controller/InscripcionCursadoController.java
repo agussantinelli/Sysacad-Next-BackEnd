@@ -70,10 +70,10 @@ public class InscripcionCursadoController {
         return ResponseEntity.ok(inscripcionCursadoService.obtenerCursadasActuales(id));
     }
 
-    @GetMapping("/disponibles")
+    @GetMapping("/materias/{idMateria}/disponibles")
     @PreAuthorize("hasAnyRole('ADMIN', 'ESTUDIANTE')")
-    public ResponseEntity<List<com.sysacad.backend.dto.comision.ComisionResponse>> getComisionesDisponibles(
-            @RequestParam UUID materiaId, 
+    public ResponseEntity<List<com.sysacad.backend.dto.inscripcion_cursado.ComisionDisponibleDTO>> getComisionesDisponibles(
+            @PathVariable UUID idMateria, 
             @RequestParam(required = false) UUID usuarioId,
             Authentication auth) {
         
@@ -84,6 +84,6 @@ public class InscripcionCursadoController {
                     .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
             id = usuario.getId();
         }
-        return ResponseEntity.ok(inscripcionCursadoService.obtenerComisionesDisponibles(materiaId, id));
+        return ResponseEntity.ok(inscripcionCursadoService.obtenerOpcionesInscripcion(idMateria, id));
     }
 }

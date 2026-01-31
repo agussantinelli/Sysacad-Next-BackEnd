@@ -116,32 +116,73 @@ public class InscripcionCursadoService {
     @Autowired
     private com.sysacad.backend.mapper.ComisionMapper comisionMapper;
 
-    public List<com.sysacad.backend.dto.comision.ComisionResponse> obtenerComisionesDisponibles(UUID idMateria, UUID idUsuario) {
-        // 1. Validar Materia y Usuario
+
+
+    @Autowired
+    private com.sysacad.backend.repository.HorarioCursadoRepository horarioCursadoRepository;
+    
+    @Autowired
+    private com.sysacad.backend.repository.AsignacionMateriaRepository asignacionMateriaRepository;
+
+    public List<com.sysacad.backend.dto.inscripcion_cursado.ComisionDisponibleDTO> obtenerOpcionesInscripcion(UUID idMateria, UUID idUsuario) {
+        // 1. Validaciones básicas
         Materia materia = materiaRepository.findById(idMateria)
                 .orElseThrow(() -> new ResourceNotFoundException("Materia no encontrada"));
         
         Usuario alumno = usuarioRepository.findById(idUsuario)
                 .orElseThrow(() -> new ResourceNotFoundException("Alumno no encontrado"));
 
-        // 2. Validar Correlativas
         if (!correlatividadService.puedeCursar(idUsuario, idMateria)) {
-            // Opcional: Lanzar excepción o devolver lista vacía. 
-            // Para "disponibles", devolver vacío tiene sentido, pero si el usuario preguntó por ESTA materia, mejor explicar por qué.
-            throw new BusinessLogicException("El alumno no cumple con las correlativas para cursar esta materia.");
+             throw new BusinessLogicException("El alumno no cumple con las correlativas para cursar esta materia.");
         }
 
-        // 3. Validar si ya está cursando o aprobada (si aplica)
-        boolean yaInscripto = inscripcionCursadoRepository.findByUsuarioIdAndMateriaId(idUsuario, idMateria).isPresent();
-        if (yaInscripto) {
+        if (inscripcionCursadoRepository.findByUsuarioIdAndMateriaId(idUsuario, idMateria).isPresent()) {
              throw new BusinessLogicException("El alumno ya está inscripto en esta materia.");
         }
-        
-        // 4. Buscar Comisiones que dicten la materia
-        List<Comision> comisiones = comisionRepository.findByMateriasId(idMateria);
 
-        // 5. Filtrar (si tuviera cupos, etc) - Por ahora devolvemos todas las que dictan la materia
-        return comisionMapper.toDTOs(comisiones);
+        // 2. Buscar comisiones que dicten la materia
+        List<Comision> comisiones = comisionRepository.findByMateriasId(idMateria);
+        
+        List<com.sysacad.backend.dto.inscripcion_cursado.ComisionDisponibleDTO> opciones = new java.util.ArrayList<>();
+
+        // 3. Para cada comisión, construir el DTO con datos ESPECIFICOS de esa materia
+        for (Comision c : comisiones) {
+            com.sysacad.backend.dto.inscripcion_cursado.ComisionDisponibleDTO dto = new com.sysacad.backend.dto.inscripcion_cursado.ComisionDisponibleDTO();
+            dto.setIdComision(c.getId());
+            dto.setNombreComision(c.getNombre());
+            dto.setTurno(c.getTurno());
+            
+            // Aula
+            if (c.getSalon() != null) {
+                dto.setUbicacion(c.getSalon().getNombre() + " (" + c.getSalon().getFacultad().getCiudad() + ")");
+            } else {
+                dto.setUbicacion("Sin asignar");
+            }
+
+            // Horarios ESPECIFICOS de la materia en esta comisión
+            List<String> horariosTexto = horarioCursadoRepository.findByIdIdComisionAndIdIdMateria(c.getId(), idMateria).stream()
+                    .map(h -> h.getId().getDia() + " " + h.getId().getHoraDesde() + " - " + h.getHoraHasta())
+                    .collect(java.util.stream.Collectors.toList());
+            dto.setHorarios(horariosTexto);
+
+            // Profesores ESPECIFICOS de la materia en esta comisión
+            List<String> profesoresNombres = new java.util.ArrayList<>();
+            if (c.getProfesores() != null) {
+                for (Usuario p : c.getProfesores()) {
+                     com.sysacad.backend.modelo.AsignacionMateria.AsignacionMateriaId asignacionId = 
+                        new com.sysacad.backend.modelo.AsignacionMateria.AsignacionMateriaId(p.getId(), idMateria);
+                    
+                    if (asignacionMateriaRepository.existsById(asignacionId)) {
+                        profesoresNombres.add(p.getNombre() + " " + p.getApellido());
+                    }
+                }
+            }
+            dto.setProfesores(profesoresNombres);
+            
+            opciones.add(dto);
+        }
+
+        return opciones;
     }
 }
 
