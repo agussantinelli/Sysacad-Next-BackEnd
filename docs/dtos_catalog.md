@@ -261,6 +261,15 @@ Response for `/api/alumnos/mis-carreras-materias/historial/{idMateria}`.
 - `fechaInscripcion` (LocalDateTime)
 - `calificaciones` (List<CalificacionCursadaResponse>)
 
+### `ComisionDisponibleDTO`
+Response for `/api/inscripciones-cursado/materias/{idMateria}/disponibles`.
+- `idComision` (UUID)
+- `nombreComision` (String)
+- `turno` (String)
+- `ubicacion` (String): e.g., "Aula 305 (Rosario)".
+- `horarios` (List<String>): List of formatted schedules (e.g. "LUNES 18:00 - 22:00").
+- `profesores` (List<String>): List of professors teaching *this* subject in *this* commission.
+
 ---
 
 ## InscripcionExamen
