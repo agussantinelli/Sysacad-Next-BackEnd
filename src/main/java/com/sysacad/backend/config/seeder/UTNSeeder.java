@@ -52,23 +52,23 @@ public class UTNSeeder {
         frro = facultadRepository.save(frro);
 
         // Cargar Datos
-        cargarCarrera(frro, 1, "ISI", "Ingeniería en Sistemas de Información", 20, getDatasetISI());
-        cargarCarrera(frro, 2, "IC", "Ingeniería Civil", 11, getDatasetCivil());
-        cargarCarrera(frro, 3, "IQ", "Ingeniería Química", 12, getDatasetQuimica());
-        cargarCarrera(frro, 4, "IM", "Ingeniería Mecánica", 10, getDatasetMecanica());
-        cargarCarrera(frro, 5, "IEE", "Ingeniería en Energía Eléctrica", 10, getDatasetElectrica());
+        PlanDeEstudio planISI = cargarCarrera(frro, 1, "ISI", "Ingeniería en Sistemas de Información", 20, getDatasetISI());
+        PlanDeEstudio planCivil = cargarCarrera(frro, 2, "IC", "Ingeniería Civil", 11, getDatasetCivil());
+        PlanDeEstudio planQuimica = cargarCarrera(frro, 3, "IQ", "Ingeniería Química", 12, getDatasetQuimica());
+        PlanDeEstudio planMecanica = cargarCarrera(frro, 4, "IM", "Ingeniería Mecánica", 10, getDatasetMecanica());
+        PlanDeEstudio planElectrica = cargarCarrera(frro, 5, "IEE", "Ingeniería en Energía Eléctrica", 10, getDatasetElectrica());
 
         // Conectar Correlativas
-        conectarCorrelativas(1, getDatasetISI());
-        conectarCorrelativas(2, getDatasetCivil());
-        conectarCorrelativas(3, getDatasetQuimica());
-        conectarCorrelativas(4, getDatasetMecanica());
-        conectarCorrelativas(5, getDatasetElectrica());
+        conectarCorrelativas(1, planISI, getDatasetISI());
+        conectarCorrelativas(2, planCivil, getDatasetCivil());
+        conectarCorrelativas(3, planQuimica, getDatasetQuimica());
+        conectarCorrelativas(4, planMecanica, getDatasetMecanica());
+        conectarCorrelativas(5, planElectrica, getDatasetElectrica());
 
         System.out.println(">> UTNSeeder: Carga completa finalizada con éxito.");
     }
 
-    private void cargarCarrera(FacultadRegional facu, Integer nroCarrera, String aliasCarrera, String nombreCarrera, Integer horasElectivas,
+    private PlanDeEstudio cargarCarrera(FacultadRegional facu, Integer nroCarrera, String aliasCarrera, String nombreCarrera, Integer horasElectivas,
             List<MateriaDef> materias) {
         System.out.println("   -> Procesando Carrera: " + nombreCarrera);
 
@@ -131,9 +131,10 @@ public class UTNSeeder {
 
             planMateriaRepository.save(pm);
         }
+        return plan;
     }
 
-    private void conectarCorrelativas(Integer nroCarrera, List<MateriaDef> materias) {
+    private void conectarCorrelativas(Integer nroCarrera, PlanDeEstudio plan, List<MateriaDef> materias) {
         for (MateriaDef def : materias) {
             Materia materiaActual = mapaCodigoMateria.get(nroCarrera + "-" + def.codigo);
             if (materiaActual == null)
@@ -146,7 +147,7 @@ public class UTNSeeder {
                 for (String codCorr : def.correlativasRegulares) {
                     Materia matCorr = mapaCodigoMateria.get(nroCarrera + "-" + codCorr);
                     if (matCorr != null) {
-                         correlatividades.add(new Correlatividad(materiaActual, matCorr, TipoCorrelatividad.REGULAR));
+                         correlatividades.add(new Correlatividad(materiaActual, matCorr, TipoCorrelatividad.REGULAR, plan));
                     } else {
                          // Manejo de caso especial "3er Año Completo" u otros strings no mapeables si existieran
                          if(!codCorr.contains("Año")) {
@@ -161,7 +162,7 @@ public class UTNSeeder {
                 for (String codCorr : def.correlativasPromocionadas) {
                     Materia matCorr = mapaCodigoMateria.get(nroCarrera + "-" + codCorr);
                     if (matCorr != null) {
-                        correlatividades.add(new Correlatividad(materiaActual, matCorr, TipoCorrelatividad.PROMOCIONADA));
+                        correlatividades.add(new Correlatividad(materiaActual, matCorr, TipoCorrelatividad.PROMOCIONADA, plan));
                     } else {
                         System.out.println("      [WARN] (" + nroCarrera + ") No se encontró correlativa PROMO '" + codCorr + "' para " + def.nombre);
                     }
@@ -169,7 +170,6 @@ public class UTNSeeder {
             }
             
             if(!correlatividades.isEmpty()) {
-                materiaActual.getCorrelativas().clear();
                 materiaActual.getCorrelativas().addAll(correlatividades);
                 materiaRepository.save(materiaActual);
             }

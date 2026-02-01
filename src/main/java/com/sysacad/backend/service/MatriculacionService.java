@@ -175,7 +175,7 @@ public class MatriculacionService {
                     boolean sePuedeInscribir = false;
                     // Solo si está PENDIENTE o LIBRE verificamos si puede cursar
                     if (estadoActual.estado.equals("PENDIENTE") || estadoActual.estado.equals("LIBRE")) {
-                        sePuedeInscribir = verificarCorrelativas(materia, mapaEstadoMaterias);
+                        sePuedeInscribir = verificarCorrelativas(materia, mapaEstadoMaterias, plan);
                     }
 
                     EstudianteMateriaDTO dto = new EstudianteMateriaDTO(
@@ -189,6 +189,7 @@ public class MatriculacionService {
                             materia.getHorasCursado(),
                             materia.getCuatrimestreDictado() != null ? materia.getCuatrimestreDictado().name() : null,
                             materia.getCorrelativas().stream()
+                                    .filter(c -> c.getPlan() != null && c.getPlan().getId().equals(plan.getId()))
                                     .map(c -> new com.sysacad.backend.dto.estudiante_materia.CorrelativaDTO(
                                             c.getCorrelativa().getNombre(),
                                             c.getTipo().toString()))
@@ -257,12 +258,16 @@ public class MatriculacionService {
         return mapa;
     }
 
-    private boolean verificarCorrelativas(Materia materia, Map<UUID, EstadoMateria> historial) {
+    private boolean verificarCorrelativas(Materia materia, Map<UUID, EstadoMateria> historial, com.sysacad.backend.modelo.PlanDeEstudio plan) {
         if (materia.getCorrelativas() == null || materia.getCorrelativas().isEmpty()) {
             return true;
         }
 
         for (com.sysacad.backend.modelo.Correlatividad correlatividad : materia.getCorrelativas()) {
+            if (correlatividad.getPlan() != null && !correlatividad.getPlan().getId().equals(plan.getId())) {
+                 continue;
+            }
+
             Materia matCorr = correlatividad.getCorrelativa();
             EstadoMateria estadoCorr = historial.get(matCorr.getId());
 
