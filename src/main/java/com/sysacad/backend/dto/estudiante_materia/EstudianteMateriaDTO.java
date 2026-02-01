@@ -19,6 +19,6 @@ public class EstudianteMateriaDTO {
     private Boolean esElectiva;
     private Short horasCursado;
     private String cuatrimestre;
-    private java.util.List<String> correlativas;
+    private java.util.List<CorrelativaDTO> correlativas;
     private Boolean tieneInscripcionExamenPendiente;
 }
