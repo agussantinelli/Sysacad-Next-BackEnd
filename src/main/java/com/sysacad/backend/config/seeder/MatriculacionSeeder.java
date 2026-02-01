@@ -49,39 +49,44 @@ public class MatriculacionSeeder {
 
             if (carreraISI != null) {
                 // Matriculamos a la mayoría en Sistemas (ISI) - Plan 2023
-                matricular("55555", frro, carreraISI.getId(), 2023); // Agustin
-                matricular("58888", frro, carreraISI.getId(), 2023); // Sofia
-                matricular("60002", frro, carreraISI.getId(), 2023); // Carlos
-                matricular("56666", frro, carreraISI.getId(), 2023); // Maria
-                matricular("60003", frro, carreraISI.getId(), 2023); // Martin
-                matricular("60004", frro, carreraISI.getId(), 2023); // Flavia
-                matricular("60010", frro, carreraISI.getId(), 2023); // Pedro
-                matricular("60011", frro, carreraISI.getId(), 2023); // Lionel
-                matricular("60012", frro, carreraISI.getId(), 2023); // Alex
-                matricular("60013", frro, carreraISI.getId(), 2023); // Diego
-                matricular("60014", frro, carreraISI.getId(), 2023); // Enzo
+                matricularIfNotExists("55555", frro, carreraISI.getId(), 2023); // Agustin
+                matricularIfNotExists("58888", frro, carreraISI.getId(), 2023); // Sofia
+                matricularIfNotExists("60002", frro, carreraISI.getId(), 2023); // Carlos
+                matricularIfNotExists("56666", frro, carreraISI.getId(), 2023); // Maria
+                matricularIfNotExists("60003", frro, carreraISI.getId(), 2023); // Martin
+                matricularIfNotExists("60004", frro, carreraISI.getId(), 2023); // Flavia
+                matricularIfNotExists("60010", frro, carreraISI.getId(), 2023); // Pedro
+                matricularIfNotExists("60011", frro, carreraISI.getId(), 2023); // Lionel
+                matricularIfNotExists("60012", frro, carreraISI.getId(), 2023); // Alex
+                matricularIfNotExists("60013", frro, carreraISI.getId(), 2023); // Diego
+                matricularIfNotExists("60014", frro, carreraISI.getId(), 2023); // Enzo
             }
 
             if (carreraCivil != null) {
-                matricular("57777", frro, carreraCivil.getId(), 2023); // Juan (Civil)
+                matricularIfNotExists("57777", frro, carreraCivil.getId(), 2023); // Juan (Civil)
             }
 
             if (carreraElectrica != null) {
-                matricular("59999", frro, carreraElectrica.getId(), 2023); // Miguel (Electrica)
+                matricularIfNotExists("59999", frro, carreraElectrica.getId(), 2023); // Miguel (Electrica)
             }
 
             System.out.println(">> Alumnos matriculados exitosamente.");
-        }
+        // } (Block removed to allow individual checks)
     }
 
-    private void matricular(String legajo, FacultadRegional facu, java.util.UUID idCarrera, Integer nroPlan) {
+    private void matricularIfNotExists(String legajo, FacultadRegional facu, java.util.UUID idCarrera, Integer nroPlan) {
         Usuario alumno = usuarioRepository.findByLegajo(legajo).orElse(null);
         if (alumno == null)
             return;
         
-        Matriculacion eu = new Matriculacion();
         Matriculacion.MatriculacionId id = new Matriculacion.MatriculacionId(alumno.getId(), facu.getId(),
                 idCarrera, nroPlan);
+
+        if (matriculacionRepository.existsById(id)) {
+            return;
+        }
+
+        Matriculacion eu = new Matriculacion();
         eu.setId(id);
         eu.setFechaInscripcion(LocalDate.now());
         eu.setEstado("ACTIVO");

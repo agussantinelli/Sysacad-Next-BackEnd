@@ -329,7 +329,7 @@ public class InscripcionSeeder {
     }
 
     private void seedExamenes() {
-        if (mesaExamenRepository.count() == 0) {
+
             System.out.println(">> InscripcionSeeder: Desplegando Mesas de Examen...");
 
             // Crear Mesas
@@ -445,11 +445,8 @@ public class InscripcionSeeder {
             // JULIO
             DetalleMesaExamen julSintaxis = createDetalleMesa(mesaJul, 1, sintaxis, profeNicolas, LocalDate.of(2026, 7, 10), LocalTime.of(9, 0));
             DetalleMesaExamen julFisica = createDetalleMesa(mesaJul, 2, fisica1, profeRoberto, LocalDate.of(2026, 7, 15), LocalTime.of(16, 0));
-
-            // JULIO MASSIVE (Simplified for this file to save space but following pattern)
             createDetalleMesa(mesaJul, 3, analisis1, profeSandra, LocalDate.of(2026, 7, 6), LocalTime.of(9, 0));
             createDetalleMesa(mesaJul, 4, algebra, profeSandra, LocalDate.of(2026, 7, 7), LocalTime.of(9, 0));
-            // ... etc
 
             // DICIEMBRE
             createDetalleMesa(mesaDic, 1, algoritmos, profeNicolas, LocalDate.of(2026, 12, 10), LocalTime.of(9, 0));
@@ -497,11 +494,17 @@ public class InscripcionSeeder {
             }
 
             System.out.println(">> InscripcionSeeder: Mesas de Examen y Asociaciones creadas.");
-        }
+
     }
 
 
     private InscripcionCursado inscribirCursado(Usuario alumno, Comision comision, Materia materia) {
+        // Idempotency check
+        var existing = inscripcionCursadoRepository.findByUsuarioIdAndMateriaId(alumno.getId(), materia.getId());
+        if (existing.isPresent()) {
+            return existing.get();
+        }
+
         boolean materiaEnComision = comision.getMaterias().stream()
                 .anyMatch(m -> m.getId().equals(materia.getId()));
         if (!materiaEnComision) {
@@ -519,6 +522,10 @@ public class InscripcionSeeder {
     }
 
     private void cargarNotaCursada(InscripcionCursado insc, String descripcion, String valor) {
+             .anyMatch(c -> c.getInscripcionCursado().getId().equals(insc.getId()) && c.getDescripcion().equals(descripcion));
+        
+        if (exists) return;
+
         CalificacionCursada calif = new CalificacionCursada();
         calif.setInscripcionCursado(insc);
         calif.setDescripcion(descripcion);
@@ -533,18 +540,28 @@ public class InscripcionSeeder {
     }
 
     private MesaExamen createMesa(String nombre, LocalDate inicio, LocalDate fin) {
-        MesaExamen mesa = new MesaExamen();
-        mesa.setNombre(nombre);
-        mesa.setFechaInicio(inicio);
-        mesa.setFechaFin(fin);
-        return mesaExamenRepository.save(mesa);
+        return mesaExamenRepository.findAll().stream()
+                .filter(m -> m.getNombre().equals(nombre))
+                .findFirst()
+                .orElseGet(() -> {
+                    MesaExamen mesa = new MesaExamen();
+                    mesa.setNombre(nombre);
+                    mesa.setFechaInicio(inicio);
+                    mesa.setFechaFin(fin);
+                    return mesaExamenRepository.save(mesa);
+                });
     }
 
     private DetalleMesaExamen createDetalleMesa(MesaExamen mesa, Integer nro,
                                               Materia materia,
                                               Usuario presidente, LocalDate dia, LocalTime hora) {
+        DetalleMesaExamen.DetalleId id = new DetalleMesaExamen.DetalleId(mesa.getId(), nro);
+        if (detalleMesaExamenRepository.existsById(id)) {
+            return detalleMesaExamenRepository.findById(id).get();
+        }
+        
         DetalleMesaExamen detalle = new DetalleMesaExamen();
-        detalle.setId(new DetalleMesaExamen.DetalleId(mesa.getId(), nro));
+        detalle.setId(id);
         detalle.setMesaExamen(mesa);
         detalle.setMateria(materia);
         detalle.setPresidente(presidente);
@@ -554,6 +571,16 @@ public class InscripcionSeeder {
     }
 
     private InscripcionExamen inscribirExamen(Usuario alumno, DetalleMesaExamen detalle) {
+        boolean exists = inscripcionExamenRepository.findByUsuarioId(alumno.getId()).stream()
+                .anyMatch(i -> i.getDetalleMesaExamen() != null && 
+                               i.getDetalleMesaExamen().getId().equals(detalle.getId()));
+        
+        if (exists) {
+            return inscripcionExamenRepository.findByUsuarioId(alumno.getId()).stream()
+                .filter(i -> i.getDetalleMesaExamen() != null && i.getDetalleMesaExamen().getId().equals(detalle.getId()))
+                .findFirst().get();
+        }
+
         InscripcionExamen insc = new InscripcionExamen();
         insc.setUsuario(alumno);
         insc.setDetalleMesaExamen(detalle);
