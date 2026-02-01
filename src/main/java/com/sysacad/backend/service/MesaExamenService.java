@@ -144,6 +144,7 @@ public class MesaExamenService {
                 com.sysacad.backend.dto.mesa_examen.MesaExamenDisponibleDTO dto = new com.sysacad.backend.dto.mesa_examen.MesaExamenDisponibleDTO();
                 
                 dto.setIdDetalleMesa(detalle.getMesaExamen().getId()); 
+                dto.setNroDetalle(detalle.getId().getNroDetalle());
                 dto.setNombreMesa(detalle.getMesaExamen().getNombre());
                 dto.setFecha(detalle.getDiaExamen());
                 dto.setHora(detalle.getHoraExamen());

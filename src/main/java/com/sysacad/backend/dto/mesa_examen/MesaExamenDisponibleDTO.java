@@ -12,7 +12,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MesaExamenDisponibleDTO {
-    private UUID idDetalleMesa;
+    private UUID idDetalleMesa; // Refers to idMesaExamen
+    private Integer nroDetalle;
     private String nombreMesa;
     private LocalDate fecha;
     private LocalTime hora;
