@@ -341,7 +341,17 @@ Response for `/api/inscripciones-cursado/materias/{idMateria}/disponibles`.
 - `nombre` (String)
 - `fechaInicio` (LocalDate)
 - `fechaFin` (LocalDate)
-- `detalles` (List<DetalleMesaExamenResponse>)
+    - `detalles` (List<DetalleMesaExamenResponse>)
+
+### `MesaExamenDisponibleDTO`
+Response for `/api/mesas/materias/{idMateria}/mesas`.
+- `idDetalleMesa` (UUID): ID of the exam table (or detail, depending on impl).
+- `nombreMesa` (String): e.g., "Turno Febrero 2026".
+- `fecha` (LocalDate)
+- `hora` (LocalTime)
+- `presidente` (String)
+- `habilitada` (Boolean): If the student can enroll.
+- `mensaje` (String): Reason for eligibility/ineligibility.
 
 ---
 
