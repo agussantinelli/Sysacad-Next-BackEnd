@@ -89,6 +89,32 @@ public class MateriaService {
         materiaRepository.deleteById(id);
     }
 
+    @Transactional(readOnly = true)
+    public List<com.sysacad.backend.dto.materia.CorrelativaArbolDTO> obtenerArbolCorrelativas(UUID idMateria, UUID idCarrera, Integer nroPlan) {
+        Materia materia = materiaRepository.findById(idMateria)
+                .orElseThrow(() -> new ResourceNotFoundException("Materia no encontrada con ID: " + idMateria));
+
+        return construirArbol(materia, idCarrera, nroPlan);
+    }
+
+    private List<com.sysacad.backend.dto.materia.CorrelativaArbolDTO> construirArbol(Materia materia, UUID idCarrera, Integer nroPlan) {
+        if (materia.getCorrelativas() == null) {
+            return java.util.Collections.emptyList();
+        }
+
+        return materia.getCorrelativas().stream()
+                .filter(c -> c.getPlan() != null &&
+                             c.getPlan().getId().getIdCarrera().equals(idCarrera) &&
+                             c.getPlan().getId().getNroPlan().equals(nroPlan))
+                .map(c -> new com.sysacad.backend.dto.materia.CorrelativaArbolDTO(
+                        c.getCorrelativa().getId(),
+                        c.getCorrelativa().getNombre(),
+                        c.getTipo().toString(),
+                        construirArbol(c.getCorrelativa(), idCarrera, nroPlan)
+                ))
+                .collect(java.util.stream.Collectors.toList());
+    }
+
     private void validarPermisoEdicion(Materia materia) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 

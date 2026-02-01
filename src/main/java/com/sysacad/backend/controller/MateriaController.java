@@ -103,4 +103,14 @@ public class MateriaController {
 
         return ResponseEntity.ok(mesaExamenService.obtenerMesasDisponibles(idMateria, usuario.getId()));
     }
+
+    @GetMapping("/{id}/correlativas")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<com.sysacad.backend.dto.materia.CorrelativaArbolDTO>> getCorrelativas(
+            @PathVariable UUID id,
+            @RequestParam UUID carreraId,
+            @RequestParam Integer nroPlan) {
+        
+        return ResponseEntity.ok(materiaService.obtenerArbolCorrelativas(id, carreraId, nroPlan));
+    }
 }
