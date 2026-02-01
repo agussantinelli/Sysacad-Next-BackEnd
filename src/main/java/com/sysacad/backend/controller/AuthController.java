@@ -66,6 +66,7 @@ public class AuthController {
                 AuthResponse authResponse = AuthResponse.builder()
                                 .token(jwtToken)
                                 .usuario(usuarioResponse)
+                                .bootId(JwtService.getBootId())
                                 .build();
 
                 return ResponseEntity.ok(authResponse);

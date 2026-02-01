@@ -24,6 +24,10 @@ public class JwtService {
     // Generar un ID único por ejecución de la aplicación (al reiniciar cambia)
     private static final String BOOT_ID = java.util.UUID.randomUUID().toString();
 
+    public static String getBootId() {
+        return BOOT_ID;
+    }
+
     public String generateToken(UserDetails userDetails) {
         return generateToken(new HashMap<>(), userDetails);
     }
