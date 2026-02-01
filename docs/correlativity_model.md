@@ -12,6 +12,7 @@ Campos:
 - `materia`: La materia que tiene el requisito.
 - `correlativa`: La materia que es requisito.
 - `tipo`: `TipoCorrelatividad` (REGULAR, PROMOCIONADA).
+- `plan`: `PlanDeEstudio` al que pertenece esta regla. Esto permite que una misma materia tenga diferentes prerequisitos según la carrera/plan.
 
 ### TipoCorrelatividad (Enum)
 Define el nivel de aprobación requerido de la materia correlativa.
