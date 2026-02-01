@@ -41,8 +41,8 @@ public class MesaExamenController {
     public ResponseEntity<List<DetalleMesaExamenResponse>> getExamenesDisponibles(org.springframework.security.core.Authentication authentication) {
         if (authentication == null) return ResponseEntity.status(401).build();
 
-        String email = authentication.getName();
-        com.sysacad.backend.modelo.Usuario usuario = usuarioRepository.findByMail(email)
+        String legajo = authentication.getName();
+        com.sysacad.backend.modelo.Usuario usuario = usuarioRepository.findByLegajo(legajo)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         return ResponseEntity.ok(mesaExamenService.getExamenesDisponibles(usuario.getId()));
