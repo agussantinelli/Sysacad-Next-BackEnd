@@ -45,3 +45,14 @@ Este documento detalla las reglas de negocio y consideraciones técnicas derivad
         - **PROMOCIONADA**: Para cursar, las correlativas de este tipo deben estar en estado `PROMOCIONADO` o `APROBADO` (Final).
         - **RENDIR FINAL**: Para rendir el examen final de una materia, el alumno debe tener la materia misma **Regularizada** (Cursada Aprobada) y **TODAS** sus correlativas (tanto Regulares como Promocionadas) **APROBADAS** (Final o Promoción).
         - Esta validación impide la inscripción si no se cumplen los requisitos específicos definidos en el Plan de Estudio.
+    - **Reglas de Calificación y Regularidad**:
+        - **Regularización**:
+            - La nota de fin de cursada debe estar entre **4.00 y 5.50** (inclusive) para obtener el estado `REGULAR`.
+        - **Promoción**:
+            - La nota de fin de cursada debe ser **6.00 o superior** para obtener el estado `PROMOCIONADO`.
+        - **Exámenes Finales**:
+            - **Aprobación**: Se requiere una nota mínima de **6.00** para aprobar un examen (`APROBADO`).
+            - **Aplazos/Fallos**: Una nota inferior a 6.00 se considera fallo (`DESAPROBADO`).
+        - **Pérdida de Regularidad por Aplazos**:
+            - Si un alumno con estado `REGULAR` en una materia acumula **4 aplazos (DESAPROBADO o AUSENTE)** en los exámenes finales de dicha materia, **pierde automáticamente su regularidad** y su cursada pasa a estado `LIBRE`.
+
