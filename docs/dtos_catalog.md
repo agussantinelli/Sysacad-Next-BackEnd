@@ -344,8 +344,9 @@ Response for `/api/inscripciones-cursado/materias/{idMateria}/disponibles`.
     - `detalles` (List<DetalleMesaExamenResponse>)
 
 ### `MesaExamenDisponibleDTO`
-Response for `/api/mesas/materias/{idMateria}/mesas`.
-- `idDetalleMesa` (UUID): ID of the exam table (or detail, depending on impl).
+Response for `/api/materias/{idMateria}/mesas`.
+- `idDetalleMesa` (UUID): ID of the exam table (MesaExamen ID).
+- `nroDetalle` (Integer): Detail number (required for inscription).
 - `nombreMesa` (String): e.g., "Turno Febrero 2026".
 - `fecha` (LocalDate)
 - `hora` (LocalTime)
