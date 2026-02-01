@@ -90,6 +90,10 @@ public class CorrelatividadService {
     public boolean puedeRendir(UUID idAlumno, UUID idMateriaAspirante) {
         Materia materiaObjetivo = materiaRepository.findById(idMateriaAspirante)
                 .orElseThrow(() -> new RuntimeException("Materia no encontrada"));
+        // Si la materia se puede rendir libre, no validar cursada ni correlativas
+        if (Boolean.TRUE.equals(materiaObjetivo.getRendirLibre())) {
+             return true; 
+        }
 
         boolean cursadaAprobada = inscripcionCursadoRepository.findByUsuarioIdAndMateriaId(idAlumno, idMateriaAspirante)
                 .stream()

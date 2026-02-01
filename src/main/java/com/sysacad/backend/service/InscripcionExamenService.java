@@ -44,7 +44,7 @@ public class InscripcionExamenService {
 
     @Transactional
     public InscripcionExamenResponse inscribirAlumno(InscripcionExamenRequest request) {
-        DetalleMesaExamen.DetalleId detalleId = new DetalleMesaExamen.DetalleId(request.getIdMesaExamen(),
+        DetalleMesaExamen.DetalleId detalleId = new DetalleMesaExamen.DetalleId(request.getIdDetalleMesa(),
                 request.getNroDetalle());
 
         DetalleMesaExamen detalle = detalleMesaExamenRepository.findById(detalleId)

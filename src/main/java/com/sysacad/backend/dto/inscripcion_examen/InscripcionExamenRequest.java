@@ -6,6 +6,6 @@ import java.util.UUID;
 @Data
 public class InscripcionExamenRequest {
     private UUID idUsuario; 
-    private UUID idMesaExamen;
+    private UUID idDetalleMesa;
     private Integer nroDetalle;
 }

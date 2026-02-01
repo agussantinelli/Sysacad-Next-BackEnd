@@ -107,7 +107,14 @@ public class UTNSeeder {
                     materia.setCuatrimestreDictado(def.cuatrimestreDictado);
                     materia.setTipoMateria(def.tipo);
                     materia.setOptativa(def.esElectiva);
-                    materia.setRendirLibre(false);
+                    
+                    // Configurar Rendir Libre para Inglés
+                    if (def.nombre.contains("Inglés")) {
+                        materia.setRendirLibre(true);
+                    } else {
+                        materia.setRendirLibre(false);
+                    }
+                    
                     materia = materiaRepository.save(materia);
                     materiasPersistidas.put(def.nombre, materia);
                 }

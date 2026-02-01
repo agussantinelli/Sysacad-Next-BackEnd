@@ -91,79 +91,42 @@ public class InscripcionSeeder {
         Materia emprendedores = getMateria("Formación de Emprendedores");
 
         if (c1k1 != null && alumnoAgustin != null) {
-            var insc = inscribirCursado(alumnoAgustin, c1k1, algoritmos);
-            insc.setNotaFinal(new BigDecimal("9.00"));
-            insc.setEstado(EstadoCursada.PROMOCIONADO);
-            insc.setFechaPromocion(LocalDate.of(2025, 12, 1));
-            insc.setTomo(getRandomTomo());
-            insc.setFolio(getRandomFolio());
-            inscripcionCursadoRepository.save(insc);
-
-            var inscSist = inscribirCursado(alumnoAgustin, c1k1, sistemas);
-            inscSist.setNotaFinal(new BigDecimal("8.00"));
-            inscSist.setEstado(EstadoCursada.PROMOCIONADO);
-            inscSist.setFechaPromocion(LocalDate.of(2025, 12, 1));
-            inscSist.setTomo(getRandomTomo());
-            inscSist.setFolio(getRandomFolio());
-            inscripcionCursadoRepository.save(inscSist);
-
-            var inscEng = inscribirCursado(alumnoAgustin, c1k1, ingles1);
-            inscEng.setNotaFinal(new BigDecimal("10.00"));
-            inscEng.setEstado(EstadoCursada.PROMOCIONADO);
-            inscEng.setFechaPromocion(LocalDate.of(2025, 12, 1));
-            inscEng.setTomo(getRandomTomo());
-            inscEng.setFolio(getRandomFolio());
-            inscripcionCursadoRepository.save(inscEng);
-
-            var inscAlg = inscribirCursado(alumnoAgustin, c1k1, algebra);
-            inscAlg.setNotaFinal(new BigDecimal("8.50"));
-            inscAlg.setEstado(EstadoCursada.PROMOCIONADO);
-            inscAlg.setFechaPromocion(LocalDate.of(2025, 12, 5));
-            inscAlg.setTomo(getRandomTomo());
-            inscAlg.setFolio(getRandomFolio());
-            inscripcionCursadoRepository.save(inscAlg);
+            // --- AÑO 1: TODO APROBADO (PROMOCIONADO) ---
+            // Esto habilita cursar/rendir 2do año
+            
+            crearHistoriaAcademica(alumnoAgustin, c1k1, algoritmos, EstadoCursada.PROMOCIONADO, new BigDecimal("9"));
+            crearHistoriaAcademica(alumnoAgustin, c1k1, sistemas, EstadoCursada.PROMOCIONADO, new BigDecimal("8"));
+            crearHistoriaAcademica(alumnoAgustin, c1k1, analisis1, EstadoCursada.PROMOCIONADO, new BigDecimal("7"));
+            crearHistoriaAcademica(alumnoAgustin, c1k1, algebra, EstadoCursada.PROMOCIONADO, new BigDecimal("8"));
+            crearHistoriaAcademica(alumnoAgustin, c1k1, fisica1, EstadoCursada.PROMOCIONADO, new BigDecimal("9"));
+            crearHistoriaAcademica(alumnoAgustin, c1k1, ingles1, EstadoCursada.PROMOCIONADO, new BigDecimal("10"));
+            crearHistoriaAcademica(alumnoAgustin, c1k1, arquitectura, EstadoCursada.PROMOCIONADO, new BigDecimal("7"));
+            
+            // Lógica también aprobada
+             Materia logica = getMateria("Lógica y Estructuras Discretas");
+             crearHistoriaAcademica(alumnoAgustin, c1k1, logica, EstadoCursada.PROMOCIONADO, new BigDecimal("8"));
         }
-
-        if (c1k2 != null && alumnoAgustin != null) {
-            var inscAn1 = inscribirCursado(alumnoAgustin, c1k2, analisis1);
-            inscAn1.setNotaFinal(new BigDecimal("7.00"));
-            inscAn1.setEstado(EstadoCursada.PROMOCIONADO);
-            inscAn1.setFechaPromocion(LocalDate.of(2025, 12, 10));
-            inscAn1.setTomo(getRandomTomo());
-            inscAn1.setFolio(getRandomFolio());
-            inscripcionCursadoRepository.save(inscAn1);
-
-            var inscFis = inscribirCursado(alumnoAgustin, c1k2, fisica1);
-            inscFis.setNotaFinal(new BigDecimal("7.50"));
-            inscFis.setEstado(EstadoCursada.PROMOCIONADO);
-            inscFis.setFechaPromocion(LocalDate.of(2025, 12, 12));
-            inscFis.setTomo(getRandomTomo());
-            inscFis.setFolio(getRandomFolio());
-            inscripcionCursadoRepository.save(inscFis);
-
-            var inscArq = inscribirCursado(alumnoAgustin, c1k2, arquitectura);
-            inscArq.setNotaFinal(new BigDecimal("9.00"));
-            inscArq.setEstado(EstadoCursada.PROMOCIONADO);
-            inscArq.setFechaPromocion(LocalDate.of(2025, 12, 15));
-            inscArq.setTomo(getRandomTomo());
-            inscArq.setFolio(getRandomFolio());
-            inscripcionCursadoRepository.save(inscArq);
-        }
-
+        
         if (c2k1 != null && alumnoAgustin != null) {
-            var inscAn2 = inscribirCursado(alumnoAgustin, c2k1, analisis2);
-            cargarNotaCursada(inscAn2, "1er Parcial", "6.00");
-            cargarNotaCursada(inscAn2, "TP Laboratorio", "7.50");
-
-            var inscSin = inscribirCursado(alumnoAgustin, c2k1, sintaxis);
-            cargarNotaCursada(inscSin, "1er Parcial", "8.00");
-
-            var inscPara = inscribirCursado(alumnoAgustin, c2k1, paradigmas);
-            cargarNotaCursada(inscPara, "TP Funcional", "9.00");
-
-            var inscSO = inscribirCursado(alumnoAgustin, c2k1, sistemasOp);
-            cargarNotaCursada(inscSO, "TP Shell", "8.50");
+            // --- AÑO 2: ALGUNAS APROBADAS, OTRAS REGULARES ---
+            
+            // Aprobadas (Promocionadas)
+            crearHistoriaAcademica(alumnoAgustin, c2k1, analisis2, EstadoCursada.PROMOCIONADO, new BigDecimal("8"));
+            Materia fisica2 = getMateria("Física II");
+            crearHistoriaAcademica(alumnoAgustin, c2k1, fisica2, EstadoCursada.PROMOCIONADO, new BigDecimal("7"));
+            
+            // Regulares (Listas para rendir examen final)
+            // Sintaxis requiere: Algoritmos y Lógica (Ya aprobadas) -> OK para rendir
+            crearHistoriaAcademica(alumnoAgustin, c2k1, sintaxis, EstadoCursada.REGULAR, new BigDecimal("6"));
+            
+            // Paradigmas requiere: Algoritmos y Lógica (Ya aprobadas) -> OK para rendir
+            crearHistoriaAcademica(alumnoAgustin, c2k1, paradigmas, EstadoCursada.REGULAR, new BigDecimal("6"));
+            
+            // Sistemas Operativos requiere: Arquitectura (Ya aprobada) -> OK para rendir
+            crearHistoriaAcademica(alumnoAgustin, c2k1, sistemasOp, EstadoCursada.REGULAR, new BigDecimal("6"));
         }
+
+
 
         if (cElectivas != null && alumnoAgustin != null) {
             var inscEntornos = inscribirCursado(alumnoAgustin, cElectivas, entornos);
@@ -632,5 +595,19 @@ public class InscripcionSeeder {
 
     private String getRandomFolio() {
         return String.valueOf(10 + (int) (Math.random() * 900));
+    }
+
+    private void crearHistoriaAcademica(Usuario alumno, Comision comision, Materia materia, EstadoCursada estado, BigDecimal nota) {
+        var insc = inscribirCursado(alumno, comision, materia);
+        insc.setEstado(estado);
+        insc.setNotaFinal(nota);
+        
+        if (estado == EstadoCursada.PROMOCIONADO) {
+            insc.setFechaPromocion(LocalDate.of(2025, 12, 15));
+            insc.setTomo(getRandomTomo());
+            insc.setFolio(getRandomFolio());
+        }
+        
+        inscripcionCursadoRepository.save(insc);
     }
 }
