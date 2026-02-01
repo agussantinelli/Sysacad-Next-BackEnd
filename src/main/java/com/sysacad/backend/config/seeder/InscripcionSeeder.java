@@ -88,6 +88,7 @@ public class InscripcionSeeder {
         Materia sistemasOp = getMateria("Sistemas Operativos");
         Materia entornos = getMateria("Entornos Gráficos");
         Materia mineria = getMateria("Minería de Datos");
+        Materia emprendedores = getMateria("Formación de Emprendedores");
 
         if (c1k1 != null && alumnoAgustin != null) {
             var insc = inscribirCursado(alumnoAgustin, c1k1, algoritmos);
@@ -174,6 +175,11 @@ public class InscripcionSeeder {
             inscMineria.setEstado(EstadoCursada.REGULAR);
             inscMineria.setNotaFinal(new BigDecimal("5.50"));
             inscripcionCursadoRepository.save(inscMineria);
+
+            var inscEmprendedores = inscribirCursado(alumnoAgustin, cElectivas, emprendedores);
+            inscEmprendedores.setEstado(EstadoCursada.REGULAR);
+            inscEmprendedores.setNotaFinal(new BigDecimal("5.00"));
+            inscripcionCursadoRepository.save(inscEmprendedores);
         }
 
         if (c1k1 != null && alumnoSofia != null) {
@@ -391,6 +397,7 @@ public class InscripcionSeeder {
             
             Materia entornos = getMateria("Entornos Gráficos");
             Materia mineria = getMateria("Minería de Datos");
+            Materia emprendedores = getMateria("Formación de Emprendedores");
 
             // FEBRERO
             DetalleMesaExamen febAlgo = createDetalleMesa(mesaFeb, 1, algoritmos, profeNicolas, LocalDate.of(2026, 2, 10), LocalTime.of(9, 0));
@@ -403,8 +410,6 @@ public class InscripcionSeeder {
             createDetalleMesa(mesaFeb, 6, logica, profeNicolas, LocalDate.of(2026, 2, 18), LocalTime.of(18, 0));
             createDetalleMesa(mesaFeb, 8, arquitectura, profeCristian, LocalDate.of(2026, 2, 22), LocalTime.of(9, 0));
             createDetalleMesa(mesaFeb, 9, analisis2, profeCristian, LocalDate.of(2026, 2, 11), LocalTime.of(14, 0));
-            // ... truncated for brevity, but mimicking full logical spread if needed, assuming user wants full replication
-            // Replicating all from DbSeeder
             createDetalleMesa(mesaFeb, 10, fisica2, profeRoberto, LocalDate.of(2026, 2, 13), LocalTime.of(16, 0));
             createDetalleMesa(mesaFeb, 11, ingSociedad, profeLaura, LocalDate.of(2026, 2, 15), LocalTime.of(18, 0));
             createDetalleMesa(mesaFeb, 12, ingles2, profeAna, LocalDate.of(2026, 2, 17), LocalTime.of(14, 0));
@@ -441,12 +446,27 @@ public class InscripcionSeeder {
 
             createDetalleMesa(mesaFeb, 37, entornos, profeClaudia, LocalDate.of(2026, 2, 26), LocalTime.of(18, 0));
             createDetalleMesa(mesaFeb, 38, mineria, profeNicolas, LocalDate.of(2026, 2, 27), LocalTime.of(18, 0));
+            createDetalleMesa(mesaFeb, 39, emprendedores, profeClaudia, LocalDate.of(2026, 2, 28), LocalTime.of(18, 0));
+            createDetalleMesa(mesaFeb, 40, ingles2, profeAna, LocalDate.of(2026, 2, 24), LocalTime.of(14, 0));
 
             // JULIO
             DetalleMesaExamen julSintaxis = createDetalleMesa(mesaJul, 1, sintaxis, profeNicolas, LocalDate.of(2026, 7, 10), LocalTime.of(9, 0));
             DetalleMesaExamen julFisica = createDetalleMesa(mesaJul, 2, fisica1, profeRoberto, LocalDate.of(2026, 7, 15), LocalTime.of(16, 0));
             createDetalleMesa(mesaJul, 3, analisis1, profeSandra, LocalDate.of(2026, 7, 6), LocalTime.of(9, 0));
             createDetalleMesa(mesaJul, 4, algebra, profeSandra, LocalDate.of(2026, 7, 7), LocalTime.of(9, 0));
+            createDetalleMesa(mesaJul, 5, ingles1, profeAna, LocalDate.of(2026, 7, 8), LocalTime.of(14, 0));
+            createDetalleMesa(mesaJul, 6, logica, profeNicolas, LocalDate.of(2026, 7, 10), LocalTime.of(18, 0));
+            createDetalleMesa(mesaJul, 7, arquitectura, profeCristian, LocalDate.of(2026, 7, 13), LocalTime.of(9, 0));
+            createDetalleMesa(mesaJul, 8, sistemas, profeNicolas, LocalDate.of(2026, 7, 14), LocalTime.of(14, 0));
+            createDetalleMesa(mesaJul, 9, analisis2, profeCristian, LocalDate.of(2026, 7, 15), LocalTime.of(14, 0));
+            createDetalleMesa(mesaJul, 10, fisica2, profeRoberto, LocalDate.of(2026, 7, 16), LocalTime.of(16, 0));
+            createDetalleMesa(mesaJul, 11, ingSociedad, profeLaura, LocalDate.of(2026, 7, 17), LocalTime.of(18, 0));
+            createDetalleMesa(mesaJul, 12, ingles2, profeAna, LocalDate.of(2026, 7, 20), LocalTime.of(14, 0));
+            createDetalleMesa(mesaJul, 13, paradigmas, profeCristian, LocalDate.of(2026, 7, 21), LocalTime.of(9, 0));
+            createDetalleMesa(mesaJul, 14, sistemasOp, profeNicolas, LocalDate.of(2026, 7, 22), LocalTime.of(18, 0));
+            createDetalleMesa(mesaJul, 15, analisisSist, profeLaura, LocalDate.of(2026, 7, 23), LocalTime.of(18, 0));
+            createDetalleMesa(mesaJul, 16, basesDatos, profeNicolas, LocalDate.of(2026, 7, 24), LocalTime.of(18, 0));
+            createDetalleMesa(mesaJul, 17, emprendedores, profeClaudia, LocalDate.of(2026, 7, 27), LocalTime.of(18, 0));
 
             // DICIEMBRE
             createDetalleMesa(mesaDic, 1, algoritmos, profeNicolas, LocalDate.of(2026, 12, 10), LocalTime.of(9, 0));
@@ -458,16 +478,32 @@ public class InscripcionSeeder {
             createDetalleMesa(mesaDic, 7, basesDatos, profeNicolas, LocalDate.of(2026, 12, 15), LocalTime.of(18, 0));
             createDetalleMesa(mesaDic, 8, disenio, profeLaura, LocalDate.of(2026, 12, 17), LocalTime.of(18, 0));
             createDetalleMesa(mesaDic, 9, proyectoFinal, profeNicolas, LocalDate.of(2026, 12, 20), LocalTime.of(18, 0));
+            createDetalleMesa(mesaDic, 10, ingles1, profeAna, LocalDate.of(2026, 12, 11), LocalTime.of(14, 0));
+            createDetalleMesa(mesaDic, 11, logica, profeNicolas, LocalDate.of(2026, 12, 13), LocalTime.of(18, 0));
+            createDetalleMesa(mesaDic, 12, arquitectura, profeCristian, LocalDate.of(2026, 12, 16), LocalTime.of(9, 0));
+            createDetalleMesa(mesaDic, 13, analisis2, profeCristian, LocalDate.of(2026, 12, 18), LocalTime.of(14, 0));
+            createDetalleMesa(mesaDic, 14, fisica2, profeRoberto, LocalDate.of(2026, 12, 19), LocalTime.of(16, 0));
+            createDetalleMesa(mesaDic, 15, ingSociedad, profeLaura, LocalDate.of(2026, 12, 21), LocalTime.of(18, 0));
+            createDetalleMesa(mesaDic, 16, ingles2, profeAna, LocalDate.of(2026, 12, 22), LocalTime.of(14, 0));
+            createDetalleMesa(mesaDic, 17, sistemasOp, profeNicolas, LocalDate.of(2026, 12, 14), LocalTime.of(18, 0));
+            createDetalleMesa(mesaDic, 18, analisisSist, profeLaura, LocalDate.of(2026, 12, 15), LocalTime.of(18, 0));
+            createDetalleMesa(mesaDic, 19, emprendedores, profeClaudia, LocalDate.of(2026, 12, 17), LocalTime.of(18, 0));
 
             // MAYO
             createDetalleMesa(mesaMay, 1, algoritmos, profeNicolas, LocalDate.of(2026, 5, 22), LocalTime.of(14, 0));
             createDetalleMesa(mesaMay, 2, analisis1, profeSandra, LocalDate.of(2026, 5, 24), LocalTime.of(14, 0));
             createDetalleMesa(mesaMay, 3, sintaxis, profeNicolas, LocalDate.of(2026, 5, 26), LocalTime.of(14, 0));
+            createDetalleMesa(mesaMay, 4, fisica1, profeRoberto, LocalDate.of(2026, 5, 27), LocalTime.of(16, 0));
+            createDetalleMesa(mesaMay, 5, sistemas, profeNicolas, LocalDate.of(2026, 5, 28), LocalTime.of(14, 0));
+            createDetalleMesa(mesaMay, 6, emprendedores, profeClaudia, LocalDate.of(2026, 5, 29), LocalTime.of(18, 0));
 
             // SEPTIEMBRE
             createDetalleMesa(mesaSep, 1, algoritmos, profeNicolas, LocalDate.of(2026, 9, 18), LocalTime.of(14, 0));
             createDetalleMesa(mesaSep, 2, analisis1, profeSandra, LocalDate.of(2026, 9, 20), LocalTime.of(14, 0));
             createDetalleMesa(mesaSep, 3, disenio, profeLaura, LocalDate.of(2026, 9, 22), LocalTime.of(14, 0));
+            createDetalleMesa(mesaSep, 4, fisica1, profeRoberto, LocalDate.of(2026, 9, 23), LocalTime.of(16, 0));
+            createDetalleMesa(mesaSep, 5, sistemas, profeNicolas, LocalDate.of(2026, 9, 24), LocalTime.of(14, 0));
+            createDetalleMesa(mesaSep, 6, emprendedores, profeClaudia, LocalDate.of(2026, 9, 25), LocalTime.of(18, 0));
 
             // Inscribir Alumnos a Examenes
             Usuario alumnoAgustin = usuarioRepository.findByLegajo("55555").orElse(null);
@@ -522,6 +558,7 @@ public class InscripcionSeeder {
     }
 
     private void cargarNotaCursada(InscripcionCursado insc, String descripcion, String valor) {
+        boolean exists = calificacionCursadaRepository.findAll().stream()
              .anyMatch(c -> c.getInscripcionCursado().getId().equals(insc.getId()) && c.getDescripcion().equals(descripcion));
         
         if (exists) return;
