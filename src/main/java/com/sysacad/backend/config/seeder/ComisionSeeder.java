@@ -420,6 +420,7 @@ public class ComisionSeeder {
 
             System.out.println(">> Seeding Académico Finalizado: Comisiones, Horarios y Asignaciones.");
     }
+    }
 
     private Salon createSalon(FacultadRegional facu, String nombre, String piso) {
         Salon s = new Salon();
@@ -482,32 +483,6 @@ public class ComisionSeeder {
 
         AsignacionMateria asignacion = new AsignacionMateria();
         asignacion.setId(id);
-        asignacion.setCargo(cargo);
-        asignacion.setProfesor(profe);
-        asignacion.setMateria(mat);
-        asignacionMateriaRepository.save(asignacion);
-    }
-}
-    private Materia getMateria(String nombre) {
-        return materiaRepository.findByNombre(nombre)
-                .orElseThrow(() -> new RuntimeException("Materia no encontrada: " + nombre));
-    }
-
-    private void crearHorario(Comision com, Materia mat, DiaSemana dia, int hDesde,
-                              int hHasta) {
-        HorarioCursado horario = new HorarioCursado();
-        HorarioCursado.HorarioCursadoId id = new HorarioCursado.HorarioCursadoId(
-                com.getId(), mat.getId(), dia, LocalTime.of(hDesde, 0));
-        horario.setId(id);
-        horario.setHoraHasta(LocalTime.of(hHasta, 0));
-        horario.setComision(com);
-        horario.setMateria(mat);
-        horarioCursadoRepository.save(horario);
-    }
-
-    private void asignarCargo(Usuario profe, Materia mat, RolCargo cargo) {
-        AsignacionMateria asignacion = new AsignacionMateria();
-        asignacion.setId(new AsignacionMateria.AsignacionMateriaId(profe.getId(), mat.getId()));
         asignacion.setCargo(cargo);
         asignacion.setProfesor(profe);
         asignacion.setMateria(mat);

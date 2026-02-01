@@ -32,7 +32,7 @@ public class MatriculacionSeeder {
 
     @Transactional
     public void seed() {
-        if (matriculacionRepository.count() == 0) {
+
             System.out.println(">> MatriculacionSeeder: Matriculando alumnos de prueba en carreras...");
 
             FacultadRegional frro = facultadRepository.findAll().stream()
