@@ -30,10 +30,10 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleGlobalException(Exception ex, WebRequest request) {
-        return buildErrorResponse("Ocurrió un error inesperado", HttpStatus.INTERNAL_SERVER_ERROR, request);
+        ex.printStackTrace(); 
+        return buildErrorResponse("Ocurrió un error inesperado: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
 
-    // Armado del Cuerpo de la Excepcion y Envio Error al Front
     private ResponseEntity<Object> buildErrorResponse(String message, HttpStatus status, WebRequest request) {
         Map<String, Object> body = new HashMap<>();
         body.put("timestamp", LocalDateTime.now());
