@@ -109,12 +109,16 @@ CREATE TABLE plan_materias (
     CONSTRAINT fk_pm_materia FOREIGN KEY (id_materia) REFERENCES materias(id)
 );
 
-CREATE TABLE correlativas (
+CREATE TABLE correlatividades (
+    id_correlatividad UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     id_materia UUID NOT NULL,
     id_correlativa UUID NOT NULL,
-    PRIMARY KEY (id_materia, id_correlativa),
+    tipo VARCHAR(20) NOT NULL,
+    plan_id_carrera UUID,
+    plan_nro_plan INTEGER,
     CONSTRAINT fk_corr_materia FOREIGN KEY (id_materia) REFERENCES materias(id),
-    CONSTRAINT fk_corr_requerida FOREIGN KEY (id_correlativa) REFERENCES materias(id)
+    CONSTRAINT fk_corr_requerida FOREIGN KEY (id_correlativa) REFERENCES materias(id),
+    CONSTRAINT fk_corr_plan FOREIGN KEY (plan_id_carrera, plan_nro_plan) REFERENCES planes_de_estudios(id_carrera, nro_plan)
 );
 
 CREATE TABLE comisiones (
