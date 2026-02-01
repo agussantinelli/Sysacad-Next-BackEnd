@@ -46,7 +46,16 @@ public class CorrelatividadService {
         // Agregar también las que tienen final aprobado (implica regularizada)
         java.util.Set<UUID> finalesAprobados = inscripcionExamenRepository.findByUsuarioId(idAlumno).stream()
                 .filter(i -> i.getEstado() == com.sysacad.backend.modelo.enums.EstadoExamen.APROBADO)
-                .map(i -> i.getDetalleMesaExamen().getMateria().getId())
+                .map(i -> {
+                    if (i.getDetalleMesaExamen() != null && i.getDetalleMesaExamen().getMateria() != null) {
+                        return i.getDetalleMesaExamen().getMateria().getId();
+                    }
+                    if (i.getMateria() != null) {
+                        return i.getMateria().getId();
+                    }
+                    return null;
+                })
+                .filter(java.util.Objects::nonNull)
                 .collect(Collectors.toSet());
 
         materiasRegularizadas.addAll(finalesAprobados);
@@ -100,7 +109,16 @@ public class CorrelatividadService {
         
         java.util.Set<UUID> finalesAprobados = inscripcionExamenRepository.findByUsuarioId(idAlumno).stream()
                 .filter(i -> i.getEstado() == com.sysacad.backend.modelo.enums.EstadoExamen.APROBADO)
-                .map(i -> i.getDetalleMesaExamen().getMateria().getId())
+                .map(i -> {
+                    if (i.getDetalleMesaExamen() != null && i.getDetalleMesaExamen().getMateria() != null) {
+                        return i.getDetalleMesaExamen().getMateria().getId();
+                    }
+                    if (i.getMateria() != null) {
+                        return i.getMateria().getId();
+                    }
+                    return null;
+                })
+                .filter(java.util.Objects::nonNull)
                 .collect(Collectors.toSet());
         
         materiasAprobadas.addAll(finalesAprobados);
