@@ -130,6 +130,32 @@ public class InscripcionCursadoService {
 
     }
 
+    public InscripcionCursadoResponse finalizarCursada(UUID idInscripcion, java.math.BigDecimal notaFinal, com.sysacad.backend.modelo.enums.EstadoCursada estado) {
+        InscripcionCursado insc = inscripcionCursadoRepository.findById(idInscripcion)
+                .orElseThrow(() -> new ResourceNotFoundException("Inscripción no encontrada con ID: " + idInscripcion));
+
+        // Validaciones Reglas de Negocio
+        if (estado == com.sysacad.backend.modelo.enums.EstadoCursada.REGULAR) {
+            if (notaFinal.compareTo(new java.math.BigDecimal("4.00")) < 0 || notaFinal.compareTo(new java.math.BigDecimal("5.50")) > 0) {
+                 throw new BusinessLogicException("Para regularizar, la nota debe estar entre 4.00 y 5.50");
+            }
+        } else if (estado == com.sysacad.backend.modelo.enums.EstadoCursada.PROMOCIONADO) {
+            if (notaFinal.compareTo(new java.math.BigDecimal("6.00")) < 0) {
+                 throw new BusinessLogicException("Para promocionar, la nota debe ser 6.00 o superior");
+            }
+        }
+
+        insc.setNotaFinal(notaFinal);
+        insc.setEstado(estado);
+        
+        if (estado == com.sysacad.backend.modelo.enums.EstadoCursada.PROMOCIONADO) {
+            insc.setFechaPromocion(LocalDate.now());
+        }
+
+        insc = inscripcionCursadoRepository.save(insc);
+        return inscripcionCursadoMapper.toDTO(insc);
+    }
+
     public List<InscripcionCursadoResponse> obtenerCursadasActuales(UUID idUsuario) {
         return inscripcionCursadoMapper.toDTOs(inscripcionCursadoRepository.findByUsuarioIdAndEstado(idUsuario, com.sysacad.backend.modelo.enums.EstadoCursada.CURSANDO));
     }

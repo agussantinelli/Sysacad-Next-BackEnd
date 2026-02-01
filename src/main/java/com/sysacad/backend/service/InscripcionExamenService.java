@@ -124,10 +124,51 @@ public class InscripcionExamenService {
         InscripcionExamen insc = inscripcionExamenRepository.findById(idInscripcion)
                 .orElseThrow(() -> new ResourceNotFoundException("Inscripción no encontrada con ID: " + idInscripcion));
 
+        // Validación de Nota y Estado
+        if (request.getEstado() == com.sysacad.backend.modelo.enums.EstadoExamen.APROBADO) {
+            if (request.getNota().compareTo(new java.math.BigDecimal("6.00")) < 0) {
+                throw new BusinessLogicException("Para aprobar el examen, la nota debe ser 6.00 o superior.");
+            }
+        }
+
         insc.setNota(request.getNota());
-        insc.setEstado(request.getEstado()); // APROBADO, DESAPROBADO, etc.
+        insc.setEstado(request.getEstado()); 
 
         insc = inscripcionExamenRepository.save(insc);
+
+        // Regla: Si desaprueba 4 veces, pierde la regularidad
+        if (request.getEstado() == com.sysacad.backend.modelo.enums.EstadoExamen.DESAPROBADO || 
+            request.getEstado() == com.sysacad.backend.modelo.enums.EstadoExamen.AUSENTE) {
+             
+             // Buscar la cursada asociada (Debería ser la última cursada regular)
+             // Asumimos que si rinde examen es porque tiene cursada (o es libre, pero si es libre no pierde regularidad)
+             
+             Usuario alumno = insc.getUsuario();
+             com.sysacad.backend.modelo.Materia materia = insc.getDetalleMesaExamen().getMateria();
+             
+             Optional<com.sysacad.backend.modelo.InscripcionCursado> cursadaOpt = inscripcionCursadoRepository
+                .findByUsuarioIdAndMateriaId(alumno.getId(), materia.getId());
+             
+             if (cursadaOpt.isPresent()) {
+                 com.sysacad.backend.modelo.InscripcionCursado cursada = cursadaOpt.get();
+                 if (cursada.getEstado() == com.sysacad.backend.modelo.enums.EstadoCursada.REGULAR) {
+                     // Contar aplazos/ausentes en exámenes previos
+                     long conteoFallidos = inscripcionExamenRepository.countByUsuarioIdAndDetalleMesaExamen_MateriaIdAndEstadoIn(
+                         alumno.getId(), 
+                         materia.getId(), 
+                         List.of(com.sysacad.backend.modelo.enums.EstadoExamen.DESAPROBADO, com.sysacad.backend.modelo.enums.EstadoExamen.AUSENTE)
+                     );
+                     
+                     // El conteo incluye el que acabamos de guardar? Sí, porque ya hicimos save() arriba.
+                     if (conteoFallidos >= 4) {
+                         cursada.setEstado(com.sysacad.backend.modelo.enums.EstadoCursada.LIBRE);
+                         inscripcionCursadoRepository.save(cursada);
+                         System.out.println(">> ALERTA: El alumno " + alumno.getLegajo() + " perdió la regularidad en " + materia.getNombre() + " por 4 aplazos.");
+                     }
+                 }
+             }
+        }
+
         return inscripcionExamenMapper.toDTO(insc);
     }
 

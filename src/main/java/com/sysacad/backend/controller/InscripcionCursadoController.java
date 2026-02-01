@@ -57,6 +57,14 @@ public class InscripcionCursadoController {
             @RequestBody CalificacionCursadaRequest request) {
         return ResponseEntity.ok(inscripcionCursadoService.cargarNota(id, request));
     }
+
+    @PutMapping("/{id}/finalizar")
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESOR')")
+    public ResponseEntity<InscripcionCursadoResponse> finalizarCursada(@PathVariable UUID id,
+                                                                       @RequestParam java.math.BigDecimal nota,
+                                                                       @RequestParam com.sysacad.backend.modelo.enums.EstadoCursada estado) {
+        return ResponseEntity.ok(inscripcionCursadoService.finalizarCursada(id, nota, estado));
+    }
     @GetMapping("/actuales")
     @PreAuthorize("hasAnyRole('ADMIN', 'ESTUDIANTE')")
     public ResponseEntity<List<InscripcionCursadoResponse>> getCursadasActuales(Authentication auth, @RequestParam(required = false) UUID idUsuario) {
