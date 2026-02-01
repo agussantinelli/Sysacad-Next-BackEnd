@@ -333,6 +333,13 @@ Response for `/api/inscripciones-cursado/materias/{idMateria}/disponibles`.
 - `id` (UUID)
 - `nombre` (String)
 
+### `CorrelativaArbolDTO`
+Response for `/api/materias/{id}/correlativas`.
+- `idMateria` (UUID)
+- `nombre` (String)
+- `tipoCorrelatividad` (String): "REGULAR", "PROMOCIONADA"
+- `correlativas` (List<CorrelativaArbolDTO>): Recursive list of prerequisites.
+
 ---
 
 ## MesaExamen
