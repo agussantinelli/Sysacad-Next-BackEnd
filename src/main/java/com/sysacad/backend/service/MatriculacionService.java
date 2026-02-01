@@ -169,7 +169,7 @@ public class MatriculacionService {
 
                     // Obtener estado actual
                     EstadoMateria estadoActual = mapaEstadoMaterias.getOrDefault(materia.getId(),
-                            new EstadoMateria("PENDIENTE", "-"));
+                            new EstadoMateria("PENDIENTE", "-", false));
 
                     // Verificar correlativas para saber si se puede inscribir
                     boolean sePuedeInscribir = false;
@@ -188,7 +188,8 @@ public class MatriculacionService {
                             materia.getOptativa(),
                             materia.getHorasCursado(),
                             materia.getCuatrimestreDictado() != null ? materia.getCuatrimestreDictado().name() : null,
-                            materia.getCorrelativas().stream().map(c -> c.getCorrelativa().getNombre()).collect(java.util.stream.Collectors.toList()));
+                            materia.getCorrelativas().stream().map(c -> c.getCorrelativa().getNombre()).collect(java.util.stream.Collectors.toList()),
+                            estadoActual.tieneInscripcionPendiente);
                     materiasDTO.add(dto);
                 }
 
@@ -222,15 +223,30 @@ public class MatriculacionService {
                 estadoFinal = "APROBADA";
             }
 
-            mapa.put(cur.getMateria().getId(), new EstadoMateria(estadoFinal, notaStr));
+            mapa.put(cur.getMateria().getId(), new EstadoMateria(estadoFinal, notaStr, false)); // Default false
         }
 
-        // Procesar Exámenes (Sobreescribe si aprobó final)
+        // Procesar Exámenes (Sobreescribe si aprobó final, O indica pendiente)
         for (com.sysacad.backend.modelo.InscripcionExamen ex : examenes) {
+            UUID materiaId = ex.getDetalleMesaExamen().getMateria().getId();
+            
+            EstadoMateria estadoActual = mapa.getOrDefault(materiaId, new EstadoMateria("PENDIENTE", "-", false));
+            
             if (ex.getEstado() == com.sysacad.backend.modelo.enums.EstadoExamen.APROBADO) {
                 // Aprobó final -> APROBADA
-                mapa.put(ex.getDetalleMesaExamen().getMateria().getId(),
-                        new EstadoMateria("APROBADA", ex.getNota() != null ? ex.getNota().toString() : "-"));
+                estadoActual.estado = "APROBADA";
+                estadoActual.nota = ex.getNota() != null ? ex.getNota().toString() : "-";
+                // Una vez aprobada, no deberia tener pendiente (en teoria), pero si tuviera otra inscripcion futura, quizas. 
+                // Pero priorizamos APROBADA.
+                estadoActual.tieneInscripcionPendiente = false;
+                mapa.put(materiaId, estadoActual);
+            } else if (ex.getEstado() == com.sysacad.backend.modelo.enums.EstadoExamen.PENDIENTE) {
+                // Hay una inscripcion PENDIENTE.
+                // Si ya estaba APROBADA, mantenemos APROBADA. Si no, marcamos el flag.
+                if (!estadoActual.estado.equals("APROBADA")) {
+                    estadoActual.tieneInscripcionPendiente = true;
+                     mapa.put(materiaId, estadoActual);
+                }
             }
         }
 
@@ -265,10 +281,17 @@ public class MatriculacionService {
     private static class EstadoMateria {
         String estado;
         String nota;
+        boolean tieneInscripcionPendiente;
 
-        public EstadoMateria(String estado, String nota) {
+        public EstadoMateria(String estado, String nota, boolean tieneInscripcionPendiente) {
             this.estado = estado;
             this.nota = nota;
+            this.tieneInscripcionPendiente = tieneInscripcionPendiente;
+        }
+
+        // Constructor compatibilidad
+        public EstadoMateria(String estado, String nota) {
+            this(estado, nota, false);
         }
     }
 }

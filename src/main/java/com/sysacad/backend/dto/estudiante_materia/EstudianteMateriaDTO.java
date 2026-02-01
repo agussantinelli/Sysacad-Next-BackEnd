@@ -20,4 +20,5 @@ public class EstudianteMateriaDTO {
     private Short horasCursado;
     private String cuatrimestre;
     private java.util.List<String> correlativas;
+    private Boolean tieneInscripcionExamenPendiente;
 }
