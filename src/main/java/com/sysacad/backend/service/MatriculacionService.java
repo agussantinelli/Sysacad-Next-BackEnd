@@ -188,7 +188,11 @@ public class MatriculacionService {
                             materia.getOptativa(),
                             materia.getHorasCursado(),
                             materia.getCuatrimestreDictado() != null ? materia.getCuatrimestreDictado().name() : null,
-                            materia.getCorrelativas().stream().map(c -> c.getCorrelativa().getNombre()).collect(java.util.stream.Collectors.toList()),
+                            materia.getCorrelativas().stream()
+                                    .map(c -> new com.sysacad.backend.dto.estudiante_materia.CorrelativaDTO(
+                                            c.getCorrelativa().getNombre(),
+                                            c.getTipo().toString()))
+                                    .collect(java.util.stream.Collectors.toList()),
                             estadoActual.tieneInscripcionPendiente);
                     materiasDTO.add(dto);
                 }
