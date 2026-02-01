@@ -82,4 +82,25 @@ public class MateriaController {
         materiaService.eliminarMateria(id);
         return ResponseEntity.noContent().build();
     }
+
+    @Autowired
+    private com.sysacad.backend.repository.UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private com.sysacad.backend.service.MesaExamenService mesaExamenService;
+
+    @GetMapping("/{idMateria}/mesas")
+    @PreAuthorize("hasRole('ESTUDIANTE')")
+    public ResponseEntity<List<com.sysacad.backend.dto.mesa_examen.MesaExamenDisponibleDTO>> getMesasPorMateria(
+            @PathVariable UUID idMateria,
+            org.springframework.security.core.Authentication authentication) {
+        
+        if (authentication == null) return ResponseEntity.status(401).build();
+
+        String legajo = authentication.getName();
+        com.sysacad.backend.modelo.Usuario usuario = usuarioRepository.findByLegajo(legajo)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        return ResponseEntity.ok(mesaExamenService.obtenerMesasDisponibles(idMateria, usuario.getId()));
+    }
 }

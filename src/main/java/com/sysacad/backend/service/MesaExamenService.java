@@ -122,56 +122,57 @@ public class MesaExamenService {
 
     @Transactional(readOnly = true)
     public List<com.sysacad.backend.dto.mesa_examen.MesaExamenDisponibleDTO> obtenerMesasDisponibles(UUID idMateria, UUID idAlumno) {
-        // 1. Validar que la materia exista
-        Materia materia = materiaRepository.findById(idMateria)
-                .orElseThrow(() -> new RuntimeException("Materia no encontrada"));
-        
-        // 2. Obtener estado académico del alumno en esa materia
-        boolean aproboFinal = inscripcionExamenRepository.existsByUsuarioIdAndMateriaIdAndEstado(
+        try {
+            // 1. Validar que la materia exista
+            Materia materia = materiaRepository.findById(idMateria)
+                    .orElseThrow(() -> new RuntimeException("Materia no encontrada"));
+            
+            // 2. Obtener estado académico del alumno en esa materia
+        boolean aproboFinal = inscripcionExamenRepository.existsByUsuarioIdAndDetalleMesaExamen_MateriaIdAndEstado(
                 idAlumno, idMateria, com.sysacad.backend.modelo.enums.EstadoExamen.APROBADO
         );
-        
-        boolean promociono = inscripcionCursadoRepository.existsByUsuarioIdAndMateriaIdAndEstado(
-                idAlumno, idMateria, com.sysacad.backend.modelo.enums.EstadoCursada.PROMOCIONADO
-        );
-
-        // Si ya aprobó, no debería anotarse
-        
-        // 3. Obtener todas las mesas donde se rinde esta materia (con FETCH de MesaExamen y Presidente)
-        List<DetalleMesaExamen> detalles = detalleMesaExamenRepository.findByMateriaIdWithDetails(idMateria);
-
-        // 4. Mapear a DTO con lógica de habilitación
-        return detalles.stream().map(detalle -> {
-            com.sysacad.backend.dto.mesa_examen.MesaExamenDisponibleDTO dto = new com.sysacad.backend.dto.mesa_examen.MesaExamenDisponibleDTO();
             
-            dto.setIdDetalleMesa(detalle.getMesaExamen().getId()); 
-            dto.setNombreMesa(detalle.getMesaExamen().getNombre());
-            dto.setFecha(detalle.getDiaExamen());
-            dto.setHora(detalle.getHoraExamen());
-            dto.setPresidente(detalle.getPresidente() != null ? detalle.getPresidente().getNombre() + " " + detalle.getPresidente().getApellido() : "A definir");
-            
-            // Lógica de habilitación
-            boolean inscripcionExistente = inscripcionExamenRepository.findByUsuarioIdAndDetalleMesaExamenId(idAlumno, detalle.getId()).isPresent();
-             
-             if (aproboFinal || promociono) {
-                 dto.setHabilitada(false);
-                 dto.setMensaje("Materia ya aprobada");
-             } else if (inscripcionExistente) {
-                 dto.setHabilitada(false);
-                 dto.setMensaje("Ya inscripto en esta mesa");
-             } else {
-                 // Chequear regularidad y correlativas para RENDIR
-                 boolean puedeRendir = correlatividadService.puedeRendir(idAlumno, idMateria);
-                 if (puedeRendir) {
-                     dto.setHabilitada(true);
-                     dto.setMensaje("Disponible");
-                 } else {
+            boolean promociono = inscripcionCursadoRepository.existsByUsuarioIdAndMateriaIdAndEstado(
+                    idAlumno, idMateria, com.sysacad.backend.modelo.enums.EstadoCursada.PROMOCIONADO
+            );
+
+            // 3. Obtener todas las mesas donde se rinde esta materia (con FETCH de MesaExamen y Presidente)
+            List<DetalleMesaExamen> detalles = detalleMesaExamenRepository.findByMateriaIdWithDetails(idMateria);
+
+            // 4. Mapear a DTO con lógica de habilitación
+            return detalles.stream().map(detalle -> {
+                com.sysacad.backend.dto.mesa_examen.MesaExamenDisponibleDTO dto = new com.sysacad.backend.dto.mesa_examen.MesaExamenDisponibleDTO();
+                
+                dto.setIdDetalleMesa(detalle.getMesaExamen().getId()); 
+                dto.setNombreMesa(detalle.getMesaExamen().getNombre());
+                dto.setFecha(detalle.getDiaExamen());
+                dto.setHora(detalle.getHoraExamen());
+                dto.setPresidente(detalle.getPresidente() != null ? detalle.getPresidente().getNombre() + " " + detalle.getPresidente().getApellido() : "A definir");
+                
+                // Lógica de habilitación
+                boolean inscripcionExistente = inscripcionExamenRepository.findByUsuarioIdAndDetalleMesaExamenId(idAlumno, detalle.getId()).isPresent();
+                 
+                 if (aproboFinal || promociono) {
                      dto.setHabilitada(false);
-                     dto.setMensaje("No cumple correlativas o regularidad");
+                     dto.setMensaje("Materia ya aprobada");
+                 } else if (inscripcionExistente) {
+                     dto.setHabilitada(false);
+                     dto.setMensaje("Ya inscripto en esta mesa");
+                 } else {
+                     boolean puedeRendir = correlatividadService.puedeRendir(idAlumno, idMateria);
+                     if (puedeRendir) {
+                         dto.setHabilitada(true);
+                         dto.setMensaje("Disponible");
+                     } else {
+                         dto.setHabilitada(false);
+                         dto.setMensaje("No cumple correlativas o regularidad");
+                     }
                  }
-             }
-
-            return dto;
-        }).collect(Collectors.toList());
+                return dto;
+            }).collect(Collectors.toList());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error debug: " + e.getClass().getName() + " - " + e.getMessage());
+        }
     }
 }

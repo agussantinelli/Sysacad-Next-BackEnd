@@ -85,6 +85,8 @@ public class CorrelatividadService {
 
         return true;
     }
+    
+    @Transactional(readOnly = true)
     public boolean puedeRendir(UUID idAlumno, UUID idMateriaAspirante) {
         Materia materiaObjetivo = materiaRepository.findById(idMateriaAspirante)
                 .orElseThrow(() -> new RuntimeException("Materia no encontrada"));
