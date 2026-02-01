@@ -30,8 +30,8 @@ public class InscripcionExamenController {
             Authentication authentication) {
 
         if (request.getIdUsuario() == null && authentication != null) {
-            String email = authentication.getName();
-            Usuario usuario = usuarioRepository.findByMail(email)
+            String legajo = authentication.getName();
+            Usuario usuario = usuarioRepository.findByLegajo(legajo)
                     .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
             request.setIdUsuario(usuario.getId());
         }
@@ -44,8 +44,8 @@ public class InscripcionExamenController {
         if (authentication == null)
             return ResponseEntity.status(401).build();
 
-        String email = authentication.getName();
-        Usuario usuario = usuarioRepository.findByMail(email)
+        String legajo = authentication.getName();
+        Usuario usuario = usuarioRepository.findByLegajo(legajo)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         return ResponseEntity.ok(inscripcionExamenService.getInscripcionesByAlumno(usuario.getId()));
