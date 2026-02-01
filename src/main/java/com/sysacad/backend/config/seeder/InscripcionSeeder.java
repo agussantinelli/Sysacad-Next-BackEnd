@@ -474,7 +474,6 @@ public class InscripcionSeeder {
             Usuario alumnoCarlos = usuarioRepository.findByLegajo("60002").orElse(null);
 
             if (alumnoAgustin != null) {
-                inscribirExamen(alumnoAgustin, febAlgo);
                 inscribirExamen(alumnoAgustin, julSintaxis);
             }
 
