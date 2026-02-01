@@ -148,6 +148,7 @@ Base URL: `/api/mesas`
 | `GET` | `/` | Authenticated | Listar todos los turnos/mesas de examen disponibles. |
 | `POST` | `/detalles` | ADMIN | Agregar fecha y hora de examen para una materia en un turno. |
 | `GET` | `/disponibles` | ESTUDIANTE | Listar exámenes disponibles para inscribirse (Filtrados por `puedeRendir`). |
+| `GET` | `/materias/{idMateria}/mesas` | ESTUDIANTE | Listar mesas disponibles para una materia específica. Retorna lista con `habilitada` (boolean) y `mensaje`, validando inscripción previa y estado académico. |
 | `GET` | `/detalles/{id}/{nroDetalle}` | ESTUDIANTE | Ver detalle de una mesa de examen específica. |
 
 ## InscripcionExamenController
@@ -172,5 +173,3 @@ Base URL: `/api/inscripciones-cursado`
 | `GET` | `/actuales` | ESTUDIANTE, ADMIN | Obtener materias que cursa actualmente (Admin puede usar `?idUsuario=UUID`). |
 | `GET` | `/materias/{idMateria}/disponibles` | ESTUDIANTE, ADMIN | Obtener comisiones disponibles. Retorna lista con `habilitada` (boolean) y `mensaje` (motivo de rechazo/éxito), validando horarios y correlativas. |
 | `PUT` | `/{id}/finalizar` | ADMIN, PROFESOR | Finalizar cursada (Cargar nota final y estado: REGULAR/PROMOCIONADO). Valida reglas de negocio (notas 4-5.5 / >=6). |
-
-
