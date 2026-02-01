@@ -282,13 +282,17 @@ El sistema cuenta con un `DbSeeder` (`src/main/java/com/sysacad/backend/config/s
 | **PROFESOR** | `54444` | Ana Martinez | `ana@sysacad.com` | `123456` |
 | **PROFESOR** | `55551` | Sandra Civiero | `sandra@sysacad.com` | `123456` |
 | **PROFESOR** | `55552` | Cristian Milone | `cristian@sysacad.com` | `123456` |
+| **PROFESOR** | `55553` | Gustavo Perez | `gustavo@sysacad.com` | `123456` |
+| **PROFESOR** | `55554` | Claudia Lopez | `claudia@sysacad.com` | `123456` |
+| **PROFESOR** | `55556` | Jorge Garcia | `jorge@sysacad.com` | `123456` |
+| **PROFESOR** | `55557` | Valeria Martinez | `valeria@sysacad.com` | `123456` |
 | **ESTUDIANTE** | `55555` | Agustin Santinelli | `agus@sysacad.com` | `123456` |
 | **ESTUDIANTE** | `56666` | Maria Rodriguez | `maria@sysacad.com` | `123456` |
 | **ESTUDIANTE** | `57777` | Juan Perez | `juan@sysacad.com` | `123456` |
 | **ESTUDIANTE** | `58888` | Sofia Lopez | `sofia@sysacad.com` | `123456` |
 | **ESTUDIANTE** | `59999` | Miguel Torres | `miguel@sysacad.com` | `123456` |
 | **ESTUDIANTE** | `60001` | Lucia Fernandez | `lucia@sysacad.com` | `123456` |
-| **ESTUDIANTE** | `60002` | Carlos Tevez | `carlos@sysacad.com` | `123456` |
+| **ESTUDIANTE** | `60002` | Carlos Alberto Tevez Martinez | `carlos@sysacad.com` | `123456` |
 | **ESTUDIANTE** | `60003` | Martin Palermo | `martin@sysacad.com` | `123456` |
 | **ESTUDIANTE** | `60004` | Flavia Avara | `flavia@sysacad.com` | `123456` |
 | **ESTUDIANTE** | `60010` | Pedro Pascal | `pedro@sysacad.com` | `123456` |
