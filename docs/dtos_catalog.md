@@ -4,15 +4,16 @@ This document enumerates all Data Transfer Objects (DTOs) used in the backend ap
 
 ## Auth
 
-### `LoginRequest` (assumed)
-- `legajo` (String)
+### `LoginRequest`
+- `identificador` (String)
 - `password` (String)
+- `tipoIdentificador` (String)
 
-### `JwtResponse` (assumed)
+
+### `AuthResponse`
 - `token` (String)
-- `type` (String)
-- `username` (String)
-- `authorities` (Collection)
+- `usuario` (UsuarioResponse)
+- `bootId` (String): UUID of the current server instance.
 
 ---
 
@@ -134,7 +135,12 @@ Response for `/api/alumnos/mis-carreras-materias`.
 - `esElectiva` (Boolean)
 - `horasCursado` (Short)
 - `cuatrimestre` (String)
-- `correlativas` (List<String>)
+- `correlativas` (List<CorrelativaDTO>)
+- `tieneInscripcionExamenPendiente` (Boolean)
+
+#### Inner Class: `CorrelativaDTO`
+- `nombre` (String)
+- `condicion` (String): "REGULAR" or "PROMOCIONADA".
 
 ---
 
