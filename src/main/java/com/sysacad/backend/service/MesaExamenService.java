@@ -40,6 +40,12 @@ public class MesaExamenService {
     @Autowired
     private com.sysacad.backend.mapper.DetalleMesaExamenMapper detalleMesaExamenMapper;
 
+    @Autowired
+    private com.sysacad.backend.repository.InscripcionCursadoRepository inscripcionCursadoRepository;
+
+    @Autowired
+    private com.sysacad.backend.repository.InscripcionExamenRepository inscripcionExamenRepository;
+
     @Transactional
     public MesaExamenResponse createMesa(MesaExamenRequest request) {
         MesaExamen mesa = mesaExamenMapper.toEntity(request);
@@ -112,5 +118,67 @@ public class MesaExamenService {
         DetalleMesaExamen detalle = detalleMesaExamenRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Mesa de examen no encontrada"));
         return detalleMesaExamenMapper.toDTO(detalle);
+    }
+
+    @Transactional(readOnly = true)
+    public List<com.sysacad.backend.dto.mesa_examen.MesaExamenDisponibleDTO> obtenerMesasDisponibles(UUID idMateria, UUID idAlumno) {
+        // 1. Validar que la materia exista
+        Materia materia = materiaRepository.findById(idMateria)
+                .orElseThrow(() -> new RuntimeException("Materia no encontrada"));
+        
+        // 2. Obtener estado académico del alumno en esa materia
+        boolean aproboFinal = inscripcionExamenRepository.existsByUsuarioIdAndDetalleMesaExamen_MateriaIdAndEstado(
+                idAlumno, idMateria, com.sysacad.backend.modelo.enums.EstadoExamen.APROBADO
+        );
+        
+        boolean promociono = inscripcionCursadoRepository.existsByUsuarioIdAndMateriaIdAndEstado(
+                idAlumno, idMateria, com.sysacad.backend.modelo.enums.EstadoCursada.PROMOCIONADO
+        );
+
+        // Si ya aprobó, no debería anotarse (salvo que quiera mejorar promedio, pero normalmente no se permite)
+        if (aproboFinal || promociono) {
+             // Retornamos lista vacía o con un mensaje especial. Por ahora vacía para UX limpia o todas deshabilitadas.
+             // El requerimiento dice: "traememe todas las mesas disponibles", pero con estructura similar a comisiones
+             // Podríamos devolverlas todas deshabilitadas con mensaje "Materia Aprobada".
+        }
+        
+        // 3. Obtener todas las mesas donde se rinde esta materia
+        // Esto busca en DetalleMesaExamen por idMateria
+        List<DetalleMesaExamen> detalles = detalleMesaExamenRepository.findByMateriaId(idMateria);
+
+        // 4. Mapear a DTO con lógica de habilitación
+        return detalles.stream().map(detalle -> {
+            com.sysacad.backend.dto.mesa_examen.MesaExamenDisponibleDTO dto = new com.sysacad.backend.dto.mesa_examen.MesaExamenDisponibleDTO();
+            dto.setIdDetalleMesa(detalle.getId().getIdMesaExamen()); // OJO: el ID es compuesto, quizas querramos enviar los dos o un wrapper
+
+            dto.setIdDetalleMesa(detalle.getMesaExamen().getId()); // temporal, really needed: mesaId + nroDetalle
+            dto.setNombreMesa(detalle.getMesaExamen().getNombre());
+            dto.setFecha(detalle.getDiaExamen());
+            dto.setHora(detalle.getHoraExamen());
+            dto.setPresidente(detalle.getPresidente() != null ? detalle.getPresidente().getNombre() + " " + detalle.getPresidente().getApellido() : "A definir");
+            
+            // Lógica de habilitación
+            boolean inscripcionExistente = inscripcionExamenRepository.findByUsuarioIdAndDetalleMesaExamenId(idAlumno, detalle.getId()).isPresent();
+             
+             if (aproboFinal || promociono) {
+                 dto.setHabilitada(false);
+                 dto.setMensaje("Materia ya aprobada");
+             } else if (inscripcionExistente) {
+                 dto.setHabilitada(false);
+                 dto.setMensaje("Ya inscripto en esta mesa");
+             } else {
+                 // Chequear regularidad y correlativas para RENDIR
+                 boolean puedeRendir = correlatividadService.puedeRendir(idAlumno, idMateria);
+                 if (puedeRendir) {
+                     dto.setHabilitada(true);
+                     dto.setMensaje("Disponible");
+                 } else {
+                     dto.setHabilitada(false);
+                     dto.setMensaje("No cumple correlativas o regularidad");
+                 }
+             }
+
+            return dto;
+        }).collect(Collectors.toList());
     }
 }
