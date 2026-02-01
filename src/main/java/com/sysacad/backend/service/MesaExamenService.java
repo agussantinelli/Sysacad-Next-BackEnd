@@ -127,7 +127,7 @@ public class MesaExamenService {
                 .orElseThrow(() -> new RuntimeException("Materia no encontrada"));
         
         // 2. Obtener estado académico del alumno en esa materia
-        boolean aproboFinal = inscripcionExamenRepository.existsByUsuarioIdAndDetalleMesaExamen_MateriaIdAndEstado(
+        boolean aproboFinal = inscripcionExamenRepository.existsByUsuarioIdAndMateriaIdAndEstado(
                 idAlumno, idMateria, com.sysacad.backend.modelo.enums.EstadoExamen.APROBADO
         );
         
@@ -135,23 +135,16 @@ public class MesaExamenService {
                 idAlumno, idMateria, com.sysacad.backend.modelo.enums.EstadoCursada.PROMOCIONADO
         );
 
-        // Si ya aprobó, no debería anotarse (salvo que quiera mejorar promedio, pero normalmente no se permite)
-        if (aproboFinal || promociono) {
-             // Retornamos lista vacía o con un mensaje especial. Por ahora vacía para UX limpia o todas deshabilitadas.
-             // El requerimiento dice: "traememe todas las mesas disponibles", pero con estructura similar a comisiones
-             // Podríamos devolverlas todas deshabilitadas con mensaje "Materia Aprobada".
-        }
+        // Si ya aprobó, no debería anotarse
         
-        // 3. Obtener todas las mesas donde se rinde esta materia
-        // Esto busca en DetalleMesaExamen por idMateria
-        List<DetalleMesaExamen> detalles = detalleMesaExamenRepository.findByMateriaId(idMateria);
+        // 3. Obtener todas las mesas donde se rinde esta materia (con FETCH de MesaExamen y Presidente)
+        List<DetalleMesaExamen> detalles = detalleMesaExamenRepository.findByMateriaIdWithDetails(idMateria);
 
         // 4. Mapear a DTO con lógica de habilitación
         return detalles.stream().map(detalle -> {
             com.sysacad.backend.dto.mesa_examen.MesaExamenDisponibleDTO dto = new com.sysacad.backend.dto.mesa_examen.MesaExamenDisponibleDTO();
-            dto.setIdDetalleMesa(detalle.getId().getIdMesaExamen()); // OJO: el ID es compuesto, quizas querramos enviar los dos o un wrapper
-
-            dto.setIdDetalleMesa(detalle.getMesaExamen().getId()); // temporal, really needed: mesaId + nroDetalle
+            
+            dto.setIdDetalleMesa(detalle.getMesaExamen().getId()); 
             dto.setNombreMesa(detalle.getMesaExamen().getNombre());
             dto.setFecha(detalle.getDiaExamen());
             dto.setHora(detalle.getHoraExamen());

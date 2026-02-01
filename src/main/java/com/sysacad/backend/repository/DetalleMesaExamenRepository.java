@@ -13,4 +13,7 @@ public interface DetalleMesaExamenRepository extends JpaRepository<DetalleMesaEx
     List<DetalleMesaExamen> findByMesaExamenId(UUID mesaExamenId);
 
     List<DetalleMesaExamen> findByMateriaId(UUID materiaId);
+
+    @org.springframework.data.jpa.repository.Query("SELECT d FROM DetalleMesaExamen d JOIN FETCH d.mesaExamen LEFT JOIN FETCH d.presidente WHERE d.materia.id = :materiaId")
+    List<DetalleMesaExamen> findByMateriaIdWithDetails(@org.springframework.data.repository.query.Param("materiaId") UUID materiaId);
 }

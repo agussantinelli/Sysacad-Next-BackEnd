@@ -23,4 +23,6 @@ public interface InscripcionExamenRepository extends JpaRepository<InscripcionEx
     boolean existsByUsuarioIdAndDetalleMesaExamen_MateriaIdAndEstado(UUID usuarioId, UUID materiaId, com.sysacad.backend.modelo.enums.EstadoExamen estado);
 
     long countByUsuarioIdAndDetalleMesaExamen_MateriaIdAndEstadoIn(UUID usuarioId, UUID materiaId, List<com.sysacad.backend.modelo.enums.EstadoExamen> estados);
+
+    boolean existsByUsuarioIdAndMateriaIdAndEstado(UUID usuarioId, UUID materiaId, com.sysacad.backend.modelo.enums.EstadoExamen estado);
 }
