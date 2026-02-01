@@ -194,6 +194,42 @@ public class ComisionSeeder {
                     Arrays.asList(entornos, emprendedores, metAgiles, mineria),
                     List.of(profeLaura, profeClaudia, profeNicolas));
 
+            // NUEVAS COMISIONES (Total 4 por nivel)
+            // 2K4
+             Comision c2k4 = createComisionIfNotExists("2K4", 2025, "MAÑANA", aula301,
+                    Arrays.asList(analisis2, fisica2, ingSociedad, ingles2, sintaxis, paradigmas, sistemasOp, analisisSist),
+                    List.of(profeGustavo, profeJorge, profeValeria, profeSandra, profeNicolas));
+
+            // 3K3
+            Comision c3k3 = createComisionIfNotExists("3K3", 2025, "TARDE", lab305,
+                    Arrays.asList(probEst, economia, basesDatos, desSoft, comDatos, analisisNumerico, disenio),
+                    List.of(profeCristian, profeAna, profeClaudia, profeRoberto));
+
+            // 3K4
+            Comision c3k4 = createComisionIfNotExists("3K4", 2025, "MAÑANA", aula201,
+                    Arrays.asList(probEst, economia, basesDatos, desSoft, comDatos, analisisNumerico, disenio),
+                    List.of(profeSandra, profeValeria, profeLaura, profeNicolas));
+
+            // 4K3
+            Comision c4k3 = createComisionIfNotExists("4K3", 2025, "TARDE", aulaMagna,
+                    Arrays.asList(legislacion, ingCalidad, redes, invOp, simulacion, tecAuto, adminSist),
+                    List.of(profeRoberto, profeCristian, profeAna, profeJorge));
+
+            // 4K4
+            Comision c4k4 = createComisionIfNotExists("4K4", 2025, "MAÑANA", aula401,
+                    Arrays.asList(legislacion, ingCalidad, redes, invOp, simulacion, tecAuto, adminSist),
+                    List.of(profeGustavo, profeLaura, profeSandra, profeValeria));
+            
+            // 5K3
+            Comision c5k3 = createComisionIfNotExists("5K3", 2025, "TARDE", aula402,
+                    Arrays.asList(ia, dataScience, sistGestion, gestionGer, seguridad, proyectoFinal),
+                    List.of(profeNicolas, profeJorge, profeCristian, profeLaura));
+
+            // 5K4
+            Comision c5k4 = createComisionIfNotExists("5K4", 2025, "MAÑANA", sum,
+                    Arrays.asList(ia, dataScience, sistGestion, gestionGer, seguridad, proyectoFinal),
+                    List.of(profeAna, profeRoberto, profeClaudia, profeSandra));
+
 
             // -------------------------------------------------------------------------
             // HORARIOS
@@ -269,6 +305,17 @@ public class ComisionSeeder {
             crearHorarioIfNotExists(c2k3, ingSociedad, DiaSemana.LUNES, 12, 14);
             crearHorarioIfNotExists(c2k3, ingles2, DiaSemana.MIERCOLES, 12, 14);
 
+            // 2K4
+            crearHorarioIfNotExists(c2k4, analisis2, DiaSemana.LUNES, 8, 12);
+            crearHorarioIfNotExists(c2k4, fisica2, DiaSemana.MARTES, 8, 12);
+            crearHorarioIfNotExists(c2k4, sintaxis, DiaSemana.MIERCOLES, 8, 12);
+            crearHorarioIfNotExists(c2k4, paradigmas, DiaSemana.JUEVES, 8, 12);
+            crearHorarioIfNotExists(c2k4, sistemasOp, DiaSemana.VIERNES, 8, 12);
+            crearHorarioIfNotExists(c2k4, analisisSist, DiaSemana.SABADO, 8, 12);
+            crearHorarioIfNotExists(c2k4, ingSociedad, DiaSemana.LUNES, 12, 14);
+            crearHorarioIfNotExists(c2k4, ingles2, DiaSemana.MIERCOLES, 12, 14);
+
+
             // 3K1
             crearHorarioIfNotExists(c3k1, disenio, DiaSemana.LUNES, 18, 22);
             crearHorarioIfNotExists(c3k1, basesDatos, DiaSemana.MARTES, 18, 22);
@@ -286,6 +333,25 @@ public class ComisionSeeder {
             crearHorarioIfNotExists(c3k2, analisisNumerico, DiaSemana.SABADO, 9, 13);
             crearHorarioIfNotExists(c3k2, probEst, DiaSemana.VIERNES, 18, 22);
             crearHorarioIfNotExists(c3k2, economia, DiaSemana.MARTES, 22, 23);
+
+            // 3K3
+            crearHorarioIfNotExists(c3k3, disenio, DiaSemana.MIERCOLES, 14, 18);
+            crearHorarioIfNotExists(c3k3, basesDatos, DiaSemana.JUEVES, 14, 18);
+            crearHorarioIfNotExists(c3k3, comDatos, DiaSemana.VIERNES, 14, 18);
+            crearHorarioIfNotExists(c3k3, desSoft, DiaSemana.LUNES, 14, 18);
+            crearHorarioIfNotExists(c3k3, analisisNumerico, DiaSemana.MARTES, 14, 18);
+            crearHorarioIfNotExists(c3k3, probEst, DiaSemana.SABADO, 9, 13);
+            crearHorarioIfNotExists(c3k3, economia, DiaSemana.MIERCOLES, 18, 20);
+
+            // 3K4
+            crearHorarioIfNotExists(c3k4, disenio, DiaSemana.JUEVES, 8, 12);
+            crearHorarioIfNotExists(c3k4, basesDatos, DiaSemana.VIERNES, 8, 12);
+            crearHorarioIfNotExists(c3k4, comDatos, DiaSemana.LUNES, 8, 12);
+            crearHorarioIfNotExists(c3k4, desSoft, DiaSemana.MARTES, 8, 12);
+            crearHorarioIfNotExists(c3k4, analisisNumerico, DiaSemana.MIERCOLES, 8, 12);
+            crearHorarioIfNotExists(c3k4, probEst, DiaSemana.SABADO, 9, 13);
+            crearHorarioIfNotExists(c3k4, economia, DiaSemana.JUEVES, 12, 14);
+
 
             // 4K1
             crearHorarioIfNotExists(c4k1, tecAuto, DiaSemana.LUNES, 18, 22);
@@ -305,6 +371,25 @@ public class ComisionSeeder {
             crearHorarioIfNotExists(c4k2, ingCalidad, DiaSemana.VIERNES, 18, 22);
             crearHorarioIfNotExists(c4k2, legislacion, DiaSemana.JUEVES, 22, 23);
 
+            // 4K3
+            crearHorarioIfNotExists(c4k3, tecAuto, DiaSemana.MIERCOLES, 14, 18);
+            crearHorarioIfNotExists(c4k3, redes, DiaSemana.JUEVES, 14, 18);
+            crearHorarioIfNotExists(c4k3, adminSist, DiaSemana.VIERNES, 14, 18);
+            crearHorarioIfNotExists(c4k3, invOp, DiaSemana.LUNES, 14, 18);
+            crearHorarioIfNotExists(c4k3, simulacion, DiaSemana.MARTES, 14, 18);
+            crearHorarioIfNotExists(c4k3, ingCalidad, DiaSemana.SABADO, 9, 13);
+            crearHorarioIfNotExists(c4k3, legislacion, DiaSemana.MIERCOLES, 18, 20);
+
+            // 4K4
+            crearHorarioIfNotExists(c4k4, tecAuto, DiaSemana.VIERNES, 8, 12);
+            crearHorarioIfNotExists(c4k4, redes, DiaSemana.LUNES, 8, 12);
+            crearHorarioIfNotExists(c4k4, adminSist, DiaSemana.MARTES, 8, 12);
+            crearHorarioIfNotExists(c4k4, invOp, DiaSemana.MIERCOLES, 8, 12);
+            crearHorarioIfNotExists(c4k4, simulacion, DiaSemana.JUEVES, 8, 12);
+            crearHorarioIfNotExists(c4k4, ingCalidad, DiaSemana.SABADO, 9, 13);
+            crearHorarioIfNotExists(c4k4, legislacion, DiaSemana.VIERNES, 12, 14);
+
+
             // 5K1
             crearHorarioIfNotExists(c5k1, ia, DiaSemana.LUNES, 18, 22);
             crearHorarioIfNotExists(c5k1, dataScience, DiaSemana.MARTES, 18, 22);
@@ -320,6 +405,23 @@ public class ComisionSeeder {
             crearHorarioIfNotExists(c5k2, gestionGer, DiaSemana.MIERCOLES, 18, 22);
             crearHorarioIfNotExists(c5k2, seguridad, DiaSemana.SABADO, 9, 13);
             crearHorarioIfNotExists(c5k2, proyectoFinal, DiaSemana.VIERNES, 18, 22);
+
+            // 5K3
+            crearHorarioIfNotExists(c5k3, ia, DiaSemana.MIERCOLES, 14, 18);
+            crearHorarioIfNotExists(c5k3, dataScience, DiaSemana.JUEVES, 14, 18);
+            crearHorarioIfNotExists(c5k3, sistGestion, DiaSemana.VIERNES, 14, 18);
+            crearHorarioIfNotExists(c5k3, gestionGer, DiaSemana.LUNES, 14, 18);
+            crearHorarioIfNotExists(c5k3, seguridad, DiaSemana.MARTES, 14, 18);
+            crearHorarioIfNotExists(c5k3, proyectoFinal, DiaSemana.SABADO, 9, 13);
+
+            // 5K4
+            crearHorarioIfNotExists(c5k4, ia, DiaSemana.JUEVES, 8, 12);
+            crearHorarioIfNotExists(c5k4, dataScience, DiaSemana.VIERNES, 8, 12);
+            crearHorarioIfNotExists(c5k4, sistGestion, DiaSemana.LUNES, 8, 12);
+            crearHorarioIfNotExists(c5k4, gestionGer, DiaSemana.MARTES, 8, 12);
+            crearHorarioIfNotExists(c5k4, seguridad, DiaSemana.MIERCOLES, 8, 12);
+            crearHorarioIfNotExists(c5k4, proyectoFinal, DiaSemana.SABADO, 9, 13);
+
 
             // Electivas
             crearHorarioIfNotExists(cElectivas, entornos, DiaSemana.LUNES, 18, 22);
