@@ -21,11 +21,17 @@ public class JwtService {
     @Value("${jwt.secret}")
     private String secretKey;
 
+    // Generar un ID único por ejecución de la aplicación (al reiniciar cambia)
+    private static final String BOOT_ID = java.util.UUID.randomUUID().toString();
+
     public String generateToken(UserDetails userDetails) {
         return generateToken(new HashMap<>(), userDetails);
     }
 
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+        // Incluir el bootId en el token
+        extraClaims.put("bootId", BOOT_ID);
+        
         return Jwts.builder()
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
@@ -37,7 +43,15 @@ public class JwtService {
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
+        final String tokenBootId = extractClaim(token, claims -> claims.get("bootId", String.class));
+        
+        // El token es válido si:
+        // 1. El usuario coincide
+        // 2. No expiró
+        // 3. El bootId del token coincide con el bootId actual del servidor
+        return (username.equals(userDetails.getUsername())) 
+                && !isTokenExpired(token)
+                && BOOT_ID.equals(tokenBootId);
     }
 
     public String extractUsername(String token) {
