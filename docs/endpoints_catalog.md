@@ -57,6 +57,7 @@ Base URL: `/api/materias`
 | `GET` | `/` | Authenticated | Listar todas las materias (opcional filtrar por tipo). |
 | `GET` | `/{id}` | Authenticated | Buscar una materia por ID. |
 | `DELETE` | `/{id}` | ADMIN | Eliminar una materia (baja lógica o física según impl). |
+| `GET` | `/{idMateria}/mesas` | ESTUDIANTE | Listar mesas disponibles para una materia específica. Retorna lista con `habilitada` (boolean) y `mensaje`, validando inscripción previa y estado académico. |
 
 ## PlanDeEstudioController
 Base URL: `/api/planes`
@@ -148,7 +149,7 @@ Base URL: `/api/mesas`
 | `GET` | `/` | Authenticated | Listar todos los turnos/mesas de examen disponibles. |
 | `POST` | `/detalles` | ADMIN | Agregar fecha y hora de examen para una materia en un turno. |
 | `GET` | `/disponibles` | ESTUDIANTE | Listar exámenes disponibles para inscribirse (Filtrados por `puedeRendir`). |
-| `GET` | `/materias/{idMateria}/mesas` | ESTUDIANTE | Listar mesas disponibles para una materia específica. Retorna lista con `habilitada` (boolean) y `mensaje`, validando inscripción previa y estado académico. |
+
 | `GET` | `/detalles/{id}/{nroDetalle}` | ESTUDIANTE | Ver detalle de una mesa de examen específica. |
 
 ## InscripcionExamenController
