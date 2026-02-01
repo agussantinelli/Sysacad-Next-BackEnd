@@ -201,7 +201,8 @@
 │   │   ├── java/com/sysacad/backend/
 │   │   │   ├── config/                        # Configuración global
 │   │   │   │   ├── security/                  # Seguridad (JWT, Filters)
-│   │   │   │   └── seeder/                    # Seeders de Base de Datos
+│   │   │   │   ├── seeder/                    # Seeders de Base de Datos
+│   │   │   │   └── WebConfig.java             # Configuración CORS y Web
 │   │   │   ├── controller/                    # Controladores REST (Entry Points)
 │   │   │   ├── dto/                           # Data Transfer Objects (Organizados por Dominio)
 │   │   │   │   ├── auth/
@@ -213,6 +214,7 @@
 │   │   │   │   ├── detalle_mesa_examen/
 │   │   │   │   ├── estudiante_materia/
 │   │   │   │   ├── facultad/
+│   │   │   │   ├── grupo/
 │   │   │   │   ├── historial/
 │   │   │   │   ├── horario/
 │   │   │   │   ├── inscripcion_cursado/
