@@ -269,6 +269,8 @@ Response for `/api/inscripciones-cursado/materias/{idMateria}/disponibles`.
 - `ubicacion` (String): e.g., "Aula 305 (Rosario)".
 - `horarios` (List<String>): List of formatted schedules (e.g. "LUNES 18:00 - 22:00").
 - `profesores` (List<String>): List of professors teaching *this* subject in *this* commission.
+- `habilitada` (Boolean): Indicates if the user can enroll.
+- `mensaje` (String): Reason for eligibility/ineligibility (e.g. "Disponible", "Superposición con...").
 
 ---
 
