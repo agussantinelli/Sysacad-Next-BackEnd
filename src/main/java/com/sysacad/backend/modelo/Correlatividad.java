@@ -2,14 +2,17 @@ package com.sysacad.backend.modelo;
 
 import com.sysacad.backend.modelo.enums.TipoCorrelatividad;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @Table(name = "correlatividades")
 public class Correlatividad implements Serializable {
@@ -21,23 +24,61 @@ public class Correlatividad implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "id_materia", nullable = false)
-    @lombok.ToString.Exclude
-    @lombok.EqualsAndHashCode.Exclude
     private Materia materia;
 
     @ManyToOne
     @JoinColumn(name = "id_correlativa", nullable = false)
-    @lombok.ToString.Exclude
-    @lombok.EqualsAndHashCode.Exclude
     private Materia correlativa;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo", nullable = false)
     private TipoCorrelatividad tipo;
 
-    public Correlatividad(Materia materia, Materia correlativa, TipoCorrelatividad tipo) {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumns({
+            @JoinColumn(name = "plan_id_carrera", referencedColumnName = "id_carrera"),
+            @JoinColumn(name = "plan_nro_plan", referencedColumnName = "nro_plan")
+    })
+    private PlanDeEstudio plan;
+
+    public Correlatividad(Materia materia, Materia correlativa, TipoCorrelatividad tipo, PlanDeEstudio plan) {
         this.materia = materia;
         this.correlativa = correlativa;
         this.tipo = tipo;
+        this.plan = plan;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Correlatividad that = (Correlatividad) o;
+        // Comparar por el ID de las materias (no las entidades completas) y el tipo y el plan
+        return Objects.equals(materia != null ? materia.getId() : null, that.materia != null ? that.materia.getId() : null) &&
+               Objects.equals(correlativa != null ? correlativa.getId() : null, that.correlativa != null ? that.correlativa.getId() : null) &&
+               tipo == that.tipo &&
+               Objects.equals(plan != null ? plan.getId() : null, that.plan != null ? that.plan.getId() : null);
+    }
+
+    @Override
+    public int hashCode() {
+        // Hash basado en IDs de materias y tipo y plan, no en las entidades
+        return Objects.hash(
+            materia != null ? materia.getId() : null,
+            correlativa != null ? correlativa.getId() : null,
+            tipo,
+            plan != null ? plan.getId() : null
+        );
+    }
+
+    @Override
+    public String toString() {
+        return "Correlatividad{" +
+                "id=" + id +
+                ", materia=" + (materia != null ? materia.getNombre() : "null") +
+                ", correlativa=" + (correlativa != null ? correlativa.getNombre() : "null") +
+                ", tipo=" + tipo +
+                ", plan=" + (plan != null ? plan.getId() : "null") +
+                '}';
     }
 }
