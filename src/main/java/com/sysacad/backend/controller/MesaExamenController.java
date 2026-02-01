@@ -52,4 +52,17 @@ public class MesaExamenController {
     public ResponseEntity<DetalleMesaExamenResponse> getDetalleMesa(@PathVariable java.util.UUID id, @PathVariable Integer nroDetalle) {
         return ResponseEntity.ok(mesaExamenService.getDetalleMesa(id, nroDetalle));
     }
+    @GetMapping("/materias/{idMateria}/mesas")
+    public ResponseEntity<List<com.sysacad.backend.dto.mesa_examen.MesaExamenDisponibleDTO>> getMesasPorMateria(
+            @PathVariable java.util.UUID idMateria,
+            org.springframework.security.core.Authentication authentication) {
+        
+        if (authentication == null) return ResponseEntity.status(401).build();
+
+        String legajo = authentication.getName();
+        com.sysacad.backend.modelo.Usuario usuario = usuarioRepository.findByLegajo(legajo)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        return ResponseEntity.ok(mesaExamenService.obtenerMesasDisponibles(idMateria, usuario.getId()));
+    }
 }
