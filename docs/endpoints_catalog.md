@@ -58,6 +58,7 @@ Base URL: `/api/materias`
 | `GET` | `/{id}` | Authenticated | Buscar una materia por ID. |
 | `DELETE` | `/{id}` | ADMIN | Eliminar una materia (baja lógica o física según impl). |
 | `GET` | `/{idMateria}/mesas` | ESTUDIANTE | Listar mesas disponibles para una materia específica. Retorna lista con `habilitada` (boolean) y `mensaje`, validando inscripción previa y estado académico. |
+| `GET` | `/{id}/correlativas` | Authenticated | Obtener árbol recursivo de correlativas de una materia filtro por `carreraId` y `nroPlan`. |
 
 ## PlanDeEstudioController
 Base URL: `/api/planes`
