@@ -192,7 +192,10 @@ public class InscripcionCursadoService {
         
         List<com.sysacad.backend.dto.inscripcion_cursado.ComisionDisponibleDTO> opciones = new java.util.ArrayList<>();
 
-        // 3. Para cada comisión, construir el DTO con datos ESPECIFICOS de esa materia
+        // 3. Obtener cursadas activas el alumno para validar superposición
+        List<InscripcionCursado> cursadasActivas = inscripcionCursadoRepository.findByUsuarioIdAndEstado(idUsuario, com.sysacad.backend.modelo.enums.EstadoCursada.CURSANDO);
+
+        // 4. Para cada comisión, construir el DTO y validar reglas
         for (Comision c : comisiones) {
             com.sysacad.backend.dto.inscripcion_cursado.ComisionDisponibleDTO dto = new com.sysacad.backend.dto.inscripcion_cursado.ComisionDisponibleDTO();
             dto.setIdComision(c.getId());
@@ -207,7 +210,9 @@ public class InscripcionCursadoService {
             }
 
             // Horarios ESPECIFICOS de la materia en esta comisión
-            List<String> horariosTexto = horarioCursadoRepository.findByIdIdComisionAndIdIdMateria(c.getId(), idMateria).stream()
+            List<HorarioCursado> horariosMateria = horarioCursadoRepository.findByIdIdComisionAndIdIdMateria(c.getId(), idMateria);
+            
+            List<String> horariosTexto = horariosMateria.stream()
                     .map(h -> h.getId().getDia() + " " + h.getId().getHoraDesde() + " - " + h.getHoraHasta())
                     .collect(java.util.stream.Collectors.toList());
             dto.setHorarios(horariosTexto);
@@ -225,6 +230,38 @@ public class InscripcionCursadoService {
                 }
             }
             dto.setProfesores(profesoresNombres);
+
+            // VALIDACIÓN DE SUPERPOSICIÓN
+            boolean superposicion = false;
+            String motivo = "Disponible para inscripción";
+
+            for (InscripcionCursado inscActiva : cursadasActivas) {
+                List<HorarioCursado> horariosActiva = horarioCursadoRepository.findByIdIdComision(inscActiva.getComision().getId());
+                
+                for (HorarioCursado hNuevo : horariosMateria) {
+                    for (HorarioCursado hActivo : horariosActiva) {
+                        if (hNuevo.getId().getDia().equals(hActivo.getId().getDia())) {
+                             // (StartA < EndB) and (EndA > StartB)
+                            if (hNuevo.getId().getHoraDesde().isBefore(hActivo.getHoraHasta()) &&
+                                hNuevo.getHoraHasta().isAfter(hActivo.getId().getHoraDesde())) {
+                                superposicion = true;
+                                motivo = "Superposición con " + inscActiva.getMateria().getNombre();
+                                break;
+                            }
+                        }
+                    }
+                    if (superposicion) break;
+                }
+                if (superposicion) break;
+            }
+
+            if (superposicion) {
+                dto.setHabilitada(false);
+                dto.setMensaje(motivo);
+            } else {
+                dto.setHabilitada(true);
+                dto.setMensaje("Disponible");
+            }
             
             opciones.add(dto);
         }
