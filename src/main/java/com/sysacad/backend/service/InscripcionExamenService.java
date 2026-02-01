@@ -37,6 +37,9 @@ public class InscripcionExamenService {
     private com.sysacad.backend.mapper.InscripcionExamenMapper inscripcionExamenMapper;
 
     @Autowired
+    private com.sysacad.backend.repository.InscripcionCursadoRepository inscripcionCursadoRepository;
+
+    @Autowired
     private CorrelatividadService correlatividadService;
 
     @Transactional
@@ -50,17 +53,47 @@ public class InscripcionExamenService {
         Usuario usuario = usuarioRepository.findById(request.getIdUsuario())
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con ID: " + request.getIdUsuario()));
 
-        // Validar Correlativas para Rendir
+        // 1. Validar si la materia ya está APROBADA o PROMOCIONADA
+        boolean yaAprobada = inscripcionExamenRepository.existsByUsuarioIdAndDetalleMesaExamen_MateriaIdAndEstado(
+                usuario.getId(), detalle.getMateria().getId(), com.sysacad.backend.modelo.enums.EstadoExamen.APROBADO);
+        boolean yaPromocionada = inscripcionCursadoRepository.existsByUsuarioIdAndMateriaIdAndEstado(
+                usuario.getId(), detalle.getMateria().getId(), com.sysacad.backend.modelo.enums.EstadoCursada.PROMOCIONADO);
+        
+        if (yaAprobada || yaPromocionada) {
+            throw new BusinessLogicException("El alumno ya tiene aprobada esta materia.");
+        }
+
+        // 2. Validar Correlativas para Rendir
         if (!correlatividadService.puedeRendir(usuario.getId(), detalle.getMateria().getId())) {
             throw new BusinessLogicException("El alumno no cumple con los requisitos (Regularidad + Correlativas) para rendir esta materia.");
         }
 
-        // Validar si ya está inscripto
+        // 3. Validar si ya está inscripto a ESTE examen
         Optional<InscripcionExamen> existente = inscripcionExamenRepository
                 .findByUsuarioIdAndDetalleMesaExamenId(usuario.getId(), detalle.getId());
 
         if (existente.isPresent()) {
             throw new BusinessLogicException("El alumno ya está inscripto a este examen");
+        }
+
+        // 4. Validar Superposición de Horarios con otros exámenes PENDIENTES
+        List<InscripcionExamen> pendientes = inscripcionExamenRepository.findByUsuarioIdAndEstado(
+                usuario.getId(), com.sysacad.backend.modelo.enums.EstadoExamen.PENDIENTE);
+        
+        for (InscripcionExamen insc : pendientes) {
+            DetalleMesaExamen otroDetalle = insc.getDetalleMesaExamen();
+            if (otroDetalle.getDiaExamen().equals(detalle.getDiaExamen())) {
+                // Asumimos duración de 3 horas para el control
+                java.time.LocalTime inicioNuevo = detalle.getHoraExamen();
+                java.time.LocalTime finNuevo = inicioNuevo.plusHours(3);
+                
+                java.time.LocalTime inicioOtro = otroDetalle.getHoraExamen();
+                java.time.LocalTime finOtro = inicioOtro.plusHours(3);
+
+                if (inicioNuevo.isBefore(finOtro) && finNuevo.isAfter(inicioOtro)) {
+                     throw new BusinessLogicException("Superposición horaria con el examen de: " + otroDetalle.getMateria().getNombre());
+                }
+            }
         }
 
         InscripcionExamen inscripcion = new InscripcionExamen();

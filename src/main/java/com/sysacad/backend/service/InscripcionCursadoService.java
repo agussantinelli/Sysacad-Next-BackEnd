@@ -77,6 +77,27 @@ public class InscripcionCursadoService {
             throw new BusinessLogicException("El alumno no cumple con las correlativas necesarias para cursar esta materia.");
         }
 
+        // Validar Superposición Horaria
+        List<InscripcionCursado> cursadasActivas = inscripcionCursadoRepository.findByUsuarioIdAndEstado(alumno.getId(), com.sysacad.backend.modelo.enums.EstadoCursada.CURSANDO);
+        List<HorarioCursado> horariosNuevaComision = horarioCursadoRepository.findByIdIdComision(comision.getId());
+
+        for (InscripcionCursado inscActiva : cursadasActivas) {
+            List<HorarioCursado> horariosActiva = horarioCursadoRepository.findByIdIdComision(inscActiva.getComision().getId());
+            
+            for (HorarioCursado hNuevo : horariosNuevaComision) {
+                for (HorarioCursado hActivo : horariosActiva) {
+                    if (hNuevo.getId().getDia().equals(hActivo.getId().getDia())) {
+                        // Verificar solapamiento de horas
+                        // (StartA < EndB) and (EndA > StartB)
+                        if (hNuevo.getId().getHoraDesde().isBefore(hActivo.getHoraHasta()) &&
+                            hNuevo.getHoraHasta().isAfter(hActivo.getId().getHoraDesde())) {
+                            throw new BusinessLogicException("El horario de la nueva comisión se superpone con la materia: " + inscActiva.getMateria().getNombre());
+                        }
+                    }
+                }
+            }
+        }
+
         // Finalmente Crea la Inscripción
         InscripcionCursado insc = new InscripcionCursado();
         insc.setUsuario(alumno);

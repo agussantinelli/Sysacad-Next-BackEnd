@@ -17,4 +17,8 @@ public interface InscripcionExamenRepository extends JpaRepository<InscripcionEx
 
     Optional<InscripcionExamen> findByUsuarioIdAndDetalleMesaExamenId(UUID usuarioId,
             DetalleMesaExamen.DetalleId detalleMesaExamenId);
+
+    List<InscripcionExamen> findByUsuarioIdAndEstado(UUID usuarioId, com.sysacad.backend.modelo.enums.EstadoExamen estado);
+
+    boolean existsByUsuarioIdAndDetalleMesaExamen_MateriaIdAndEstado(UUID usuarioId, UUID materiaId, com.sysacad.backend.modelo.enums.EstadoExamen estado);
 }
