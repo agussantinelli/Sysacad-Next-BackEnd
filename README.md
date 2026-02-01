@@ -69,7 +69,10 @@
     <li><strong>Seguridad Stateless:</strong> Autenticación vía JWT (JSON Web Tokens) con Spring Security (v6+).</li>
     <li><strong>Validación Robusta:</strong> Reglas de negocio forzadas en la capa de servicio (Domain Driven Design).</li>
     <li><strong>Optimización (N+1):</strong> Uso estratégico de <code>JOIN FETCH</code> en JPQL y DTOs projections.</li>
+    <li><strong>Validación Robusta:</strong> Reglas de negocio forzadas en la capa de servicio (Domain Driven Design).</li>
+    <li><strong>Optimización (N+1):</strong> Uso estratégico de <code>JOIN FETCH</code> en JPQL y DTOs projections.</li>
     <li><strong>Manejo de Errores Global:</strong> <code>@ControllerAdvice</code> para respuestas JSON estandarizadas en excepciones.</li>
+    <li><strong>Session Invalidation (Boot ID):</strong> Mecanismo de seguridad que invalida todos los tokens JWT activos al reiniciar el servidor.</li>
 </ul>
 
 <hr>
@@ -270,7 +273,11 @@
 
 El sistema cuenta con un `DbSeeder` (`src/main/java/com/sysacad/backend/config/seeder/DbSeeder.java`) que pobla la base de datos automáticamente al inicio si detecta tablas vacías.
 *   **Carga Estructural:** Crea la UTN Facultad Regional Rosario, carreras (ISI, IM, IQ, IE, IC) y la estructura de materias real.
-*   **Simulación de Cursada y Exámenes:** Genera comisiones en distintos turnos, asigna docentes, define horarios, inscribe alumnos, carga notas y **crea mesas de examen en Febrero, Julio y Diciembre con alumnos inscriptos**.
+*   **Simulación de Cursada y Exámenes:** 
+    *   Genera comisiones para 2025 con horarios reales y validación de superposición.
+    *   Asigna docentes a materias específicas para validar permisos.
+    *   Inscribe alumnos y carga notas historicas.
+    *   **Genera Mesas de Examen** con fechas reales para los turnos de **Febrero, Julio y Diciembre**, incluyendo inscripciones y actas.
 *   **Usuarios:** Crea una población diversa de usuarios (Admin, Profesores, Estudiantes) para pruebas.
 
 <h3>🔐 Usuarios de Prueba Generados</h3>
