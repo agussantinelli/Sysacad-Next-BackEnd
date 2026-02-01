@@ -79,10 +79,11 @@ public class InscripcionCursadoService {
 
         // Validar Superposición Horaria
         List<InscripcionCursado> cursadasActivas = inscripcionCursadoRepository.findByUsuarioIdAndEstado(alumno.getId(), com.sysacad.backend.modelo.enums.EstadoCursada.CURSANDO);
-        List<HorarioCursado> horariosNuevaComision = horarioCursadoRepository.findByIdIdComision(comision.getId());
+        
+        List<HorarioCursado> horariosNuevaComision = horarioCursadoRepository.findByIdIdComisionAndIdIdMateria(comision.getId(), materia.getId());
 
         for (InscripcionCursado inscActiva : cursadasActivas) {
-            List<HorarioCursado> horariosActiva = horarioCursadoRepository.findByIdIdComision(inscActiva.getComision().getId());
+            List<HorarioCursado> horariosActiva = horarioCursadoRepository.findByIdIdComisionAndIdIdMateria(inscActiva.getComision().getId(), inscActiva.getMateria().getId());
             
             for (HorarioCursado hNuevo : horariosNuevaComision) {
                 for (HorarioCursado hActivo : horariosActiva) {
