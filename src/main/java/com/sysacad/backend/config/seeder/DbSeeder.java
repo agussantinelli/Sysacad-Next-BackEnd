@@ -717,13 +717,13 @@ public class DbSeeder {
                                         cargarNotaCursada(calificacionCursadaRepository, inscSO, "TP Shell", "8.50");
 
                                         var inscEntornos = inscribirCursado(inscripcionCursadoRepository, alumnoAgustin, cElectivas, entornos);
-                                        inscEntornos.setEstado(EstadoCursada.REGULARIZADA);
-                                        inscEntornos.setNotaFinal(new BigDecimal("8.00"));
+                                        inscEntornos.setEstado(EstadoCursada.REGULAR);
+                                        inscEntornos.setNotaFinal(new BigDecimal("5.00"));
                                         inscripcionCursadoRepository.save(inscEntornos);
 
                                         var inscMineria = inscribirCursado(inscripcionCursadoRepository, alumnoAgustin, cElectivas, mineria);
-                                        inscMineria.setEstado(EstadoCursada.REGULARIZADA);
-                                        inscMineria.setNotaFinal(new BigDecimal("7.50"));
+                                        inscMineria.setEstado(EstadoCursada.REGULAR);
+                                        inscMineria.setNotaFinal(new BigDecimal("5.50"));
                                         inscripcionCursadoRepository.save(inscMineria);
                                 }
 
@@ -1041,6 +1041,9 @@ public class DbSeeder {
                                 createDetalleMesa(detalleMesaExamenRepository, mesaFeb, 34, gestionGer, profeLaura, LocalDate.of(2026, 2, 16), LocalTime.of(18, 0));
                                 createDetalleMesa(detalleMesaExamenRepository, mesaFeb, 35, seguridad, profeCristian, LocalDate.of(2026, 2, 18), LocalTime.of(18, 0));
                                 createDetalleMesa(detalleMesaExamenRepository, mesaFeb, 36, proyectoFinal, profeNicolas, LocalDate.of(2026, 2, 25), LocalTime.of(18, 0));
+
+                                Materia entornos = getMateria(materiaRepository, "Entornos Gráficos");
+                                Materia mineria = getMateria(materiaRepository, "Minería de Datos");
                                 createDetalleMesa(detalleMesaExamenRepository, mesaFeb, 37, entornos, profeClaudia, LocalDate.of(2026, 2, 26), LocalTime.of(18, 0));
                                 createDetalleMesa(detalleMesaExamenRepository, mesaFeb, 38, mineria, profeNicolas, LocalDate.of(2026, 2, 27), LocalTime.of(18, 0));
 
