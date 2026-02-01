@@ -16,4 +16,8 @@ public class ComisionDisponibleDTO {
     private String ubicacion; // "Aula 305 - Piso 3"
     private List<String> horarios; // "Lunes 18:00 - 22:00", "Jueves 18:00 - 22:00"
     private List<String> profesores; // "Nicolas Cabello", "Sandra Civiero"
+    
+    // Estado de elegibilidad para el alumno solicitante
+    private boolean habilitada; // true si se puede inscribir
+    private String mensaje;     // "Disponible", "Superposición con Análisis II", "Cupo lleno"
 }
