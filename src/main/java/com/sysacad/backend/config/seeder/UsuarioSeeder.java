@@ -27,6 +27,14 @@ public class UsuarioSeeder {
 
     @Transactional
     public void seed() {
+            // Verificar si ya hay usuarios cargados
+            if (usuarioRepository.count() > 0) {
+                System.out.println(">> UsuarioSeeder: OMITIDO - Los usuarios ya están cargados.");
+                return;
+            }
+
+            System.out.println(">> UsuarioSeeder: Iniciando carga de usuarios...");
+            
             // Limpiar imágenes anteriores
             // fileStorageService.deleteAllPerfiles(); // Comentado para evitar borrar fotos en cada reinicio si cambiamos estrategia
 

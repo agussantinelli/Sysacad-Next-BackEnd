@@ -15,9 +15,19 @@ public class DbSeeder {
             UsuarioSeeder usuarioSeeder,
             MatriculacionSeeder matriculacionSeeder,
             ComisionSeeder comisionSeeder,
-            InscripcionSeeder inscripcionSeeder
+            InscripcionSeeder inscripcionSeeder,
+            com.sysacad.backend.repository.MateriaRepository materiaRepository
     ) {
         return args -> {
+            // Verificar si ya se ejecutó el seeder
+            if (materiaRepository.count() > 0) {
+                System.out.println(">> DbSeeder: OMITIDO - La base de datos ya contiene datos.");
+                System.out.println(">> Para volver a seedear, eliminar todas las tablas primero.");
+                return;
+            }
+
+            System.out.println(">> DbSeeder: Iniciando proceso de seeding...");
+            
             // Carga Estructural (Materias, Planes, Carreras)
             utnSeeder.seed();
 

@@ -45,6 +45,14 @@ public class InscripcionSeeder {
 
     @Transactional
     public void seed() {
+        // Verificar si ya hay inscripciones cargadas
+        if (inscripcionCursadoRepository.count() > 0 || inscripcionExamenRepository.count() > 0) {
+            System.out.println(">> InscripcionSeeder: OMITIDO - Las inscripciones ya están cargadas.");
+            return;
+        }
+
+        System.out.println(">> InscripcionSeeder: Iniciando carga de inscripciones y exámenes...");
+        
         seedCursado();
         seedExamenes();
     }

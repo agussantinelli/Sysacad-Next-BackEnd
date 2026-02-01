@@ -32,6 +32,11 @@ public class MatriculacionSeeder {
 
     @Transactional
     public void seed() {
+            // Verificar si ya hay matriculaciones cargadas
+            if (matriculacionRepository.count() > 0) {
+                System.out.println(">> MatriculacionSeeder: OMITIDO - Las matriculaciones ya están cargadas.");
+                return;
+            }
 
             System.out.println(">> MatriculacionSeeder: Matriculando alumnos de prueba en carreras...");
 
