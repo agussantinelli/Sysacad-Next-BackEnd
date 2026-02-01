@@ -170,6 +170,7 @@ Base URL: `/api/inscripciones-cursado`
 | `POST` | `/{id}/notas` | ADMIN, PROFESOR | Cargar una nota parcial a una cursada. |
 | `GET` | `/actuales` | ESTUDIANTE, ADMIN | Obtener materias que cursa actualmente (Admin puede usar `?idUsuario=UUID`). |
 | `GET` | `/actuales` | ESTUDIANTE, ADMIN | Obtener materias que cursa actualmente (Admin puede usar `?idUsuario=UUID`). |
-| `GET` | `/materias/{idMateria}/disponibles` | ESTUDIANTE, ADMIN | Obtener comisiones disponibles con horarios y profesores específicos para una materia. Valida correlativas y no inscripción. |
+| `GET` | `/materias/{idMateria}/disponibles` | ESTUDIANTE, ADMIN | Obtener comisiones disponibles. Retorna lista con `habilitada` (boolean) y `mensaje` (motivo de rechazo/éxito), validando horarios y correlativas. |
+| `PUT` | `/{id}/finalizar` | ADMIN, PROFESOR | Finalizar cursada (Cargar nota final y estado: REGULAR/PROMOCIONADO). Valida reglas de negocio (notas 4-5.5 / >=6). |
 
 
