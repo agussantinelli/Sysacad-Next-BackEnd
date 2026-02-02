@@ -10,5 +10,5 @@ import java.util.UUID;
 public class AvisoRequest {
     private String titulo;
     private String descripcion;
-    private String estado;
+    private com.sysacad.backend.modelo.enums.EstadoAviso estado;
 }

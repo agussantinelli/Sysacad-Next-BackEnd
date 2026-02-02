@@ -14,13 +14,5 @@ public class AvisoResponse {
     private String titulo;
     private String descripcion;
     private LocalDateTime fechaEmision;
-    private String estado;
-
-    public AvisoResponse(Aviso aviso) {
-        this.id = aviso.getId();
-        this.titulo = aviso.getTitulo();
-        this.descripcion = aviso.getDescripcion();
-        this.fechaEmision = aviso.getFechaEmision();
-        this.estado = aviso.getEstado();
-    }
+    private com.sysacad.backend.modelo.enums.EstadoAviso estado;
 }
