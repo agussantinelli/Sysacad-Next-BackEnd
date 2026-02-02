@@ -108,7 +108,7 @@
         <tr>
             <td><strong>📚 Curricular</strong></td>
             <td><code>materias</code>, <code>plan_materias</code>, <code>correlativas</code>, <code>equivalencias</code></td>
-            <td>Asignaturas con tipología (Básica/Específica/Compartida), gestión de Modalidad y <strong>Validación Estricta de Correlatividades (Regular/Promocionada)</strong>.</td>
+            <td>Asignaturas con tipología (Básica/Específica/Compartida), gestión de Modalidad, <strong>Validación Estricta de Correlatividades (Regular/Promocionada, específicas por Plan) y visualización recursiva</strong>.</td>
         </tr>
         <tr>
             <td><strong>📅 Gestión de Cursada</strong></td>
@@ -271,7 +271,7 @@
 
 <h3>🌱 Base de Datos y Seeding Automático</h3>
 
-El sistema cuenta con un `DbSeeder` (`src/main/java/com/sysacad/backend/config/seeder/DbSeeder.java`) que pobla la base de datos automáticamente al inicio si detecta tablas vacías.
+El sistema cuenta con un `DbSeeder` (`src/main/java/com/sysacad/backend/config/seeder/DbSeeder.java`) que pobla la base de datos automáticamente **de forma idempotente** (evita duplicados) al inicio si detecta tablas vacías.
 *   **Carga Estructural:** Crea la UTN Facultad Regional Rosario, carreras (ISI, IM, IQ, IE, IC) y la estructura de materias real.
 *   **Simulación de Cursada y Exámenes:** 
     *   Genera comisiones para 2025 con horarios reales y validación de superposición.
