@@ -215,6 +215,7 @@
 │   │   │   │   └── WebConfig.java             # Configuración CORS y Web
 │   │   │   ├── controller/                    # Controladores REST (Entry Points)
 │   │   │   ├── dto/                           # Data Transfer Objects (Organizados por Dominio)
+│   │   │   │   ├── alumno/
 │   │   │   │   ├── auth/
 │   │   │   │   ├── aviso/
 │   │   │   │   ├── calificacion_cursada/
@@ -241,9 +242,11 @@
 │   │   │   │   └── enums/                     # Enumeraciones
 │   │   │   ├── repository/                    # Repositorios (Acceso a Datos)
 │   │   │   ├── service/                       # Lógica de Negocio (Service Layer)
+│   │   │   │   └── pdf/                       # Generadores de PDF (OpenPDF)
 │   │   │   └── BackendApplication.java        # Punto de entrada de la aplicación
 │   │   └── resources/
-│   │       ├── static/                        # Archivos estáticos públicos
+│   │       ├── img/                           # Assets para reportes (Logos)
+│   │       ├── static/                        # Archivos estáticos públicos (Calendarios)
 │   │       ├── templates/                     # Plantillas de vista
 │   │       ├── application.properties         # Configuración de Spring Boot
 │   │       └── application-secret.properties  # Credenciales sensibles (No versionado)
