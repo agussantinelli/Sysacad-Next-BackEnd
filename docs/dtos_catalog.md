@@ -108,6 +108,7 @@ Response for `/api/alumnos/mis-carreras-materias`.
 - `salon` (String)
 - `horarios` (List<String>): Formatted schedules (e.g., "LUNES 08:00 - 12:00")
 - `profesores` (List<String>): If requester is head: all professors teaching in this commission; otherwise: empty list
+- `cantidadAlumnos` (Long): Number of students enrolled in this commission for this subject
 
 
 ---
