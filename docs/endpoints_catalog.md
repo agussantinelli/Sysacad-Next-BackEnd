@@ -92,7 +92,7 @@ Base URL: `/api/avisos`
 | Método | Endpoint | Roles / Acceso | Descripción |
 | :--- | :--- | :--- | :--- |
 | `POST` | `/` | ADMIN | Publicar un nuevo aviso. |
-| `GET` | `/` | Authenticated | Obtener listado de últimos avisos. |
+| `GET` | `/` | Authenticated | Obtener listado de últimos avisos (Solo estado ACTIVO). |
 
 ## GrupoController
 Base URL: `/api/grupos`
