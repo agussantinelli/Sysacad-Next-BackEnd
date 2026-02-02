@@ -25,6 +25,7 @@
     <img src="https://img.shields.io/badge/Project%20Lombok-Enables-BC0230?style=for-the-badge&logo=lombok&logoColor=white" alt="Lombok Badge"/>
     <img src="https://img.shields.io/badge/JUnit-5-25A162?style=for-the-badge&logo=junit5&logoColor=white" alt="JUnit Badge"/>
     <img src="https://img.shields.io/badge/MapStruct-Mapping-000000?style=for-the-badge&logo=mapstruct&logoColor=white" alt="MapStruct Badge"/>
+    <img src="https://img.shields.io/badge/OpenPDF-PDF_Engine-B52E31?style=for-the-badge&logo=adobeacrobatreader&logoColor=white" alt="OpenPDF Badge"/>
 </div>
 
 <div align="center">
@@ -347,93 +348,23 @@ El sistema cuenta con un `DbSeeder` (`src/main/java/com/sysacad/backend/config/s
 
 | Recurso | Métodos | Descripción Breve |
 | :--- | :--- | :--- |
-    <tbody>
-        <tr>
-            <td>**/auth**</td>
-            <td>`POST`</td>
-            <td>Login y obtención de Token JWT.</td>
-        </tr>
-        <tr>
-            <td>**/usuarios**</td>
-            <td>`POST`, `GET`, `DELETE`</td>
-            <td>Gestión completa de usuarios (Admin). Búsqueda por legajo.</td>
-        </tr>
-        <tr>
-            <td>**/facultades**</td>
-            <td>`POST`, `GET`</td>
-            <td>Gestión de facultades regionales.</td>
-        </tr>
-        <tr>
-            <td>**/carreras**</td>
-            <td>`POST`, `GET`</td>
-            <td>Carreras y Plans de Estudio asociados.</td>
-        </tr>
-        <tr>
-            <td>**/planes**</td>
-            <td>`POST`, `GET`</td>
-            <td>Planes de estudio independientes.</td>
-        </tr>
-        <tr>
-            <td>**/materias**</td>
-            <td>`POST`, `GET`, `PUT`</td>
-            <td>ABM de materias, incluyendo correlatividades y <strong>Modalidad</strong>.</td>
-        </tr>
-        <tr>
-            <td>**/comisiones**</td>
-            <td>`POST`, `GET`, `PUT`</td>
-            <td>Comisiones anuales, asignación de docentes y horarios.</td>
-        </tr>
-        <tr>
-            <td>**/inscripciones**</td>
-            <td>`POST`, `GET`</td>
-            <td>Inscripción a cursada/finales y consulta de historia académica.</td>
-        </tr>
-        <tr>
-            <td>**/avisos**</td>
-            <td>`POST`, `GET`</td>
-            <td>Cartelera de novedades (Admin publica, usuarios **marcan como leído**).</td>
-        </tr>
-        <tr>
-            <td>**/grupos**</td>
-            <td>`POST`, `GET`</td>
-            <td>**Chat Grupal**: Creación de grupos, gestión de miembros y envío de mensajes.</td>
-        </tr>
-        <tr>
-            <td>**/salones**</td>
-            <td>`POST`, `GET`</td>
-            <td>Gestión de aulas físicas y asignación a facultades.</td>
-        </tr>
-        <tr>
-            <td>**/sanciones**</td>
-            <td>`POST`, `GET`</td>
-            <td>Registro disciplinario de estudiantes.</td>
-        </tr>
-        <tr>
-            <td>**/horarios**</td>
-            <td>`POST`, `GET`, `DELETE`</td>
-            <td>Gestión de agenda semanal por comisión y materia.</td>
-        </tr>
-        <tr>
-            <td>**/alumnos**</td>
-            <td>`POST`, `GET`</td>
-            <td>Matriculación, consulta de plan, **historial académico** y descarga de **Certificados**.</td>
-        </tr>
-        <tr>
-            <td>**/mesas**</td>
-            <td>`POST`, `GET`</td>
-            <td>Gestión de Turnos de Examen y cronograma de fechas.</td>
-        </tr>
-        <tr>
-            <td>**/inscripciones-examen**</td>
-            <td>`POST`, `GET`, `DELETE`</td>
-            <td>Inscripción específica a finales y consulta de inscripciones.</td>
-        </tr>
-        <tr>
-            <td>**/calendario**</td>
-            <td>`GET`</td>
-            <td>Descarga directa del Calendario Académico (PDF).</td>
-        </tr>
-    </tbody>
+| **/auth** | `POST` | Login y obtención de Token JWT. |
+| **/usuarios** | `POST`, `GET`, `DELETE` | Gestión completa de usuarios (Admin). Búsqueda por legajo. |
+| **/facultades** | `POST`, `GET` | Gestión de facultades regionales. |
+| **/carreras** | `POST`, `GET` | Carreras y Planes de Estudio asociados. |
+| **/planes** | `POST`, `GET` | Planes de estudio independientes. |
+| **/materias** | `POST`, `GET`, `PUT` | ABM de materias, incluyendo correlatividades y <strong>Modalidad</strong>. |
+| **/comisiones** | `POST`, `GET`, `PUT` | Comisiones anuales, asignación de docentes y horarios. |
+| **/inscripciones** | `POST`, `GET` | Inscripción a cursada/finales y consulta de historia académica. |
+| **/avisos** | `POST`, `GET` | Cartelera de novedades (Admin publica, usuarios **marcan como leído**). |
+| **/grupos** | `POST`, `GET` | **Chat Grupal**: Creación de grupos, gestión de miembros y envío de mensajes. |
+| **/salones** | `POST`, `GET` | Gestión de aulas físicas y asignación a facultades. |
+| **/sanciones** | `POST`, `GET` | Registro disciplinario de estudiantes. |
+| **/horarios** | `POST`, `GET`, `DELETE` | Gestión de agenda semanal por comisión y materia. |
+| **/alumnos** | `POST`, `GET` | Matriculación, consulta de plan, **historial académico** y descarga de **Certificados**. |
+| **/mesas** | `POST`, `GET` | Gestión de Turnos de Examen y cronograma de fechas. |
+| **/inscripciones-examen** | `POST`, `GET`, `DELETE` | Inscripción específica a finales y consulta de inscripciones. |
+| **/calendario** | `GET` | Descarga directa del Calendario Académico (PDF). |
 
 <hr>
 
