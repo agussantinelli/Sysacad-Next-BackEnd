@@ -139,6 +139,26 @@ public class UsuarioController {
         return ResponseEntity.noContent().build();
     }
 
+    @PostMapping("/{id}/cambiar-password")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<Void> cambiarPassword(@PathVariable UUID id,
+                                                @RequestBody com.sysacad.backend.dto.usuario.CambioPasswordRequest request,
+                                                org.springframework.security.core.Authentication authentication) {
+        
+        // Validar que el usuario sea el mismo o sea admin
+        String legajoAutenticado = authentication.getName();
+        boolean isAdmin = authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+        
+        Usuario u = usuarioService.obtenerPorId(id).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        
+        if (!isAdmin && !u.getLegajo().equals(legajoAutenticado)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        usuarioService.cambiarPassword(id, request.getPasswordActual(), request.getPasswordNueva());
+        return ResponseEntity.ok().build();
+    }
+
     private UsuarioResponse convertirADTO(Usuario usuario) {
         UsuarioResponse dto = usuarioMapper.toDTO(usuario);
 

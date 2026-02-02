@@ -162,4 +162,16 @@ public class UsuarioService {
             throw new BusinessLogicException("No tiene permisos para modificar este perfil.");
         }
     }
+    @Transactional
+    public void cambiarPassword(UUID idUsuario, String oldPassword, String newPassword) {
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
+
+        if (!passwordEncoder.matches(oldPassword, usuario.getPassword())) {
+            throw new BusinessLogicException("La contraseña actual es incorrecta.");
+        }
+
+        usuario.setPassword(passwordEncoder.encode(newPassword));
+        usuarioRepository.save(usuario);
+    }
 }
