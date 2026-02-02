@@ -74,6 +74,7 @@ Base URL: `/api/planes`
 | Método | Endpoint | Roles | Descripción | Body/Params | Respuesta |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | `GET` | `/api/profesores/mis-materias` | `PROFESOR` | Obtiene las materias asignadas al profesor autenticado. | - | `200 OK` + `List<MateriaProfesorDTO>` |
+| `GET` | `/api/profesores/materias/{idMateria}/comisiones` | `PROFESOR` | Obtiene las comisiones de una materia. Si es jefe de cátedra: todas las comisiones. Si no: solo las suyas. | `idMateria` (path) | `200 OK` + `List<ComisionHorarioDTO>` |
 
 ---
 

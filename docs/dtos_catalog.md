@@ -100,6 +100,16 @@ Response for `/api/alumnos/mis-carreras-materias`.
 - `legajo` (String)
 - `nombreCompleto` (String)
 
+### `ComisionHorarioDTO`
+- `idComision` (UUID)
+- `nombre` (String)
+- `anio` (Integer)
+- `turno` (String)
+- `salon` (String)
+- `horarios` (List<String>): Formatted schedules (e.g., "LUNES 08:00 - 12:00")
+- `profesores` (List<String>): If requester is head: all professors teaching in this commission; otherwise: empty list
+
+
 ---
 
 ## DetalleMesaExamen
@@ -488,3 +498,4 @@ Response for `/api/materias/{idMateria}/mesas`.
 - `nivel` (Integer)
 - `plan` (String)
 - `cargo` (RolCargo enum)
+- `jefeCatedra` (String, nullable): Name of the head professor (null if the professor IS the head)
