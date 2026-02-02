@@ -1,5 +1,6 @@
 package com.sysacad.backend.controller;
 
+import com.sysacad.backend.dto.comision.ComisionHorarioDTO;
 import com.sysacad.backend.dto.materia.MateriaProfesorDTO;
 import com.sysacad.backend.modelo.Usuario;
 import com.sysacad.backend.repository.UsuarioRepository;
@@ -9,10 +10,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/profesores")
@@ -39,5 +42,18 @@ public class ProfesorController {
                 
         List<MateriaProfesorDTO> materias = profesorService.obtenerMateriasAsignadas(profesor.getId());
         return ResponseEntity.ok(materias);
+    }
+
+    @GetMapping("/materias/{idMateria}/comisiones")
+    @PreAuthorize("hasRole('PROFESOR')")
+    public ResponseEntity<List<ComisionHorarioDTO>> getComisionesDeMateria(
+            @PathVariable UUID idMateria,
+            Authentication authentication) {
+        String username = authentication.getName();
+        Usuario profesor = usuarioRepository.findByLegajo(username)
+                .orElseThrow(() -> new RuntimeException("Profesor no encontrado: " + username));
+
+        List<ComisionHorarioDTO> comisiones = profesorService.obtenerComisionesDeMateria(profesor.getId(), idMateria);
+        return ResponseEntity.ok(comisiones);
     }
 }

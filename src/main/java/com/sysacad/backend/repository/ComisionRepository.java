@@ -17,4 +17,6 @@ public interface ComisionRepository extends JpaRepository<Comision, UUID> {
     List<Comision> findByMateriasId(UUID materiaId);
 
     List<Comision> findByNombreAndAnio(String nombre, Integer anio);
+
+    List<Comision> findByMateriasIdAndProfesoresId(UUID materiaId, UUID profesorId);
 }

@@ -49,10 +49,28 @@ public class ProfesorService {
 
     @Transactional(readOnly = true)
     public List<ComisionHorarioDTO> obtenerComisionesDeMateria(UUID idProfesor, UUID idMateria) {
-        List<Comision> comisiones = comisionRepository.findByMateriasIdAndProfesoresId(idMateria, idProfesor);
+        // 1. Verificar el cargo del profesor en esta materia
+        List<AsignacionMateria> asignaciones = asignacionMateriaRepository.findByIdIdUsuario(idProfesor);
+        AsignacionMateria asignacionMateria = asignaciones.stream()
+                .filter(a -> a.getMateria().getId().equals(idMateria))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Profesor no asignado a esta materia"));
 
+        boolean esJefeCatedra = asignacionMateria.getCargo() == com.sysacad.backend.modelo.enums.RolCargo.JEFE_CATEDRA;
+
+        // 2. Obtener las comisiones según el rol
+        List<Comision> comisiones;
+        if (esJefeCatedra) {
+            // Si es jefe de cátedra: traer TODAS las comisiones de esta materia
+            comisiones = comisionRepository.findByMateriasId(idMateria);
+        } else {
+            // Si NO es jefe: traer solo las comisiones donde este profesor participa
+            comisiones = comisionRepository.findByMateriasIdAndProfesoresId(idMateria, idProfesor);
+        }
+
+        // 3. Mapear a DTO
         return comisiones.stream()
-                .map(comision -> mapToComisionHorarioDTO(comision, idMateria))
+                .map(comision -> mapToComisionHorarioDTO(comision, idMateria, esJefeCatedra))
                 .collect(Collectors.toList());
     }
 
@@ -77,16 +95,31 @@ public class ProfesorService {
             }
         }
         
+        // Si NO es jefe de cátedra, buscar quién es el jefe
+        String nombreJefe = null;
+        boolean esJefe = asignacion.getCargo() == com.sysacad.backend.modelo.enums.RolCargo.JEFE_CATEDRA;
+        
+        if (!esJefe) {
+            List<AsignacionMateria> jefes = asignacionMateriaRepository.findByIdIdMateriaAndCargo(
+                    materia.getId(), com.sysacad.backend.modelo.enums.RolCargo.JEFE_CATEDRA);
+            
+            if (!jefes.isEmpty()) {
+                AsignacionMateria jefe = jefes.get(0);
+                nombreJefe = jefe.getProfesor().getNombre() + " " + jefe.getProfesor().getApellido();
+            }
+        }
+        
         return new MateriaProfesorDTO(
                 materia.getId(),
                 materia.getNombre(),
                 nivel,
                 planDescripcion,
-                asignacion.getCargo()
+                asignacion.getCargo(),
+                nombreJefe
         );
     }
 
-    private ComisionHorarioDTO mapToComisionHorarioDTO(Comision comision, UUID idMateria) {
+    private ComisionHorarioDTO mapToComisionHorarioDTO(Comision comision, UUID idMateria, boolean esJefeCatedra) {
         // Fetch schedules for this commission-subject pair
         List<HorarioCursado> horarios = horarioCursadoRepository.findByIdIdComisionAndIdIdMateria(
                 comision.getId(), idMateria);
@@ -98,13 +131,30 @@ public class ProfesorService {
                         h.getHoraHasta().toString()))
                 .collect(Collectors.toList());
 
+        List<String> profesores = new java.util.ArrayList<>();
+        
+        if (esJefeCatedra) {
+            // Solo si es jefe: mostrar todos los profesores que dan clase en esta comisión para esta materia
+            profesores = comision.getProfesores().stream()
+                    .filter(profesor -> {
+                        List<AsignacionMateria> asignaciones = asignacionMateriaRepository
+                                .findByIdIdUsuario(profesor.getId());
+                        return asignaciones.stream()
+                                .anyMatch(a -> a.getMateria().getId().equals(idMateria));
+                    })
+                    .map(profesor -> profesor.getNombre() + " " + profesor.getApellido())
+                    .collect(Collectors.toList());
+        }
+        // Si NO es jefe: lista vacía
+
         return new ComisionHorarioDTO(
                 comision.getId(),
                 comision.getNombre(),
                 comision.getAnio(),
                 comision.getTurno(),
                 comision.getSalon().getNombre(),
-                horarioFormateado
+                horarioFormateado,
+                profesores
         );
     }
 }
