@@ -93,6 +93,7 @@ Base URL: `/api/avisos`
 | :--- | :--- | :--- | :--- |
 | `POST` | `/` | ADMIN | Publicar un nuevo aviso. |
 | `GET` | `/` | Authenticated | Obtener listado de últimos avisos (Solo estado ACTIVO). |
+| `POST` | `/{id}/leido` | Authenticated | Marcar un aviso como leído por el usuario actual. |
 
 ## GrupoController
 Base URL: `/api/grupos`
