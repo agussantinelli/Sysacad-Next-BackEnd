@@ -30,6 +30,7 @@ This document enumerates all Data Transfer Objects (DTOs) used in the backend ap
 - `descripcion` (String)
 - `fechaEmision` (LocalDateTime)
 - `estado` (EstadoAviso enum)
+- `visto` (Boolean): Indica si el usuario actual ya leyó este aviso.
 
 ---
 
