@@ -11,6 +11,7 @@ import com.sysacad.backend.repository.AsignacionMateriaRepository;
 import com.sysacad.backend.repository.ComisionRepository;
 import com.sysacad.backend.repository.HorarioCursadoRepository;
 import com.sysacad.backend.repository.PlanMateriaRepository;
+import com.sysacad.backend.repository.InscripcionCursadoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,16 +27,19 @@ public class ProfesorService {
     private final ComisionRepository comisionRepository;
     private final HorarioCursadoRepository horarioCursadoRepository;
     private final PlanMateriaRepository planMateriaRepository;
+    private final InscripcionCursadoRepository inscripcionCursadoRepository;
 
     @Autowired
     public ProfesorService(AsignacionMateriaRepository asignacionMateriaRepository,
                            ComisionRepository comisionRepository,
                            HorarioCursadoRepository horarioCursadoRepository,
-                           PlanMateriaRepository planMateriaRepository) {
+                           PlanMateriaRepository planMateriaRepository,
+                           InscripcionCursadoRepository inscripcionCursadoRepository) {
         this.asignacionMateriaRepository = asignacionMateriaRepository;
         this.comisionRepository = comisionRepository;
         this.horarioCursadoRepository = horarioCursadoRepository;
         this.planMateriaRepository = planMateriaRepository;
+        this.inscripcionCursadoRepository = inscripcionCursadoRepository;
     }
 
     @Transactional(readOnly = true)
@@ -147,6 +151,10 @@ public class ProfesorService {
         }
         // Si NO es jefe: lista vacía
 
+        // Contar alumnos cursando esta materia en esta comisión (solo estado CURSANDO)
+        long cantidadAlumnos = inscripcionCursadoRepository.countByComisionIdAndMateriaIdAndEstado(
+                comision.getId(), idMateria, com.sysacad.backend.modelo.enums.EstadoCursada.CURSANDO);
+
         return new ComisionHorarioDTO(
                 comision.getId(),
                 comision.getNombre(),
@@ -154,7 +162,8 @@ public class ProfesorService {
                 comision.getTurno(),
                 comision.getSalon().getNombre(),
                 horarioFormateado,
-                profesores
+                profesores,
+                cantidadAlumnos
         );
     }
 }
