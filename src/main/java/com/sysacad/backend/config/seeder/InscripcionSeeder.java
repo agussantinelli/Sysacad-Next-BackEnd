@@ -132,6 +132,13 @@ public class InscripcionSeeder {
             
             // Sistemas Operativos requiere: Arquitectura (Ya aprobada) -> OK para rendir
             crearHistoriaAcademica(alumnoAgustin, c2k1, sistemasOp, EstadoCursada.REGULAR, new BigDecimal("6"));
+
+            // --- CURSANDO ACTUALMENTE ---
+            Materia analisisSist = getMateria("Análisis de Sistemas de Información");
+            inscribirCursado(alumnoAgustin, c2k1, analisisSist);
+            
+            Materia ingles2 = getMateria("Inglés II");
+            inscribirCursado(alumnoAgustin, c2k1, ingles2);
         }
 
 
