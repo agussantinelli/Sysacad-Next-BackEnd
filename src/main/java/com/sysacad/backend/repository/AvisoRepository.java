@@ -13,4 +13,5 @@ public interface AvisoRepository extends JpaRepository<Aviso, UUID> {
 
     List<Aviso> findByFechaEmisionAfter(LocalDateTime fecha);
 
+    List<Aviso> findByEstado(com.sysacad.backend.modelo.enums.EstadoAviso estado);
 }

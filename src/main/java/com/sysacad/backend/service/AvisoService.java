@@ -28,7 +28,7 @@ public class AvisoService {
 
     @Transactional(readOnly = true)
     public List<Aviso> obtenerUltimosAvisos() {
-        // Podríamos filtrar por fecha, ej. últimos 30 días
-        return avisoRepository.findAll();
+        // Filtrar solo los activos (no ocultos)
+        return avisoRepository.findByEstado(com.sysacad.backend.modelo.enums.EstadoAviso.ACTIVO);
     }
 }
