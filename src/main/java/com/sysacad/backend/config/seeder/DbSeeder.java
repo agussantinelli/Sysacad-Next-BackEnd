@@ -16,6 +16,7 @@ public class DbSeeder {
             MatriculacionSeeder matriculacionSeeder,
             ComisionSeeder comisionSeeder,
             InscripcionSeeder inscripcionSeeder,
+            AvisoSeeder avisoSeeder,
             com.sysacad.backend.repository.MateriaRepository materiaRepository
     ) {
         return args -> {
@@ -42,6 +43,9 @@ public class DbSeeder {
 
             // Inscripciones y Examenes
             inscripcionSeeder.seed();
+
+            // Avisos
+            avisoSeeder.seed();
 
             System.out.println(">> DbSeeder: Proceso de seeding completo.");
         };
