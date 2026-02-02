@@ -284,7 +284,7 @@ Response for `/api/inscripciones-cursado/materias/{idMateria}/disponibles`.
 
 ### `InscripcionExamenRequest`
 - `idUsuario` (UUID)
-- `idMesaExamen` (UUID)
+- `idDetalleMesa` (UUID)
 - `nroDetalle` (Integer)
 
 ### `InscripcionExamenResponse`
