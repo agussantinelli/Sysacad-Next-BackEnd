@@ -70,6 +70,13 @@ Base URL: `/api/planes`
 | `GET` | `/vigentes/{idCarrera}` | Authenticated | Listar planes vigentes (Alternativa). |
 | `GET` | `/carrera/{idCarrera}` | Authenticated | Listar todos los planes de una carrera (vigentes o no). |
 
+## ProfesorController
+| Método | Endpoint | Roles | Descripción | Body/Params | Respuesta |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| `GET` | `/api/profesores/mis-materias` | `PROFESOR` | Obtiene las materias asignadas al profesor autenticado. | - | `200 OK` + `List<MateriaProfesorDTO>` |
+
+---
+
 ## UsuarioController
 Base URL: `/api/usuarios`
 

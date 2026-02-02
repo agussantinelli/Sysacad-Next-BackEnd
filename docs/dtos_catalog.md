@@ -477,3 +477,14 @@ Response for `/api/materias/{idMateria}/mesas`.
 #### Inner Class: `InfoCarrera`
 - `nombreCarrera` (String)
 - `facultad` (String)
+
+---
+
+## MateriaProfesor
+
+### `MateriaProfesorDTO`
+- `id` (UUID)
+- `nombre` (String)
+- `nivel` (Integer)
+- `plan` (String)
+- `cargo` (RolCargo enum)
