@@ -22,14 +22,14 @@ This document enumerates all Data Transfer Objects (DTOs) used in the backend ap
 ### `AvisoRequest`
 - `titulo` (String)
 - `descripcion` (String)
-- `estado` (String)
+- `estado` (EstadoAviso enum)
 
 ### `AvisoResponse`
 - `id` (UUID)
 - `titulo` (String)
 - `descripcion` (String)
 - `fechaEmision` (LocalDateTime)
-- `estado` (String)
+- `estado` (EstadoAviso enum)
 
 ---
 

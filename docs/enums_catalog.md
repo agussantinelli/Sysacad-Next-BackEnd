@@ -107,7 +107,13 @@ Status of a notification for a specific user.
 - `ENVIADO`
 - `BORRADO`
 - `ELIMINADO`
+- `ELIMINADO`
 - `EN_BORRADOR`
+
+### `EstadoAviso`
+Status of a general notice.
+- `ACTIVO`: Visible to all target users.
+- `OCULTO`: Hidden from users (e.g. draft or expired).
 
 ---
 
