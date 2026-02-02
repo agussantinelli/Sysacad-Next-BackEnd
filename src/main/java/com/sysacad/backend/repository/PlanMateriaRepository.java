@@ -12,4 +12,6 @@ public interface PlanMateriaRepository extends JpaRepository<PlanMateria, PlanMa
     List<PlanMateria> findByIdNroPlan(Integer nroPlan);
 
     List<PlanMateria> findByNivel(Short nivel);
+
+    List<PlanMateria> findByIdIdMateria(java.util.UUID idMateria);
 }
