@@ -23,6 +23,7 @@ public class Aviso {
     @Column(name = "fecha_emision", nullable = false)
     private LocalDateTime fechaEmision;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
-    private String estado;
+    private com.sysacad.backend.modelo.enums.EstadoAviso estado;
 }
