@@ -22,7 +22,7 @@ public class AvisoService {
     @Transactional
     public Aviso publicarAviso(Aviso aviso) {
         aviso.setFechaEmision(LocalDateTime.now());
-        aviso.setEstado("PUBLICADO");
+        aviso.setEstado(com.sysacad.backend.modelo.enums.EstadoAviso.ACTIVO);
         return avisoRepository.save(aviso);
     }
 
