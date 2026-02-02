@@ -15,4 +15,5 @@ public class AvisoResponse {
     private String descripcion;
     private LocalDateTime fechaEmision;
     private com.sysacad.backend.modelo.enums.EstadoAviso estado;
+    private boolean visto;
 }
