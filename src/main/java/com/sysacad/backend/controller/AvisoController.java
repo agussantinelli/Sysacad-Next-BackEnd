@@ -20,11 +20,13 @@ public class AvisoController {
 
     private final AvisoService avisoService;
     private final com.sysacad.backend.mapper.AvisoMapper avisoMapper;
+    private final com.sysacad.backend.repository.UsuarioRepository usuarioRepository;
 
     @Autowired
-    public AvisoController(AvisoService avisoService, com.sysacad.backend.mapper.AvisoMapper avisoMapper) {
+    public AvisoController(AvisoService avisoService, com.sysacad.backend.mapper.AvisoMapper avisoMapper, com.sysacad.backend.repository.UsuarioRepository usuarioRepository) {
         this.avisoService = avisoService;
         this.avisoMapper = avisoMapper;
+        this.usuarioRepository = usuarioRepository;
     }
 
     @PostMapping
@@ -41,5 +43,17 @@ public class AvisoController {
     public ResponseEntity<List<AvisoResponse>> obtenerUltimosAvisos() {
         List<Aviso> avisos = avisoService.obtenerUltimosAvisos();
         return ResponseEntity.ok(avisoMapper.toDTOs(avisos));
+    }
+
+    @PostMapping("/{id}/leido")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<Void> marcarComoLeido(@PathVariable java.util.UUID id,
+                                                org.springframework.security.core.Authentication authentication) {
+        String username = authentication.getName();
+        com.sysacad.backend.modelo.Usuario usuario = usuarioRepository.findByLegajoOrMail(username, username)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        avisoService.marcarComoLeido(id, usuario.getId());
+        return ResponseEntity.ok().build();
     }
 }

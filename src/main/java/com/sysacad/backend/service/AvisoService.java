@@ -13,10 +13,16 @@ import java.util.List;
 public class AvisoService {
 
     private final AvisoRepository avisoRepository;
+    private final com.sysacad.backend.repository.AvisoPersonaRepository avisoPersonaRepository;
+    private final com.sysacad.backend.repository.UsuarioRepository usuarioRepository;
 
     @Autowired
-    public AvisoService(AvisoRepository avisoRepository) {
+    public AvisoService(AvisoRepository avisoRepository, 
+                        com.sysacad.backend.repository.AvisoPersonaRepository avisoPersonaRepository,
+                        com.sysacad.backend.repository.UsuarioRepository usuarioRepository) {
         this.avisoRepository = avisoRepository;
+        this.avisoPersonaRepository = avisoPersonaRepository;
+        this.usuarioRepository = usuarioRepository;
     }
 
     @Transactional
@@ -30,5 +36,29 @@ public class AvisoService {
     public List<Aviso> obtenerUltimosAvisos() {
         // Filtrar solo los activos (no ocultos)
         return avisoRepository.findByEstado(com.sysacad.backend.modelo.enums.EstadoAviso.ACTIVO);
+    }
+
+    @Transactional
+    public void marcarComoLeido(java.util.UUID idAviso, java.util.UUID idUsuario) {
+        Aviso aviso = avisoRepository.findById(idAviso)
+                .orElseThrow(() -> new RuntimeException("Aviso no encontrado"));
+        
+        com.sysacad.backend.modelo.Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        com.sysacad.backend.modelo.AvisoPersona.AvisoPersonaId id = new com.sysacad.backend.modelo.AvisoPersona.AvisoPersonaId(idAviso, idUsuario);
+
+        com.sysacad.backend.modelo.AvisoPersona avisoPersona = avisoPersonaRepository.findById(id)
+                .orElse(new com.sysacad.backend.modelo.AvisoPersona());
+        
+        if (avisoPersona.getId() == null) {
+            avisoPersona.setId(id);
+            avisoPersona.setAviso(aviso);
+            avisoPersona.setPersona(usuario);
+        }
+        
+        avisoPersona.setEstado(com.sysacad.backend.modelo.enums.EstadoAvisoPersona.LEIDO);
+        
+        avisoPersonaRepository.save(avisoPersona);
     }
 }
