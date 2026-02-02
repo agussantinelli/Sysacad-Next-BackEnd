@@ -98,7 +98,7 @@
         <tr>
             <td><strong>👤 Actores y Comunicación</strong></td>
             <td><code>usuarios</code>, <code>sanciones</code>, <code>avisos</code>, <code>avisos_personas</code>, <code>grupos</code>, <code>miembros_grupo</code>, <code>mensajes_grupo</code></td>
-            <td>Gestión de perfiles, roles, disciplina, notificaciones y <strong>chat grupal (mensajería)</strong>.</td>
+            <td>Gestión de perfiles, roles, disciplina, notificaciones con <strong>estado de lectura (visto)</strong> y <strong>chat grupal (mensajería)</strong>.</td>
         </tr>
         <tr>
             <td><strong>📜 Jerarquía Académica</strong></td>
@@ -123,7 +123,7 @@
         <tr>
             <td><strong>📝 Ciclo del Alumno</strong></td>
             <td><code>matriculaciones</code>, <code>inscripciones</code>, <code>calificaciones</code></td>
-            <td>Trazabilidad total: Matriculación en carrera, inscripción a cursada/examen y registro de historia académica.</td>
+            <td>Trazabilidad total: Matriculación en carrera, inscripción a cursada/examen, registro de historia académica y **emisión de certificados (Regularidad, etc.)**.</td>
         </tr>
     </tbody>
 </table>
@@ -188,6 +188,12 @@
             <td>MapStruct</td>
             <td>1.5.5</td>
             <td>Mapeo DTO-Entity en tiempo de compilación.</td>
+        </tr>
+        <tr>
+            <td><strong>PDF Engine</strong></td>
+            <td>OpenPDF</td>
+            <td>1.3.30</td>
+            <td>Generación de documentos PDF (Certificados).</td>
         </tr>
     </tbody>
 </table>
@@ -341,22 +347,93 @@ El sistema cuenta con un `DbSeeder` (`src/main/java/com/sysacad/backend/config/s
 
 | Recurso | Métodos | Descripción Breve |
 | :--- | :--- | :--- |
-| **/auth** | `POST` | Login y obtención de Token JWT. |
-| **/usuarios** | `POST`, `GET`, `DELETE` | Gestión completa de usuarios (Admin). Búsqueda por legajo. |
-| **/facultades** | `POST`, `GET` | Gestión de facultades regionales. |
-| **/carreras** | `POST`, `GET` | Carreras y Planes de Estudio asociados. |
-| **/planes** | `POST`, `GET` | Planes de estudio independientes. |
-| **/materias** | `POST`, `GET`, `PUT` | ABM de materias, incluyendo correlatividades y <strong>Modalidad</strong>. |
-| **/comisiones** | `POST`, `GET`, `PUT` | Comisiones anuales, asignación de docentes y horarios. |
-| **/inscripciones** | `POST`, `GET` | Inscripción a cursada/finales y consulta de historia académica. |
-| **/avisos** | `POST`, `GET` | Cartelera de novedades (Admin publica, todos leen). |
-| **/grupos** | `POST`, `GET` | **Chat Grupal**: Creación de grupos, gestión de miembros y envío de mensajes. |
-| **/salones** | `POST`, `GET` | Gestión de aulas físicas y asignación a facultades. |
-| **/sanciones** | `POST`, `GET` | Registro disciplinario de estudiantes. |
-| **/horarios** | `POST`, `GET`, `DELETE` | Gestión de agenda semanal por comisión y materia. |
-| **/alumnos** | `POST`, `GET` | Matriculación en carreras, consulta de plan y **historial académico**. |
-| **/mesas** | `POST`, `GET` | Gestión de Turnos de Examen y cronograma de fechas. |
-| **/inscripciones-examen** | `POST`, `GET`, `DELETE` | Inscripción específica a finales y consulta de inscripciones. |
+    <tbody>
+        <tr>
+            <td>**/auth**</td>
+            <td>`POST`</td>
+            <td>Login y obtención de Token JWT.</td>
+        </tr>
+        <tr>
+            <td>**/usuarios**</td>
+            <td>`POST`, `GET`, `DELETE`</td>
+            <td>Gestión completa de usuarios (Admin). Búsqueda por legajo.</td>
+        </tr>
+        <tr>
+            <td>**/facultades**</td>
+            <td>`POST`, `GET`</td>
+            <td>Gestión de facultades regionales.</td>
+        </tr>
+        <tr>
+            <td>**/carreras**</td>
+            <td>`POST`, `GET`</td>
+            <td>Carreras y Plans de Estudio asociados.</td>
+        </tr>
+        <tr>
+            <td>**/planes**</td>
+            <td>`POST`, `GET`</td>
+            <td>Planes de estudio independientes.</td>
+        </tr>
+        <tr>
+            <td>**/materias**</td>
+            <td>`POST`, `GET`, `PUT`</td>
+            <td>ABM de materias, incluyendo correlatividades y <strong>Modalidad</strong>.</td>
+        </tr>
+        <tr>
+            <td>**/comisiones**</td>
+            <td>`POST`, `GET`, `PUT`</td>
+            <td>Comisiones anuales, asignación de docentes y horarios.</td>
+        </tr>
+        <tr>
+            <td>**/inscripciones**</td>
+            <td>`POST`, `GET`</td>
+            <td>Inscripción a cursada/finales y consulta de historia académica.</td>
+        </tr>
+        <tr>
+            <td>**/avisos**</td>
+            <td>`POST`, `GET`</td>
+            <td>Cartelera de novedades (Admin publica, usuarios **marcan como leído**).</td>
+        </tr>
+        <tr>
+            <td>**/grupos**</td>
+            <td>`POST`, `GET`</td>
+            <td>**Chat Grupal**: Creación de grupos, gestión de miembros y envío de mensajes.</td>
+        </tr>
+        <tr>
+            <td>**/salones**</td>
+            <td>`POST`, `GET`</td>
+            <td>Gestión de aulas físicas y asignación a facultades.</td>
+        </tr>
+        <tr>
+            <td>**/sanciones**</td>
+            <td>`POST`, `GET`</td>
+            <td>Registro disciplinario de estudiantes.</td>
+        </tr>
+        <tr>
+            <td>**/horarios**</td>
+            <td>`POST`, `GET`, `DELETE`</td>
+            <td>Gestión de agenda semanal por comisión y materia.</td>
+        </tr>
+        <tr>
+            <td>**/alumnos**</td>
+            <td>`POST`, `GET`</td>
+            <td>Matriculación, consulta de plan, **historial académico** y descarga de **Certificados**.</td>
+        </tr>
+        <tr>
+            <td>**/mesas**</td>
+            <td>`POST`, `GET`</td>
+            <td>Gestión de Turnos de Examen y cronograma de fechas.</td>
+        </tr>
+        <tr>
+            <td>**/inscripciones-examen**</td>
+            <td>`POST`, `GET`, `DELETE`</td>
+            <td>Inscripción específica a finales y consulta de inscripciones.</td>
+        </tr>
+        <tr>
+            <td>**/calendario**</td>
+            <td>`GET`</td>
+            <td>Descarga directa del Calendario Académico (PDF).</td>
+        </tr>
+    </tbody>
 
 <hr>
 
