@@ -85,17 +85,8 @@ public class InscripcionCursadoService {
         for (InscripcionCursado inscActiva : cursadasActivas) {
             List<HorarioCursado> horariosActiva = horarioCursadoRepository.findByIdIdComisionAndIdIdMateria(inscActiva.getComision().getId(), inscActiva.getMateria().getId());
             
-            for (HorarioCursado hNuevo : horariosNuevaComision) {
-                for (HorarioCursado hActivo : horariosActiva) {
-                    if (hNuevo.getId().getDia().equals(hActivo.getId().getDia())) {
-                        // Verificar solapamiento de horas
-                        // (StartA < EndB) and (EndA > StartB)
-                        if (hNuevo.getId().getHoraDesde().isBefore(hActivo.getHoraHasta()) &&
-                            hNuevo.getHoraHasta().isAfter(hActivo.getId().getHoraDesde())) {
-                            throw new BusinessLogicException("El horario de la nueva comisión se superpone con la materia: " + inscActiva.getMateria().getNombre());
-                        }
-                    }
-                }
+            if (verificarSuperposicionHoraria(horariosNuevaComision, horariosActiva)) {
+                throw new BusinessLogicException("El horario de la nueva comisión se superpone con la materia: " + inscActiva.getMateria().getNombre());
             }
         }
 
@@ -232,28 +223,23 @@ public class InscripcionCursadoService {
             }
             dto.setProfesores(profesoresNombres);
 
+
+
             // VALIDACIÓN DE SUPERPOSICIÓN
             boolean superposicion = false;
             String motivo = "Disponible para inscripción";
 
             for (InscripcionCursado inscActiva : cursadasActivas) {
-                List<HorarioCursado> horariosActiva = horarioCursadoRepository.findByIdIdComision(inscActiva.getComision().getId());
+                List<HorarioCursado> horariosActiva = horarioCursadoRepository.findByIdIdComisionAndIdIdMateria(
+                        inscActiva.getComision().getId(), 
+                        inscActiva.getMateria().getId()
+                );
                 
-                for (HorarioCursado hNuevo : horariosMateria) {
-                    for (HorarioCursado hActivo : horariosActiva) {
-                        if (hNuevo.getId().getDia().equals(hActivo.getId().getDia())) {
-                             // (StartA < EndB) and (EndA > StartB)
-                            if (hNuevo.getId().getHoraDesde().isBefore(hActivo.getHoraHasta()) &&
-                                hNuevo.getHoraHasta().isAfter(hActivo.getId().getHoraDesde())) {
-                                superposicion = true;
-                                motivo = "Superposición con " + inscActiva.getMateria().getNombre();
-                                break;
-                            }
-                        }
-                    }
-                    if (superposicion) break;
+                if (verificarSuperposicionHoraria(horariosMateria, horariosActiva)) {
+                    superposicion = true;
+                    motivo = "Superposición con " + inscActiva.getMateria().getNombre();
+                    break;
                 }
-                if (superposicion) break;
             }
 
             if (superposicion) {
@@ -268,6 +254,21 @@ public class InscripcionCursadoService {
         }
 
         return opciones;
+    }
+
+    private boolean verificarSuperposicionHoraria(List<HorarioCursado> horariosNuevo, List<HorarioCursado> horariosActivo) {
+        for (HorarioCursado hNuevo : horariosNuevo) {
+            for (HorarioCursado hActivo : horariosActivo) {
+                if (hNuevo.getId().getDia().equals(hActivo.getId().getDia())) {
+                    // (StartA < EndB) and (EndA > StartB)
+                    if (hNuevo.getId().getHoraDesde().isBefore(hActivo.getHoraHasta()) &&
+                        hNuevo.getHoraHasta().isAfter(hActivo.getId().getHoraDesde())) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 }
 
