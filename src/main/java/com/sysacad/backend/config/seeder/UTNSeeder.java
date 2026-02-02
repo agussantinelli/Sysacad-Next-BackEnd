@@ -328,13 +328,13 @@ public class UTNSeeder {
                 new MateriaDef("46", "Introducción a la Práctica Profesional", 4, "ANUAL", 3, true, null, List.of("16")),
                 new MateriaDef("47", "Química Aplicada a la Informática", 4, "1 C", 3, true, List.of("4", "5", "6", "7", "8"), List.of("1", "2", "3")),
                 new MateriaDef("48", "Infraestructura Tecnológica", 4, "CUATRIMESTRAL", 4, true, List.of("16"), List.of("15")),
-                new MateriaDef("49", "Soporte a las Bases de Datos con PV", 4, "ANUAL", 4, true, List.of("19"), List.of("19")),
+                new MateriaDef("49", "Soporte a las Bases de Datos con PV", 4, "ANUAL", 4, true, null, List.of("19")),
                 new MateriaDef("50", "Metodología de la Investigación", 4, "CUATRIMESTRAL", 4, true, null, List.of("17")),
                 new MateriaDef("51", "Metodologías Ágiles", 3, "CUATRIMESTRAL", 4, true, List.of("25"), List.of("14", "16")),
-                new MateriaDef("52", "Fabricación Aditiva", 3, "ANUAL", 5, true, List.of("28", "29", "30"), List.of("28", "29", "30")),
+                new MateriaDef("52", "Fabricación Aditiva", 3, "ANUAL", 5, true, null, List.of("28", "29", "30")),
                 new MateriaDef("53", "Dirección de Recursos Humanos", 3, "CUATRIMESTRAL", 5, true, null, List.of("30")),
                 new MateriaDef("54", "Informática en la Administración Pública", 4, "CUATRIMESTRAL", 5, true, null, List.of("16")),
-                new MateriaDef("55", "Sistemas de Información Integrados", 4, "CUATRIMESTRAL", 5, true, List.of("25", "27", "30"), List.of("25", "27", "30")),
+                new MateriaDef("55", "Sistemas de Información Integrados", 4, "CUATRIMESTRAL", 5, true, null, List.of("25", "27", "30")),
                 new MateriaDef("56", "Minería de Datos", 6, "CUATRIMESTRAL", 5, true, List.of("28"), List.of("17", "19")));
     }
 
