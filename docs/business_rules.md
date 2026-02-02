@@ -33,6 +33,7 @@ Este documento detalla las reglas de negocio y consideraciones técnicas derivad
     - **Inscripciones**:
         - **Validación de duplicados**: No se permite doble inscripción activa a la misma materia o examen.
         - **Validación de Dictado**: Para inscribirse a cursar, la comisión seleccionada debe dictar explícitamente la materia solicitada.
+        - **Superposición Horaria**: No se permite la inscripción si el horario de cursado de la nueva materia se solapa (aunque sea parcialmente) con el de cualquier otra materia que el alumno esté cursando actualmente (`Estado: CURSANDO`).
     - **Roles y Permisos**:
         - **Matriculación**: Solo se permite matricular usuarios que posean el rol `ESTUDIANTE`.
         - **Asignación Docente**: Solo un usuario con rol `ADMIN` o el propio `JEFE_CATEDRA` de la materia pueden asignar profesores a una comisión.
