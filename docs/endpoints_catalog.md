@@ -140,7 +140,6 @@ Base URL: `/api/alumnos`
 
 | Método | Endpoint | Roles / Acceso | Descripción |
 | :--- | :--- | :--- | :--- |
-| `GET` | `/mis-carreras-materias` | ESTUDIANTE | Obtener plan de estudio completo (materias, notas, correlativas, horarios). |
 | `GET` | `/mis-carreras-materias/historial/{idMateria}` | ESTUDIANTE | Obtener historial detallado (cursadas y finales) de una materia. |
 
 ## MesaExamenController
@@ -184,3 +183,10 @@ Base URL: `/api/calendario`
 | Método | Endpoint | Roles / Acceso | Descripción |
 | :--- | :--- | :--- | :--- |
 | `GET` | `/` | Authenticated | Descargar el calendario académico en formato PDF. |
+
+## CertificadoController
+Base URL: `/api/alumnos`
+
+| Método | Endpoint | Roles / Acceso | Descripción |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/certificado-regular` | ESTUDIANTE | Descargar "Certificado de Alumno Regular" en PDF. |
