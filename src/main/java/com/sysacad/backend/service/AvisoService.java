@@ -15,14 +15,17 @@ public class AvisoService {
     private final AvisoRepository avisoRepository;
     private final com.sysacad.backend.repository.AvisoPersonaRepository avisoPersonaRepository;
     private final com.sysacad.backend.repository.UsuarioRepository usuarioRepository;
+    private final com.sysacad.backend.mapper.AvisoMapper avisoMapper;
 
     @Autowired
     public AvisoService(AvisoRepository avisoRepository, 
                         com.sysacad.backend.repository.AvisoPersonaRepository avisoPersonaRepository,
-                        com.sysacad.backend.repository.UsuarioRepository usuarioRepository) {
+                        com.sysacad.backend.repository.UsuarioRepository usuarioRepository,
+                        com.sysacad.backend.mapper.AvisoMapper avisoMapper) {
         this.avisoRepository = avisoRepository;
         this.avisoPersonaRepository = avisoPersonaRepository;
         this.usuarioRepository = usuarioRepository;
+        this.avisoMapper = avisoMapper;
     }
 
     @Transactional
@@ -36,6 +39,21 @@ public class AvisoService {
     public List<Aviso> obtenerUltimosAvisos() {
         // Filtrar solo los activos (no ocultos)
         return avisoRepository.findByEstado(com.sysacad.backend.modelo.enums.EstadoAviso.ACTIVO);
+    }
+
+    @Transactional(readOnly = true)
+    public List<com.sysacad.backend.dto.aviso.AvisoResponse> obtenerUltimosAvisosParaUsuario(java.util.UUID idUsuario) {
+        List<Aviso> avisos = obtenerUltimosAvisos();
+        List<com.sysacad.backend.dto.aviso.AvisoResponse> responses = avisoMapper.toDTOs(avisos);
+
+        responses.forEach(dto -> { // Ahora dto es AvisoResponse
+            boolean leido = avisoPersonaRepository.findById(new com.sysacad.backend.modelo.AvisoPersona.AvisoPersonaId(dto.getId(), idUsuario))
+                    .map(ap -> ap.getEstado() == com.sysacad.backend.modelo.enums.EstadoAvisoPersona.LEIDO)
+                    .orElse(false);
+            dto.setVisto(leido);
+        });
+
+        return responses;
     }
 
     @Transactional
