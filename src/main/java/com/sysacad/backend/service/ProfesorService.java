@@ -72,7 +72,7 @@ public class ProfesorService {
             nivel = planMateria.getNivel() != null ? planMateria.getNivel().intValue() : null;
             
             if (planMateria.getPlan() != null) {
-                planDescripcion = planMateria.getPlan().getAnio() + " - " + 
+                planDescripcion = planMateria.getPlan().getNombre() + " - " + 
                                  planMateria.getPlan().getCarrera().getNombre();
             }
         }
