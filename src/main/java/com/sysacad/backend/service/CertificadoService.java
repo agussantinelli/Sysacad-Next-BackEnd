@@ -37,7 +37,7 @@ public class CertificadoService {
 
         // 2. Obtener carrera principal (simplificado: tomamos la primera matriculación vigente)
         // En un caso real, el alumno elegiría de qué carrera quiere el certificado si tiene varias.
-        Matriculacion matricula = matriculacionRepository.findByUsuario(alumno).stream()
+        Matriculacion matricula = matriculacionRepository.findByIdIdUsuario(alumno.getId()).stream()
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("El alumno no está inscripto en ninguna carrera"));
 
