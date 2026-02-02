@@ -8,5 +8,6 @@ public record MateriaProfesorDTO(
         String nombre,
         Integer nivel,
         String plan, 
-        RolCargo cargo
+        RolCargo cargo,
+        String jefeCatedra  // Nombre del jefe (null si el profesor ES jefe)
 ) {}
