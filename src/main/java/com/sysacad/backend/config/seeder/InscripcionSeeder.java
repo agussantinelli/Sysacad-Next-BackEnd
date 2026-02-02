@@ -133,7 +133,6 @@ public class InscripcionSeeder {
             // Sistemas Operativos requiere: Arquitectura (Ya aprobada) -> OK para rendir
             crearHistoriaAcademica(alumnoAgustin, c2k1, sistemasOp, EstadoCursada.REGULAR, new BigDecimal("6"));
 
-            // --- CURSANDO ACTUALMENTE ---
             Materia analisisSist = getMateria("Análisis de Sistemas de Información");
             inscribirCursado(alumnoAgustin, c2k1, analisisSist);
             
@@ -259,13 +258,13 @@ public class InscripcionSeeder {
 
         if (c1k2 != null && alumnoPedro != null) {
             var i1 = inscribirCursado(alumnoPedro, c1k2, algoritmos);
-            i1.setEstado(EstadoCursada.REGULAR); i1.setNotaFinal(new BigDecimal("7")); inscripcionCursadoRepository.save(i1);
+            i1.setEstado(EstadoCursada.REGULAR); i1.setNotaFinal(new BigDecimal("5")); inscripcionCursadoRepository.save(i1);
             var i2 = inscribirCursado(alumnoPedro, c1k2, analisis1);
-            i2.setEstado(EstadoCursada.REGULAR); i2.setNotaFinal(new BigDecimal("6")); inscripcionCursadoRepository.save(i2);
+            i2.setEstado(EstadoCursada.REGULAR); i2.setNotaFinal(new BigDecimal("5")); inscripcionCursadoRepository.save(i2);
             var i3 = inscribirCursado(alumnoPedro, c1k2, fisica1);
-            i3.setEstado(EstadoCursada.REGULAR); i3.setNotaFinal(new BigDecimal("6")); inscripcionCursadoRepository.save(i3);
+            i3.setEstado(EstadoCursada.REGULAR); i3.setNotaFinal(new BigDecimal("5")); inscripcionCursadoRepository.save(i3);
             var i4 = inscribirCursado(alumnoPedro, c1k2, arquitectura);
-            i4.setEstado(EstadoCursada.REGULAR); i4.setNotaFinal(new BigDecimal("8")); inscripcionCursadoRepository.save(i4);
+            i4.setEstado(EstadoCursada.REGULAR); i4.setNotaFinal(new BigDecimal("4")); inscripcionCursadoRepository.save(i4);
         }
 
         if (c1k1 != null && alumnoLionel != null) {
