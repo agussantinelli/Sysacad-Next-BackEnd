@@ -446,6 +446,10 @@ Response for `/api/materias/{idMateria}/mesas`.
 - `rol` (RolUsuario enum)
 - `estado` (String)
 
+### `CambioPasswordRequest`
+- `passwordActual` (String)
+- `passwordNueva` (String)
+
 ### `UsuarioResponse`
 - `id` (UUID)
 - `legajo` (String)

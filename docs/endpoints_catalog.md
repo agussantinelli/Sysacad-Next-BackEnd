@@ -78,6 +78,7 @@ Base URL: `/api/usuarios`
 | `POST` | `/` | ADMIN | Registrar un nuevo usuario. |
 | `PUT` | `/{id}` | Authenticated | Actualizar datos de un usuario. |
 | `POST` | `/{id}/foto` | Authenticated | Subir foto de perfil. |
+| `POST` | `/{id}/cambiar-password` | Authenticated | Cambiar contraseña (requiere password actual). |
 | `GET` | `/` | ADMIN | Obtener todos los usuarios (opcional filtrar por rol). |
 | `GET` | `/{id}` | Authenticated | Obtener usuario por ID. |
 | `GET` | `/buscar/legajo/{legajo}` | ADMIN, PROFESOR | Buscar usuario por legajo. |
