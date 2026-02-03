@@ -37,6 +37,17 @@ public class DetalleMesaExamen {
     @Column(name = "hora_examen", nullable = false)
     private LocalTime horaExamen;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "detalle_mesa_examen_auxiliares",
+            joinColumns = {
+                    @JoinColumn(name = "id_mesa_examen", referencedColumnName = "id_mesa_examen"),
+                    @JoinColumn(name = "nro_detalle", referencedColumnName = "nro_detalle")
+            },
+            inverseJoinColumns = @JoinColumn(name = "id_usuario")
+    )
+    private java.util.List<Usuario> auxiliares;
+
     @Embeddable
     @Data
     @NoArgsConstructor
