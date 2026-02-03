@@ -164,7 +164,7 @@ public class ProfesorService {
                 horarioFormateado,
                 profesores,
                 cantidadAlumnos
-                cantidadAlumnos
+
         );
     }
 
