@@ -1,5 +1,6 @@
 package com.sysacad.backend.service.pdf;
 
+import com.sysacad.backend.dto.alumno.AlumnoCertificadoDTO;
 import com.sysacad.backend.dto.examen.ProfesorCertificadoDTO;
 
 public interface IPdfGenerator {
