@@ -474,7 +474,7 @@ public class ProfesorService {
             inscripcionExamenRepository.save(inscripcion);
         }
     }
-    }
+
 
     @Transactional(readOnly = true)
     public List<AlumnoCursadaDTO> obtenerInscriptosCursada(UUID idProfesor, UUID idComision, UUID idMateria) {
