@@ -130,6 +130,7 @@ Response for `/api/alumnos/mis-carreras-materias`.
 - `apellido` (String)
 - `legajo` (Long)
 - `estado` (EstadoCursada enum)
+- `notaFinal` (BigDecimal): Grade if promoted or regularized.
 - `calificaciones` (List<CalificacionDTO>)
 
 #### Inner Class: `CalificacionDTO`
