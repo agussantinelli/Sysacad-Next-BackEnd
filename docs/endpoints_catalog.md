@@ -71,25 +71,17 @@ Base URL: `/api/planes`
 | `GET` | `/carrera/{idCarrera}` | Authenticated | Listar todos los planes de una carrera (vigentes o no). |
 
 ## ProfesorController
-| Método | Endpoint | Roles | Descripción | Body/Params | Respuesta |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **/api/profesores/mis-materias** | `GET` | `PROFESOR` | Obtiene las materias asignadas al profesor autenticado. | - | `200 OK` + `List<MateriaProfesorDTO>` |
-| **/api/profesores/mis-comisiones** | `GET` | `PROFESOR` | Obtiene todas las comisiones donde el profesor dicta alguna materia (incluye dashboard info). | - | `200 OK` + `List<ComisionDetalladaDTO>` |
-| **/api/profesores/materias/{idMateria}/comisiones** | `GET` | `PROFESOR` | Obtiene las comisiones de una materia. Si es jefe de cátedra: todas las comisiones. Si no: solo las suyas. | `idMateria` (path) | `200 OK` + `List<ComisionHorarioDTO>` |
-|
-- **GET /api/profesores/mesas-examen**: Listado de mesas de examen donde el profesor es relevante.
-    - Rol: Profesor, Jefe de Cátedra, Auxiliar.
-    - Respuesta: `List<ProfesorMesaExamenDTO>`
-- **GET /api/profesores/mesas-examen/{idMesa}/materias**: Detalles de las materias en una mesa específica.
-    - Rol: Profesor asociado al detalle.
-    - Respuesta: `List<ProfesorDetalleExamenDTO>`
-- **GET /api/profesores/mesas-examen/{idMesa}/materias/{nroDetalle}/inscriptos**: Lista de alumnos inscriptos para un examen específico.
-    - Rol: Profesor asociado al detalle (Tribunal).
-    - Respuesta: `List<AlumnoExamenDTO>`
-- **POST /api/profesores/mesas-examen/calificar-lote**: Carga masiva de notas para exámenes.
-    - Rol: Profesor asociado al detalle (Tribunal).
-    - Body: `List<CargaNotaItemDTO>`
- |
+Base URL: `/api/profesores`
+
+| Método | Endpoint | Roles / Acceso | Descripción |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/mis-materias` | PROFESOR | Obtiene las materias asignadas al profesor. Retorna `List<MateriaProfesorDTO>`. |
+| `GET` | `/mis-comisiones` | PROFESOR | Obtiene comisiones donde dicta clase. Retorna `List<ComisionDetalladaDTO>`. |
+| `GET` | `/materias/{idMateria}/comisiones` | PROFESOR | Obtiene comisiones de una materia. Retorna `List<ComisionHorarioDTO>`. |
+| `GET` | `/mesas-examen` | PROFESOR | Listado de mesas de examen donde participa. Retorna `List<ProfesorMesaExamenDTO>`. |
+| `GET` | `/mesas-examen/{idMesa}/materias` | PROFESOR | Detalles de materias en una mesa específica. Retorna `List<ProfesorDetalleExamenDTO>`. |
+| `GET` | `/mesas-examen/{idMesa}/materias/{nroDetalle}/inscriptos` | PROFESOR | Lista de alumnos inscriptos para corregir. Retorna `List<AlumnoExamenDTO>`. |
+| `POST` | `/mesas-examen/calificar-lote` | PROFESOR | Carga masiva de notas. Body: `List<CargaNotaItemDTO>`. |
 
 ---
 
@@ -174,7 +166,6 @@ Base URL: `/api/mesas`
 | `GET` | `/` | Authenticated | Listar todos los turnos/mesas de examen disponibles. |
 | `POST` | `/detalles` | ADMIN | Agregar fecha y hora de examen para una materia en un turno. |
 | `GET` | `/disponibles` | ESTUDIANTE | Listar exámenes disponibles para inscribirse (Filtrados por `puedeRendir`). |
-
 | `GET` | `/detalles/{id}/{nroDetalle}` | ESTUDIANTE | Ver detalle de una mesa de examen específica. |
 
 ## InscripcionExamenController
