@@ -23,7 +23,8 @@ public interface InscripcionCursadoRepository extends JpaRepository<InscripcionC
 
     boolean existsByUsuarioIdAndMateriaIdAndEstado(UUID idUsuario, UUID idMateria, com.sysacad.backend.modelo.enums.EstadoCursada estado);
 
-    long countByComisionIdAndMateriaIdAndEstado(UUID idComision, UUID idMateria, com.sysacad.backend.modelo.enums.EstadoCursada estado);
-    
     List<InscripcionCursado> findByComisionIdAndMateriaIdAndEstado(UUID idComision, UUID idMateria, com.sysacad.backend.modelo.enums.EstadoCursada estado);
+
+    @org.springframework.data.jpa.repository.Query("SELECT i FROM InscripcionCursado i WHERE i.comision.id = :idComision AND i.materia.id = :idMateria AND (i.estado = com.sysacad.backend.modelo.enums.EstadoCursada.CURSANDO OR ((i.estado = com.sysacad.backend.modelo.enums.EstadoCursada.REGULAR OR i.estado = com.sysacad.backend.modelo.enums.EstadoCursada.PROMOCIONADO) AND (i.fechaRegularidad >= :fechaLimite OR i.fechaPromocion >= :fechaLimite)))")
+    List<InscripcionCursado> findInscriptosActivosOSemiesActivos(@org.springframework.data.repository.query.Param("idComision") UUID idComision, @org.springframework.data.repository.query.Param("idMateria") UUID idMateria, @org.springframework.data.repository.query.Param("fechaLimite") java.time.LocalDate fechaLimite);
 }

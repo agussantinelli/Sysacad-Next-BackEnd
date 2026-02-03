@@ -481,9 +481,11 @@ public class ProfesorService {
         // Verificar si el profesor tiene acceso a esta comisión y materia
         verificarAccesoComisionMateria(idProfesor, idComision, idMateria);
 
+        java.time.LocalDate fechaLimite = java.time.LocalDate.now().minusMonths(3);
+
         List<com.sysacad.backend.modelo.InscripcionCursado> inscripciones = 
-                inscripcionCursadoRepository.findByComisionIdAndMateriaIdAndEstado(
-                        idComision, idMateria, com.sysacad.backend.modelo.enums.EstadoCursada.CURSANDO);
+                inscripcionCursadoRepository.findInscriptosActivosOSemiesActivos(
+                        idComision, idMateria, fechaLimite);
 
         return inscripciones.stream()
                 .map(i -> new AlumnoCursadaDTO(
