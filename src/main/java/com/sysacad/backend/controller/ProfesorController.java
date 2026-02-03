@@ -177,4 +177,37 @@ public class ProfesorController {
         profesorService.cargarNotasCursada(profesor.getId(), idComision, idMateria, notasDTO);
         return ResponseEntity.ok().build();
     }
+    @GetMapping("/estadisticas/general")
+    @PreAuthorize("hasRole('PROFESOR')")
+    public ResponseEntity<com.sysacad.backend.dto.profesor.ProfesorEstadisticasDTO> getEstadisticasGenerales(
+            @org.springframework.web.bind.annotation.RequestParam(required = false) Integer anio,
+            Authentication authentication) {
+        
+        Usuario profesor = usuarioRepository.findByLegajo(authentication.getName())
+                .orElseThrow(() -> new RuntimeException("Profesor no encontrado"));
+
+        return ResponseEntity.ok(profesorService.obtenerEstadisticasGenerales(profesor.getId(), anio));
+    }
+
+    @GetMapping("/estadisticas/materias/{idMateria}")
+    @PreAuthorize("hasRole('PROFESOR')")
+    public ResponseEntity<com.sysacad.backend.dto.profesor.ProfesorEstadisticasDTO> getEstadisticasPorMateria(
+            @PathVariable UUID idMateria,
+            @org.springframework.web.bind.annotation.RequestParam(required = false) Integer anio,
+            Authentication authentication) {
+        
+        Usuario profesor = usuarioRepository.findByLegajo(authentication.getName())
+                .orElseThrow(() -> new RuntimeException("Profesor no encontrado"));
+
+        return ResponseEntity.ok(profesorService.obtenerEstadisticasPorMateria(profesor.getId(), idMateria, anio));
+    }
+
+    @GetMapping("/estadisticas/anios")
+    @PreAuthorize("hasRole('PROFESOR')")
+    public ResponseEntity<List<Integer>> getAniosDisponibles(Authentication authentication) {
+        Usuario profesor = usuarioRepository.findByLegajo(authentication.getName())
+                .orElseThrow(() -> new RuntimeException("Profesor no encontrado"));
+
+        return ResponseEntity.ok(profesorService.obtenerAniosConActividad(profesor.getId()));
+    }
 }

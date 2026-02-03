@@ -573,6 +573,60 @@ public class ProfesorService {
         }
     }
 
+    @Transactional(readOnly = true)
+    public com.sysacad.backend.dto.profesor.ProfesorEstadisticasDTO obtenerEstadisticasGenerales(UUID idProfesor, Integer anio) {
+        long totalAlumnos = inscripcionCursadoRepository.countAlumnosByProfesor(idProfesor, anio);
+        long promo = inscripcionCursadoRepository.countAlumnosByProfesorAndEstado(idProfesor, anio, com.sysacad.backend.modelo.enums.EstadoCursada.PROMOCIONADO);
+        long regular = inscripcionCursadoRepository.countAlumnosByProfesorAndEstado(idProfesor, anio, com.sysacad.backend.modelo.enums.EstadoCursada.REGULAR);
+        long libre = inscripcionCursadoRepository.countAlumnosByProfesorAndEstado(idProfesor, anio, com.sysacad.backend.modelo.enums.EstadoCursada.LIBRE);
+        Double avg = inscripcionCursadoRepository.calculateAverageGradeByProfesor(idProfesor, anio);
+
+        long totalExamen = inscripcionExamenRepository.countExamenesByProfesor(idProfesor, anio);
+        long aprobados = inscripcionExamenRepository.countExamenesByProfesorAndEstado(idProfesor, anio, com.sysacad.backend.modelo.enums.EstadoExamen.APROBADO);
+        long desaprobados = inscripcionExamenRepository.countExamenesByProfesorAndEstado(idProfesor, anio, com.sysacad.backend.modelo.enums.EstadoExamen.DESAPROBADO);
+        long ausentes = inscripcionExamenRepository.countExamenesByProfesorAndEstado(idProfesor, anio, com.sysacad.backend.modelo.enums.EstadoExamen.AUSENTE);
+
+        return new com.sysacad.backend.dto.profesor.ProfesorEstadisticasDTO(
+                totalAlumnos, promo, regular, libre,
+                avg != null ? java.math.BigDecimal.valueOf(avg) : java.math.BigDecimal.ZERO,
+                totalExamen, aprobados, desaprobados, ausentes
+        );
+    }
+
+    @Transactional(readOnly = true)
+    public com.sysacad.backend.dto.profesor.ProfesorEstadisticasDTO obtenerEstadisticasPorMateria(UUID idProfesor, UUID idMateria, Integer anio) {
+        long totalAlumnos = inscripcionCursadoRepository.countAlumnosByProfesorAndMateria(idProfesor, idMateria, anio);
+        long promo = inscripcionCursadoRepository.countAlumnosByProfesorAndMateriaAndEstado(idProfesor, idMateria, anio, com.sysacad.backend.modelo.enums.EstadoCursada.PROMOCIONADO);
+        long regular = inscripcionCursadoRepository.countAlumnosByProfesorAndMateriaAndEstado(idProfesor, idMateria, anio, com.sysacad.backend.modelo.enums.EstadoCursada.REGULAR);
+        long libre = inscripcionCursadoRepository.countAlumnosByProfesorAndMateriaAndEstado(idProfesor, idMateria, anio, com.sysacad.backend.modelo.enums.EstadoCursada.LIBRE);
+        Double avg = inscripcionCursadoRepository.calculateAverageGradeByProfesorAndMateria(idProfesor, idMateria, anio);
+
+        long totalExamen = inscripcionExamenRepository.countExamenesByProfesorAndMateria(idProfesor, idMateria, anio);
+        long aprobados = inscripcionExamenRepository.countExamenesByProfesorAndMateriaAndEstado(idProfesor, idMateria, anio, com.sysacad.backend.modelo.enums.EstadoExamen.APROBADO);
+        long desaprobados = inscripcionExamenRepository.countExamenesByProfesorAndMateriaAndEstado(idProfesor, idMateria, anio, com.sysacad.backend.modelo.enums.EstadoExamen.DESAPROBADO);
+        long ausentes = inscripcionExamenRepository.countExamenesByProfesorAndMateriaAndEstado(idProfesor, idMateria, anio, com.sysacad.backend.modelo.enums.EstadoExamen.AUSENTE);
+
+        return new com.sysacad.backend.dto.profesor.ProfesorEstadisticasDTO(
+                totalAlumnos, promo, regular, libre,
+                avg != null ? java.math.BigDecimal.valueOf(avg) : java.math.BigDecimal.ZERO,
+                totalExamen, aprobados, desaprobados, ausentes
+        );
+    }
+
+    @Transactional(readOnly = true)
+    public List<Integer> obtenerAniosConActividad(UUID idProfesor) {
+        List<Integer> aniosComision = comisionRepository.findDistinctAniosByProfesorId(idProfesor);
+        List<Integer> aniosExamen = detalleMesaExamenRepository.findDistinctYearsByProfesorId(idProfesor);
+
+        Set<Integer> aniosSet = new HashSet<>(aniosComision);
+        aniosSet.addAll(aniosExamen);
+
+        return aniosSet.stream()
+                .filter(anio -> anio != null)
+                .sorted(java.util.Comparator.reverseOrder())
+                .collect(Collectors.toList());
+    }
+
     private void verificarAccesoComisionMateria(UUID idProfesor, UUID idComision, UUID idMateria) {
         // Simple verificación: si el profesor está en esa comisión
         Comision comision = comisionRepository.findById(idComision)
