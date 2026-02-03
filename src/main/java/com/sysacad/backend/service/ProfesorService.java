@@ -443,16 +443,16 @@ public class ProfesorService {
             }
 
             if (inscripcion.getEstado() == EstadoExamen.APROBADO) {
-                // Tomo
+                // Tomo: Guardar si viene en DTO, sino generar random solo si no existe
                 if (notaDTO.getTomo() != null && !notaDTO.getTomo().isBlank()) {
-                    inscripcion.setTomo(notaDTO.getTomo());
+                    inscripcion.setTomo(notaDTO.getTomo().trim());
                 } else if (inscripcion.getTomo() == null) {
                    inscripcion.setTomo(String.valueOf(100 + (int)(Math.random() * 900)));
                 }
 
-                // Folio
+                // Folio: Guardar si viene en DTO, sino generar random solo si no existe
                 if (notaDTO.getFolio() != null && !notaDTO.getFolio().isBlank()) {
-                    inscripcion.setFolio(notaDTO.getFolio());
+                    inscripcion.setFolio(notaDTO.getFolio().trim());
                 } else if (inscripcion.getFolio() == null) {
                     inscripcion.setFolio(String.valueOf(10 + (int)(Math.random() * 900)));
                 }
