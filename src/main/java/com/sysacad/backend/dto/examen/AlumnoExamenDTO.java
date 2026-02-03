@@ -10,5 +10,7 @@ public record AlumnoExamenDTO(
         String apellido,
         Long legajo,
         EstadoExamen estado,
-        BigDecimal nota
+        BigDecimal nota,
+        String tomo,
+        String folio
 ) {}

@@ -546,6 +546,8 @@ Response for `/api/materias/{idMateria}/mesas`.
 - `legajo`: Long
 - `estado`: String (PENDIENTE, APROBADO, DESAPROBADO, AUSENTE)
 - `nota`: BigDecimal
+- `tomo`: String
+- `folio`: String
 
 #### CargaNotaItemDTO
 - `idInscripcion`: UUID

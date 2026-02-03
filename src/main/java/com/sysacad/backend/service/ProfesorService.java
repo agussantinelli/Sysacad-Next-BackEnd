@@ -398,7 +398,9 @@ public class ProfesorService {
                         i.getUsuario().getApellido(),
                         Long.parseLong(i.getUsuario().getLegajo()),
                         i.getEstado(),
-                        i.getNota()
+                        i.getNota(),
+                        i.getTomo(),
+                        i.getFolio()
                 ))
                 .collect(Collectors.toList());
     }
