@@ -270,5 +270,11 @@ public class InscripcionCursadoService {
         }
         return false;
     }
+    public List<CalificacionCursadaResponse> obtenerCalificaciones(UUID idUsuario, UUID idMateria) {
+        InscripcionCursado insc = inscripcionCursadoRepository.findByUsuarioIdAndMateriaId(idUsuario, idMateria)
+                .orElseThrow(() -> new ResourceNotFoundException("El alumno no está inscripto en esta materia."));
+        
+        return calificacionCursadaMapper.toDTOs(insc.getCalificaciones());
+    }
 }
 

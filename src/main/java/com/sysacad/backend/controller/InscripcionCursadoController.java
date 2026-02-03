@@ -94,4 +94,21 @@ public class InscripcionCursadoController {
         }
         return ResponseEntity.ok(inscripcionCursadoService.obtenerOpcionesInscripcion(idMateria, id));
     }
+    @GetMapping("/alumno/{idAlumno}/materia/{idMateria}/notas")
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESOR', 'ESTUDIANTE')")
+    public ResponseEntity<List<CalificacionCursadaResponse>> getNotasCursada(
+            @PathVariable UUID idAlumno,
+            @PathVariable UUID idMateria,
+            Authentication auth) {
+        
+        // Security check: Students can only view their own grades
+        if (auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ESTUDIANTE"))) {
+            Usuario usuario = usuarioRepository.findByLegajoOrMail(auth.getName(), auth.getName()).orElse(null);
+            if (usuario != null && !usuario.getId().equals(idAlumno)) {
+                throw new RuntimeException("Acceso denegado: No puedes ver notas de otro alumno");
+            }
+        }
+
+        return ResponseEntity.ok(inscripcionCursadoService.obtenerCalificaciones(idAlumno, idMateria));
+    }
 }
