@@ -197,6 +197,7 @@ Base URL: `/api/inscripciones-cursado`
 | `GET` | `/actuales` | ESTUDIANTE, ADMIN | Obtener materias que cursa actualmente (Admin puede usar `?idUsuario=UUID`). |
 | `GET` | `/materias/{idMateria}/disponibles` | ESTUDIANTE, ADMIN | Obtener comisiones disponibles. Retorna lista con `habilitada` (boolean) y `mensaje` (motivo de rechazo/éxito), validando horarios y correlativas. |
 | `PUT` | `/{id}/finalizar` | ADMIN, PROFESOR | Finalizar cursada (Cargar nota final y estado: REGULAR/PROMOCIONADO). Valida reglas de negocio (notas 4-5.5 / >=6). |
+| `GET` | `/alumno/{idAlumno}/materia/{idMateria}/notas` | ADMIN, PROFESOR, ESTUDIANTE | Obtener notas parciales de un alumno en una materia. |
 
 ## CalendarioPdfController
 Base URL: `/api/calendario`
