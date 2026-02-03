@@ -110,6 +110,18 @@ Response for `/api/alumnos/mis-carreras-materias`.
 - `profesores` (List<String>): If requester is head: all professors teaching in this commission; otherwise: empty list
 - `cantidadAlumnos` (Long): Number of students enrolled in this commission for this subject
 
+### `ComisionDetalladaDTO`
+- `idComision` (UUID)
+- `nombre` (String)
+- `anio` (Integer)
+- `turno` (String)
+- `salon` (String)
+- `horarios` (List<String>)
+- `profesores` (List<String>)
+- `cantidadAlumnos` (Long)
+- `nombreMateria` (String)
+- `idMateria` (UUID)
+
 
 ---
 
