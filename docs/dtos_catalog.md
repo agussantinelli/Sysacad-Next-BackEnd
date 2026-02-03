@@ -107,7 +107,7 @@ Response for `/api/alumnos/mis-carreras-materias`.
 - `turno` (String)
 - `salon` (String)
 - `horarios` (List<String>): Formatted schedules (e.g., "LUNES 08:00 - 12:00")
-- `profesores` (List<String>): If requester is head: all professors teaching in this commission; otherwise: empty list
+- `profesores` (List<String>): List of all professors teaching in this commission for this subject.
 - `cantidadAlumnos` (Long): Number of students enrolled in this commission for this subject
 
 ### `ComisionDetalladaDTO`
@@ -117,7 +117,7 @@ Response for `/api/alumnos/mis-carreras-materias`.
 - `turno` (String)
 - `salon` (String)
 - `horarios` (List<String>)
-- `profesores` (List<String>)
+- `profesores` (List<String>): List of all professors teaching in this commission for this subject.
 - `cantidadAlumnos` (Long)
 - `nombreMateria` (String)
 - `idMateria` (UUID)

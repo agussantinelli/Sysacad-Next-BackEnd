@@ -136,21 +136,16 @@ public class ProfesorService {
                         h.getHoraHasta().toString()))
                 .collect(Collectors.toList());
 
-        List<String> profesores = new java.util.ArrayList<>();
-        
-        if (esJefeCatedra) {
-            // Solo si es jefe: mostrar todos los profesores que dan clase en esta comisión para esta materia
-            profesores = comision.getProfesores().stream()
-                    .filter(profesor -> {
-                        List<AsignacionMateria> asignaciones = asignacionMateriaRepository
-                                .findByIdIdUsuario(profesor.getId());
-                        return asignaciones.stream()
-                                .anyMatch(a -> a.getMateria().getId().equals(idMateria));
-                    })
-                    .map(profesor -> profesor.getNombre() + " " + profesor.getApellido())
-                    .collect(Collectors.toList());
-        }
-        // Si NO es jefe: lista vacía
+        // Mostrar todos los profesores que dan clase en esta comisión para esta materia
+        List<String> profesores = comision.getProfesores().stream()
+                .filter(profesor -> {
+                    List<AsignacionMateria> asignaciones = asignacionMateriaRepository
+                            .findByIdIdUsuario(profesor.getId());
+                    return asignaciones.stream()
+                            .anyMatch(a -> a.getMateria().getId().equals(idMateria));
+                })
+                .map(profesor -> profesor.getNombre() + " " + profesor.getApellido())
+                .collect(Collectors.toList());
 
         // Contar alumnos cursando esta materia en esta comisión (solo estado CURSANDO)
         long cantidadAlumnos = inscripcionCursadoRepository.countByComisionIdAndMateriaIdAndEstado(
@@ -217,20 +212,15 @@ public class ProfesorService {
                         h.getHoraHasta().toString()))
                 .collect(Collectors.toList());
 
-        List<String> profesores = new java.util.ArrayList<>();
-        
-        if (esJefeCatedra) {
-            profesores = comision.getProfesores().stream()
-                    .filter(profesor -> {
-                        List<AsignacionMateria> asignaciones = asignacionMateriaRepository
-                                .findByIdIdUsuario(profesor.getId());
-                        return asignaciones.stream()
-                                .anyMatch(a -> a.getMateria().getId().equals(materia.getId()));
-                    })
-                    .map(profesor -> profesor.getNombre() + " " + profesor.getApellido())
-                    .collect(Collectors.toList());
-        }
-        // Si NO es jefe: lista vacía
+        List<String> profesores = comision.getProfesores().stream()
+                .filter(profesor -> {
+                    List<AsignacionMateria> asignaciones = asignacionMateriaRepository
+                            .findByIdIdUsuario(profesor.getId());
+                    return asignaciones.stream()
+                            .anyMatch(a -> a.getMateria().getId().equals(materia.getId()));
+                })
+                .map(profesor -> profesor.getNombre() + " " + profesor.getApellido())
+                .collect(Collectors.toList());
 
         // Contar alumnos cursando esta materia en esta comisión (solo estado CURSANDO)
         long cantidadAlumnos = inscripcionCursadoRepository.countByComisionIdAndMateriaIdAndEstado(
