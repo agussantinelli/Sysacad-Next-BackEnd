@@ -4,6 +4,8 @@ import com.sysacad.backend.dto.comision.ComisionDetalladaDTO;
 import com.sysacad.backend.dto.comision.ComisionHorarioDTO;
 import com.sysacad.backend.dto.examen.ProfesorMesaExamenDTO;
 import com.sysacad.backend.dto.examen.ProfesorDetalleExamenDTO;
+import com.sysacad.backend.dto.examen.AlumnoExamenDTO;
+import com.sysacad.backend.dto.examen.CargaNotaItemDTO;
 import com.sysacad.backend.dto.materia.MateriaProfesorDTO;
 import com.sysacad.backend.modelo.Usuario;
 import com.sysacad.backend.repository.UsuarioRepository;
@@ -13,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -93,5 +97,31 @@ public class ProfesorController {
 
         List<ProfesorDetalleExamenDTO> detalles = profesorService.obtenerDetallesMesaProfesor(profesor.getId(), idMesa);
         return ResponseEntity.ok(detalles);
+    }
+
+    @GetMapping("/mesas-examen/{idMesa}/materias/{nroDetalle}/inscriptos")
+    @PreAuthorize("hasRole('PROFESOR')")
+    public ResponseEntity<List<AlumnoExamenDTO>> getInscriptosMesaExamen(
+            @PathVariable UUID idMesa,
+            @PathVariable Integer nroDetalle,
+            Authentication authentication) {
+        String username = authentication.getName();
+        Usuario profesor = usuarioRepository.findByLegajo(username)
+                .orElseThrow(() -> new RuntimeException("Profesor no encontrado"));
+
+        return ResponseEntity.ok(profesorService.obtenerInscriptosExamen(profesor.getId(), idMesa, nroDetalle));
+    }
+
+    @PostMapping("/mesas-examen/calificar-lote")
+    @PreAuthorize("hasRole('PROFESOR')")
+    public ResponseEntity<Void> cargarNotasLote(
+            @RequestBody List<CargaNotaItemDTO> notas,
+            Authentication authentication) {
+        String username = authentication.getName();
+        Usuario profesor = usuarioRepository.findByLegajo(username)
+                .orElseThrow(() -> new RuntimeException("Profesor no encontrado"));
+
+        profesorService.cargarNotasLote(profesor.getId(), notas);
+        return ResponseEntity.ok().build();
     }
 }
