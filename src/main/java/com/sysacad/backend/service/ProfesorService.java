@@ -517,6 +517,34 @@ public class ProfesorService {
                 continue; // O lanzar error
             }
 
+            if (Boolean.TRUE.equals(dto.getEsNotaFinal())) {
+                // Lógica de Nota Final: Actualizar estado de cursada e inscripción
+                if (notaDTO.getEstado() != null) {
+                    try {
+                        com.sysacad.backend.modelo.enums.EstadoCursada nuevoEstado = 
+                                com.sysacad.backend.modelo.enums.EstadoCursada.valueOf(notaDTO.getEstado());
+                        inscripcion.setEstado(nuevoEstado);
+                        
+                        // Setear fechas según estado
+                        if (nuevoEstado == com.sysacad.backend.modelo.enums.EstadoCursada.REGULAR) {
+                             inscripcion.setFechaRegularidad(java.time.LocalDate.now());
+                        } else if (nuevoEstado == com.sysacad.backend.modelo.enums.EstadoCursada.PROMOCIONADO) {
+                             inscripcion.setFechaPromocion(java.time.LocalDate.now());
+                        }
+                    } catch (IllegalArgumentException e) {
+                        // Log error or ignore invalid status
+                    }
+                }
+                
+                if (notaDTO.getNota() != null) {
+                    inscripcion.setNotaFinal(notaDTO.getNota());
+                }
+                
+                inscripcionCursadoRepository.save(inscripcion);
+                // No creamos calificación parcial si es nota final
+                continue;
+            }
+
             // Buscar si ya existe la calificacion para este concepto
             CalificacionCursada calificacion = calificacionCursadaRepository.findByInscripcionCursadoIdAndDescripcion(
                     inscripcion.getId(), dto.getConcepto())
