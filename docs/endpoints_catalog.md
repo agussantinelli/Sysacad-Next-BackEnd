@@ -83,6 +83,8 @@ Base URL: `/api/profesores`
 | `GET` | `/mesas-examen/{idMesa}/materias/{nroDetalle}/inscriptos` | PROFESOR | Lista de alumnos inscriptos para corregir. Retorna `List<AlumnoExamenDTO>`. |
 | `POST` | `/mesas-examen/calificar-lote` | PROFESOR | Carga masiva de notas. Body: `List<CargaNotaItemDTO>`. |
 | `GET` | `/certificado-regular` | PROFESOR, ADMIN | Descargar "Certificado de Servicios" en PDF. |
+| `GET` | `/comisiones/{idComision}/materias/{idMateria}/inscriptos` | PROFESOR | Obtener lista de alumnos cursando una materia en una comisión. |
+| `POST` | `/comisiones/{idComision}/materias/{idMateria}/calificar` | PROFESOR | Cargar lote de notas parciales (concepto) para una cursada. |
 
 ---
 
