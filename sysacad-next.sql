@@ -202,6 +202,15 @@ CREATE TABLE detalle_mesa_examen (
     CONSTRAINT fk_dme_presidente FOREIGN KEY (id_presidente) REFERENCES usuarios(id)
 );
 
+CREATE TABLE detalle_mesa_examen_auxiliares (
+    id_mesa_examen UUID NOT NULL,
+    nro_detalle INTEGER NOT NULL,
+    id_usuario UUID NOT NULL,
+    PRIMARY KEY (id_mesa_examen, nro_detalle, id_usuario),
+    CONSTRAINT fk_dmea_detalle FOREIGN KEY (id_mesa_examen, nro_detalle) REFERENCES detalle_mesa_examen(id_mesa_examen, nro_detalle),
+    CONSTRAINT fk_dmea_usuario FOREIGN KEY (id_usuario) REFERENCES usuarios(id)
+);
+
 CREATE TABLE inscripciones_examen (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     id_usuario UUID NOT NULL,
