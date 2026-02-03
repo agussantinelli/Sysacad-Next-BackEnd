@@ -123,6 +123,28 @@ Response for `/api/alumnos/mis-carreras-materias`.
 - `idMateria` (UUID)
 
 
+
+### `AlumnoCursadaDTO`
+- `idInscripcion` (UUID)
+- `nombre` (String)
+- `apellido` (String)
+- `legajo` (Long)
+- `estado` (EstadoCursada enum)
+- `calificaciones` (List<CalificacionDTO>)
+
+#### Inner Class: `CalificacionDTO`
+- `concepto` (String)
+- `nota` (BigDecimal)
+- `fecha` (LocalDate)
+
+### `CargaNotasCursadaDTO`
+- `concepto` (String)
+- `notas` (List<NotaCursadaItemDTO>)
+
+#### Inner Class: `NotaCursadaItemDTO`
+- `idInscripcion` (UUID)
+- `nota` (BigDecimal)
+
 ---
 
 ## DetalleMesaExamen
