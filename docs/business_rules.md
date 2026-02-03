@@ -57,3 +57,9 @@ Este documento detalla las reglas de negocio y consideraciones técnicas derivad
         - **Pérdida de Regularidad por Aplazos**:
             - Si un alumno con estado `REGULAR` en una materia acumula **4 aplazos (DESAPROBADO o AUSENTE)** en los exámenes finales de dicha materia, **pierde automáticamente su regularidad** y su cursada pasa a estado `LIBRE`.
 
+
+### Poderes del Jefe de Cátedra
+El **Jefe de Cátedra** tiene permisos extendidos sobre las materias que lidera:
+- Puede ver **todas las comisiones** de la materia, no solo aquellas donde dicta clases.
+- Puede cargar notas y gestionar exámenes para **cualquier comisión** de dicha materia.
+- En los listados, se le muestra la información completa de todos los profesores y alumnos de la cátedra.
