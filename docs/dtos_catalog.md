@@ -535,6 +535,21 @@ Response for `/api/materias/{idMateria}/mesas`.
 - `cantidadInscriptos` (Long)
 - `tribunal` (List<MiembroTribunalDTO>)
 
-### `MiembroTribunalDTO`
-- `nombreCompleto` (String)
-- `rol` (String): "PRESIDENTE", "AUXILIAR"
+#### MiembroTribunalDTO
+- `nombre`: String (Nombre y Apellido)
+- `rol`: String (PRESIDENTE, AUXILIAR)
+
+#### AlumnoExamenDTO
+- `idInscripcion`: UUID (ID de InscripcionExamen)
+- `nombre`: String
+- `apellido`: String
+- `legajo`: Long
+- `estado`: String (PENDIENTE, APROBADO, DESAPROBADO, AUSENTE)
+- `nota`: BigDecimal
+
+#### CargaNotaItemDTO
+- `idInscripcion`: UUID
+- `nota`: BigDecimal
+- `estado`: String (APROBADO, DESAPROBADO, AUSENTE)
+- `tomo`: String (Opcional, si aprueba)
+- `folio`: String (Opcional, si aprueba)

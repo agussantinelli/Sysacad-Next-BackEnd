@@ -76,8 +76,20 @@ Base URL: `/api/planes`
 | **/api/profesores/mis-materias** | `GET` | `PROFESOR` | Obtiene las materias asignadas al profesor autenticado. | - | `200 OK` + `List<MateriaProfesorDTO>` |
 | **/api/profesores/mis-comisiones** | `GET` | `PROFESOR` | Obtiene todas las comisiones donde el profesor dicta alguna materia (incluye dashboard info). | - | `200 OK` + `List<ComisionDetalladaDTO>` |
 | **/api/profesores/materias/{idMateria}/comisiones** | `GET` | `PROFESOR` | Obtiene las comisiones de una materia. Si es jefe de cátedra: todas las comisiones. Si no: solo las suyas. | `idMateria` (path) | `200 OK` + `List<ComisionHorarioDTO>` |
-| **/api/profesores/mesas-examen** | `GET` | `PROFESOR` | Listado de mesas de examen donde el profesor tiene participación. | - | `200 OK` + `List<ProfesorMesaExamenDTO>` |
-| **/api/profesores/mesas-examen/{idMesa}/materias** | `GET` | `PROFESOR` | Listado de materias/detalles específicos dentro de una mesa de examen. | `idMesa` (path) | `200 OK` + `List<ProfesorDetalleExamenDTO>` |
+|
+- **GET /api/profesores/mesas-examen**: Listado de mesas de examen donde el profesor es relevante.
+    - Rol: Profesor, Jefe de Cátedra, Auxiliar.
+    - Respuesta: `List<ProfesorMesaExamenDTO>`
+- **GET /api/profesores/mesas-examen/{idMesa}/materias**: Detalles de las materias en una mesa específica.
+    - Rol: Profesor asociado al detalle.
+    - Respuesta: `List<ProfesorDetalleExamenDTO>`
+- **GET /api/profesores/mesas-examen/{idMesa}/materias/{nroDetalle}/inscriptos**: Lista de alumnos inscriptos para un examen específico.
+    - Rol: Profesor asociado al detalle (Tribunal).
+    - Respuesta: `List<AlumnoExamenDTO>`
+- **POST /api/profesores/mesas-examen/calificar-lote**: Carga masiva de notas para exámenes.
+    - Rol: Profesor asociado al detalle (Tribunal).
+    - Body: `List<CargaNotaItemDTO>`
+ |
 
 ---
 
