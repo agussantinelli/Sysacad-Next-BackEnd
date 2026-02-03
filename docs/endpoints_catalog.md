@@ -73,9 +73,11 @@ Base URL: `/api/planes`
 ## ProfesorController
 | Método | Endpoint | Roles | Descripción | Body/Params | Respuesta |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| `GET` | `/api/profesores/mis-materias` | `PROFESOR` | Obtiene las materias asignadas al profesor autenticado. | - | `200 OK` + `List<MateriaProfesorDTO>` |
-| `GET` | `/api/profesores/mis-comisiones` | `PROFESOR` | Obtiene todas las comisiones donde el profesor dicta alguna materia (incluye dashboard info). | - | `200 OK` + `List<ComisionDetalladaDTO>` |
-| `GET` | `/api/profesores/materias/{idMateria}/comisiones` | `PROFESOR` | Obtiene las comisiones de una materia. Si es jefe de cátedra: todas las comisiones. Si no: solo las suyas. | `idMateria` (path) | `200 OK` + `List<ComisionHorarioDTO>` |
+| **/api/profesores/mis-materias** | `GET` | `PROFESOR` | Obtiene las materias asignadas al profesor autenticado. | - | `200 OK` + `List<MateriaProfesorDTO>` |
+| **/api/profesores/mis-comisiones** | `GET` | `PROFESOR` | Obtiene todas las comisiones donde el profesor dicta alguna materia (incluye dashboard info). | - | `200 OK` + `List<ComisionDetalladaDTO>` |
+| **/api/profesores/materias/{idMateria}/comisiones** | `GET` | `PROFESOR` | Obtiene las comisiones de una materia. Si es jefe de cátedra: todas las comisiones. Si no: solo las suyas. | `idMateria` (path) | `200 OK` + `List<ComisionHorarioDTO>` |
+| **/api/profesores/mesas-examen** | `GET` | `PROFESOR` | Listado de mesas de examen donde el profesor tiene participación. | - | `200 OK` + `List<ProfesorMesaExamenDTO>` |
+| **/api/profesores/mesas-examen/{idMesa}/materias** | `GET` | `PROFESOR` | Listado de materias/detalles específicos dentro de una mesa de examen. | `idMesa` (path) | `200 OK` + `List<ProfesorDetalleExamenDTO>` |
 
 ---
 

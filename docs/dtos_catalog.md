@@ -512,3 +512,29 @@ Response for `/api/materias/{idMateria}/mesas`.
 - `plan` (String)
 - `cargo` (RolCargo enum)
 - `jefeCatedra` (String, nullable): Name of the head professor (null if the professor IS the head)
+
+---
+
+## Examen (Profesor)
+
+### `ProfesorMesaExamenDTO`
+- `id` (UUID)
+- `nombre` (String)
+- `fechaInicio` (LocalDate)
+- `fechaFin` (LocalDate)
+- `cantidadMateriasInvolucradas` (Integer)
+
+### `ProfesorDetalleExamenDTO`
+- `idMesaExamen` (UUID)
+- `nroDetalle` (Integer)
+- `idMateria` (UUID)
+- `nombreMateria` (String)
+- `anioMateria` (String)
+- `fecha` (LocalDate)
+- `hora` (LocalTime)
+- `cantidadInscriptos` (Long)
+- `tribunal` (List<MiembroTribunalDTO>)
+
+### `MiembroTribunalDTO`
+- `nombreCompleto` (String)
+- `rol` (String): "PRESIDENTE", "AUXILIAR"
