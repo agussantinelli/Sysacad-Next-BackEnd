@@ -523,6 +523,11 @@ public class ProfesorService {
                     try {
                         com.sysacad.backend.modelo.enums.EstadoCursada nuevoEstado = 
                                 com.sysacad.backend.modelo.enums.EstadoCursada.valueOf(notaDTO.getEstado());
+                        
+                        if (nuevoEstado == com.sysacad.backend.modelo.enums.EstadoCursada.CURSANDO) {
+                            continue;
+                        }
+
                         inscripcion.setEstado(nuevoEstado);
                         
                         // Setear fechas según estado
