@@ -1,8 +1,10 @@
 package com.sysacad.backend.service;
 
 import com.sysacad.backend.dto.alumno.AlumnoCertificadoDTO;
+import com.sysacad.backend.dto.examen.ProfesorCertificadoDTO;
 import com.sysacad.backend.modelo.Matriculacion;
 import com.sysacad.backend.modelo.Usuario;
+import com.sysacad.backend.modelo.enums.RolUsuario;
 import com.sysacad.backend.repository.MatriculacionRepository;
 import com.sysacad.backend.repository.UsuarioRepository;
 import com.sysacad.backend.service.pdf.IPdfGenerator;
@@ -60,5 +62,31 @@ public class CertificadoService {
 
         // 4. Generar PDF
         return pdfGenerator.generarCertificado(datos);
+    }
+
+    @Transactional(readOnly = true)
+    public byte[] generarCertificadoDocente(UUID idUsuario) {
+        // 1. Obtener datos del usuario
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        // 2. Determinar ROL string
+        String rolStr = switch (usuario.getRol()) {
+            case PROFESOR -> "Docente";
+            case ADMIN -> "Administrador";
+            default -> "Personal";
+        };
+
+        // 3. Construir DTO
+        ProfesorCertificadoDTO datos = new ProfesorCertificadoDTO(
+                usuario.getNombre() + " " + usuario.getApellido(),
+                usuario.getDni(),
+                usuario.getLegajo(),
+                rolStr,
+                LocalDate.now()
+        );
+
+        // 4. Generar PDF
+        return pdfGenerator.generarCertificadoProfesor(datos);
     }
 }

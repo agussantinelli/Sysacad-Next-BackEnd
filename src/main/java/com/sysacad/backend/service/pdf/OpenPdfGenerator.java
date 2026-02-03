@@ -41,6 +41,30 @@ public class OpenPdfGenerator implements IPdfGenerator {
         }
     }
 
+    @Override
+    public byte[] generarCertificadoProfesor(com.sysacad.backend.dto.examen.ProfesorCertificadoDTO datos) {
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            Document document = new Document(PageSize.A4);
+            PdfWriter.getInstance(document, out);
+
+            document.open();
+
+            // A. ENCABEZADO
+            agregarEncabezado(document);
+
+            // B. CUERPO
+            agregarCuerpoProfesor(document, datos);
+
+            // C. PIE DE PAGINA
+            agregarPieDePaginaProfesor(document, datos);
+
+            document.close();
+            return out.toByteArray();
+        } catch (Exception e) {
+            throw new RuntimeException("Error al generar el PDF del certificado docente: " + e.getMessage(), e);
+        }
+    }
+
     private void agregarEncabezado(Document document) throws DocumentException, IOException {
         PdfPTable headerTable = new PdfPTable(2);
         headerTable.setWidthPercentage(100);
@@ -112,6 +136,50 @@ public class OpenPdfGenerator implements IPdfGenerator {
     }
 
     private void agregarPieDePagina(Document document, AlumnoCertificadoDTO datos) throws DocumentException {
+        Font fontPie = FontFactory.getFont(FontFactory.TIMES, 12);
+
+        String mes = datos.fechaEmision().getMonth().getDisplayName(TextStyle.FULL, new Locale("es", "ES"));
+        String texto = String.format(
+            "A solicitud del interesado y a los fines de ser presentado ante quien corresponda, se le extiende el presente certificado, sin enmiendas ni raspaduras, en Rosario el %d de %s de %d.-",
+            datos.fechaEmision().getDayOfMonth(),
+            mes,
+            datos.fechaEmision().getYear()
+        );
+
+        Paragraph p = new Paragraph(texto, fontPie);
+        p.setAlignment(Element.ALIGN_JUSTIFIED);
+        p.setLeading(20f);
+        document.add(p);
+        
+        document.add(new Paragraph("\n\n\n\n"));
+        
+        Paragraph direccion = new Paragraph("E ZEBALLOS 1341 - ROSARIO", FontFactory.getFont(FontFactory.TIMES_ITALIC, 10));
+        direccion.setAlignment(Element.ALIGN_CENTER);
+        document.add(direccion);
+    }
+    
+    private void agregarCuerpoProfesor(Document document, com.sysacad.backend.dto.examen.ProfesorCertificadoDTO datos) throws DocumentException {
+        Font fontCuerpo = FontFactory.getFont(FontFactory.TIMES, 12);
+        
+        // El rol ya viene formateado dsl Service (ej: "Docente", "Administrador")
+        String texto = String.format(
+            "Por la presente se hace constar que %s - DNI: %s - LEGAJO N° %s, se desempeña como %s en la Facultad Regional Rosario de la Universidad Tecnológica Nacional.",
+            datos.nombreCompleto(),
+            datos.dni(),
+            datos.legajo(),
+            datos.rol()
+        );
+
+        Paragraph p = new Paragraph(texto, fontCuerpo);
+        p.setAlignment(Element.ALIGN_JUSTIFIED);
+        p.setLeading(20f);
+        p.setFirstLineIndent(30f);
+        
+        document.add(p);
+        document.add(new Paragraph("\n"));
+    }
+
+    private void agregarPieDePaginaProfesor(Document document, com.sysacad.backend.dto.examen.ProfesorCertificadoDTO datos) throws DocumentException {
         Font fontPie = FontFactory.getFont(FontFactory.TIMES, 12);
 
         String mes = datos.fechaEmision().getMonth().getDisplayName(TextStyle.FULL, new Locale("es", "ES"));
