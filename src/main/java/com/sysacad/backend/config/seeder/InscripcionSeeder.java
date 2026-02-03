@@ -491,6 +491,7 @@ public class InscripcionSeeder {
             // Usamos a Agustin y Sofia
             Usuario alumnoAgustin = usuarioRepository.findByLegajo("55555").orElse(null);
             Usuario alumnoSofia = usuarioRepository.findByLegajo("58888").orElse(null);
+            Usuario alumnoCarlos = usuarioRepository.findByLegajo("60002").orElse(null);
 
             if (alumnoAgustin != null) {
                 // Agustin rinde Algoritmos en Dic 2025 -> PENDIENTE (Para corregir)
@@ -502,10 +503,7 @@ public class InscripcionSeeder {
                 inscribirExamen(alumnoSofia, dic25Sistemas);
             }
 
-            // Inscribir Alumnos a Examenes
-            Usuario alumnoAgustin = usuarioRepository.findByLegajo("55555").orElse(null);
-            Usuario alumnoSofia = usuarioRepository.findByLegajo("58888").orElse(null);
-            Usuario alumnoCarlos = usuarioRepository.findByLegajo("60002").orElse(null);
+            // Inscribir Alumnos a Examenes (General)
 
             if (alumnoAgustin != null) {
                 inscribirExamen(alumnoAgustin, julSintaxis);
