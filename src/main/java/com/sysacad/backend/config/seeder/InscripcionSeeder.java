@@ -384,8 +384,8 @@ public class InscripcionSeeder {
             // Complete Generation (Feb)
             createDetalleMesa(mesaFeb, 4, fisica1, profeRoberto, LocalDate.of(2026, 2, 14), LocalTime.of(16, 0));
             createDetalleMesa(mesaFeb, 5, ingles1, profeAna, LocalDate.of(2026, 2, 16), LocalTime.of(14, 0));
-            createDetalleMesa(mesaFeb, 6, logica, profeNicolas, LocalDate.of(2026, 2, 18), LocalTime.of(18, 0));
-            createDetalleMesa(mesaFeb, 8, arquitectura, profeCristian, LocalDate.of(2026, 2, 22), LocalTime.of(9, 0));
+            DetalleMesaExamen febLogica = createDetalleMesa(mesaFeb, 6, logica, profeNicolas, LocalDate.of(2026, 2, 18), LocalTime.of(18, 0));
+            DetalleMesaExamen febArquitectura = createDetalleMesa(mesaFeb, 8, arquitectura, profeCristian, LocalDate.of(2026, 2, 22), LocalTime.of(9, 0));
             createDetalleMesa(mesaFeb, 9, analisis2, profeCristian, LocalDate.of(2026, 2, 11), LocalTime.of(14, 0));
             createDetalleMesa(mesaFeb, 10, fisica2, profeRoberto, LocalDate.of(2026, 2, 13), LocalTime.of(16, 0));
             createDetalleMesa(mesaFeb, 11, ingSociedad, profeLaura, LocalDate.of(2026, 2, 15), LocalTime.of(18, 0));
@@ -539,6 +539,70 @@ public class InscripcionSeeder {
                 inscribirExamen(alumnoCarlos, julFisica);
             }
 
+            // MATERIA: ALGORITMOS Y ESTRUCTURAS DE DATOS (Mesa Febrero 2026)
+            crearResultadoExamen(alumnoMiguel, febAlgo, EstadoExamen.APROBADO, new BigDecimal("8.00")); // Muy bueno
+            crearResultadoExamen(alumnoLucia, febAlgo, EstadoExamen.APROBADO, new BigDecimal("7.00"));  // Bueno
+            crearResultadoExamen(alumnoJuan, febAlgo, EstadoExamen.APROBADO, new BigDecimal("9.00"));   // Distinguido
+            crearResultadoExamen(alumnoPedro, febAlgo, EstadoExamen.APROBADO, new BigDecimal("6.00"));  // Justo
+            crearResultadoExamen(alumnoMartin, febAlgo, EstadoExamen.DESAPROBADO, new BigDecimal("2.00")); // Mal el práctico
+            crearResultadoExamen(alumnoDiego, febAlgo, EstadoExamen.DESAPROBADO, new BigDecimal("4.00")); // Faltó teoría
+            crearResultadoExamen(alumnoFlavia, febAlgo, EstadoExamen.AUSENTE, null); 
+            crearResultadoExamen(alumnoEnzo, febAlgo, EstadoExamen.AUSENTE, null);
+            crearResultadoExamen(alumnoPedro, febSistemas, EstadoExamen.APROBADO, new BigDecimal("9.00"));
+            crearResultadoExamen(alumnoEnzo, febSistemas, EstadoExamen.APROBADO, new BigDecimal("8.00"));
+            crearResultadoExamen(alumnoAlex, febSistemas, EstadoExamen.DESAPROBADO, new BigDecimal("4.00")); // Aplazo
+            crearResultadoExamen(alumnoDiego, febSistemas, EstadoExamen.AUSENTE, null);
+            crearResultadoExamen(alumnoMartin, febSistemas, EstadoExamen.APROBADO, new BigDecimal("7.00"));
+
+            // MATERIA: ANÁLISIS MATEMÁTICO I (Mesa Febrero 2026)
+            crearResultadoExamen(alumnoJuan, febAnalisis, EstadoExamen.APROBADO, new BigDecimal("7.00"));
+            crearResultadoExamen(alumnoMiguel, febAnalisis, EstadoExamen.DESAPROBADO, new BigDecimal("2.00"));
+            crearResultadoExamen(alumnoFlavia, febAnalisis, EstadoExamen.APROBADO, new BigDecimal("6.00"));
+
+            // MATERIA: SINTAXIS Y SEMÁNTICA (Mesa Julio 2026)
+            crearResultadoExamen(alumnoAgustin, julSintaxis, EstadoExamen.APROBADO, new BigDecimal("10.00")); // Sobresaliente
+            crearResultadoExamen(alumnoSofia, julSintaxis, EstadoExamen.APROBADO, new BigDecimal("9.00"));
+
+            // MATERIA: FÍSICA I (Mesa Julio 2026)
+            crearResultadoExamen(alumnoCarlos, julFisica, EstadoExamen.DESAPROBADO, new BigDecimal("5.00")); // Casi
+            crearResultadoExamen(alumnoPedro, julFisica, EstadoExamen.APROBADO, new BigDecimal("6.00"));
+            crearResultadoExamen(alumnoMiguel, febAlgo, EstadoExamen.APROBADO, new BigDecimal("8.00"));
+            crearResultadoExamen(alumnoLucia, febAlgo, EstadoExamen.APROBADO, new BigDecimal("7.00"));
+            crearResultadoExamen(alumnoMartin, febAlgo, EstadoExamen.DESAPROBADO, new BigDecimal("2.00"));
+            crearResultadoExamen(alumnoFlavia, febAlgo, EstadoExamen.AUSENTE, null);
+            crearResultadoExamen(alumnoPedro, febAlgo, EstadoExamen.APROBADO, new BigDecimal("6.00"));
+            crearResultadoExamen(alumnoPedro, febSistemas, EstadoExamen.APROBADO, new BigDecimal("9.00"));
+            crearResultadoExamen(alumnoAlex, febSistemas, EstadoExamen.DESAPROBADO, new BigDecimal("4.00"));
+            crearResultadoExamen(alumnoDiego, febSistemas, EstadoExamen.AUSENTE, null);
+            crearResultadoExamen(alumnoEnzo, febSistemas, EstadoExamen.APROBADO, new BigDecimal("8.00"));
+            crearResultadoExamen(alumnoJuan, febAnalisis, EstadoExamen.APROBADO, new BigDecimal("7.00"));
+
+            // MATERIA: LÓGICA Y ESTRUCTURAS DISCRETAS (Mesa Febrero 2026)
+            crearResultadoExamen(alumnoMartin, febLogica, EstadoExamen.APROBADO, new BigDecimal("8.00"));
+            crearResultadoExamen(alumnoFlavia, febLogica, EstadoExamen.APROBADO, new BigDecimal("7.00"));
+            crearResultadoExamen(alumnoPedro, febLogica, EstadoExamen.DESAPROBADO, new BigDecimal("2.00"));
+            crearResultadoExamen(alumnoLionel, febLogica, EstadoExamen.APROBADO, new BigDecimal("10.00"));
+            crearResultadoExamen(alumnoAlex, febLogica, EstadoExamen.AUSENTE, null);
+            crearResultadoExamen(alumnoDiego, febLogica, EstadoExamen.APROBADO, new BigDecimal("6.00"));
+
+            // MATERIA: ARQUITECTURA DE COMPUTADORAS (Mesa Febrero 2026)
+            crearResultadoExamen(alumnoEnzo, febArquitectura, EstadoExamen.APROBADO, new BigDecimal("7.00"));
+            crearResultadoExamen(alumnoMiguel, febArquitectura, EstadoExamen.DESAPROBADO, new BigDecimal("5.00")); // Casi
+            crearResultadoExamen(alumnoLucia, febArquitectura, EstadoExamen.APROBADO, new BigDecimal("9.00"));
+
+            // MATERIA: ALGORITMOS (Mesa Diciembre 2025 - "Turno Especial")
+            // Resultados del año anterior para historial
+            crearResultadoExamen(alumnoAgustin, dic25Algo, EstadoExamen.APROBADO, new BigDecimal("8.00"));
+            crearResultadoExamen(alumnoSofia, dic25Algo, EstadoExamen.APROBADO, new BigDecimal("9.00"));
+            crearResultadoExamen(alumnoCarlos, dic25Algo, EstadoExamen.DESAPROBADO, new BigDecimal("2.00"));
+            crearResultadoExamen(alumnoJuan, dic25Algo, EstadoExamen.AUSENTE, null);
+            crearResultadoExamen(alumnoMiguel, dic25Algo, EstadoExamen.APROBADO, new BigDecimal("6.00"));
+
+            // MATERIA: SISTEMAS (Mesa Diciembre 2025 - "Turno Especial")
+            crearResultadoExamen(alumnoMaria, dic25Sistemas, EstadoExamen.APROBADO, new BigDecimal("7.00"));
+            crearResultadoExamen(alumnoMartin, dic25Sistemas, EstadoExamen.DESAPROBADO, new BigDecimal("5.00"));
+            crearResultadoExamen(alumnoFlavia, dic25Sistemas, EstadoExamen.APROBADO, new BigDecimal("8.00"));
+
             System.out.println(">> InscripcionSeeder: Mesas de Examen y Asociaciones creadas.");
 
     }
@@ -661,5 +725,19 @@ public class InscripcionSeeder {
         }
         
         inscripcionCursadoRepository.save(insc);
+    }
+
+    private void crearResultadoExamen(Usuario alumno, DetalleMesaExamen detalle, EstadoExamen estado, BigDecimal nota) {
+        if (alumno == null) return;
+        var insc = inscribirExamen(alumno, detalle);
+        insc.setEstado(estado);
+        insc.setNota(nota);
+        
+        if (estado == EstadoExamen.APROBADO) {
+            insc.setTomo(getRandomTomo());
+            insc.setFolio(getRandomFolio());
+        }
+        
+        inscripcionExamenRepository.save(insc);
     }
 }
