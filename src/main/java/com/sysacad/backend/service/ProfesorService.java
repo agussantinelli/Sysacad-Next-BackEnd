@@ -13,6 +13,15 @@ import com.sysacad.backend.repository.ComisionRepository;
 import com.sysacad.backend.repository.HorarioCursadoRepository;
 import com.sysacad.backend.repository.PlanMateriaRepository;
 import com.sysacad.backend.repository.InscripcionCursadoRepository;
+import com.sysacad.backend.dto.examen.ProfesorMesaExamenDTO;
+import com.sysacad.backend.dto.examen.ProfesorDetalleExamenDTO;
+import com.sysacad.backend.dto.examen.MiembroTribunalDTO;
+import com.sysacad.backend.repository.DetalleMesaExamenRepository;
+import com.sysacad.backend.repository.InscripcionExamenRepository;
+import com.sysacad.backend.modelo.DetalleMesaExamen;
+import com.sysacad.backend.modelo.MesaExamen;
+import java.util.Set;
+import java.util.HashSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,18 +38,24 @@ public class ProfesorService {
     private final HorarioCursadoRepository horarioCursadoRepository;
     private final PlanMateriaRepository planMateriaRepository;
     private final InscripcionCursadoRepository inscripcionCursadoRepository;
+    private final DetalleMesaExamenRepository detalleMesaExamenRepository;
+    private final InscripcionExamenRepository inscripcionExamenRepository;
 
     @Autowired
     public ProfesorService(AsignacionMateriaRepository asignacionMateriaRepository,
                            ComisionRepository comisionRepository,
                            HorarioCursadoRepository horarioCursadoRepository,
                            PlanMateriaRepository planMateriaRepository,
-                           InscripcionCursadoRepository inscripcionCursadoRepository) {
+                           InscripcionCursadoRepository inscripcionCursadoRepository,
+                           DetalleMesaExamenRepository detalleMesaExamenRepository,
+                           InscripcionExamenRepository inscripcionExamenRepository) {
         this.asignacionMateriaRepository = asignacionMateriaRepository;
         this.comisionRepository = comisionRepository;
         this.horarioCursadoRepository = horarioCursadoRepository;
         this.planMateriaRepository = planMateriaRepository;
         this.inscripcionCursadoRepository = inscripcionCursadoRepository;
+        this.detalleMesaExamenRepository = detalleMesaExamenRepository;
+        this.inscripcionExamenRepository = inscripcionExamenRepository;
     }
 
     @Transactional(readOnly = true)
@@ -239,4 +254,121 @@ public class ProfesorService {
                 materia.getId()
         );
     }
-}
+
+    @Transactional(readOnly = true)
+    public List<ProfesorMesaExamenDTO> obtenerMesasExamenProfesor(UUID idProfesor) {
+        // Obtenemos todos los detalles relevantes
+        Set<DetalleMesaExamen> detallesRelevantes = obtenerDetallesExamenRelevantes(idProfesor);
+
+        // Agrupar por MesaExamen
+        java.util.Map<MesaExamen, Long> mesasCount = detallesRelevantes.stream()
+                .collect(Collectors.groupingBy(DetalleMesaExamen::getMesaExamen, Collectors.counting()));
+
+        // Mapear a DTO
+        return mesasCount.entrySet().stream()
+                .map(entry -> {
+                    MesaExamen mesa = entry.getKey();
+                    return new ProfesorMesaExamenDTO(
+                            mesa.getId(),
+                            mesa.getNombre(),
+                            mesa.getFechaInicio(),
+                            mesa.getFechaFin(),
+                            entry.getValue().intValue()
+                    );
+                })
+                .sorted(java.util.Comparator.comparing(ProfesorMesaExamenDTO::fechaInicio).reversed())
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProfesorDetalleExamenDTO> obtenerDetallesMesaProfesor(UUID idProfesor, UUID idMesa) {
+        // Filtrar detalles relevantes solo de esta mesa
+        List<DetalleMesaExamen> detallesDeMesa = detalleMesaExamenRepository.findByMesaExamenId(idMesa);
+        
+        List<AsignacionMateria> asignaciones = asignacionMateriaRepository.findByIdIdUsuario(idProfesor);
+        
+        // Logica de filtrado manual para asegurar coherencia
+        return detallesDeMesa.stream()
+                .filter(detalle -> esProfesorRelevanteParaDetalle(detalle, idProfesor, asignaciones))
+                .map(detalle -> mapToProfesorDetalleExamenDTO(detalle))
+                .collect(Collectors.toList());
+    }
+
+    private Set<DetalleMesaExamen> obtenerDetallesExamenRelevantes(UUID idProfesor) {
+        Set<DetalleMesaExamen> detalles = new HashSet<>();
+        
+        // 1. Donde es Presidente
+        detalles.addAll(detalleMesaExamenRepository.findByPresidenteId(idProfesor));
+        
+        // 2. Donde es Auxiliar
+        detalles.addAll(detalleMesaExamenRepository.findByAuxiliaresId(idProfesor));
+        
+        // 3. Donde es Jefe de Cátedra de la materia
+        List<AsignacionMateria> asignacionesJefe = asignacionMateriaRepository.findByIdIdUsuario(idProfesor).stream()
+                .filter(a -> a.getCargo() == com.sysacad.backend.modelo.enums.RolCargo.JEFE_CATEDRA)
+                .collect(Collectors.toList());
+        
+        for (AsignacionMateria asignacion : asignacionesJefe) {
+            detalles.addAll(detalleMesaExamenRepository.findByMateriaId(asignacion.getMateria().getId()));
+        }
+        
+        return detalles;
+    }
+
+    private boolean esProfesorRelevanteParaDetalle(DetalleMesaExamen detalle, UUID idProfesor, List<AsignacionMateria> asignaciones) {
+        // Es Presidente?
+        if (detalle.getPresidente().getId().equals(idProfesor)) return true;
+        
+        // Es Auxiliar?
+        boolean esAuxiliar = detalle.getAuxiliares() != null && detalle.getAuxiliares().stream()
+                .anyMatch(aux -> aux.getId().equals(idProfesor));
+        if (esAuxiliar) return true;
+        
+        // Es Jefe de Catedra de la materia?
+        return asignaciones.stream()
+                .anyMatch(a -> a.getMateria().getId().equals(detalle.getMateria().getId()) && 
+                               a.getCargo() == com.sysacad.backend.modelo.enums.RolCargo.JEFE_CATEDRA);
+    }
+    
+    private ProfesorDetalleExamenDTO mapToProfesorDetalleExamenDTO(DetalleMesaExamen detalle) {
+        // Obtener inscriptos
+        Long inscriptos = inscripcionExamenRepository.countByDetalleMesaExamenId(detalle.getId());
+        
+        // Obtener anio materia
+        String anioMateria = "N/A";
+        List<PlanMateria> pm = planMateriaRepository.findByIdIdMateria(detalle.getMateria().getId());
+        if (!pm.isEmpty()) {
+            anioMateria = pm.get(0).getNivel().toString(); // Simplification
+        }
+
+        // Construir tribunal
+        List<MiembroTribunalDTO> tribunal = new java.util.ArrayList<>();
+        
+        // Presidente
+        tribunal.add(new MiembroTribunalDTO(
+                detalle.getPresidente().getNombre() + " " + detalle.getPresidente().getApellido(),
+                "PRESIDENTE"
+        ));
+        
+        // Auxiliares
+        if (detalle.getAuxiliares() != null) {
+            detalle.getAuxiliares().forEach(aux -> {
+                tribunal.add(new MiembroTribunalDTO(
+                        aux.getNombre() + " " + aux.getApellido(),
+                        "AUXILIAR"
+                ));
+            });
+        }
+
+        return new ProfesorDetalleExamenDTO(
+                detalle.getMesaExamen().getId(),
+                detalle.getId().getNroDetalle(),
+                detalle.getMateria().getId(),
+                detalle.getMateria().getNombre(),
+                anioMateria,
+                detalle.getDiaExamen(),
+                detalle.getHoraExamen(),
+                inscriptos,
+                tribunal
+        );
+    }
