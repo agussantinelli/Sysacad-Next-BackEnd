@@ -202,4 +202,19 @@ public class ProfesorService {
         
         return resultado;
     }
+
+    @Transactional(readOnly = true)
+    public List<MateriaProfesorDTO> obtenerMateriasEnComision(UUID idProfesor, UUID idComision) {
+        Comision comision = comisionRepository.findById(idComision)
+                .orElseThrow(() -> new RuntimeException("Comisión no encontrada: " + idComision));
+
+        List<AsignacionMateria> misAsignaciones = asignacionMateriaRepository.findByIdIdUsuario(idProfesor);
+
+        // Filtrar materias de la comisión que el profesor dicta
+        return comision.getMaterias().stream()
+                .flatMap(materia -> misAsignaciones.stream()
+                        .filter(a -> a.getMateria().getId().equals(materia.getId())))
+                .map(this::mapToDTO) // Reutilizamos el mapeo existente que ya trae jefeCatedra y detalles
+                .collect(Collectors.toList());
+    }
 }

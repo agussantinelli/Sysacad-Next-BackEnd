@@ -55,6 +55,19 @@ public class ProfesorController {
         return ResponseEntity.ok(comisiones);
     }
 
+    @GetMapping("/comisiones/{idComision}/materias")
+    @PreAuthorize("hasRole('PROFESOR')")
+    public ResponseEntity<List<MateriaProfesorDTO>> getMateriasEnComision(
+            @PathVariable UUID idComision,
+            Authentication authentication) {
+        String username = authentication.getName();
+        Usuario profesor = usuarioRepository.findByLegajo(username)
+                .orElseThrow(() -> new RuntimeException("Profesor no encontrado: " + username));
+
+        List<MateriaProfesorDTO> materias = profesorService.obtenerMateriasEnComision(profesor.getId(), idComision);
+        return ResponseEntity.ok(materias);
+    }
+
     @GetMapping("/materias/{idMateria}/comisiones")
     @PreAuthorize("hasRole('PROFESOR')")
     public ResponseEntity<List<ComisionHorarioDTO>> getComisionesDeMateria(
