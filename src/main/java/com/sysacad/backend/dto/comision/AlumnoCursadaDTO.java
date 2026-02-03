@@ -16,5 +16,6 @@ public class AlumnoCursadaDTO {
     private String apellido;
     private Long legajo;
     private EstadoCursada estado;
+    private java.math.BigDecimal notaFinal;
     private java.util.List<CalificacionDTO> calificaciones;
 }

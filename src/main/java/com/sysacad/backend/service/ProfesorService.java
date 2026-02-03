@@ -496,6 +496,7 @@ public class ProfesorService {
                         i.getUsuario().getApellido(),
                         Long.parseLong(i.getUsuario().getLegajo()),
                         i.getEstado(),
+                        i.getNotaFinal(),
                         i.getCalificaciones().stream()
                             .map(c -> new CalificacionDTO(
                                 c.getDescripcion(),
