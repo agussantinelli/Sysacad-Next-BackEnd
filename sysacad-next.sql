@@ -304,3 +304,11 @@ CREATE TABLE mensajes_grupo (
     CONSTRAINT fk_msg_usuario FOREIGN KEY (id_usuario) REFERENCES usuarios(id)
 );
 
+CREATE TABLE solicitudes_certificado (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    usuario_id UUID NOT NULL,
+    fecha_solicitud TIMESTAMP NOT NULL,
+    tipo VARCHAR(50) NOT NULL,
+    CONSTRAINT fk_sc_usuario FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+);
+
