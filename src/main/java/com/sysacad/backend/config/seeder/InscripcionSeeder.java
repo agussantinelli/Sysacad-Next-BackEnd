@@ -482,6 +482,26 @@ public class InscripcionSeeder {
             createDetalleMesa(mesaSep, 5, sistemas, profeNicolas, LocalDate.of(2026, 9, 24), LocalTime.of(14, 0));
             createDetalleMesa(mesaSep, 6, emprendedores, profeClaudia, LocalDate.of(2026, 9, 25), LocalTime.of(18, 0));
 
+            // DICIEMBRE 2025 (Especial para Nicolas)
+            MesaExamen mesaDic2025 = createMesa("Turno Diciembre 2025", LocalDate.of(2025, 12, 1), LocalDate.of(2025, 12, 22));
+            DetalleMesaExamen dic25Algo = createDetalleMesa(mesaDic2025, 1, algoritmos, profeNicolas, LocalDate.of(2025, 12, 10), LocalTime.of(9, 0), profeLaura);
+            DetalleMesaExamen dic25Sistemas = createDetalleMesa(mesaDic2025, 2, sistemas, profeNicolas, LocalDate.of(2025, 12, 12), LocalTime.of(14, 0), profeSandra);
+            
+            // Inscribir alumnos a Diciembre 2025 para que Nicolas tenga que corregir
+            // Usamos a Agustin y Sofia
+            Usuario alumnoAgustin = usuarioRepository.findByLegajo("55555").orElse(null);
+            Usuario alumnoSofia = usuarioRepository.findByLegajo("58888").orElse(null);
+
+            if (alumnoAgustin != null) {
+                // Agustin rinde Algoritmos en Dic 2025 -> PENDIENTE (Para corregir)
+                inscribirExamen(alumnoAgustin, dic25Algo);
+            }
+            
+            if (alumnoSofia != null) {
+                // Sofia rinde Sistemas en Dic 2025 -> PENDIENTE (Para corregir)
+                inscribirExamen(alumnoSofia, dic25Sistemas);
+            }
+
             // Inscribir Alumnos a Examenes
             Usuario alumnoAgustin = usuarioRepository.findByLegajo("55555").orElse(null);
             Usuario alumnoSofia = usuarioRepository.findByLegajo("58888").orElse(null);
