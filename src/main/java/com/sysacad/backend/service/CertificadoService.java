@@ -20,6 +20,7 @@ public class CertificadoService {
 
     private final UsuarioRepository usuarioRepository;
     private final MatriculacionRepository matriculacionRepository; // Para saber qué carrera cursa
+    private final IPdfGenerator pdfGenerator;
     private final com.sysacad.backend.repository.SolicitudCertificadoRepository solicitudCertificadoRepository;
 
     @Autowired
