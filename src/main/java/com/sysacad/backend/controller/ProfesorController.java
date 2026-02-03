@@ -9,8 +9,11 @@ import com.sysacad.backend.dto.examen.CargaNotaItemDTO;
 import com.sysacad.backend.dto.materia.MateriaProfesorDTO;
 import com.sysacad.backend.modelo.Usuario;
 import com.sysacad.backend.repository.UsuarioRepository;
+import com.sysacad.backend.service.CertificadoService;
 import com.sysacad.backend.service.ProfesorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -29,11 +32,13 @@ import java.util.UUID;
 public class ProfesorController {
 
     private final ProfesorService profesorService;
+    private final CertificadoService certificadoService;
     private final UsuarioRepository usuarioRepository;
 
     @Autowired
-    public ProfesorController(ProfesorService profesorService, UsuarioRepository usuarioRepository) {
+    public ProfesorController(ProfesorService profesorService, CertificadoService certificadoService, UsuarioRepository usuarioRepository) {
         this.profesorService = profesorService;
+        this.certificadoService = certificadoService;
         this.usuarioRepository = usuarioRepository;
     }
 
@@ -123,5 +128,22 @@ public class ProfesorController {
 
         profesorService.cargarNotasLote(profesor.getId(), notas);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/certificado-regular")
+    @PreAuthorize("hasRole('PROFESOR') or hasRole('ADMIN')")
+    public ResponseEntity<byte[]> descargarCertificadoRegularDocente(Authentication authentication) {
+        String username = authentication.getName();
+        Usuario usuario = usuarioRepository.findByLegajo(username)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        byte[] pdfBytes = certificadoService.generarCertificadoDocente(usuario.getId());
+
+        String filename = "certificado_servicios_" + usuario.getLegajo() + ".pdf";
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_PDF)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
+                .body(pdfBytes);
     }
 }
