@@ -25,4 +25,7 @@ public interface InscripcionExamenRepository extends JpaRepository<InscripcionEx
     long countByUsuarioIdAndDetalleMesaExamen_MateriaIdAndEstadoIn(UUID usuarioId, UUID materiaId, List<com.sysacad.backend.modelo.enums.EstadoExamen> estados);
 
     boolean existsByUsuarioIdAndMateriaIdAndEstado(UUID usuarioId, UUID materiaId, com.sysacad.backend.modelo.enums.EstadoExamen estado);
+
+    @org.springframework.data.jpa.repository.Query("SELECT COUNT(i) FROM InscripcionExamen i WHERE i.detalleMesaExamen.id = :detalleId")
+    Long countByDetalleMesaExamenId(@org.springframework.data.repository.query.Param("detalleId") DetalleMesaExamen.DetalleId detalleId);
 }
