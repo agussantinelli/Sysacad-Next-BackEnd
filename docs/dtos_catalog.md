@@ -580,3 +580,11 @@ Response for `/api/materias/{idMateria}/mesas`.
 - `estado`: String (APROBADO, DESAPROBADO, AUSENTE)
 - `tomo`: String (Opcional, si aprueba)
 - `folio`: String (Opcional, si aprueba)
+
+### `ProfesorCertificadoDTO`
+- `nombreCompleto`: String
+- `dni`: String
+- `legajo`: String
+- `rol`: String (e.g. "PROFESOR", "ADMINISTRADOR")
+- `fechaEmision`: LocalDate
+
