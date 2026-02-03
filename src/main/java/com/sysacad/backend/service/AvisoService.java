@@ -16,23 +16,41 @@ public class AvisoService {
     private final com.sysacad.backend.repository.AvisoPersonaRepository avisoPersonaRepository;
     private final com.sysacad.backend.repository.UsuarioRepository usuarioRepository;
     private final com.sysacad.backend.mapper.AvisoMapper avisoMapper;
+    private final IEmailService emailService;
 
     @Autowired
     public AvisoService(AvisoRepository avisoRepository, 
                         com.sysacad.backend.repository.AvisoPersonaRepository avisoPersonaRepository,
                         com.sysacad.backend.repository.UsuarioRepository usuarioRepository,
-                        com.sysacad.backend.mapper.AvisoMapper avisoMapper) {
+                        com.sysacad.backend.mapper.AvisoMapper avisoMapper,
+                        IEmailService emailService) {
         this.avisoRepository = avisoRepository;
         this.avisoPersonaRepository = avisoPersonaRepository;
         this.usuarioRepository = usuarioRepository;
         this.avisoMapper = avisoMapper;
+        this.emailService = emailService;
     }
 
     @Transactional
     public Aviso publicarAviso(Aviso aviso) {
         aviso.setFechaEmision(LocalDateTime.now());
         aviso.setEstado(com.sysacad.backend.modelo.enums.EstadoAviso.ACTIVO);
-        return avisoRepository.save(aviso);
+        Aviso guardado = avisoRepository.save(aviso);
+        
+        // Notificar a todos los estudiantes
+        List<com.sysacad.backend.modelo.Usuario> estudiantes = usuarioRepository.findByRol(com.sysacad.backend.modelo.enums.RolUsuario.ESTUDIANTE);
+        for (com.sysacad.backend.modelo.Usuario estudiante : estudiantes) {
+            String subject = "Nuevo Aviso en Sysacad: " + aviso.getTitulo();
+            String body = "Hola " + estudiante.getNombre() + ",\n\n" +
+                          "Se ha publicado un nuevo aviso:\n\n" +
+                          aviso.getTitulo() + "\n" +
+                          aviso.getDescripcion() + "\n\n" +
+                          "Saludos,\nSysacad Team";
+            // Enviar asíncronamente en un caso real, por ahora simple loop
+            emailService.sendEmail(estudiante.getMail(), subject, body);
+        }
+        
+        return guardado;
     }
 
     @Transactional(readOnly = true)

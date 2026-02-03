@@ -175,9 +175,10 @@ public class ProfesorService {
                 .map(profesor -> profesor.getNombre() + " " + profesor.getApellido())
                 .collect(Collectors.toList());
 
-        // Contar alumnos cursando esta materia en esta comisión (solo estado CURSANDO)
-        long cantidadAlumnos = inscripcionCursadoRepository.countByComisionIdAndMateriaIdAndEstado(
-                comision.getId(), idMateria, com.sysacad.backend.modelo.enums.EstadoCursada.CURSANDO);
+        // Contar alumnos activos o recién calificados
+        java.time.LocalDate fechaLimite = java.time.LocalDate.now().minusMonths(3);
+        long cantidadAlumnos = inscripcionCursadoRepository.countInscriptosActivosOSemiesActivos(
+                comision.getId(), idMateria, fechaLimite);
 
         return new ComisionHorarioDTO(
                 comision.getId(),
@@ -250,9 +251,10 @@ public class ProfesorService {
                 .map(profesor -> profesor.getNombre() + " " + profesor.getApellido())
                 .collect(Collectors.toList());
 
-        // Contar alumnos cursando esta materia en esta comisión (solo estado CURSANDO)
-        long cantidadAlumnos = inscripcionCursadoRepository.countByComisionIdAndMateriaIdAndEstado(
-                comision.getId(), materia.getId(), com.sysacad.backend.modelo.enums.EstadoCursada.CURSANDO);
+        // Contar alumnos activos o recién calificados
+        java.time.LocalDate fechaLimite = java.time.LocalDate.now().minusMonths(3);
+        long cantidadAlumnos = inscripcionCursadoRepository.countInscriptosActivosOSemiesActivos(
+                comision.getId(), materia.getId(), fechaLimite);
 
         return new ComisionDetalladaDTO(
                 comision.getId(),
