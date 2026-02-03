@@ -499,6 +499,11 @@ public class InscripcionSeeder {
             Usuario alumnoMaria = usuarioRepository.findByLegajo("56666").orElse(null);
             Usuario alumnoMartin = usuarioRepository.findByLegajo("60003").orElse(null);
             Usuario alumnoFlavia = usuarioRepository.findByLegajo("60004").orElse(null);
+            Usuario alumnoPedro = usuarioRepository.findByLegajo("60010").orElse(null);
+            Usuario alumnoLionel = usuarioRepository.findByLegajo("60011").orElse(null);
+            Usuario alumnoAlex = usuarioRepository.findByLegajo("60012").orElse(null);
+            Usuario alumnoDiego = usuarioRepository.findByLegajo("60013").orElse(null);
+            Usuario alumnoEnzo = usuarioRepository.findByLegajo("60014").orElse(null);
 
             if (alumnoAgustin != null) {
                 // Agustin rinde Algoritmos en Dic 2025 -> PENDIENTE (Para corregir)
