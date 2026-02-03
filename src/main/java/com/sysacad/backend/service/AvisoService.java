@@ -79,4 +79,10 @@ public class AvisoService {
         
         avisoPersonaRepository.save(avisoPersona);
     }
+
+
+    @Transactional(readOnly = true)
+    public long contarAvisosNoLeidos(java.util.UUID idUsuario) {
+        return avisoRepository.countAvisosNoLeidos(idUsuario);
+    }
 }

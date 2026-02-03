@@ -65,6 +65,16 @@ public class AvisoController {
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         avisoService.marcarComoLeido(id, usuario.getId());
+
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/sin-leer/cantidad")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<Long> contarNoLeidos(org.springframework.security.core.Authentication authentication) {
+        String username = authentication.getName();
+        return usuarioRepository.findByLegajoOrMail(username, username)
+                .map(usuario -> ResponseEntity.ok(avisoService.contarAvisosNoLeidos(usuario.getId())))
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
     }
 }
