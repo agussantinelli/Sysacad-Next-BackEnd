@@ -1,5 +1,6 @@
 package com.sysacad.backend.controller;
 
+import com.sysacad.backend.dto.comision.ComisionDetalladaDTO;
 import com.sysacad.backend.dto.comision.ComisionHorarioDTO;
 import com.sysacad.backend.dto.materia.MateriaProfesorDTO;
 import com.sysacad.backend.modelo.Usuario;
@@ -43,29 +44,16 @@ public class ProfesorController {
         List<MateriaProfesorDTO> materias = profesorService.obtenerMateriasAsignadas(profesor.getId());
         return ResponseEntity.ok(materias);
     }
-
+    
     @GetMapping("/mis-comisiones")
     @PreAuthorize("hasRole('PROFESOR')")
-    public ResponseEntity<List<ComisionHorarioDTO>> getMisComisiones(Authentication authentication) {
+    public ResponseEntity<List<ComisionDetalladaDTO>> getMisComisiones(Authentication authentication) {
         String username = authentication.getName();
         Usuario profesor = usuarioRepository.findByLegajo(username)
                 .orElseThrow(() -> new RuntimeException("Profesor no encontrado: " + username));
 
-        List<ComisionHorarioDTO> comisiones = profesorService.obtenerTodasLasComisiones(profesor.getId());
+        List<ComisionDetalladaDTO> comisiones = profesorService.obtenerTodasLasComisiones(profesor.getId());
         return ResponseEntity.ok(comisiones);
-    }
-
-    @GetMapping("/comisiones/{idComision}/materias")
-    @PreAuthorize("hasRole('PROFESOR')")
-    public ResponseEntity<List<MateriaProfesorDTO>> getMateriasEnComision(
-            @PathVariable UUID idComision,
-            Authentication authentication) {
-        String username = authentication.getName();
-        Usuario profesor = usuarioRepository.findByLegajo(username)
-                .orElseThrow(() -> new RuntimeException("Profesor no encontrado: " + username));
-
-        List<MateriaProfesorDTO> materias = profesorService.obtenerMateriasEnComision(profesor.getId(), idComision);
-        return ResponseEntity.ok(materias);
     }
 
     @GetMapping("/materias/{idMateria}/comisiones")

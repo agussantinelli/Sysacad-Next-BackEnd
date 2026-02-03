@@ -1,5 +1,6 @@
 package com.sysacad.backend.service;
 
+import com.sysacad.backend.dto.comision.ComisionDetalladaDTO;
 import com.sysacad.backend.dto.comision.ComisionHorarioDTO;
 import com.sysacad.backend.dto.materia.MateriaProfesorDTO;
 import com.sysacad.backend.modelo.AsignacionMateria;
@@ -169,7 +170,7 @@ public class ProfesorService {
     }
 
     @Transactional(readOnly = true)
-    public List<ComisionHorarioDTO> obtenerTodasLasComisiones(UUID idProfesor) {
+    public List<ComisionDetalladaDTO> obtenerTodasLasComisiones(UUID idProfesor) {
         // 1. Obtener todas las comisiones donde el profesor da clases
         List<Comision> comisiones = comisionRepository.findByProfesoresId(idProfesor);
 
@@ -180,7 +181,7 @@ public class ProfesorService {
         // Una comisión puede tener varias materias, pero el profesor solo dicta algunas de ellas.
         // Generamos un DTO por cada par (Comisión, Materia) válido.
         
-        List<ComisionHorarioDTO> resultado = new java.util.ArrayList<>();
+        List<ComisionDetalladaDTO> resultado = new java.util.ArrayList<>();
 
         for (Comision comision : comisiones) {
             // Filtrar las materias de la comisión que el profesor dicta
@@ -196,25 +197,56 @@ public class ProfesorService {
                         .anyMatch(a -> a.getMateria().getId().equals(materia.getId()) &&
                                 a.getCargo() == com.sysacad.backend.modelo.enums.RolCargo.JEFE_CATEDRA);
 
-                resultado.add(mapToComisionHorarioDTO(comision, materia.getId(), esJefe));
+                resultado.add(mapToComisionDetalladaDTO(comision, materia, esJefe));
             }
         }
         
         return resultado;
     }
 
-    @Transactional(readOnly = true)
-    public List<MateriaProfesorDTO> obtenerMateriasEnComision(UUID idProfesor, UUID idComision) {
-        Comision comision = comisionRepository.findById(idComision)
-                .orElseThrow(() -> new RuntimeException("Comisión no encontrada: " + idComision));
+    private ComisionDetalladaDTO mapToComisionDetalladaDTO(Comision comision, Materia materia, boolean esJefeCatedra) {
+        // Obtenemos el DTO base reutilizando lógica similar (pero adaptada)
+        // Fetch schedules for this commission-subject pair
+        List<HorarioCursado> horarios = horarioCursadoRepository.findByIdIdComisionAndIdIdMateria(
+                comision.getId(), materia.getId());
 
-        List<AsignacionMateria> misAsignaciones = asignacionMateriaRepository.findByIdIdUsuario(idProfesor);
-
-        // Filtrar materias de la comisión que el profesor dicta
-        return comision.getMaterias().stream()
-                .flatMap(materia -> misAsignaciones.stream()
-                        .filter(a -> a.getMateria().getId().equals(materia.getId())))
-                .map(this::mapToDTO) // Reutilizamos el mapeo existente que ya trae jefeCatedra y detalles
+        List<String> horarioFormateado = horarios.stream()
+                .map(h -> String.format("%s %s - %s",
+                        h.getId().getDia().name(),
+                        h.getId().getHoraDesde().toString(),
+                        h.getHoraHasta().toString()))
                 .collect(Collectors.toList());
+
+        List<String> profesores = new java.util.ArrayList<>();
+        
+        if (esJefeCatedra) {
+            profesores = comision.getProfesores().stream()
+                    .filter(profesor -> {
+                        List<AsignacionMateria> asignaciones = asignacionMateriaRepository
+                                .findByIdIdUsuario(profesor.getId());
+                        return asignaciones.stream()
+                                .anyMatch(a -> a.getMateria().getId().equals(materia.getId()));
+                    })
+                    .map(profesor -> profesor.getNombre() + " " + profesor.getApellido())
+                    .collect(Collectors.toList());
+        }
+        // Si NO es jefe: lista vacía
+
+        // Contar alumnos cursando esta materia en esta comisión (solo estado CURSANDO)
+        long cantidadAlumnos = inscripcionCursadoRepository.countByComisionIdAndMateriaIdAndEstado(
+                comision.getId(), materia.getId(), com.sysacad.backend.modelo.enums.EstadoCursada.CURSANDO);
+
+        return new ComisionDetalladaDTO(
+                comision.getId(),
+                comision.getNombre(),
+                comision.getAnio(),
+                comision.getTurno(),
+                comision.getSalon().getNombre(),
+                horarioFormateado,
+                profesores,
+                cantidadAlumnos,
+                materia.getNombre(),
+                materia.getId()
+        );
     }
 }
