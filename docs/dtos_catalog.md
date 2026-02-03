@@ -533,6 +533,7 @@ Response for `/api/materias/{idMateria}/mesas`.
 - `fecha` (LocalDate)
 - `hora` (LocalTime)
 - `cantidadInscriptos` (Long)
+- `todosCorregidos` (Boolean): Indica si todos los inscriptos tienen nota/estado final.
 - `tribunal` (List<MiembroTribunalDTO>)
 
 #### MiembroTribunalDTO
