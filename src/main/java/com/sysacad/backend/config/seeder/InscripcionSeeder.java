@@ -492,6 +492,13 @@ public class InscripcionSeeder {
             Usuario alumnoAgustin = usuarioRepository.findByLegajo("55555").orElse(null);
             Usuario alumnoSofia = usuarioRepository.findByLegajo("58888").orElse(null);
             Usuario alumnoCarlos = usuarioRepository.findByLegajo("60002").orElse(null);
+            
+            Usuario alumnoJuan = usuarioRepository.findByLegajo("57777").orElse(null);
+            Usuario alumnoMiguel = usuarioRepository.findByLegajo("59999").orElse(null);
+            Usuario alumnoLucia = usuarioRepository.findByLegajo("60001").orElse(null);
+            Usuario alumnoMaria = usuarioRepository.findByLegajo("56666").orElse(null);
+            Usuario alumnoMartin = usuarioRepository.findByLegajo("60003").orElse(null);
+            Usuario alumnoFlavia = usuarioRepository.findByLegajo("60004").orElse(null);
 
             if (alumnoAgustin != null) {
                 // Agustin rinde Algoritmos en Dic 2025 -> PENDIENTE (Para corregir)
@@ -502,6 +509,15 @@ public class InscripcionSeeder {
                 // Sofia rinde Sistemas en Dic 2025 -> PENDIENTE (Para corregir)
                 inscribirExamen(alumnoSofia, dic25Sistemas);
             }
+
+            // Agregar 3 alumnos a mano a cada mesa de Diciembre 2025
+            if (alumnoJuan != null) inscribirExamen(alumnoJuan, dic25Algo);
+            if (alumnoMiguel != null) inscribirExamen(alumnoMiguel, dic25Algo);
+            if (alumnoLucia != null) inscribirExamen(alumnoLucia, dic25Algo);
+
+            if (alumnoMaria != null) inscribirExamen(alumnoMaria, dic25Sistemas);
+            if (alumnoMartin != null) inscribirExamen(alumnoMartin, dic25Sistemas);
+            if (alumnoFlavia != null) inscribirExamen(alumnoFlavia, dic25Sistemas);
 
             // Inscribir Alumnos a Examenes (General)
 
