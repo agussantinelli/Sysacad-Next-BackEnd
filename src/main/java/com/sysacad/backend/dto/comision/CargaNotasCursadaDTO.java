@@ -11,5 +11,6 @@ import java.util.List;
 @NoArgsConstructor
 public class CargaNotasCursadaDTO {
     private String concepto;
+    private Boolean esNotaFinal;
     private List<NotaCursadaItemDTO> notas;
 }

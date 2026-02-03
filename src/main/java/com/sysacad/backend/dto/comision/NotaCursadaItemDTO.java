@@ -13,4 +13,5 @@ import java.util.UUID;
 public class NotaCursadaItemDTO {
     private UUID idInscripcion;
     private BigDecimal nota;
+    private String estado;
 }
