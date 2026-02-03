@@ -222,6 +222,7 @@
 │   │   │   │   ├── comision/
 │   │   │   │   ├── detalle_mesa_examen/
 │   │   │   │   ├── estudiante_materia/
+│   │   │   │   ├── examen/
 │   │   │   │   ├── facultad/
 │   │   │   │   ├── grupo/
 │   │   │   │   ├── historial/
