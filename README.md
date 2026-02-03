@@ -121,8 +121,8 @@
         </tr>
         <tr>
             <td><strong>📝 Ciclo del Alumno</strong></td>
-            <td><code>matriculaciones</code>, <code>inscripciones</code>, <code>calificaciones</code></td>
-            <td>Trazabilidad total: Matriculación en carrera, inscripción a cursada/examen, registro de historia académica y **emisión de certificados (Regularidad, etc.)**.</td>
+            <td><code>matriculaciones</code>, <code>inscripciones</code>, <code>calificaciones</code>, <code>solicitudes_certificado</code></td>
+            <td>Trazabilidad total: Matriculación en carrera, inscripción a cursada/examen, registro de historia académica y **Auditoría de emisión de certificados**.</td>
         </tr>
     </tbody>
 </table>
