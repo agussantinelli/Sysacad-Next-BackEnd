@@ -44,6 +44,17 @@ public class ProfesorController {
         return ResponseEntity.ok(materias);
     }
 
+    @GetMapping("/mis-comisiones")
+    @PreAuthorize("hasRole('PROFESOR')")
+    public ResponseEntity<List<ComisionHorarioDTO>> getMisComisiones(Authentication authentication) {
+        String username = authentication.getName();
+        Usuario profesor = usuarioRepository.findByLegajo(username)
+                .orElseThrow(() -> new RuntimeException("Profesor no encontrado: " + username));
+
+        List<ComisionHorarioDTO> comisiones = profesorService.obtenerTodasLasComisiones(profesor.getId());
+        return ResponseEntity.ok(comisiones);
+    }
+
     @GetMapping("/materias/{idMateria}/comisiones")
     @PreAuthorize("hasRole('PROFESOR')")
     public ResponseEntity<List<ComisionHorarioDTO>> getComisionesDeMateria(

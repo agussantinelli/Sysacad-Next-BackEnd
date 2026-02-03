@@ -164,6 +164,42 @@ public class ProfesorService {
                 horarioFormateado,
                 profesores,
                 cantidadAlumnos
+                cantidadAlumnos
         );
+    }
+
+    @Transactional(readOnly = true)
+    public List<ComisionHorarioDTO> obtenerTodasLasComisiones(UUID idProfesor) {
+        // 1. Obtener todas las comisiones donde el profesor da clases
+        List<Comision> comisiones = comisionRepository.findByProfesoresId(idProfesor);
+
+        // 2. Obtener todas las asignaciones del profesor para saber qué materias dicta
+        List<AsignacionMateria> misAsignaciones = asignacionMateriaRepository.findByIdIdUsuario(idProfesor);
+
+        // 3. Generar DTOs
+        // Una comisión puede tener varias materias, pero el profesor solo dicta algunas de ellas.
+        // Generamos un DTO por cada par (Comisión, Materia) válido.
+        
+        List<ComisionHorarioDTO> resultado = new java.util.ArrayList<>();
+
+        for (Comision comision : comisiones) {
+            // Filtrar las materias de la comisión que el profesor dicta
+            List<Materia> materiasQueDicta = comision.getMaterias().stream()
+                    .filter(materiaComision -> misAsignaciones.stream()
+                            .anyMatch(asignacion -> asignacion.getMateria().getId().equals(materiaComision.getId())))
+                    .collect(Collectors.toList());
+
+            // Si es jefe de cátedra en alguna de ellas, necesitamos saberlo para el mapeo
+            for (Materia materia : materiasQueDicta) {
+                // Determinar si es jefe de cátedra para ESTA materia
+                boolean esJefe = misAsignaciones.stream()
+                        .anyMatch(a -> a.getMateria().getId().equals(materia.getId()) &&
+                                a.getCargo() == com.sysacad.backend.modelo.enums.RolCargo.JEFE_CATEDRA);
+
+                resultado.add(mapToComisionHorarioDTO(comision, materia.getId(), esJefe));
+            }
+        }
+        
+        return resultado;
     }
 }
