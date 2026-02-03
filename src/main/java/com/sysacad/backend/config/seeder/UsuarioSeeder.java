@@ -56,7 +56,7 @@ public class UsuarioSeeder {
             createUsuarioIfNotExists("55557", "Valeria", "Martinez", "22222231", "valeria@sysacad.com", RolUsuario.PROFESOR, Genero.F, "Contadora", LocalDate.of(1983, 12, 12));
 
             // ESTUDIANTES
-            createUsuarioIfNotExists("55555", "Agustin", "Santinelli", "33333333", "agus@sysacad.com", RolUsuario.ESTUDIANTE, Genero.M, null, LocalDate.of(2004, 11, 17));
+            createUsuarioIfNotExists("55555", "Agustin", "Santinelli", "33333333", "agustinsantinelli@gmail.com", RolUsuario.ESTUDIANTE, Genero.M, null, LocalDate.of(2004, 11, 17));
             createUsuarioIfNotExists("56666", "Maria", "Rodriguez", "33333334", "maria@sysacad.com", RolUsuario.ESTUDIANTE, Genero.F, null, LocalDate.of(2003, 5, 20));
             createUsuarioIfNotExists("57777", "Juan", "Perez", "33333335", "juan@sysacad.com", RolUsuario.ESTUDIANTE, Genero.M, null, LocalDate.of(2004, 1, 10));
             createUsuarioIfNotExists("58888", "Sofia", "Lopez", "33333336", "sofia@sysacad.com", RolUsuario.ESTUDIANTE, Genero.F, null, LocalDate.of(2001, 7, 8));
