@@ -96,39 +96,39 @@ public class ProfesorService {
 
     private MateriaProfesorDTO mapToDTO(AsignacionMateria asignacion) {
         Materia materia = asignacion.getMateria();
-        
+
         // Query PlanMateria to get nivel and plan information
         List<PlanMateria> planMaterias = planMateriaRepository.findByIdIdMateria(materia.getId());
-        
+
         // Use the first plan (in case a subject appears in multiple plans, we take the first one)
         // In a real scenario, you might want to filter by vigente or current year
         Integer nivel = null;
         String planDescripcion = "N/A";
-        
+
         if (!planMaterias.isEmpty()) {
             PlanMateria planMateria = planMaterias.get(0);
             nivel = planMateria.getNivel() != null ? planMateria.getNivel().intValue() : null;
-            
+
             if (planMateria.getPlan() != null) {
-                planDescripcion = planMateria.getPlan().getNombre() + " - " + 
-                                 planMateria.getPlan().getCarrera().getNombre();
+                planDescripcion = planMateria.getPlan().getNombre() + " - " +
+                        planMateria.getPlan().getCarrera().getNombre();
             }
         }
-        
+
         // Si NO es jefe de cátedra, buscar quién es el jefe
         String nombreJefe = null;
         boolean esJefe = asignacion.getCargo() == com.sysacad.backend.modelo.enums.RolCargo.JEFE_CATEDRA;
-        
+
         if (!esJefe) {
             List<AsignacionMateria> jefes = asignacionMateriaRepository.findByIdIdMateriaAndCargo(
                     materia.getId(), com.sysacad.backend.modelo.enums.RolCargo.JEFE_CATEDRA);
-            
+
             if (!jefes.isEmpty()) {
                 AsignacionMateria jefe = jefes.get(0);
                 nombreJefe = jefe.getProfesor().getNombre() + " " + jefe.getProfesor().getApellido();
             }
         }
-        
+
         return new MateriaProfesorDTO(
                 materia.getId(),
                 materia.getNombre(),
@@ -190,7 +190,7 @@ public class ProfesorService {
         // 3. Generar DTOs
         // Una comisión puede tener varias materias, pero el profesor solo dicta algunas de ellas.
         // Generamos un DTO por cada par (Comisión, Materia) válido.
-        
+
         List<ComisionDetalladaDTO> resultado = new java.util.ArrayList<>();
 
         for (Comision comision : comisiones) {
@@ -210,7 +210,7 @@ public class ProfesorService {
                 resultado.add(mapToComisionDetalladaDTO(comision, materia, esJefe));
             }
         }
-        
+
         return resultado;
     }
 
@@ -284,9 +284,9 @@ public class ProfesorService {
     public List<ProfesorDetalleExamenDTO> obtenerDetallesMesaProfesor(UUID idProfesor, UUID idMesa) {
         // Filtrar detalles relevantes solo de esta mesa
         List<DetalleMesaExamen> detallesDeMesa = detalleMesaExamenRepository.findByMesaExamenId(idMesa);
-        
+
         List<AsignacionMateria> asignaciones = asignacionMateriaRepository.findByIdIdUsuario(idProfesor);
-        
+
         // Logica de filtrado manual para asegurar coherencia
         return detallesDeMesa.stream()
                 .filter(detalle -> esProfesorRelevanteParaDetalle(detalle, idProfesor, asignaciones))
@@ -296,44 +296,44 @@ public class ProfesorService {
 
     private Set<DetalleMesaExamen> obtenerDetallesExamenRelevantes(UUID idProfesor) {
         Set<DetalleMesaExamen> detalles = new HashSet<>();
-        
+
         // 1. Donde es Presidente
         detalles.addAll(detalleMesaExamenRepository.findByPresidenteId(idProfesor));
-        
+
         // 2. Donde es Auxiliar
         detalles.addAll(detalleMesaExamenRepository.findByAuxiliaresId(idProfesor));
-        
+
         // 3. Donde es Jefe de Cátedra de la materia
         List<AsignacionMateria> asignacionesJefe = asignacionMateriaRepository.findByIdIdUsuario(idProfesor).stream()
                 .filter(a -> a.getCargo() == com.sysacad.backend.modelo.enums.RolCargo.JEFE_CATEDRA)
                 .collect(Collectors.toList());
-        
+
         for (AsignacionMateria asignacion : asignacionesJefe) {
             detalles.addAll(detalleMesaExamenRepository.findByMateriaId(asignacion.getMateria().getId()));
         }
-        
+
         return detalles;
     }
 
     private boolean esProfesorRelevanteParaDetalle(DetalleMesaExamen detalle, UUID idProfesor, List<AsignacionMateria> asignaciones) {
         // Es Presidente?
         if (detalle.getPresidente().getId().equals(idProfesor)) return true;
-        
+
         // Es Auxiliar?
         boolean esAuxiliar = detalle.getAuxiliares() != null && detalle.getAuxiliares().stream()
                 .anyMatch(aux -> aux.getId().equals(idProfesor));
         if (esAuxiliar) return true;
-        
+
         // Es Jefe de Catedra de la materia?
         return asignaciones.stream()
-                .anyMatch(a -> a.getMateria().getId().equals(detalle.getMateria().getId()) && 
-                               a.getCargo() == com.sysacad.backend.modelo.enums.RolCargo.JEFE_CATEDRA);
+                .anyMatch(a -> a.getMateria().getId().equals(detalle.getMateria().getId()) &&
+                        a.getCargo() == com.sysacad.backend.modelo.enums.RolCargo.JEFE_CATEDRA);
     }
-    
+
     private ProfesorDetalleExamenDTO mapToProfesorDetalleExamenDTO(DetalleMesaExamen detalle) {
         // Obtener inscriptos
         Long inscriptos = inscripcionExamenRepository.countByDetalleMesaExamenId(detalle.getId());
-        
+
         // Obtener anio materia
         String anioMateria = "N/A";
         List<PlanMateria> pm = planMateriaRepository.findByIdIdMateria(detalle.getMateria().getId());
@@ -343,13 +343,13 @@ public class ProfesorService {
 
         // Construir tribunal
         List<MiembroTribunalDTO> tribunal = new java.util.ArrayList<>();
-        
+
         // Presidente
         tribunal.add(new MiembroTribunalDTO(
                 detalle.getPresidente().getNombre() + " " + detalle.getPresidente().getApellido(),
                 "PRESIDENTE"
         ));
-        
+
         // Auxiliares
         if (detalle.getAuxiliares() != null) {
             detalle.getAuxiliares().forEach(aux -> {
@@ -372,3 +372,4 @@ public class ProfesorService {
                 tribunal
         );
     }
+}
