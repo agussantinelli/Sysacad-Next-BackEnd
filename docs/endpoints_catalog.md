@@ -82,6 +82,7 @@ Base URL: `/api/profesores`
 | `GET` | `/mesas-examen/{idMesa}/materias` | PROFESOR | Detalles de materias en una mesa específica. Retorna `List<ProfesorDetalleExamenDTO>`. |
 | `GET` | `/mesas-examen/{idMesa}/materias/{nroDetalle}/inscriptos` | PROFESOR | Lista de alumnos inscriptos para corregir. Retorna `List<AlumnoExamenDTO>`. |
 | `POST` | `/mesas-examen/calificar-lote` | PROFESOR | Carga masiva de notas. Body: `List<CargaNotaItemDTO>`. |
+| `GET` | `/certificado-regular` | PROFESOR, ADMIN | Descargar "Certificado de Servicios" en PDF. |
 
 ---
 
