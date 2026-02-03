@@ -20,22 +20,31 @@ public class CertificadoService {
 
     private final UsuarioRepository usuarioRepository;
     private final MatriculacionRepository matriculacionRepository; // Para saber qué carrera cursa
-    private final IPdfGenerator pdfGenerator;
+    private final com.sysacad.backend.repository.SolicitudCertificadoRepository solicitudCertificadoRepository;
 
     @Autowired
     public CertificadoService(UsuarioRepository usuarioRepository, 
                               MatriculacionRepository matriculacionRepository, 
-                              IPdfGenerator pdfGenerator) {
+                              IPdfGenerator pdfGenerator,
+                              com.sysacad.backend.repository.SolicitudCertificadoRepository solicitudCertificadoRepository) {
         this.usuarioRepository = usuarioRepository;
         this.matriculacionRepository = matriculacionRepository;
         this.pdfGenerator = pdfGenerator;
+        this.solicitudCertificadoRepository = solicitudCertificadoRepository;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public byte[] generarCertificadoRegular(UUID idUsuario) {
         // 1. Obtener datos del alumno
         Usuario alumno = usuarioRepository.findById(idUsuario)
                 .orElseThrow(() -> new RuntimeException("Alumno no encontrado"));
+        
+        // Log solicitud
+        com.sysacad.backend.modelo.SolicitudCertificado solicitud = new com.sysacad.backend.modelo.SolicitudCertificado();
+        solicitud.setUsuario(alumno);
+        solicitud.setFechaSolicitud(java.time.LocalDateTime.now());
+        solicitud.setTipo(com.sysacad.backend.modelo.enums.TipoCertificado.ALUMNO_REGULAR);
+        solicitudCertificadoRepository.save(solicitud);
 
         // 2. Obtener carrera principal (simplificado: tomamos la primera matriculación vigente)
         // En un caso real, el alumno elegiría de qué carrera quiere el certificado si tiene varias.
@@ -64,11 +73,18 @@ public class CertificadoService {
         return pdfGenerator.generarCertificado(datos);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public byte[] generarCertificadoDocente(UUID idUsuario) {
         // 1. Obtener datos del usuario
         Usuario usuario = usuarioRepository.findById(idUsuario)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        
+        // Log solicitud
+        com.sysacad.backend.modelo.SolicitudCertificado solicitud = new com.sysacad.backend.modelo.SolicitudCertificado();
+        solicitud.setUsuario(usuario);
+        solicitud.setFechaSolicitud(java.time.LocalDateTime.now());
+        solicitud.setTipo(com.sysacad.backend.modelo.enums.TipoCertificado.DOCENTE);
+        solicitudCertificadoRepository.save(solicitud);
 
         // 2. Determinar ROL string
         String rolStr = switch (usuario.getRol()) {
