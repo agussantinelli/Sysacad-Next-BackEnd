@@ -482,9 +482,8 @@ public class ProfesorService {
         verificarAccesoComisionMateria(idProfesor, idComision, idMateria);
 
         List<com.sysacad.backend.modelo.InscripcionCursado> inscripciones = 
-                inscripcionCursadoRepository.findByComisionId(idComision).stream()
-                        .filter(i -> i.getMateria().getId().equals(idMateria))
-                        .collect(Collectors.toList());
+                inscripcionCursadoRepository.findByComisionIdAndMateriaIdAndEstado(
+                        idComision, idMateria, com.sysacad.backend.modelo.enums.EstadoCursada.CURSANDO);
 
         return inscripciones.stream()
                 .map(i -> new AlumnoCursadaDTO(
@@ -519,10 +518,8 @@ public class ProfesorService {
             }
 
             // Buscar si ya existe la calificacion para este concepto
-            CalificacionCursada calificacion = calificacionCursadaRepository.findAll().stream() // Optimizable con repositorio custom query
-                    .filter(c -> c.getInscripcionCursado().getId().equals(inscripcion.getId()) && 
-                                 c.getDescripcion().equalsIgnoreCase(dto.getConcepto()))
-                    .findFirst()
+            CalificacionCursada calificacion = calificacionCursadaRepository.findByInscripcionCursadoIdAndDescripcion(
+                    inscripcion.getId(), dto.getConcepto())
                     .orElse(null);
 
             if (calificacion == null) {
