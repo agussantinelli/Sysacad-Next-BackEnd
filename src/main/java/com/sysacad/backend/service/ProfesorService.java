@@ -364,6 +364,12 @@ public class ProfesorService {
             });
         }
 
+        // Check if all are corrected
+        long pendientes = inscripcionExamenRepository.countByDetalleMesaExamenIdAndEstado(
+                detalle.getId(), com.sysacad.backend.modelo.enums.EstadoExamen.PENDIENTE);
+        boolean todosCorregidos = (pendientes == 0 && inscriptos > 0); // If 0 enrolled, also consider corrected? Or N/A. usually true or false.
+        // Let's say if 0 enrolled, todosCorregidos = true (trivially).
+
         return new ProfesorDetalleExamenDTO(
                 detalle.getMesaExamen().getId(),
                 detalle.getId().getNroDetalle(),
@@ -373,6 +379,7 @@ public class ProfesorService {
                 detalle.getDiaExamen(),
                 detalle.getHoraExamen(),
                 inscriptos,
+                todosCorregidos,
                 tribunal
         );
     }

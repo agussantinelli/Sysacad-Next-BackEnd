@@ -14,5 +14,6 @@ public record ProfesorDetalleExamenDTO(
         LocalDate fecha,
         LocalTime hora,
         Long cantidadInscriptos,
+        boolean todosCorregidos,
         List<MiembroTribunalDTO> tribunal
 ) {}

@@ -30,4 +30,6 @@ public interface InscripcionExamenRepository extends JpaRepository<InscripcionEx
     Long countByDetalleMesaExamenId(@org.springframework.data.repository.query.Param("detalleId") DetalleMesaExamen.DetalleId detalleId);
 
     List<InscripcionExamen> findByDetalleMesaExamenId(DetalleMesaExamen.DetalleId detalleId);
+
+    long countByDetalleMesaExamenIdAndEstado(DetalleMesaExamen.DetalleId detalleId, com.sysacad.backend.modelo.enums.EstadoExamen estado);
 }
