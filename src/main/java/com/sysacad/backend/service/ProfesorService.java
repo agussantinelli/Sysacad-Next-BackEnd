@@ -29,6 +29,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import com.sysacad.backend.dto.examen.AlumnoExamenDTO;
+import com.sysacad.backend.dto.examen.CargaNotaItemDTO;
+import com.sysacad.backend.modelo.InscripcionExamen;
+import com.sysacad.backend.modelo.enums.EstadoExamen;
 
 @Service
 public class ProfesorService {
@@ -371,5 +375,66 @@ public class ProfesorService {
                 inscriptos,
                 tribunal
         );
+    }
+
+    @Transactional(readOnly = true)
+    public List<AlumnoExamenDTO> obtenerInscriptosExamen(UUID idProfesor, UUID idMesa, Integer nroDetalle) {
+        DetalleMesaExamen.DetalleId idDetalle = new DetalleMesaExamen.DetalleId(idMesa, nroDetalle);
+        DetalleMesaExamen detalle = detalleMesaExamenRepository.findById(idDetalle)
+                .orElseThrow(() -> new RuntimeException("Detalle de mesa no encontrado"));
+
+        List<AsignacionMateria> asignaciones = asignacionMateriaRepository.findByIdIdUsuario(idProfesor);
+
+        if (!esProfesorRelevanteParaDetalle(detalle, idProfesor, asignaciones)) {
+            throw new RuntimeException("Acceso denegado: No eres parte del tribunal de este examen.");
+        }
+
+        List<InscripcionExamen> inscriptos = inscripcionExamenRepository.findByDetalleMesaExamenId(idDetalle);
+
+        return inscriptos.stream()
+                .map(i -> new AlumnoExamenDTO(
+                        i.getId(),
+                        i.getUsuario().getNombre(),
+                        i.getUsuario().getApellido(),
+                        Long.parseLong(i.getUsuario().getLegajo()),
+                        i.getEstado(),
+                        i.getNota()
+                ))
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void cargarNotasLote(UUID idProfesor, List<CargaNotaItemDTO> notas) {
+        List<AsignacionMateria> asignaciones = asignacionMateriaRepository.findByIdIdUsuario(idProfesor);
+
+        for (CargaNotaItemDTO notaDTO : notas) {
+            InscripcionExamen inscripcion = inscripcionExamenRepository.findById(notaDTO.getIdInscripcion())
+                    .orElseThrow(() -> new RuntimeException("Inscripción no encontrada: " + notaDTO.getIdInscripcion()));
+
+            DetalleMesaExamen detalle = inscripcion.getDetalleMesaExamen();
+            if (detalle == null) {
+                 throw new RuntimeException("Inscripción sin detalle de mesa asociado");
+            }
+
+            if (!esProfesorRelevanteParaDetalle(detalle, idProfesor, asignaciones)) {
+                throw new RuntimeException("Acceso denegado: No tienes permiso para calificar este examen.");
+            }
+
+            // Actualizar nota
+            inscripcion.setNota(notaDTO.getNota());
+            inscripcion.setEstado(notaDTO.getEstado());
+
+            if (notaDTO.getEstado() == EstadoExamen.APROBADO) {
+                // Generar Tomo y Folio si no tiene, o si se quiere regenerar (comportamiento simple: si no tiene)
+                if (inscripcion.getTomo() == null || inscripcion.getFolio() == null) {
+                    inscripcion.setTomo(String.valueOf(100 + (int)(Math.random() * 900)));
+                    inscripcion.setFolio(String.valueOf(10 + (int)(Math.random() * 900)));
+                }
+            } else {
+                // Si desaprueba o ausente, limpiar tomo/folio? Por ahora no.
+            }
+            
+            inscripcionExamenRepository.save(inscripcion);
+        }
     }
 }

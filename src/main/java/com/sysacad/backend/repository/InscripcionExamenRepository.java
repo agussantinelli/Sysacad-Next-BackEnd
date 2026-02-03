@@ -28,4 +28,6 @@ public interface InscripcionExamenRepository extends JpaRepository<InscripcionEx
 
     @org.springframework.data.jpa.repository.Query("SELECT COUNT(i) FROM InscripcionExamen i WHERE i.detalleMesaExamen.id = :detalleId")
     Long countByDetalleMesaExamenId(@org.springframework.data.repository.query.Param("detalleId") DetalleMesaExamen.DetalleId detalleId);
+
+    List<InscripcionExamen> findByDetalleMesaExamenId(DetalleMesaExamen.DetalleId detalleId);
 }
