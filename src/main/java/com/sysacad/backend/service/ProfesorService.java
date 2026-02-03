@@ -20,6 +20,11 @@ import com.sysacad.backend.repository.DetalleMesaExamenRepository;
 import com.sysacad.backend.repository.InscripcionExamenRepository;
 import com.sysacad.backend.modelo.DetalleMesaExamen;
 import com.sysacad.backend.modelo.MesaExamen;
+import com.sysacad.backend.repository.CalificacionCursadaRepository;
+import com.sysacad.backend.modelo.CalificacionCursada;
+import com.sysacad.backend.dto.comision.AlumnoCursadaDTO;
+import com.sysacad.backend.dto.comision.CargaNotasCursadaDTO;
+import com.sysacad.backend.dto.comision.NotaCursadaItemDTO;
 import java.util.Set;
 import java.util.HashSet;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +49,7 @@ public class ProfesorService {
     private final InscripcionCursadoRepository inscripcionCursadoRepository;
     private final DetalleMesaExamenRepository detalleMesaExamenRepository;
     private final InscripcionExamenRepository inscripcionExamenRepository;
+    private final CalificacionCursadaRepository calificacionCursadaRepository;
 
     @Autowired
     public ProfesorService(AsignacionMateriaRepository asignacionMateriaRepository,
@@ -52,7 +58,8 @@ public class ProfesorService {
                            PlanMateriaRepository planMateriaRepository,
                            InscripcionCursadoRepository inscripcionCursadoRepository,
                            DetalleMesaExamenRepository detalleMesaExamenRepository,
-                           InscripcionExamenRepository inscripcionExamenRepository) {
+                           InscripcionExamenRepository inscripcionExamenRepository,
+                           CalificacionCursadaRepository calificacionCursadaRepository) {
         this.asignacionMateriaRepository = asignacionMateriaRepository;
         this.comisionRepository = comisionRepository;
         this.horarioCursadoRepository = horarioCursadoRepository;
@@ -60,6 +67,7 @@ public class ProfesorService {
         this.inscripcionCursadoRepository = inscripcionCursadoRepository;
         this.detalleMesaExamenRepository = detalleMesaExamenRepository;
         this.inscripcionExamenRepository = inscripcionExamenRepository;
+        this.calificacionCursadaRepository = calificacionCursadaRepository;
     }
 
     @Transactional(readOnly = true)
@@ -463,6 +471,84 @@ public class ProfesorService {
             }
             
             inscripcionExamenRepository.save(inscripcion);
+        }
+    }
+    }
+
+    @Transactional(readOnly = true)
+    public List<AlumnoCursadaDTO> obtenerInscriptosCursada(UUID idProfesor, UUID idComision, UUID idMateria) {
+        // Verificar si el profesor tiene acceso a esta comisión y materia
+        verificarAccesoComisionMateria(idProfesor, idComision, idMateria);
+
+        List<com.sysacad.backend.modelo.InscripcionCursado> inscripciones = 
+                inscripcionCursadoRepository.findByComisionId(idComision).stream()
+                        .filter(i -> i.getMateria().getId().equals(idMateria))
+                        .collect(Collectors.toList());
+
+        return inscripciones.stream()
+                .map(i -> new AlumnoCursadaDTO(
+                        i.getId(),
+                        i.getUsuario().getNombre(),
+                        i.getUsuario().getApellido(),
+                        Long.parseLong(i.getUsuario().getLegajo()),
+                        i.getEstado()
+                ))
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void cargarNotasCursada(UUID idProfesor, UUID idComision, UUID idMateria, CargaNotasCursadaDTO dto) {
+        verificarAccesoComisionMateria(idProfesor, idComision, idMateria);
+
+        for (NotaCursadaItemDTO notaDTO : dto.getNotas()) {
+            var inscripcion = inscripcionCursadoRepository.findById(notaDTO.getIdInscripcion())
+                    .orElseThrow(() -> new RuntimeException("Inscripción no encontrada: " + notaDTO.getIdInscripcion()));
+
+            // Validar coherencia
+            if (!inscripcion.getComision().getId().equals(idComision) || 
+                !inscripcion.getMateria().getId().equals(idMateria)) {
+                continue; // O lanzar error
+            }
+
+            // Buscar si ya existe la calificacion para este concepto
+            CalificacionCursada calificacion = calificacionCursadaRepository.findAll().stream() // Optimizable con repositorio custom query
+                    .filter(c -> c.getInscripcionCursado().getId().equals(inscripcion.getId()) && 
+                                 c.getDescripcion().equalsIgnoreCase(dto.getConcepto()))
+                    .findFirst()
+                    .orElse(null);
+
+            if (calificacion == null) {
+                calificacion = new CalificacionCursada();
+                calificacion.setInscripcionCursado(inscripcion);
+                calificacion.setDescripcion(dto.getConcepto());
+            }
+            
+            calificacion.setNota(notaDTO.getNota());
+            calificacion.setFecha(java.time.LocalDate.now());
+            
+            calificacionCursadaRepository.save(calificacion);
+        }
+    }
+
+    private void verificarAccesoComisionMateria(UUID idProfesor, UUID idComision, UUID idMateria) {
+        // Simple verificación: si el profesor está en esa comisión
+        Comision comision = comisionRepository.findById(idComision)
+                .orElseThrow(() -> new RuntimeException("Comisión no encontrada"));
+
+        boolean esProfeDeComision = comision.getProfesores().stream()
+                .anyMatch(p -> p.getId().equals(idProfesor));
+        
+        if (!esProfeDeComision) {
+            // Verificar si es jefe de catedra global de la materia, quiza quiera ver/editar
+            // Por simplicidad, requerimos que esté asignado a la comisión O sea jefe de cátedra
+            List<AsignacionMateria> asignaciones = asignacionMateriaRepository.findByIdIdUsuario(idProfesor);
+            boolean esJefe = asignaciones.stream()
+                    .anyMatch(a -> a.getMateria().getId().equals(idMateria) && 
+                              a.getCargo() == com.sysacad.backend.modelo.enums.RolCargo.JEFE_CATEDRA);
+            
+            if (!esJefe) {
+                throw new RuntimeException("Acceso denegado a esta comisión/materia");
+            }
         }
     }
 }
