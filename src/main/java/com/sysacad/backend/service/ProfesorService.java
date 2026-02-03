@@ -420,18 +420,37 @@ public class ProfesorService {
                 throw new RuntimeException("Acceso denegado: No tienes permiso para calificar este examen.");
             }
 
-            // Actualizar nota
-            inscripcion.setNota(notaDTO.getNota());
-            inscripcion.setEstado(notaDTO.getEstado());
+            // Calcular estado basado en la nota
+            if (notaDTO.getNota() != null) {
+                inscripcion.setNota(notaDTO.getNota());
+                if (notaDTO.getNota().compareTo(new java.math.BigDecimal("6.00")) >= 0) {
+                    inscripcion.setEstado(EstadoExamen.APROBADO);
+                } else {
+                    inscripcion.setEstado(EstadoExamen.DESAPROBADO);
+                }
+            } else if (notaDTO.getEstado() == EstadoExamen.AUSENTE) {
+                inscripcion.setNota(null);
+                inscripcion.setEstado(EstadoExamen.AUSENTE);
+            }
 
-            if (notaDTO.getEstado() == EstadoExamen.APROBADO) {
-                // Generar Tomo y Folio si no tiene, o si se quiere regenerar (comportamiento simple: si no tiene)
-                if (inscripcion.getTomo() == null || inscripcion.getFolio() == null) {
-                    inscripcion.setTomo(String.valueOf(100 + (int)(Math.random() * 900)));
+            if (inscripcion.getEstado() == EstadoExamen.APROBADO) {
+                // Tomo
+                if (notaDTO.getTomo() != null && !notaDTO.getTomo().isBlank()) {
+                    inscripcion.setTomo(notaDTO.getTomo());
+                } else if (inscripcion.getTomo() == null) {
+                   inscripcion.setTomo(String.valueOf(100 + (int)(Math.random() * 900)));
+                }
+
+                // Folio
+                if (notaDTO.getFolio() != null && !notaDTO.getFolio().isBlank()) {
+                    inscripcion.setFolio(notaDTO.getFolio());
+                } else if (inscripcion.getFolio() == null) {
                     inscripcion.setFolio(String.valueOf(10 + (int)(Math.random() * 900)));
                 }
             } else {
-                // Si desaprueba o ausente, limpiar tomo/folio? Por ahora no.
+                // Resetear si no está aprobado
+                inscripcion.setTomo(null);
+                inscripcion.setFolio(null);
             }
             
             inscripcionExamenRepository.save(inscripcion);
