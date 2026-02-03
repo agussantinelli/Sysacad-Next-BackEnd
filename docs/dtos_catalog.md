@@ -139,11 +139,13 @@ Response for `/api/alumnos/mis-carreras-materias`.
 
 ### `CargaNotasCursadaDTO`
 - `concepto` (String)
+- `esNotaFinal` (Boolean)
 - `notas` (List<NotaCursadaItemDTO>)
 
 #### Inner Class: `NotaCursadaItemDTO`
 - `idInscripcion` (UUID)
 - `nota` (BigDecimal)
+- `estado` (String): Optional. Value from `EstadoCursada` (e.g., "REGULAR", "PROMOCIONADO"). Required if `esNotaFinal` is true.
 
 ---
 
