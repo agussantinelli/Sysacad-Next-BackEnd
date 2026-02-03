@@ -589,3 +589,14 @@ Response for `/api/materias/{idMateria}/mesas`.
 - `rol`: String (e.g. "PROFESOR", "ADMINISTRADOR")
 - `fechaEmision`: LocalDate
 
+### `ProfesorEstadisticasDTO`
+- `cantidadTotalAlumnos` (long): Total enrolled (sum of all statuses).
+- `cantidadPromocionados` (long)
+- `cantidadRegulares` (long)
+- `cantidadLibres` (long)
+- `notaPromedio` (BigDecimal): Average numeric grade.
+- `cantidadTotalInscriptosExamen` (long)
+- `cantidadAprobadosExamen` (long)
+- `cantidadDesaprobadosExamen` (long)
+- `cantidadAusentesExamen` (long)
+

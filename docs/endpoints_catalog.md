@@ -85,6 +85,9 @@ Base URL: `/api/profesores`
 | `GET` | `/certificado-regular` | PROFESOR, ADMIN | Descargar "Certificado de Servicios" en PDF. |
 | `GET` | `/comisiones/{idComision}/materias/{idMateria}/inscriptos` | PROFESOR | Obtener lista de alumnos cursando una materia en una comisión. |
 | `POST` | `/comisiones/{idComision}/materias/{idMateria}/calificar` | PROFESOR | Cargar lote de notas parciales (concepto) para una cursada. |
+| `GET` | `/estadisticas/general` | PROFESOR | Obtener estadísticas globales. QueryParam opcional: `anio`. |
+| `GET` | `/estadisticas/materias/{idMateria}` | PROFESOR | Obtener estadísticas de una materia. QueryParam opcional: `anio`. |
+| `GET` | `/estadisticas/anios` | PROFESOR | Obtener lista de años con actividad (distinct). |
 
 ---
 
