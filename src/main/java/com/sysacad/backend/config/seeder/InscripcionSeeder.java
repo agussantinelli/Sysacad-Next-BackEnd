@@ -377,9 +377,9 @@ public class InscripcionSeeder {
             Materia emprendedores = getMateria("Formación de Emprendedores");
 
             // FEBRERO
-            DetalleMesaExamen febAlgo = createDetalleMesa(mesaFeb, 1, algoritmos, profeNicolas, LocalDate.of(2026, 2, 10), LocalTime.of(9, 0));
-            DetalleMesaExamen febSistemas = createDetalleMesa(mesaFeb, 2, sistemas, profeNicolas, LocalDate.of(2026, 2, 12), LocalTime.of(14, 0));
-            DetalleMesaExamen febAnalisis = createDetalleMesa(mesaFeb, 3, analisis1, profeSandra, LocalDate.of(2026, 2, 15), LocalTime.of(9, 0));
+            DetalleMesaExamen febAlgo = createDetalleMesa(mesaFeb, 1, algoritmos, profeNicolas, LocalDate.of(2026, 2, 10), LocalTime.of(9, 0), profeLaura, profeCristian);
+            DetalleMesaExamen febSistemas = createDetalleMesa(mesaFeb, 2, sistemas, profeNicolas, LocalDate.of(2026, 2, 12), LocalTime.of(14, 0), profeSandra);
+            DetalleMesaExamen febAnalisis = createDetalleMesa(mesaFeb, 3, analisis1, profeSandra, LocalDate.of(2026, 2, 15), LocalTime.of(9, 0), profeAna);
 
             // Complete Generation (Feb)
             createDetalleMesa(mesaFeb, 4, fisica1, profeRoberto, LocalDate.of(2026, 2, 14), LocalTime.of(16, 0));
@@ -567,7 +567,7 @@ public class InscripcionSeeder {
 
     private DetalleMesaExamen createDetalleMesa(MesaExamen mesa, Integer nro,
                                               Materia materia,
-                                              Usuario presidente, LocalDate dia, LocalTime hora) {
+                                              Usuario presidente, LocalDate dia, LocalTime hora, Usuario... auxiliares) {
         DetalleMesaExamen.DetalleId id = new DetalleMesaExamen.DetalleId(mesa.getId(), nro);
         if (detalleMesaExamenRepository.existsById(id)) {
             return detalleMesaExamenRepository.findById(id).get();
@@ -580,6 +580,11 @@ public class InscripcionSeeder {
         detalle.setPresidente(presidente);
         detalle.setDiaExamen(dia);
         detalle.setHoraExamen(hora);
+        
+        if (auxiliares != null && auxiliares.length > 0) {
+            detalle.setAuxiliares(java.util.List.of(auxiliares));
+        }
+        
         return detalleMesaExamenRepository.save(detalle);
     }
 
