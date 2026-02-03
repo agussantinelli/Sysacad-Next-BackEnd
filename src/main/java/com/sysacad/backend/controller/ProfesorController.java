@@ -9,6 +9,8 @@ import com.sysacad.backend.dto.examen.CargaNotaItemDTO;
 import com.sysacad.backend.dto.materia.MateriaProfesorDTO;
 import com.sysacad.backend.modelo.Usuario;
 import com.sysacad.backend.repository.UsuarioRepository;
+import com.sysacad.backend.dto.comision.AlumnoCursadaDTO;
+import com.sysacad.backend.dto.comision.CargaNotasCursadaDTO;
 import com.sysacad.backend.service.CertificadoService;
 import com.sysacad.backend.service.ProfesorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -145,5 +147,34 @@ public class ProfesorController {
                 .contentType(MediaType.APPLICATION_PDF)
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
                 .body(pdfBytes);
+    }
+
+    @GetMapping("/comisiones/{idComision}/materias/{idMateria}/inscriptos")
+    @PreAuthorize("hasRole('PROFESOR')")
+    public ResponseEntity<List<AlumnoCursadaDTO>> getInscriptosComision(
+            @PathVariable UUID idComision,
+            @PathVariable UUID idMateria,
+            Authentication authentication) {
+        
+        Usuario profesor = usuarioRepository.findByLegajo(authentication.getName())
+                .orElseThrow(() -> new RuntimeException("Profesor no encontrado"));
+
+        List<AlumnoCursadaDTO> inscriptos = profesorService.obtenerInscriptosCursada(profesor.getId(), idComision, idMateria);
+        return ResponseEntity.ok(inscriptos);
+    }
+
+    @PostMapping("/comisiones/{idComision}/materias/{idMateria}/calificar")
+    @PreAuthorize("hasRole('PROFESOR')")
+    public ResponseEntity<Void> cargarNotasComision(
+            @PathVariable UUID idComision,
+            @PathVariable UUID idMateria,
+            @RequestBody CargaNotasCursadaDTO notasDTO,
+            Authentication authentication) {
+
+        Usuario profesor = usuarioRepository.findByLegajo(authentication.getName())
+                .orElseThrow(() -> new RuntimeException("Profesor no encontrado"));
+
+        profesorService.cargarNotasCursada(profesor.getId(), idComision, idMateria, notasDTO);
+        return ResponseEntity.ok().build();
     }
 }
