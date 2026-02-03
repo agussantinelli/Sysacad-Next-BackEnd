@@ -25,6 +25,7 @@ import com.sysacad.backend.modelo.CalificacionCursada;
 import com.sysacad.backend.dto.comision.AlumnoCursadaDTO;
 import com.sysacad.backend.dto.comision.CargaNotasCursadaDTO;
 import com.sysacad.backend.dto.comision.NotaCursadaItemDTO;
+import com.sysacad.backend.dto.comision.CalificacionDTO;
 import java.util.Set;
 import java.util.HashSet;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -491,7 +492,14 @@ public class ProfesorService {
                         i.getUsuario().getNombre(),
                         i.getUsuario().getApellido(),
                         Long.parseLong(i.getUsuario().getLegajo()),
-                        i.getEstado()
+                        i.getEstado(),
+                        i.getCalificaciones().stream()
+                            .map(c -> new CalificacionDTO(
+                                c.getDescripcion(),
+                                c.getNota(),
+                                c.getFecha()
+                            ))
+                            .collect(Collectors.toList())
                 ))
                 .collect(Collectors.toList());
     }
