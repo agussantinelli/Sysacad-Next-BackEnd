@@ -75,6 +75,11 @@ Main user roles in the system.
 - `ESTUDIANTE`
 - `PROFESOR`
 
+### `EstadoUsuario`
+Status of a user account.
+- `ACTIVO`: User can log in and perform actions.
+- `INACTIVO`: User is disabled.
+
 ---
 
 ## Comision

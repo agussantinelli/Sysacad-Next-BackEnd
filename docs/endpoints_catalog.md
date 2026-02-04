@@ -96,8 +96,9 @@ Base URL: `/api/usuarios`
 
 | Método | Endpoint | Roles / Acceso | Descripción |
 | :--- | :--- | :--- | :--- |
-| `POST` | `/` | ADMIN | Registrar un nuevo usuario. |
-| `PUT` | `/{id}` | Authenticated | Actualizar datos de un usuario. |
+| `POST` | `/` | ADMIN | Registrar un nuevo usuario (Full data + Estado Default ACTIVO). |
+| `PUT` | `/{id}` | Authenticated | Actualizar datos completos de un usuario. |
+| `PUT` | `/{id}/estado` | ADMIN | Cambiar estado de un usuario (QueryParam: `nuevoEstado`). |
 | `POST` | `/{id}/foto` | Authenticated | Subir foto de perfil. |
 | `POST` | `/{id}/cambiar-password` | Authenticated | Cambiar contraseña (requiere password actual). |
 | `GET` | `/` | ADMIN | Obtener todos los usuarios (opcional filtrar por rol). |
