@@ -27,4 +27,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, UUID> {
     boolean existsByMail(String mail);
     
     boolean existsByLegajo(String legajo);
+
+    boolean existsByTipoDocumentoAndDni(com.sysacad.backend.modelo.enums.TipoDocumento tipoDocumento, String dni);
 }

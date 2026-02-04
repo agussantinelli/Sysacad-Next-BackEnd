@@ -29,6 +29,7 @@ public class UsuarioService {
     private final PasswordEncoder passwordEncoder;
     private final AsignacionMateriaRepository asignacionMateriaRepository;
     private final InscripcionCursadoRepository inscripcionCursadoRepository;
+    private final com.sysacad.backend.repository.DetalleMesaExamenRepository detalleMesaExamenRepository;
     private final FileStorageService fileStorageService;
 
     @Autowired
@@ -36,11 +37,13 @@ public class UsuarioService {
             PasswordEncoder passwordEncoder,
             AsignacionMateriaRepository asignacionMateriaRepository,
             InscripcionCursadoRepository inscripcionCursadoRepository,
+            com.sysacad.backend.repository.DetalleMesaExamenRepository detalleMesaExamenRepository,
             FileStorageService fileStorageService) {
         this.usuarioRepository = usuarioRepository;
         this.passwordEncoder = passwordEncoder;
         this.asignacionMateriaRepository = asignacionMateriaRepository;
         this.inscripcionCursadoRepository = inscripcionCursadoRepository;
+        this.detalleMesaExamenRepository = detalleMesaExamenRepository;
         this.fileStorageService = fileStorageService;
     }
 
@@ -62,6 +65,9 @@ public class UsuarioService {
         if (usuarioRepository.existsByLegajo(usuario.getLegajo())) {
             throw new BusinessLogicException("El legajo ya existe");
         }
+        if (usuarioRepository.existsByTipoDocumentoAndDni(usuario.getTipoDocumento(), usuario.getDni())) {
+            throw new BusinessLogicException("Ya existe un usuario con ese Tipo de Documento y DNI.");
+        }
 
         usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
         
@@ -76,6 +82,15 @@ public class UsuarioService {
     public Usuario cambiarEstado(UUID id, com.sysacad.backend.modelo.enums.EstadoUsuario nuevoEstado) {
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con ID: " + id));
+
+        if (nuevoEstado == com.sysacad.backend.modelo.enums.EstadoUsuario.INACTIVO) {
+            // Validar que no tenga mesas de examen futuras
+            boolean tieneMesasFuturas = detalleMesaExamenRepository.existsByProfesorAndFechaAfter(usuario.getId(), java.time.LocalDate.now());
+            if (tieneMesasFuturas) {
+                throw new BusinessLogicException("No se puede desactivar al profesor porque está asignado a mesas de examen futuras.");
+            }
+        }
+
         usuario.setEstado(nuevoEstado);
         return usuarioRepository.save(usuario);
     }

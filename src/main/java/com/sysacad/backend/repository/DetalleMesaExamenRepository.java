@@ -23,4 +23,7 @@ public interface DetalleMesaExamenRepository extends JpaRepository<DetalleMesaEx
 
     @org.springframework.data.jpa.repository.Query("SELECT DISTINCT YEAR(d.diaExamen) FROM DetalleMesaExamen d LEFT JOIN d.auxiliares a WHERE d.presidente.id = :profesorId OR a.id = :profesorId ORDER BY YEAR(d.diaExamen) DESC")
     List<Integer> findDistinctYearsByProfesorId(@org.springframework.data.repository.query.Param("profesorId") UUID profesorId);
+    
+    @org.springframework.data.jpa.repository.Query("SELECT COUNT(d) > 0 FROM DetalleMesaExamen d LEFT JOIN d.auxiliares a WHERE (d.presidente.id = :profesorId OR a.id = :profesorId) AND d.diaExamen > :fecha")
+    boolean existsByProfesorAndFechaAfter(@org.springframework.data.repository.query.Param("profesorId") UUID profesorId, @org.springframework.data.repository.query.Param("fecha") java.time.LocalDate fecha);
 }
