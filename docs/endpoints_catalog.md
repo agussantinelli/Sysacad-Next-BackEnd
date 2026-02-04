@@ -112,7 +112,8 @@ Base URL: `/api/avisos`
 
 | Método | Endpoint | Roles / Acceso | Descripción |
 | :--- | :--- | :--- | :--- |
-| `POST` | `/` | ADMIN | Publicar un nuevo aviso. |
+| `POST` | `/` | ADMIN | Publicar un nuevo aviso (Estado opcional en body: ACTIVO/OCULTO). |
+| `PUT` | `/{id}/estado` | ADMIN | Cambiar estado de un aviso (QueryParam: `nuevoEstado`). |
 | `GET` | `/` | Authenticated | Obtener listado de últimos avisos (Solo estado ACTIVO). |
 | `POST` | `/{id}/leido` | Authenticated | Marcar un aviso como leído por el usuario actual. |
 | `GET` | `/sin-leer/cantidad` | Authenticated | Obtener cantidad de avisos activos no leídos por el usuario. |
