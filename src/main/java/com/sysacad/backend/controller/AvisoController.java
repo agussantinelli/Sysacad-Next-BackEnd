@@ -33,10 +33,17 @@ public class AvisoController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<AvisoResponse> publicarAviso(@RequestBody AvisoRequest request) {
         Aviso aviso = avisoMapper.toEntity(request);
-        // El servicio setea fecha y estado por defecto, o usamos el request si aplica
-        // El request tiene estado, pero el servicio lo sobreescribe a 'PUBLICADO'.
+        // Si el request trae estado (ACTIVO u OCULTO), el mapper lo pasa. El servicio ahora lo respetará.
         Aviso nuevo = avisoService.publicarAviso(aviso);
         return new ResponseEntity<>(avisoMapper.toDTO(nuevo), HttpStatus.CREATED);
+    }
+    
+    @PutMapping("/{id}/estado")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<AvisoResponse> cambiarEstado(@PathVariable java.util.UUID id, 
+                                                       @RequestParam com.sysacad.backend.modelo.enums.EstadoAviso nuevoEstado) {
+        Aviso actualizado = avisoService.cambiarEstadoAviso(id, nuevoEstado);
+        return ResponseEntity.ok(avisoMapper.toDTO(actualizado));
     }
 
     @GetMapping

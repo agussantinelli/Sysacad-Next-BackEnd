@@ -34,7 +34,9 @@ public class AvisoService {
     @Transactional
     public Aviso publicarAviso(Aviso aviso) {
         aviso.setFechaEmision(LocalDateTime.now());
-        aviso.setEstado(com.sysacad.backend.modelo.enums.EstadoAviso.ACTIVO);
+        if (aviso.getEstado() == null) {
+            aviso.setEstado(com.sysacad.backend.modelo.enums.EstadoAviso.ACTIVO);
+        }
         Aviso guardado = avisoRepository.save(aviso);
         
         // Notificar a todos los estudiantes
@@ -51,6 +53,15 @@ public class AvisoService {
         }
         
         return guardado;
+    }
+
+    @Transactional
+    public Aviso cambiarEstadoAviso(java.util.UUID idAviso, com.sysacad.backend.modelo.enums.EstadoAviso nuevoEstado) {
+        Aviso aviso = avisoRepository.findById(idAviso)
+                .orElseThrow(() -> new RuntimeException("Aviso no encontrado"));
+        
+        aviso.setEstado(nuevoEstado);
+        return avisoRepository.save(aviso);
     }
 
     @Transactional(readOnly = true)
