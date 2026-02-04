@@ -13,6 +13,7 @@ import com.sysacad.backend.repository.ComisionRepository;
 import com.sysacad.backend.repository.HorarioCursadoRepository;
 import com.sysacad.backend.repository.PlanMateriaRepository;
 import com.sysacad.backend.repository.InscripcionCursadoRepository;
+import com.sysacad.backend.repository.InstanciaEvaluacionRepository;
 import com.sysacad.backend.dto.examen.ProfesorMesaExamenDTO;
 import com.sysacad.backend.dto.examen.ProfesorDetalleExamenDTO;
 import com.sysacad.backend.dto.examen.MiembroTribunalDTO;
@@ -52,6 +53,8 @@ public class ProfesorService {
     private final InscripcionExamenRepository inscripcionExamenRepository;
     private final CalificacionCursadaRepository calificacionCursadaRepository;
 
+    private final InstanciaEvaluacionRepository instanciaEvaluacionRepository;
+
     @Autowired
     public ProfesorService(AsignacionMateriaRepository asignacionMateriaRepository,
                            ComisionRepository comisionRepository,
@@ -60,7 +63,8 @@ public class ProfesorService {
                            InscripcionCursadoRepository inscripcionCursadoRepository,
                            DetalleMesaExamenRepository detalleMesaExamenRepository,
                            InscripcionExamenRepository inscripcionExamenRepository,
-                           CalificacionCursadaRepository calificacionCursadaRepository) {
+                           CalificacionCursadaRepository calificacionCursadaRepository,
+                           com.sysacad.backend.repository.InstanciaEvaluacionRepository instanciaEvaluacionRepository) {
         this.asignacionMateriaRepository = asignacionMateriaRepository;
         this.comisionRepository = comisionRepository;
         this.horarioCursadoRepository = horarioCursadoRepository;
@@ -69,6 +73,7 @@ public class ProfesorService {
         this.detalleMesaExamenRepository = detalleMesaExamenRepository;
         this.inscripcionExamenRepository = inscripcionExamenRepository;
         this.calificacionCursadaRepository = calificacionCursadaRepository;
+        this.instanciaEvaluacionRepository = instanciaEvaluacionRepository;
     }
 
     @Transactional(readOnly = true)
@@ -499,7 +504,7 @@ public class ProfesorService {
                         i.getNotaFinal(),
                         i.getCalificaciones().stream()
                             .map(c -> new CalificacionDTO(
-                                c.getDescripcion(),
+                                c.getInstanciaEvaluacion().getNombre(),
                                 c.getNota(),
                                 c.getFecha()
                             ))
@@ -555,15 +560,24 @@ public class ProfesorService {
                 continue;
             }
 
-            // Buscar si ya existe la calificacion para este concepto
-            CalificacionCursada calificacion = calificacionCursadaRepository.findByInscripcionCursadoIdAndDescripcion(
-                    inscripcion.getId(), dto.getConcepto())
+            // Buscar o crear InstanciaEvaluacion
+            String descripcionConcepto = dto.getConcepto().trim();
+            com.sysacad.backend.modelo.InstanciaEvaluacion instancia = instanciaEvaluacionRepository.findByNombre(descripcionConcepto)
+                    .orElseGet(() -> {
+                         com.sysacad.backend.modelo.InstanciaEvaluacion nueva = new com.sysacad.backend.modelo.InstanciaEvaluacion();
+                         nueva.setNombre(descripcionConcepto);
+                         return instanciaEvaluacionRepository.save(nueva);
+                    });
+
+            // Buscar si ya existe la calificacion para este concepto (usando ID de instancia)
+            CalificacionCursada calificacion = calificacionCursadaRepository.findByInscripcionCursadoIdAndInstanciaEvaluacionId(
+                    inscripcion.getId(), instancia.getId())
                     .orElse(null);
 
             if (calificacion == null) {
                 calificacion = new CalificacionCursada();
                 calificacion.setInscripcionCursado(inscripcion);
-                calificacion.setDescripcion(dto.getConcepto());
+                calificacion.setInstanciaEvaluacion(instancia);
             }
             
             calificacion.setNota(notaDTO.getNota());

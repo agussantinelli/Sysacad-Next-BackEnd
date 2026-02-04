@@ -9,5 +9,5 @@ import java.util.UUID;
 @Repository
 public interface CalificacionCursadaRepository extends JpaRepository<CalificacionCursada, UUID> {
 
-    java.util.Optional<CalificacionCursada> findByInscripcionCursadoIdAndDescripcion(UUID idInscripcion, String descripcion);
+    java.util.Optional<CalificacionCursada> findByInscripcionCursadoIdAndInstanciaEvaluacionId(UUID idInscripcion, UUID idInstancia);
 }
