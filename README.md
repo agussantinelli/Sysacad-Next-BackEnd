@@ -367,6 +367,7 @@ El sistema cuenta con un `DbSeeder` (`src/main/java/com/sysacad/backend/config/s
 | **/mesas** | `POST`, `GET` | Gestión de Turnos de Examen y cronograma de fechas. |
 | **/inscripciones-examen** | `POST`, `GET`, `DELETE` | Inscripción específica a finales y consulta de inscripciones. |
 | **/calendario** | `GET` | Descarga directa del Calendario Académico (PDF). |
+| **/reportes** | `GET` | Reportes de auditoría (ej. Historial de descargas de certificados). |
 
 <hr>
 
