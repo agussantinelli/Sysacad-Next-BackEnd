@@ -212,3 +212,10 @@ Base URL: `/api/alumnos`
 | Método | Endpoint | Roles / Acceso | Descripción |
 | :--- | :--- | :--- | :--- |
 | `GET` | `/certificado-regular` | ESTUDIANTE | Descargar "Certificado de Alumno Regular" en PDF. |
+
+## ReporteController
+Base URL: `/api/reportes`
+
+| Método | Endpoint | Roles / Acceso | Descripción |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/certificados` | ADMIN (Recomendado) | Obtener historial de descargas de certificados (Legajo, Mail, Nombre, Tipo, Fecha). |
