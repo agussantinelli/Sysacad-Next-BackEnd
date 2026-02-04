@@ -79,8 +79,9 @@ public class Usuario implements UserDetails {
     @Column(nullable = false, length = 20)
     private RolUsuario rol;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
-    private String estado;
+    private EstadoUsuario estado;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -99,5 +100,5 @@ public class Usuario implements UserDetails {
     @Override
     public boolean isCredentialsNonExpired() { return true; }
     @Override
-    public boolean isEnabled() { return "ACTIVO".equals(estado); }
+    public boolean isEnabled() { return estado == EstadoUsuario.ACTIVO; }
 }
