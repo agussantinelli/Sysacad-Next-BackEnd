@@ -45,7 +45,11 @@ public class UsuarioController {
         
         Usuario usuarioManual = new Usuario();
         usuarioManual.setLegajo(request.getLegajo());
-        usuarioManual.setPassword(request.getPassword());
+        if (request.getPassword() == null || request.getPassword().trim().isEmpty()) {
+            usuarioManual.setPassword(request.getLegajo());
+        } else {
+            usuarioManual.setPassword(request.getPassword());
+        }
         usuarioManual.setTipoDocumento(request.getTipoDocumento());
         usuarioManual.setDni(request.getDni());
         usuarioManual.setNombre(request.getNombre());
