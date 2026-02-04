@@ -255,13 +255,19 @@ CREATE TABLE inscripciones_cursado (
     CONSTRAINT fk_ic_comision FOREIGN KEY (id_comision) REFERENCES comisiones(id)
 );
 
+CREATE TABLE instancias_evaluacion (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    nombre VARCHAR(100) NOT NULL UNIQUE
+);
+
 CREATE TABLE calificaciones_cursada (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     id_inscripcion_cursado UUID NOT NULL,
-    descripcion VARCHAR(100) NOT NULL,
+    id_instancia_evaluacion UUID NOT NULL,
     nota DECIMAL(4, 2) NOT NULL,
     fecha DATE NOT NULL,
-    CONSTRAINT fk_cc_inscripcion FOREIGN KEY (id_inscripcion_cursado) REFERENCES inscripciones_cursado(id) ON DELETE CASCADE
+    CONSTRAINT fk_cc_inscripcion FOREIGN KEY (id_inscripcion_cursado) REFERENCES inscripciones_cursado(id) ON DELETE CASCADE,
+    CONSTRAINT fk_cc_instancia FOREIGN KEY (id_instancia_evaluacion) REFERENCES instancias_evaluacion(id)
 );
 
 CREATE TABLE avisos_personas (
