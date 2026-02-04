@@ -64,11 +64,18 @@ public class AvisoService {
         List<Aviso> avisos = obtenerUltimosAvisos();
         List<com.sysacad.backend.dto.aviso.AvisoResponse> responses = avisoMapper.toDTOs(avisos);
 
-        responses.forEach(dto -> { // Ahora dto es AvisoResponse
-            boolean leido = avisoPersonaRepository.findById(new com.sysacad.backend.modelo.AvisoPersona.AvisoPersonaId(dto.getId(), idUsuario))
-                    .map(ap -> ap.getEstado() == com.sysacad.backend.modelo.enums.EstadoAvisoPersona.LEIDO)
-                    .orElse(false);
-            dto.setVisto(leido);
+        com.sysacad.backend.modelo.Usuario usuario = usuarioRepository.findById(idUsuario).orElse(null);
+        boolean esAdmin = usuario != null && usuario.getRol() == com.sysacad.backend.modelo.enums.RolUsuario.ADMIN;
+
+        responses.forEach(dto -> { 
+            if (esAdmin) {
+                dto.setVisto(true);
+            } else {
+                boolean leido = avisoPersonaRepository.findById(new com.sysacad.backend.modelo.AvisoPersona.AvisoPersonaId(dto.getId(), idUsuario))
+                        .map(ap -> ap.getEstado() == com.sysacad.backend.modelo.enums.EstadoAvisoPersona.LEIDO)
+                        .orElse(false);
+                dto.setVisto(leido);
+            }
         });
 
         return responses;
@@ -101,6 +108,10 @@ public class AvisoService {
 
     @Transactional(readOnly = true)
     public long contarAvisosNoLeidos(java.util.UUID idUsuario) {
+        com.sysacad.backend.modelo.Usuario usuario = usuarioRepository.findById(idUsuario).orElse(null);
+        if (usuario != null && usuario.getRol() == com.sysacad.backend.modelo.enums.RolUsuario.ADMIN) {
+            return 0;
+        }
         return avisoRepository.countAvisosNoLeidos(idUsuario);
     }
 }

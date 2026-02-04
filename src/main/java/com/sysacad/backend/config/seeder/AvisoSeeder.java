@@ -73,8 +73,14 @@ public class AvisoSeeder {
             ap.setId(new AvisoPersona.AvisoPersonaId(aviso.getId(), u.getId()));
             ap.setAviso(aviso);
             ap.setPersona(u);
-            // Por defecto ENVIADO
-            ap.setEstado(EstadoAvisoPersona.ENVIADO);
+            
+            // Si es ADMIN, ya nace LEIDO (porque el admin los crea)
+            if (u.getRol() == com.sysacad.backend.modelo.enums.RolUsuario.ADMIN) {
+                ap.setEstado(EstadoAvisoPersona.LEIDO);
+            } else {
+                ap.setEstado(EstadoAvisoPersona.ENVIADO);
+            }
+            
             avisoPersonaRepository.save(ap);
         }
     }
