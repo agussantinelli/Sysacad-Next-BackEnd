@@ -24,6 +24,7 @@ public class InscripcionSeeder {
     private final MateriaRepository materiaRepository;
     private final ComisionRepository comisionRepository;
     private final UsuarioRepository usuarioRepository;
+    private final InstanciaEvaluacionRepository instanciaEvaluacionRepository;
 
     public InscripcionSeeder(InscripcionCursadoRepository inscripcionCursadoRepository,
                              CalificacionCursadaRepository calificacionCursadaRepository,
@@ -32,7 +33,8 @@ public class InscripcionSeeder {
                              InscripcionExamenRepository inscripcionExamenRepository,
                              MateriaRepository materiaRepository,
                              ComisionRepository comisionRepository,
-                             UsuarioRepository usuarioRepository) {
+                             UsuarioRepository usuarioRepository,
+                             InstanciaEvaluacionRepository instanciaEvaluacionRepository) {
         this.inscripcionCursadoRepository = inscripcionCursadoRepository;
         this.calificacionCursadaRepository = calificacionCursadaRepository;
         this.mesaExamenRepository = mesaExamenRepository;
@@ -41,6 +43,7 @@ public class InscripcionSeeder {
         this.materiaRepository = materiaRepository;
         this.comisionRepository = comisionRepository;
         this.usuarioRepository = usuarioRepository;
+        this.instanciaEvaluacionRepository = instanciaEvaluacionRepository;
     }
 
     @Transactional
@@ -637,14 +640,23 @@ public class InscripcionSeeder {
     }
 
     private void cargarNotaCursada(InscripcionCursado insc, String descripcion, String valor) {
+        // Buscar o crear la instancia de evaluación
+        InstanciaEvaluacion instancia = instanciaEvaluacionRepository.findByNombre(descripcion)
+                .orElseGet(() -> {
+                    InstanciaEvaluacion nueva = new InstanciaEvaluacion();
+                    nueva.setNombre(descripcion);
+                    return instanciaEvaluacionRepository.save(nueva);
+                });
+
         boolean exists = calificacionCursadaRepository.findAll().stream()
-             .anyMatch(c -> c.getInscripcionCursado().getId().equals(insc.getId()) && c.getDescripcion().equals(descripcion));
+             .anyMatch(c -> c.getInscripcionCursado().getId().equals(insc.getId()) && 
+                            c.getInstanciaEvaluacion().getId().equals(instancia.getId()));
         
         if (exists) return;
 
         CalificacionCursada calif = new CalificacionCursada();
         calif.setInscripcionCursado(insc);
-        calif.setDescripcion(descripcion);
+        calif.setInstanciaEvaluacion(instancia);
         calif.setNota(new BigDecimal(valor));
         calif.setFecha(LocalDate.now());
         calificacionCursadaRepository.save(calif);
