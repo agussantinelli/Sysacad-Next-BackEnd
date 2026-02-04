@@ -24,8 +24,9 @@ public class CalificacionCursada {
     @JoinColumn(name = "id_inscripcion_cursado", nullable = false)
     private InscripcionCursado inscripcionCursado;
 
-    @Column(nullable = false, length = 100)
-    private String descripcion; // Por ej. "1er Parcial"
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_instancia_evaluacion", nullable = false)
+    private InstanciaEvaluacion instanciaEvaluacion;
 
     @Column(nullable = false, precision = 4, scale = 2)
     private BigDecimal nota;
