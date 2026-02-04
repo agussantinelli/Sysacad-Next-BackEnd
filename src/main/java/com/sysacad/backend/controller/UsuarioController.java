@@ -78,6 +78,13 @@ public class UsuarioController {
         }
     }
 
+    @PutMapping("/{id}/estado")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<UsuarioResponse> cambiarEstado(@PathVariable UUID id, @RequestParam com.sysacad.backend.modelo.enums.EstadoUsuario nuevoEstado) {
+        Usuario actualizado = usuarioService.cambiarEstado(id, nuevoEstado);
+        return ResponseEntity.ok(convertirADTO(actualizado));
+    }
+
     @PostMapping(value = "/{id}/foto", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<String> subirFotoPerfil(@PathVariable UUID id, @RequestParam("file") MultipartFile file) {

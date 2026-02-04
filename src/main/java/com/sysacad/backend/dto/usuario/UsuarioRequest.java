@@ -27,5 +27,5 @@ public class UsuarioRequest {
     private LocalDate fechaIngreso;
     private String tituloAcademico;
     private RolUsuario rol;
-    private String estado;
+    private com.sysacad.backend.modelo.enums.EstadoUsuario estado;
 }

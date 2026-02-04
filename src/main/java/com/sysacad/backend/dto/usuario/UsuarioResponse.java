@@ -30,7 +30,7 @@ public class UsuarioResponse {
     private LocalDate fechaIngreso;
     private String tituloAcademico;
     private RolUsuario rol;
-    private String estado;
+    private com.sysacad.backend.modelo.enums.EstadoUsuario estado;
 
     private String tipoIdentificador;
     private Integer anioIngreso;

@@ -64,6 +64,19 @@ public class UsuarioService {
         }
 
         usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
+        
+        if (usuario.getEstado() == null) {
+            usuario.setEstado(com.sysacad.backend.modelo.enums.EstadoUsuario.ACTIVO);
+        }
+        
+        return usuarioRepository.save(usuario);
+    }
+    
+    @Transactional
+    public Usuario cambiarEstado(UUID id, com.sysacad.backend.modelo.enums.EstadoUsuario nuevoEstado) {
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con ID: " + id));
+        usuario.setEstado(nuevoEstado);
         return usuarioRepository.save(usuario);
     }
 

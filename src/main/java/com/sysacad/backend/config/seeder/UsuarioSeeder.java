@@ -90,7 +90,7 @@ public class UsuarioSeeder {
         u.setMail(mail);
         u.setRol(rol);
         u.setGenero(genero);
-        u.setEstado("ACTIVO");
+        u.setEstado(com.sysacad.backend.modelo.enums.EstadoUsuario.ACTIVO);
         u.setTituloAcademico(titulo);
         u.setFechaNacimiento(fechaNacimiento != null ? fechaNacimiento : LocalDate.of(1995, 1, 1));
         u.setFechaIngreso(LocalDate.now());
