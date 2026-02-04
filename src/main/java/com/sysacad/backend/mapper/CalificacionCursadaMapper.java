@@ -12,6 +12,7 @@ public interface CalificacionCursadaMapper {
 
     CalificacionCursadaMapper INSTANCE = Mappers.getMapper(CalificacionCursadaMapper.class);
 
+    @org.mapstruct.Mapping(source = "instanciaEvaluacion.nombre", target = "descripcion")
     CalificacionCursadaResponse toDTO(CalificacionCursada calificacion);
 
     List<CalificacionCursadaResponse> toDTOs(List<CalificacionCursada> calificaciones);

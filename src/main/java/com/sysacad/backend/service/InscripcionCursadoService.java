@@ -106,13 +106,25 @@ public class InscripcionCursadoService {
         return inscripcionCursadoMapper.toDTOs(inscripcionCursadoRepository.findByUsuarioId(idUsuario));
     }
 
+    @Autowired
+    private InstanciaEvaluacionRepository instanciaEvaluacionRepository;
+
     public CalificacionCursadaResponse cargarNota(UUID idInscripcion, CalificacionCursadaRequest request) {
         InscripcionCursado insc = inscripcionCursadoRepository.findById(idInscripcion)
                 .orElseThrow(() -> new ResourceNotFoundException("Inscripción no encontrada con ID: " + idInscripcion));
 
+        // Buscar o crear InstanciaEvaluacion
+        String nombreInstancia = request.getDescripcion().trim();
+        InstanciaEvaluacion instancia = instanciaEvaluacionRepository.findByNombre(nombreInstancia)
+                .orElseGet(() -> {
+                    InstanciaEvaluacion nueva = new InstanciaEvaluacion();
+                    nueva.setNombre(nombreInstancia);
+                    return instanciaEvaluacionRepository.save(nueva);
+                });
+
         CalificacionCursada calif = new CalificacionCursada();
         calif.setInscripcionCursado(insc);
-        calif.setDescripcion(request.getDescripcion());
+        calif.setInstanciaEvaluacion(instancia);
         calif.setNota(request.getNota());
         calif.setFecha(LocalDate.now());
 
