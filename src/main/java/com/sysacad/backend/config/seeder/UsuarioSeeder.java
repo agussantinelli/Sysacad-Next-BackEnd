@@ -46,14 +46,14 @@ public class UsuarioSeeder {
             // PROFESORES
             createUsuarioIfNotExists("51111", "Dario", "Cvitanich", "22222222", "dario@sysacad.com", RolUsuario.PROFESOR, Genero.M, "Doctor en Ciencias de la Computación", LocalDate.of(1990, 6, 23), "uploads/perfiles/seeded-51111.jpg");
             createUsuarioIfNotExists("52222", "Laura", "Gomez", "22222223", "laura@sysacad.com", RolUsuario.PROFESOR, Genero.F, "Ingeniera en Sistemas", LocalDate.of(1985, 3, 15), null);
-            createUsuarioIfNotExists("53333", "Roberto", "Diaz", "22222224", "roberto@sysacad.com", RolUsuario.PROFESOR, Genero.M, "Licenciado en Física", LocalDate.of(1978, 9, 10));
-            createUsuarioIfNotExists("54444", "Ana", "Martinez", "22222225", "ana@sysacad.com", RolUsuario.PROFESOR, Genero.F, "Traductora Pública", LocalDate.of(1982, 11, 30));
-            createUsuarioIfNotExists("55551", "Sandra", "Civiero", "22222226", "sandra@sysacad.com", RolUsuario.PROFESOR, Genero.F, "Matemática", LocalDate.of(1975, 4, 12));
-            createUsuarioIfNotExists("55552", "Cristian", "Milone", "22222227", "cristian@sysacad.com", RolUsuario.PROFESOR, Genero.M, "Ingeniero Electrónico", LocalDate.of(1988, 8, 25));
-            createUsuarioIfNotExists("55553", "Gustavo", "Perez", "22222228", "gustavo@sysacad.com", RolUsuario.PROFESOR, Genero.M, "Ingeniero en Sistemas", LocalDate.of(1980, 2, 20));
-            createUsuarioIfNotExists("55554", "Claudia", "Lopez", "22222229", "claudia@sysacad.com", RolUsuario.PROFESOR, Genero.F, "Licenciada en Educación", LocalDate.of(1975, 5, 15));
-            createUsuarioIfNotExists("55556", "Jorge", "Garcia", "22222230", "jorge@sysacad.com", RolUsuario.PROFESOR, Genero.M, "Abogado", LocalDate.of(1970, 10, 10));
-            createUsuarioIfNotExists("55557", "Valeria", "Martinez", "22222231", "valeria@sysacad.com", RolUsuario.PROFESOR, Genero.F, "Contadora", LocalDate.of(1983, 12, 12));
+            createUsuarioIfNotExists("53333", "Roberto", "Diaz", "22222224", "roberto@sysacad.com", RolUsuario.PROFESOR, Genero.M, "Licenciado en Física", LocalDate.of(1978, 9, 10), null);
+            createUsuarioIfNotExists("54444", "Ana", "Martinez", "22222225", "ana@sysacad.com", RolUsuario.PROFESOR, Genero.F, "Traductora Pública", LocalDate.of(1982, 11, 30), null);
+            createUsuarioIfNotExists("55551", "Sandra", "Civiero", "22222226", "sandra@sysacad.com", RolUsuario.PROFESOR, Genero.F, "Matemática", LocalDate.of(1975, 4, 12), null);
+            createUsuarioIfNotExists("55552", "Cristian", "Milone", "22222227", "cristian@sysacad.com", RolUsuario.PROFESOR, Genero.M, "Ingeniero Electrónico", LocalDate.of(1988, 8, 25), null);
+            createUsuarioIfNotExists("55553", "Gustavo", "Perez", "22222228", "gustavo@sysacad.com", RolUsuario.PROFESOR, Genero.M, "Ingeniero en Sistemas", LocalDate.of(1980, 2, 20), null);
+            createUsuarioIfNotExists("55554", "Claudia", "Lopez", "22222229", "claudia@sysacad.com", RolUsuario.PROFESOR, Genero.F, "Licenciada en Educación", LocalDate.of(1975, 5, 15), null);
+            createUsuarioIfNotExists("55556", "Jorge", "Garcia", "22222230", "jorge@sysacad.com", RolUsuario.PROFESOR, Genero.M, "Abogado", LocalDate.of(1970, 10, 10), null);
+            createUsuarioIfNotExists("55557", "Valeria", "Martinez", "22222231", "valeria@sysacad.com", RolUsuario.PROFESOR, Genero.F, "Contadora", LocalDate.of(1983, 12, 12), null);
 
             // ESTUDIANTES
             createUsuarioIfNotExists("55555", "Agustin", "Santinelli", "33333333", "agustinsantinelli@gmail.com", RolUsuario.ESTUDIANTE, Genero.M, null, LocalDate.of(2004, 11, 17), "uploads/perfiles/seeded-55555.jpg");
@@ -61,15 +61,15 @@ public class UsuarioSeeder {
             createUsuarioIfNotExists("57777", "Juan", "Perez", "33333335", "juan@sysacad.com", RolUsuario.ESTUDIANTE, Genero.M, null, LocalDate.of(2004, 1, 10), null);
             createUsuarioIfNotExists("58888", "Sofia", "Lopez", "33333336", "sofia@sysacad.com", RolUsuario.ESTUDIANTE, Genero.F, null, LocalDate.of(2001, 7, 8), null);
             createUsuarioIfNotExists("59999", "Miguel", "Torres", "33333337", "miguel@sysacad.com", RolUsuario.ESTUDIANTE, Genero.M, null, LocalDate.of(2004, 3, 30), null);
-            createUsuarioIfNotExists("60001", "Lucia", "Fernandez", "33333338", "lucia@sysacad.com", RolUsuario.ESTUDIANTE, Genero.F, null, LocalDate.of(2002, 12, 12));
-            createUsuarioIfNotExists("60002", "Carlos Alberto", "Tevez Martinez", "33333339", "carlos@sysacad.com", RolUsuario.ESTUDIANTE, Genero.M, null, LocalDate.of(2003, 2, 5));
-            createUsuarioIfNotExists("60003", "Martin", "Palermo", "33333340", "martin@sysacad.com", RolUsuario.ESTUDIANTE, Genero.M, null, LocalDate.of(2003, 11, 7));
-            createUsuarioIfNotExists("60004", "Flavia", "Avara", "33333341", "flavia@sysacad.com", RolUsuario.ESTUDIANTE, Genero.F, null, LocalDate.of(2004, 11, 24));
-            createUsuarioIfNotExists("60010", "Pedro", "Pascal", "33333350", "pedro@sysacad.com", RolUsuario.ESTUDIANTE, Genero.M, null, LocalDate.of(2003, 4, 2));
-            createUsuarioIfNotExists("60011", "Lionel", "Messi", "33333351", "lio@sysacad.com", RolUsuario.ESTUDIANTE, Genero.M, null, LocalDate.of(1987, 6, 24));
-            createUsuarioIfNotExists("60012", "Alex", "Morgan", "33333352", "alex@sysacad.com", RolUsuario.ESTUDIANTE, Genero.F, null, LocalDate.of(2002, 5, 3));
-            createUsuarioIfNotExists("60013", "Diego", "Maradona", "33333353", "diego@sysacad.com", RolUsuario.ESTUDIANTE, Genero.M, null, LocalDate.of(1960, 10, 30));
-            createUsuarioIfNotExists("60014", "Enzo", "Fernandez", "33333354", "enzo@sysacad.com", RolUsuario.ESTUDIANTE, Genero.M, null, LocalDate.of(2001, 1, 17));
+            createUsuarioIfNotExists("60001", "Lucia", "Fernandez", "33333338", "lucia@sysacad.com", RolUsuario.ESTUDIANTE, Genero.F, null, LocalDate.of(2002, 12, 12), null);
+            createUsuarioIfNotExists("60002", "Carlos Alberto", "Tevez Martinez", "33333339", "carlos@sysacad.com", RolUsuario.ESTUDIANTE, Genero.M, null, LocalDate.of(2003, 2, 5), null);
+            createUsuarioIfNotExists("60003", "Martin", "Palermo", "33333340", "martin@sysacad.com", RolUsuario.ESTUDIANTE, Genero.M, null, LocalDate.of(2003, 11, 7), null);
+            createUsuarioIfNotExists("60004", "Flavia", "Avara", "33333341", "flavia@sysacad.com", RolUsuario.ESTUDIANTE, Genero.F, null, LocalDate.of(2004, 11, 24), null);
+            createUsuarioIfNotExists("60010", "Pedro", "Pascal", "33333350", "pedro@sysacad.com", RolUsuario.ESTUDIANTE, Genero.M, null, LocalDate.of(2003, 4, 2), null);
+            createUsuarioIfNotExists("60011", "Lionel", "Messi", "33333351", "lio@sysacad.com", RolUsuario.ESTUDIANTE, Genero.M, null, LocalDate.of(1987, 6, 24), null);
+            createUsuarioIfNotExists("60012", "Alex", "Morgan", "33333352", "alex@sysacad.com", RolUsuario.ESTUDIANTE, Genero.F, null, LocalDate.of(2002, 5, 3), null);
+            createUsuarioIfNotExists("60013", "Diego", "Maradona", "33333353", "diego@sysacad.com", RolUsuario.ESTUDIANTE, Genero.M, null, LocalDate.of(1960, 10, 30), null);
+            createUsuarioIfNotExists("60014", "Enzo", "Fernandez", "33333354", "enzo@sysacad.com", RolUsuario.ESTUDIANTE, Genero.M, null, LocalDate.of(2001, 1, 17), null);
 
             System.out.println(">> Usuarios creados/verificados con éxito.");
         // } (Eliminado el bloque if count == 0 para permitir verificaciones individuales)

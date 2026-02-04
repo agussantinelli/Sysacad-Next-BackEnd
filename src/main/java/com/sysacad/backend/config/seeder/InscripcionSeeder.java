@@ -568,11 +568,11 @@ public class InscripcionSeeder {
             crearResultadoExamen(alumnoFlavia, febAnalisis, EstadoExamen.APROBADO, new BigDecimal("6.00"));
 
             // MATERIA: SINTAXIS Y SEMÁNTICA (Mesa Julio 2026)
-            crearResultadoExamen(alumnoAgustin, julSintaxis, EstadoExamen.APROBADO, new BigDecimal("10.00")); // Sobresaliente
+            crearResultadoExamen(alumnoAgustin, julSintaxis, EstadoExamen.APROBADO, new BigDecimal("10.00")); 
             crearResultadoExamen(alumnoSofia, julSintaxis, EstadoExamen.APROBADO, new BigDecimal("9.00"));
 
             // MATERIA: FÍSICA I (Mesa Julio 2026)
-            crearResultadoExamen(alumnoCarlos, julFisica, EstadoExamen.DESAPROBADO, new BigDecimal("5.00")); // Casi
+            crearResultadoExamen(alumnoCarlos, julFisica, EstadoExamen.DESAPROBADO, new BigDecimal("5.00")); 
             crearResultadoExamen(alumnoPedro, julFisica, EstadoExamen.APROBADO, new BigDecimal("6.00"));
             crearResultadoExamen(alumnoMiguel, febAlgo, EstadoExamen.APROBADO, new BigDecimal("8.00"));
             crearResultadoExamen(alumnoLucia, febAlgo, EstadoExamen.APROBADO, new BigDecimal("7.00"));
