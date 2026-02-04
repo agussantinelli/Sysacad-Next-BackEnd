@@ -146,8 +146,11 @@ public class UsuarioService {
 
     @Transactional
     public void eliminarUsuario(UUID id) {
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con ID: " + id));
+
         // Antes de eliminar el usuario, limpiamos su foto del disco para no dejar basura
-        usuarioRepository.findById(id).ifPresent(u -> fileStorageService.borrarArchivo(u.getFotoPerfil()));
+        fileStorageService.borrarArchivo(usuario.getFotoPerfil());
         usuarioRepository.deleteById(id);
     }
 

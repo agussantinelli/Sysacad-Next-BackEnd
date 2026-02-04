@@ -57,6 +57,12 @@ public class FileStorageService {
 
         try {
             Path path = Paths.get(ruta);
+            // PROTECCIÓN: No borrar imágenes que provienen del seeder (prefijo "seeded/" en path relativo o nombre "seeded-")
+            if (ruta.contains("seeded-") || ruta.contains("seeded/")) {
+                System.out.println(">> FileStorageService: OMITIDO borrado de imagen protegida: " + ruta);
+                return;
+            }
+
             if (Files.exists(path) && path.toString().startsWith("uploads")) {
                 Files.delete(path);
             }
