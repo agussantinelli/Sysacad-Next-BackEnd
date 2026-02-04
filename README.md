@@ -111,8 +111,8 @@
         </tr>
         <tr>
             <td><strong>📅 Gestión de Cursada</strong></td>
-            <td><code>comisiones</code>, <code>materias_comisiones</code>, <code>profesores_comisiones</code>, <code>asignaciones_materia</code>, <code>horarios_cursado</code></td>
-            <td>Oferta operativa anual/cuatrimestral. Soporta relación N:M, asignación de roles docentes y <strong>agenda semanal de cursado</strong>.</td>
+            <td><code>comisiones</code>, <code>materias_comisiones</code>, <code>profesores_comisiones</code>, <code>asignaciones_materia</code>, <code>horarios_cursado</code>, <code>instancias_evaluacion</code></td>
+            <td>Oferta operativa anual/cuatrimestral. Soporta relación N:M, asignación de roles docentes y <strong>agenda semanal de cursado</strong>. Normalización de conceptos de evaluación.</td>
         </tr>
         <tr>
             <td><strong>🗓️ Exámenes Finales</strong></td>
