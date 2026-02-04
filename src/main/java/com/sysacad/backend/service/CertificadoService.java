@@ -106,4 +106,19 @@ public class CertificadoService {
         // 4. Generar PDF
         return pdfGenerator.generarCertificadoProfesor(datos);
     }
+
+    @Transactional(readOnly = true)
+    public java.util.List<com.sysacad.backend.dto.reporte.ReporteCertificadoDTO> obtenerHistorialDescargas() {
+        return solicitudCertificadoRepository.findAll().stream()
+                .map(solicitud -> new com.sysacad.backend.dto.reporte.ReporteCertificadoDTO(
+                        solicitud.getUsuario().getLegajo(),
+                        solicitud.getUsuario().getMail(),
+                        solicitud.getUsuario().getNombre(),
+                        solicitud.getUsuario().getApellido(),
+                        solicitud.getTipo().name(),
+                        solicitud.getFechaSolicitud()
+                ))
+                .sorted((a, b) -> b.getFecha().compareTo(a.getFecha())) // Ordenado por fecha descendente
+                .collect(java.util.stream.Collectors.toList());
+    }
 }
