@@ -72,11 +72,18 @@ public class AvisoService {
 
     @Transactional(readOnly = true)
     public List<com.sysacad.backend.dto.aviso.AvisoResponse> obtenerUltimosAvisosParaUsuario(java.util.UUID idUsuario) {
-        List<Aviso> avisos = obtenerUltimosAvisos();
-        List<com.sysacad.backend.dto.aviso.AvisoResponse> responses = avisoMapper.toDTOs(avisos);
-
+        
         com.sysacad.backend.modelo.Usuario usuario = usuarioRepository.findById(idUsuario).orElse(null);
         boolean esAdmin = usuario != null && usuario.getRol() == com.sysacad.backend.modelo.enums.RolUsuario.ADMIN;
+
+        List<Aviso> avisos;
+        if (esAdmin) {
+            avisos = avisoRepository.findAllByOrderByFechaEmisionDesc();
+        } else {
+            avisos = avisoRepository.findByEstadoOrderByFechaEmisionDesc(com.sysacad.backend.modelo.enums.EstadoAviso.ACTIVO);
+        }
+
+        List<com.sysacad.backend.dto.aviso.AvisoResponse> responses = avisoMapper.toDTOs(avisos);
 
         responses.forEach(dto -> { 
             if (esAdmin) {

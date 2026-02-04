@@ -12,6 +12,10 @@ import java.util.UUID;
 public interface AvisoRepository extends JpaRepository<Aviso, UUID> {
 
     List<Aviso> findByFechaEmisionAfter(LocalDateTime fecha);
+    
+    List<Aviso> findAllByOrderByFechaEmisionDesc();
+
+    List<Aviso> findByEstadoOrderByFechaEmisionDesc(com.sysacad.backend.modelo.enums.EstadoAviso estado);
 
     List<Aviso> findByEstado(com.sysacad.backend.modelo.enums.EstadoAviso estado);
 
