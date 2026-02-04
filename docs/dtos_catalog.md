@@ -600,3 +600,15 @@ Response for `/api/materias/{idMateria}/mesas`.
 - `cantidadDesaprobadosExamen` (long)
 - `cantidadAusentesExamen` (long)
 
+
+---
+
+## Reporte
+
+### `ReporteCertificadoDTO`
+- `legajo` (String)
+- `mail` (String)
+- `nombre` (String)
+- `apellido` (String)
+- `tipoCertificado` (String)
+- `fecha` (LocalDateTime)
