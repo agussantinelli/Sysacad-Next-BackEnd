@@ -33,7 +33,8 @@ public class SecurityConfig {
                                 .authorizeHttpRequests(auth -> auth
                                                 .requestMatchers("/api/auth/**").permitAll()
                                                 .requestMatchers("/api/health").permitAll()
-                                                .requestMatchers("/uploads/**").permitAll() // Para ver las fotos
+                                                .requestMatchers("/uploads/**").permitAll()
+                                                .requestMatchers("/api/reportes/**").hasRole("ADMIN")
                                                 .anyRequest().authenticated())
                                 .sessionManagement(session -> session
                                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))

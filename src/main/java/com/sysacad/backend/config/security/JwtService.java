@@ -49,10 +49,6 @@ public class JwtService {
         final String username = extractUsername(token);
         final String tokenBootId = extractClaim(token, claims -> claims.get("bootId", String.class));
         
-        // El token es válido si:
-        // 1. El usuario coincide
-        // 2. No expiró
-        // 3. El bootId del token coincide con el bootId actual del servidor
         return (username.equals(userDetails.getUsername())) 
                 && !isTokenExpired(token)
                 && BOOT_ID.equals(tokenBootId);
