@@ -15,6 +15,13 @@ This document enumerates all Data Transfer Objects (DTOs) used in the backend ap
 - `fechaInscripcion` (LocalDateTime)
 - `estado` (String)
 
+### `AdminInscripcionRequest`
+- `idAlumno` (UUID)
+- `tipo` (String): "CURSADA" o "EXAMEN".
+- `idReferencia` (UUID): ID of Comision or MesaExamen.
+- `idMateria` (UUID): Required for "CURSADA".
+- `nroDetalle` (Integer): Required for "EXAMEN".
+
 ### `AdminEstadisticasDTO`
 - Inherits from `ProfesorEstadisticasDTO` (see below).
 - Provides aggregated statistics filtered by Year, Faculty, and Career.
