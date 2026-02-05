@@ -35,6 +35,7 @@ Base URL: `/api/admin/carreras`
 | Método | Endpoint | Roles / Acceso | Descripción |
 | :--- | :--- | :--- | :--- |
 | `GET` | `/` | ADMIN | Obtener carreras con estadísticas. Retorna `List<CarreraAdminDTO>`. |
+| `POST` | `/` | ADMIN | Registrar una nueva carrera. Body: `CarreraRequest`. Retorna `CarreraResponse`. |
 | `GET` | `/simples` | ADMIN | Obtener listado simple de carreras disponibles. Retorna `List<CarreraResponse>`. |
 | `POST` | `/{carreraId}/facultades/{facultadId}` | ADMIN | Asociar una carrera a una facultad. Retorna `Void`. |
 | `GET` | `/{carreraId}/plan/{anio}` | ADMIN | Obtener detalle de plan de estudio. Retorna `PlanDetalleDTO`. |
@@ -77,7 +78,6 @@ Base URL: `/api/carreras`
 
 | Método | Endpoint | Roles / Acceso | Descripción |
 | :--- | :--- | :--- | :--- |
-| `POST` | `/` | ADMIN | Registrar una nueva carrera. |
 | `GET` | `/facultad/{idFacultad}` | Authenticated | Listar carreras de una facultad específica. |
 | `POST` | `/planes` | ADMIN | Crear un nuevo plan de estudio. |
 | `POST` | `/planes/materias` | ADMIN | Agregar una materia a un plan de estudio. |
