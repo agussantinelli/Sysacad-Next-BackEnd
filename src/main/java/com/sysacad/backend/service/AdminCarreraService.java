@@ -141,7 +141,17 @@ public class AdminCarreraService {
 
     @Transactional
     public CarreraResponse registrarCarrera(CarreraRequest request) {
+        if (carreraRepository.existsByNombre(request.getNombre())) {
+            throw new RuntimeException("Ya existe una carrera con el nombre: " + request.getNombre());
+        }
+        
+        String aliasUpper = request.getAlias().toUpperCase();
+        if (carreraRepository.existsByAlias(aliasUpper)) {
+            throw new RuntimeException("Ya existe una carrera con el alias: " + aliasUpper);
+        }
+
         Carrera carrera = carreraMapper.toEntity(request);
+        carrera.setAlias(aliasUpper);
 
         if (request.getIdFacultad() != null) {
             FacultadRegional facultad = facultadRegionalRepository.findById(request.getIdFacultad())

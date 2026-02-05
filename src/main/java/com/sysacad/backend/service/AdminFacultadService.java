@@ -42,6 +42,10 @@ public class AdminFacultadService {
 
     @Transactional
     public void crearFacultad(FacultadRequest request) {
+        if (facultadRepository.existsByCiudadAndProvincia(request.getCiudad(), request.getProvincia())) {
+            throw new RuntimeException("Ya existe una facultad en " + request.getCiudad() + ", " + request.getProvincia());
+        }
+        
         FacultadRegional facultad = new FacultadRegional();
         facultad.setCiudad(request.getCiudad());
         facultad.setProvincia(request.getProvincia());
