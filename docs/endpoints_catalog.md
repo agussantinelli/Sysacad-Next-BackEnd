@@ -38,6 +38,7 @@ Base URL: `/api/admin/carreras`
 | `GET` | `/simples` | ADMIN | Obtener listado simple de carreras disponibles. Retorna `List<CarreraResponse>`. |
 | `POST` | `/{carreraId}/facultades/{facultadId}` | ADMIN | Asociar una carrera a una facultad. Retorna `Void`. |
 | `GET` | `/{carreraId}/plan/{anio}` | ADMIN | Obtener detalle de plan de estudio. Retorna `PlanDetalleDTO`. |
+| `GET` | `/{carreraId}/planes/detallados` | ADMIN | Obtener todos los planes detallados de una carrera. Retorna `List<PlanDetalleDTO>`. |
 
 ## AdminMesaController
 Base URL: `/api/admin/mesas`
