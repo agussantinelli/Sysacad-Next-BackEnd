@@ -19,6 +19,34 @@ Base URL: `/api/admin`
 | `GET` | `/estadisticas` | ADMIN | Obtener estadísticas generales. Retorna `AdminEstadisticasDTO`. |
 | `GET` | `/usuarios/{id}` | ADMIN | Obtener detalle de usuario por ID. Retorna `UsuarioResponse`. |
 
+
+## AdminFacultadController
+Base URL: `/api/admin/facultades`
+
+| Método | Endpoint | Roles / Acceso | Descripción |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/` | ADMIN | Listar todas las facultades. Retorna `List<FacultadResponse>`. |
+| `POST` | `/` | ADMIN | Crear una nueva facultad. Body: `FacultadRequest`. Retorna `Void`. |
+| `DELETE` | `/{id}` | ADMIN | Eliminar una facultad por ID. Retorna `Void`. |
+
+## AdminCarreraController
+Base URL: `/api/admin/carreras`
+
+| Método | Endpoint | Roles / Acceso | Descripción |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/` | ADMIN | Obtener carreras con estadísticas. Retorna `List<CarreraAdminDTO>`. |
+| `GET` | `/{carreraId}/plan/{anio}` | ADMIN | Obtener detalle de plan de estudio. Retorna `PlanDetalleDTO`. |
+
+## AdminMesaController
+Base URL: `/api/admin/mesas`
+
+| Método | Endpoint | Roles / Acceso | Descripción |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/` | ADMIN | Obtener mesas con estadísticas. Retorna `List<MesaAdminDTO>`. |
+| `POST` | `/turnos` | ADMIN | Crear turno de examen. Body: `MesaExamenRequest`. |
+| `POST` | `/detalles` | ADMIN | Agregar detalle a una mesa. Body: `DetalleMesaRequest`. |
+| `DELETE` | `/{idMesa}/detalle/{nroDetalle}` | ADMIN | Eliminar detalle de mesa. |
+
 ## AdminMatriculacionController
 Base URL: `/api/admin/matriculacion`
 
