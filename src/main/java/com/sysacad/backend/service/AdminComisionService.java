@@ -104,13 +104,7 @@ public class AdminComisionService {
         comisionRepository.save(comision);
     }
 
-    @Transactional(readOnly = true)
-    public List<ProfesorDisponibleDTO> obtenerProfesoresDisponibles(UUID idMateria, List<AsignarMateriaComisionRequest.HorarioRequestDTO> horarios) {
-        // 1. Get all qualified professors
-        List<AsignacionMateria> asignaciones = asignacionMateriaRepository.findByIdIdMateria(idMateria);
-        List<Usuario> candidatos = asignaciones.stream().map(AsignacionMateria::getProfesor).collect(Collectors.toList());
-
-        // 2. Identify busy professors
+    private java.util.Set<UUID> obtenerProfesoresOcupados(List<AsignarMateriaComisionRequest.HorarioRequestDTO> horarios) {
         java.util.Set<UUID> busyProfessors = new java.util.HashSet<>();
 
         for (AsignarMateriaComisionRequest.HorarioRequestDTO horario : horarios) {
@@ -124,13 +118,24 @@ public class AdminComisionService {
                 // If a schedule overlaps, logic says: professors in that commission teaching that subject are busy.
                 Comision c = h.getComision();
                 Materia m = h.getMateria();
-                
+
                 // Get professors in that commission who are assigned to that subject
                 c.getProfesores().stream()
                         .filter(p -> asignacionMateriaRepository.existsByIdIdUsuarioAndIdIdMateria(p.getId(), m.getId()))
                         .forEach(p -> busyProfessors.add(p.getId()));
             }
         }
+        return busyProfessors;
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProfesorDisponibleDTO> obtenerProfesoresDisponibles(UUID idMateria, List<AsignarMateriaComisionRequest.HorarioRequestDTO> horarios) {
+        // 1. Get all qualified professors
+        List<AsignacionMateria> asignaciones = asignacionMateriaRepository.findByIdIdMateria(idMateria);
+        List<Usuario> candidatos = asignaciones.stream().map(AsignacionMateria::getProfesor).collect(Collectors.toList());
+
+        // 2. Identify busy professors
+        java.util.Set<UUID> busyProfessors = obtenerProfesoresOcupados(horarios);
 
         // 3. Filter candidates
         return candidatos.stream()
@@ -163,8 +168,11 @@ public class AdminComisionService {
             }
 
             // Validar disponibilidad (Check availability again closely)
-            // Simplified check or trust the frontend workflow? Let's assume validation done or race condition acceptable for now.
             // Ideally we repeat the logic from obtenerProfesoresDisponibles for these specific professors.
+            java.util.Set<UUID> busyProfessors = obtenerProfesoresOcupados(request.getHorarios());
+            if (busyProfessors.contains(idProfesor)) {
+                 throw new RuntimeException("El profesor " + profesor.getNombre() + " " + profesor.getApellido() + " tiene superposición horaria.");
+            }
             
             if (!comision.getProfesores().contains(profesor)) {
                  comision.getProfesores().add(profesor);
