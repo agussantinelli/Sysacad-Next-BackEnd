@@ -73,6 +73,16 @@ Base URL: `/api/admin/inscripcion`
 | `GET` | `/examen/mesas` | ADMIN | Mesas de examen disponibles. Params: `idAlumno`, `idMateria`. | `List<MesaExamenDisponibleDTO>` |
 | `POST` | `/` | ADMIN | Inscripción (Cursada/Examen). Body: `AdminInscripcionRequest`. | `Void` |
 
+## AdminComisionController
+Base URL: `/api/admin/comisiones`
+
+| Method | Endpoint | Roles | Description | Return DTO |
+| :--- | :--- | :--- | :--- | :--- |
+| `GET` | `/` | ADMIN | Obtener todas las comisiones detalladas. | `List<AdminComisionDTO>` |
+| `POST` | `/` | ADMIN | Crear comisión. Body: `ComisionRequest`. | `Void` |
+| `POST` | `/{id}/materias` | ADMIN | Asignar materia y profesores a comisión. Body: `AsignarMateriaComisionRequest`. | `Void` |
+| `POST` | `/profesores-disponibles` | ADMIN | Buscar profesores habilitados y sin superposición horaria. Body: `AsignarMateriaComisionRequest` (usa `idMateria`, `horarios`). | `List<ProfesorDisponibleDTO>` |
+
 ## CarreraController
 Base URL: `/api/carreras`
 
