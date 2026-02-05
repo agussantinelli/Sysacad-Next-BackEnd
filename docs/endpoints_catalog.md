@@ -14,10 +14,21 @@ Base URL: `/api/admin`
 
 | Método | Endpoint | Roles / Acceso | Descripción |
 | :--- | :--- | :--- | :--- |
-| `GET` | `/inscripciones` | ADMIN | Listar todas las inscripciones (Cursada y Examen) con detalle. |
-| `DELETE` | `/inscripciones/{id}` | ADMIN | Eliminar una inscripción. Requiere QueryParam `tipo` ("CURSADA" o "EXAMEN"). |
-| `GET` | `/estadisticas` | ADMIN | Obtener estadísticas generales filtradas por Año, Facultad y Carrera. |
-| `GET` | `/usuarios/{id}` | ADMIN | Obtener detalle de usuario por ID (reutiliza `UsuarioResponse`). |
+| `GET` | `/inscripciones` | ADMIN | Listar todas las inscripciones. Retorna `List<AdminInscripcionDTO>`. |
+| `DELETE` | `/inscripciones/{id}` | ADMIN | Eliminar una inscripción. Requiere QueryParam `tipo`. Retorna `Void`. |
+| `GET` | `/estadisticas` | ADMIN | Obtener estadísticas generales. Retorna `AdminEstadisticasDTO`. |
+| `GET` | `/usuarios/{id}` | ADMIN | Obtener detalle de usuario por ID. Retorna `UsuarioResponse`. |
+
+## AdminMatriculacionController
+Base URL: `/api/admin/matriculacion`
+
+| Method | Endpoint | Roles | Description |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/usuarios/buscar` | ADMIN | Buscar usuarios por legajo parcial. Retorna `List<UsuarioResponse>`. |
+| `GET` | `/facultades` | ADMIN | Obtener todas las facultades. Retorna `List<FacultadResponse>`. |
+| `GET` | `/carreras` | ADMIN | Obtener carreras por facultad. Retorna `List<CarreraResponse>`. |
+| `GET` | `/planes` | ADMIN | Obtener planes por carrera. Retorna `List<PlanDeEstudioResponse>`. |
+| `POST` | `/` | ADMIN | Crear matrícula. Body: `MatriculacionRequest`. Retorna `Void`. |
 
 ## CarreraController
 Base URL: `/api/carreras`
