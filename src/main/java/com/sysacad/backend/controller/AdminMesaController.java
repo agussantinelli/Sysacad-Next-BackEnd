@@ -36,13 +36,21 @@ public class AdminMesaController {
     }
 
     @PostMapping("/detalles")
-    public ResponseEntity<Void> agregarDetalle(@RequestBody com.sysacad.backend.dto.admin.DetalleMesaRequest request) {
+    public ResponseEntity<Void> agregarDetalleMesa(@RequestBody DetalleMesaRequest request) {
         mesaService.agregarDetalleMesa(request);
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/profesores-disponibles")
+    public ResponseEntity<List<ProfesorDisponibleDTO>> obtenerProfesoresDisponibles(
+            @RequestParam UUID idMateria,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) LocalTime hora) {
+        return ResponseEntity.ok(mesaService.obtenerProfesoresDisponibles(idMateria, fecha, hora));
+    }
+
     @DeleteMapping("/{idMesa}/detalle/{nroDetalle}")
-    public ResponseEntity<Void> eliminarDetalle(@PathVariable UUID idMesa, @PathVariable Integer nroDetalle) {
+    public ResponseEntity<Void> eliminarDetalleMesa(@PathVariable UUID idMesa, @PathVariable Integer nroDetalle) {
         mesaService.eliminarDetalleMesa(idMesa, nroDetalle);
         return ResponseEntity.noContent().build();
     }
