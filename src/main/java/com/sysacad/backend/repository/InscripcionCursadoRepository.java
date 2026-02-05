@@ -43,6 +43,26 @@ public interface InscripcionCursadoRepository extends JpaRepository<InscripcionC
     @org.springframework.data.jpa.repository.Query("SELECT AVG(i.notaFinal) FROM InscripcionCursado i JOIN i.comision c JOIN c.profesores p WHERE p.id = :profesorId AND i.notaFinal IS NOT NULL AND (:anio IS NULL OR c.anio = :anio)")
     Double calculateAverageGradeByProfesor(@org.springframework.data.repository.query.Param("profesorId") UUID profesorId, @org.springframework.data.repository.query.Param("anio") Integer anio);
 
+    // Estadísticas Admin
+    @org.springframework.data.jpa.repository.Query("SELECT COUNT(i) FROM InscripcionCursado i JOIN i.comision c " +
+            "WHERE (:anio IS NULL OR c.anio = :anio) " +
+            "AND (:facultadId IS NULL OR c.materia.plan.carrera.facultades.id = :facultadId) " + // Asumiendo simple join, podría requerir join explícito si es ManyToMany complejo
+            "AND (:carreraId IS NULL OR c.materia.plan.carrera.id = :carreraId) " + 
+            "AND (:estado IS NULL OR i.estado = :estado)")
+    long countAlumnosAdmin(@org.springframework.data.repository.query.Param("anio") Integer anio,
+                           @org.springframework.data.repository.query.Param("facultadId") UUID facultadId,
+                           @org.springframework.data.repository.query.Param("carreraId") UUID carreraId,
+                           @org.springframework.data.repository.query.Param("estado") com.sysacad.backend.modelo.enums.EstadoCursada estado);
+
+    @org.springframework.data.jpa.repository.Query("SELECT AVG(i.notaFinal) FROM InscripcionCursado i JOIN i.comision c " +
+            "WHERE i.notaFinal IS NOT NULL " +
+            "AND (:anio IS NULL OR c.anio = :anio) " +
+            "AND (:facultadId IS NULL OR c.materia.plan.carrera.facultades.id = :facultadId) " + 
+            "AND (:carreraId IS NULL OR c.materia.plan.carrera.id = :carreraId)")
+    Double calculateAverageGradeAdmin(@org.springframework.data.repository.query.Param("anio") Integer anio,
+                                      @org.springframework.data.repository.query.Param("facultadId") UUID facultadId,
+                                      @org.springframework.data.repository.query.Param("carreraId") UUID carreraId);
+
     // Estadísticas por Materia
     @org.springframework.data.jpa.repository.Query("SELECT COUNT(i) FROM InscripcionCursado i JOIN i.comision c JOIN c.profesores p WHERE p.id = :profesorId AND i.materia.id = :materiaId AND (:anio IS NULL OR c.anio = :anio)")
     long countAlumnosByProfesorAndMateria(@org.springframework.data.repository.query.Param("profesorId") UUID profesorId, @org.springframework.data.repository.query.Param("materiaId") UUID materiaId, @org.springframework.data.repository.query.Param("anio") Integer anio);

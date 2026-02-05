@@ -40,6 +40,17 @@ public interface InscripcionExamenRepository extends JpaRepository<InscripcionEx
     @org.springframework.data.jpa.repository.Query("SELECT COUNT(i) FROM InscripcionExamen i JOIN i.detalleMesaExamen d LEFT JOIN d.auxiliares a WHERE (d.presidente.id = :profesorId OR a.id = :profesorId) AND i.estado = :estado AND (:anio IS NULL OR YEAR(d.diaExamen) = :anio)")
     long countExamenesByProfesorAndEstado(@org.springframework.data.repository.query.Param("profesorId") UUID profesorId, @org.springframework.data.repository.query.Param("anio") Integer anio, @org.springframework.data.repository.query.Param("estado") com.sysacad.backend.modelo.enums.EstadoExamen estado);
 
+    // Estadísticas Admin
+    @org.springframework.data.jpa.repository.Query("SELECT COUNT(i) FROM InscripcionExamen i JOIN i.detalleMesaExamen d " +
+            "WHERE (:anio IS NULL OR YEAR(d.diaExamen) = :anio) " +
+            "AND (:facultadId IS NULL OR d.materia.plan.carrera.facultades.id = :facultadId) " +
+            "AND (:carreraId IS NULL OR d.materia.plan.carrera.id = :carreraId) " +
+            "AND (:estado IS NULL OR i.estado = :estado)")
+    long countExamenesAdmin(@org.springframework.data.repository.query.Param("anio") Integer anio,
+                            @org.springframework.data.repository.query.Param("facultadId") UUID facultadId,
+                            @org.springframework.data.repository.query.Param("carreraId") UUID carreraId,
+                            @org.springframework.data.repository.query.Param("estado") com.sysacad.backend.modelo.enums.EstadoExamen estado);
+
     // Estadísticas por Materia
     @org.springframework.data.jpa.repository.Query("SELECT COUNT(i) FROM InscripcionExamen i JOIN i.detalleMesaExamen d LEFT JOIN d.auxiliares a WHERE (d.presidente.id = :profesorId OR a.id = :profesorId) AND d.materia.id = :materiaId AND (:anio IS NULL OR YEAR(d.diaExamen) = :anio)")
     long countExamenesByProfesorAndMateria(@org.springframework.data.repository.query.Param("profesorId") UUID profesorId, @org.springframework.data.repository.query.Param("materiaId") UUID materiaId, @org.springframework.data.repository.query.Param("anio") Integer anio);
