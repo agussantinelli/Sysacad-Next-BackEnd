@@ -41,7 +41,9 @@ public class AdminService {
         resultado.addAll(cursadas.stream().map(i -> new AdminInscripcionDTO(
                 i.getId(),
                 "CURSADA",
-                i.getUsuario().getApellido() + " " + i.getUsuario().getNombre(),
+                i.getUsuario().getNombre(),
+                i.getUsuario().getApellido(),
+                i.getUsuario().getFotoPerfil(),
                 i.getUsuario().getLegajo(),
                 i.getMateria().getNombre(),
                 i.getComision() != null ? i.getComision().getNombre() : "Sin Comisión",
@@ -54,7 +56,9 @@ public class AdminService {
         resultado.addAll(examenes.stream().map(i -> new AdminInscripcionDTO(
                 i.getId(),
                 "EXAMEN",
-                i.getUsuario().getApellido() + " " + i.getUsuario().getNombre(),
+                i.getUsuario().getNombre(),
+                i.getUsuario().getApellido(),
+                i.getUsuario().getFotoPerfil(),
                 i.getUsuario().getLegajo(),
                 i.getDetalleMesaExamen().getMateria().getNombre(),
                 "N/A",
