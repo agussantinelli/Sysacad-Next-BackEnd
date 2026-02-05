@@ -38,4 +38,13 @@ public interface HorarioCursadoRepository extends JpaRepository<HorarioCursado, 
             @Param("horaDesde") LocalTime horaDesde,
             @Param("horaHasta") LocalTime horaHasta
     );
+
+    @Query("SELECT h FROM HorarioCursado h JOIN FETCH h.comision c JOIN FETCH c.profesores p JOIN FETCH h.materia m " +
+            "WHERE h.id.dia = :dia " +
+            "AND (h.id.horaDesde < :horaHasta AND h.horaHasta > :horaDesde)")
+    List<HorarioCursado> encontrarSolapamientosGlobal(
+            @Param("dia") DiaSemana dia,
+            @Param("horaDesde") LocalTime horaDesde,
+            @Param("horaHasta") LocalTime horaHasta
+    );
 }

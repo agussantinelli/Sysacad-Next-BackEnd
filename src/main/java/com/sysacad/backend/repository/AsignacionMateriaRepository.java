@@ -19,4 +19,6 @@ public interface AsignacionMateriaRepository extends JpaRepository<AsignacionMat
 
     // Buscar quién es el jefe de una materia específica
     List<AsignacionMateria> findByIdIdMateriaAndCargo(UUID idMateria, RolCargo cargo);
+    
+    boolean existsByIdIdUsuarioAndIdIdMateria(UUID idUsuario, UUID idMateria);
 }
