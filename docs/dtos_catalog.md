@@ -33,6 +33,52 @@ This document enumerates all Data Transfer Objects (DTOs) used in the backend ap
 - `nroPlan` (Integer)
 
 
+
+### `AdminComisionDTO`
+- `id` (UUID)
+- `nombre` (String)
+- `turno` (String)
+- `anio` (Integer)
+- `nombreSalon` (String)
+- `materias` (List<AdminMateriaComisionDTO>)
+
+### `AdminMateriaComisionDTO`
+- `idMateria` (UUID)
+- `nombreMateria` (String)
+- `nivel` (Short)
+- `cantidadInscriptos` (long)
+- `alumnos` (List<AlumnoResumenDTO>)
+- `profesores` (List<ProfesorResumenDTO>)
+
+### `AlumnoResumenDTO`
+- `idUsuario` (UUID)
+- `nombre` (String)
+- `apellido` (String)
+- `legajo` (String)
+
+### `ProfesorResumenDTO`
+- `idUsuario` (UUID)
+- `nombre` (String)
+- `apellido` (String)
+- `legajo` (String)
+
+### `AsignarMateriaComisionRequest`
+- `idMateria` (UUID)
+- `idsProfesores` (List<UUID>)
+- `horarios` (List<HorarioRequestDTO>)
+
+#### Inner Class: `HorarioRequestDTO`
+- `dia` (DiaSemana enum)
+- `horaDesde` (LocalTime)
+- `horaHasta` (LocalTime)
+
+### `ProfesorDisponibleDTO`
+- `id` (UUID)
+- `nombre` (String)
+- `apellido` (String)
+- `legajo` (String)
+
+
 ### `CarreraAdminDTO`
 - `id` (UUID)
 - `nombre` (String)
