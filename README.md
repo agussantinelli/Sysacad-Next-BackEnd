@@ -354,6 +354,9 @@ El sistema cuenta con un `DbSeeder` (`src/main/java/com/sysacad/backend/config/s
 | **/admin** | `GET` | Dashboard Admin: Listado global de inscripciones y Estadísticas generales. |
 | **/admin/matriculacion** | `POST`, `GET` | Matriculación manual de alumnos en carreras (Admin). |
 | **/admin/inscripcion** | `POST`, `GET` | Inscripción manual de alumnos a Cursada y Exámenes (Admin). |
+| **/admin/facultades** | `GET`, `POST`, `DELETE` | ABM de Facultades. Lista con estadísticas (matriculados, carreras). |
+| **/admin/carreras** | `GET` | Lista carreras con cantidad de inscriptos y detalle de planes. |
+| **/admin/mesas** | `GET`, `POST`, `DELETE` | Gestión de **Turnos** y **Mesas de Examen** (Detalles). |
 | **/usuarios** | `POST`, `GET`, `DELETE` | Gestión completa de usuarios (Admin). Búsqueda por legajo. |
 | **/facultades** | `POST`, `GET` | Gestión de facultades regionales. |
 | **/carreras** | `POST`, `GET` | Carreras y Planes de Estudio asociados. |
