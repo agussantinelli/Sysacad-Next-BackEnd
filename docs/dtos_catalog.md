@@ -478,6 +478,7 @@ Response for `/api/materias/{id}/correlativas`.
 - `nivel` (Integer)
 - `horasCursado` (Short)
 - `tipoMateria` (String)
+- `esElectiva` (Boolean)
 - `correlativas` (List<String>)
 
 ---
