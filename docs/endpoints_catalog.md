@@ -50,6 +50,15 @@ Base URL: `/api/admin/mesas`
 | `POST` | `/turnos` | ADMIN | Crear turno de examen. Body: `MesaExamenRequest`. |
 | `POST` | `/detalles` | ADMIN | Agregar detalle a una mesa. Body: `DetalleMesaRequest`. |
 | `DELETE` | `/{idMesa}/detalle/{nroDetalle}` | ADMIN | Eliminar detalle de mesa. |
+| `GET` | `/profesores-disponibles` | ADMIN | Buscar profesores para mesa. Params: `idMateria`, `fecha`, `hora`. Retorna `List<ProfesorDisponibleDTO>`. |
+
+## AdminGeneralController
+Base URL: `/api/admin/general`
+
+| Method | Endpoint | Roles | Description | Return DTO |
+| :--- | :--- | :--- | :--- | :--- |
+| `GET` | `/carreras` | ADMIN | Obtener todas las carreras (simple). | `List<CarreraResponse>` |
+| `GET` | `/materias/buscar` | ADMIN | Buscar materias por nombre en una carrera. Params: `idCarrera`, `query`. | `List<SimpleMateriaDTO>` |
 
 ## AdminMatriculacionController
 Base URL: `/api/admin/matriculacion`
