@@ -47,15 +47,5 @@ public class MateriaResponse {
         }
     }
 
-    @Data
-    @NoArgsConstructor
-    public static class SimpleMateriaDTO {
-        private UUID id;
-        private String nombre;
-
-        public SimpleMateriaDTO(UUID id, String nombre) {
-            this.id = id;
-            this.nombre = nombre;
-        }
-    }
+    // Inner class removed. Now using standalone DTO.
 }
