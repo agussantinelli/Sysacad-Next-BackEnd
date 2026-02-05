@@ -15,6 +15,7 @@ Base URL: `/api/admin`
 | Método | Endpoint | Roles / Acceso | Descripción |
 | :--- | :--- | :--- | :--- |
 | `GET` | `/inscripciones` | ADMIN | Listar todas las inscripciones (Cursada y Examen) con detalle. |
+| `DELETE` | `/inscripciones/{id}` | ADMIN | Eliminar una inscripción. Requiere QueryParam `tipo` ("CURSADA" o "EXAMEN"). |
 | `GET` | `/estadisticas` | ADMIN | Obtener estadísticas generales filtradas por Año, Facultad y Carrera. |
 
 ## CarreraController
