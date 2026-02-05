@@ -14,4 +14,8 @@ public interface CarreraRepository extends JpaRepository<Carrera, UUID> {
 
     // Búsqueda por alias
     java.util.Optional<Carrera> findByAlias(String alias);
+
+    boolean existsByNombre(String nombre);
+    
+    boolean existsByAlias(String alias);
 }
