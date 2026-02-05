@@ -14,6 +14,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, UUID> {
 
     Optional<Usuario> findByLegajoOrMail(String legajo, String mail);
 
+    List<Usuario> findByLegajoContaining(String legajo);
+
     Optional<Usuario> findByLegajo(String legajo);
 
     Optional<Usuario> findByMail(String mail);
