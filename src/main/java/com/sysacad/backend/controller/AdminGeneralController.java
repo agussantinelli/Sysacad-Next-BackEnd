@@ -1,6 +1,6 @@
 package com.sysacad.backend.controller;
 
-import com.sysacad.backend.dto.CarreraResponse;
+import com.sysacad.backend.dto.carrera.CarreraResponse;
 import com.sysacad.backend.dto.materia.SimpleMateriaDTO;
 import com.sysacad.backend.service.AdminGeneralService;
 import org.springframework.beans.factory.annotation.Autowired;

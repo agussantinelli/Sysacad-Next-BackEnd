@@ -1,13 +1,18 @@
 package com.sysacad.backend.controller;
 
+import com.sysacad.backend.dto.admin.DetalleMesaRequest;
 import com.sysacad.backend.dto.admin.MesaAdminDTO;
 import com.sysacad.backend.dto.admin.MesaRequest;
+import com.sysacad.backend.dto.admin.ProfesorDisponibleDTO;
 import com.sysacad.backend.service.AdminMesaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
 
