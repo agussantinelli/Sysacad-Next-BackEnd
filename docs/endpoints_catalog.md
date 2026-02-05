@@ -30,6 +30,17 @@ Base URL: `/api/admin/matriculacion`
 | `GET` | `/planes` | ADMIN | Obtener planes por carrera. Retorna `List<PlanDeEstudioResponse>`. |
 | `POST` | `/` | ADMIN | Crear matrícula. Body: `MatriculacionRequest`. Retorna `Void`. |
 
+## AdminInscripcionController
+Base URL: `/api/admin/inscripcion`
+
+| Method | Endpoint | Roles | Description | Return DTO |
+| :--- | :--- | :--- | :--- | :--- |
+| `GET` | `/cursado/materias` | ADMIN | Materias disponibles para cursada. Param: `idAlumno`. | `List<MateriaResponse>` |
+| `GET` | `/cursado/comisiones` | ADMIN | Comisiones disponibles. Params: `idAlumno`, `idMateria`. | `List<ComisionDisponibleDTO>` |
+| `GET` | `/examen/materias` | ADMIN | Materias disponibles para examen. Param: `idAlumno`. | `List<MateriaResponse>` |
+| `GET` | `/examen/mesas` | ADMIN | Mesas de examen disponibles. Params: `idAlumno`, `idMateria`. | `List<MesaExamenDisponibleDTO>` |
+| `POST` | `/` | ADMIN | Inscripción (Cursada/Examen). Body: `AdminInscripcionRequest`. | `Void` |
+
 ## CarreraController
 Base URL: `/api/carreras`
 
