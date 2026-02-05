@@ -44,7 +44,7 @@ public class AdminService {
                 i.getUsuario().getApellido() + " " + i.getUsuario().getNombre(),
                 i.getUsuario().getLegajo(),
                 i.getMateria().getNombre(),
-                i.getComision() != null ? i.getComision().getDescripcion() : "Sin Comisión", // Asumiendo descripcion o similar
+                i.getComision() != null ? i.getComision().getNombre() : "Sin Comisión",
                 i.getFechaInscripcion(),
                 i.getEstado().toString()
         )).collect(Collectors.toList()));
