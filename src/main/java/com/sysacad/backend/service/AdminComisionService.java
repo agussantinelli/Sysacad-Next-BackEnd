@@ -4,7 +4,6 @@ import com.sysacad.backend.dto.admin.*;
 import com.sysacad.backend.dto.comision.ComisionRequest;
 import com.sysacad.backend.exception.ResourceNotFoundException;
 import com.sysacad.backend.modelo.*;
-import com.sysacad.backend.model.enums.DiaSemana;
 import com.sysacad.backend.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -70,7 +69,7 @@ public class AdminComisionService {
                     return new AdminMateriaComisionDTO(
                             materia.getId(),
                             materia.getNombre(),
-                            materia.getNivel(),
+                            null, 
                             (long) inscriptos.size(),
                             alumnos,
                             profesores

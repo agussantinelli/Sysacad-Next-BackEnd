@@ -35,8 +35,12 @@ public class AdminMesaService {
         this.detalleMesaRepository = detalleMesaRepository;
         this.inscripcionExamenRepository = inscripcionExamenRepository;
         this.materiaRepository = materiaRepository;
+        this.materiaRepository = materiaRepository;
         this.usuarioRepository = usuarioRepository;
+        this.asignacionMateriaRepository = asignacionMateriaRepository;
     }
+
+    private final com.sysacad.backend.repository.AsignacionMateriaRepository asignacionMateriaRepository;
 
     // Listar MESAS (Detalles) que es lo que usualmente se administra como "Mesas de Examen por Materia"
     @Transactional(readOnly = true)
@@ -85,6 +89,11 @@ public class AdminMesaService {
                 detalleMesaRepository.findMaxNroDetalle(mesa.getId()).orElse(0) + 1 // Auto-increment nro_detalle
         );
         
+        // Validar disponibilidad del presidente
+        if (detalleMesaRepository.existsByProfesorAndFechaAndHora(request.getIdPresidente(), request.getDiaExamen(), request.getHoraExamen())) {
+             throw new RuntimeException("El profesor seleccionado ya tiene una mesa asignada en ese horario.");
+        }
+
         detalle.setId(id);
         detalle.setMesaExamen(mesa);
         detalle.setMateria(materia);
@@ -93,6 +102,19 @@ public class AdminMesaService {
         detalle.setHoraExamen(request.getHoraExamen());
         
         detalleMesaRepository.save(detalle);
+    }
+
+    @Transactional(readOnly = true)
+    public List<com.sysacad.backend.dto.admin.ProfesorDisponibleDTO> obtenerProfesoresDisponibles(UUID idMateria, java.time.LocalDate fecha, java.time.LocalTime hora) {
+        // 1. Get all qualified professors
+        List<com.sysacad.backend.modelo.AsignacionMateria> asignaciones = asignacionMateriaRepository.findByIdIdMateria(idMateria);
+        List<com.sysacad.backend.modelo.Usuario> candidatos = asignaciones.stream().map(com.sysacad.backend.modelo.AsignacionMateria::getProfesor).collect(Collectors.toList());
+
+        // 2. Filter out busy professors
+        return candidatos.stream()
+                .filter(p -> !detalleMesaRepository.existsByProfesorAndFechaAndHora(p.getId(), fecha, hora))
+                .map(p -> new com.sysacad.backend.dto.admin.ProfesorDisponibleDTO(p.getId(), p.getNombre(), p.getApellido(), p.getLegajo()))
+                .collect(Collectors.toList());
     }
 
     @Transactional
