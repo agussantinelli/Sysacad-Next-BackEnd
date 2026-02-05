@@ -7,6 +7,7 @@ This document enumerates all Data Transfer Objects (DTOs) used in the backend ap
 ### `AdminInscripcionDTO`
 - `id` (UUID)
 - `tipo` (String): "CURSADA" o "EXAMEN".
+- `idAlumno` (UUID)
 - `nombreAlumno` (String)
 - `legajoAlumno` (String)
 - `nombreMateria` (String)
