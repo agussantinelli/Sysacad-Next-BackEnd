@@ -505,7 +505,7 @@ Response for `/api/inscripciones-cursado/materias/{idMateria}/disponibles`.
 - `optativa` (Boolean)
 - `correlativas` (List<SimpleMateriaDTO>)
 
-#### Inner Class: `SimpleMateriaDTO`
+### `SimpleMateriaDTO`
 - `id` (UUID)
 - `nombre` (String)
 
