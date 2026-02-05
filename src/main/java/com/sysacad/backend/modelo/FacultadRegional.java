@@ -19,6 +19,8 @@ public class FacultadRegional {
     @Column(nullable = false, length = 100)
     private String provincia;
 
+    @lombok.ToString.Exclude
+    @lombok.EqualsAndHashCode.Exclude
     @ManyToMany(mappedBy = "facultades", fetch = FetchType.LAZY)
     private java.util.Set<Carrera> carreras;
 }

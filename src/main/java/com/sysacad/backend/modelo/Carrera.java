@@ -26,6 +26,8 @@ public class Carrera {
     @Column(name = "horas_electivas_requeridas")
     private Integer horasElectivasRequeridas;
 
+    @lombok.ToString.Exclude
+    @lombok.EqualsAndHashCode.Exclude
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "facultades_carreras",
