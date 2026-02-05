@@ -15,6 +15,7 @@ import java.util.UUID;
 public class AdminInscripcionDTO {
     private UUID id;
     private String tipo; // "CURSADA" o "EXAMEN"
+    private UUID idAlumno;
     private String nombre;
     private String apellido;
     private String fotoPerfil;

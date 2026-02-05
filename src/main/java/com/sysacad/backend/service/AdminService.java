@@ -41,6 +41,7 @@ public class AdminService {
         resultado.addAll(cursadas.stream().map(i -> new AdminInscripcionDTO(
                 i.getId(),
                 "CURSADA",
+                i.getUsuario().getId(),
                 i.getUsuario().getNombre(),
                 i.getUsuario().getApellido(),
                 i.getUsuario().getFotoPerfil(),
@@ -56,6 +57,7 @@ public class AdminService {
         resultado.addAll(examenes.stream().map(i -> new AdminInscripcionDTO(
                 i.getId(),
                 "EXAMEN",
+                i.getUsuario().getId(),
                 i.getUsuario().getNombre(),
                 i.getUsuario().getApellido(),
                 i.getUsuario().getFotoPerfil(),
