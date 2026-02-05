@@ -16,5 +16,6 @@ public class MateriaDetalleDTO {
     private Integer nivel;
     private Short horasCursado;
     private String tipoMateria;
+    private Boolean esElectiva;
     private List<String> correlativas; // List of names or codes
 }

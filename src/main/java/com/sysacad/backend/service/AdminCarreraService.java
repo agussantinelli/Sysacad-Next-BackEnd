@@ -109,6 +109,7 @@ public class AdminCarreraService {
                             (int) pm.getNivel(),
                             m.getHorasCursado(),
                             m.getTipoMateria().name(),
+                            m.getOptativa(),
                             correlativas
                     );
                 })
