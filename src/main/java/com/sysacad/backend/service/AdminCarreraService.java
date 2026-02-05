@@ -69,8 +69,23 @@ public class AdminCarreraService {
         PlanDeEstudio plan = planDeEstudioRepository.findById(planId)
                 .orElseThrow(() -> new RuntimeException("Plan de estudio no encontrado"));
 
+        return mapToPlanDetalleDTO(plan);
+    }
+
+    @Transactional(readOnly = true)
+    public List<PlanDetalleDTO> obtenerPlanesDetallados(UUID carreraId) {
+        return planDeEstudioRepository.findByIdIdCarrera(carreraId).stream()
+                .map(this::mapToPlanDetalleDTO)
+                .collect(Collectors.toList());
+    }
+
+    private PlanDetalleDTO mapToPlanDetalleDTO(PlanDeEstudio plan) {
+        UUID carreraId = plan.getId().getIdCarrera();
+        Integer anio = plan.getId().getNroPlan();
+        PlanDeEstudio.PlanId planId = plan.getId();
+
         List<PlanMateria> planMaterias = planMateriaRepository.findByIdIdCarreraAndIdNroPlan(carreraId, anio);
-        
+
         List<MateriaDetalleDTO> materiasDTO = planMaterias.stream()
                 .map(pm -> {
                     Materia m = pm.getMateria();

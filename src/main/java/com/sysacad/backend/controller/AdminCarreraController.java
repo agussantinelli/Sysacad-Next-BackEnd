@@ -40,6 +40,11 @@ public class AdminCarreraController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/{carreraId}/planes/detallados")
+    public ResponseEntity<List<PlanDetalleDTO>> obtenerPlanesDetallados(@PathVariable UUID carreraId) {
+        return ResponseEntity.ok(carreraService.obtenerPlanesDetallados(carreraId));
+    }
+
     @GetMapping("/{carreraId}/plan/{anio}")
     public ResponseEntity<PlanDetalleDTO> obtenerDetallePlan(@PathVariable UUID carreraId, @PathVariable Integer anio) {
         return ResponseEntity.ok(carreraService.obtenerDetallePlan(carreraId, anio));
