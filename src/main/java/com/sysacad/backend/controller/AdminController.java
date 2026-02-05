@@ -18,10 +18,24 @@ import java.util.UUID;
 public class AdminController {
 
     private final AdminService adminService;
+    private final com.sysacad.backend.service.UsuarioService usuarioService;
+    private final com.sysacad.backend.mapper.UsuarioMapper usuarioMapper;
 
     @Autowired
-    public AdminController(AdminService adminService) {
+    public AdminController(AdminService adminService,
+                           com.sysacad.backend.service.UsuarioService usuarioService,
+                           com.sysacad.backend.mapper.UsuarioMapper usuarioMapper) {
         this.adminService = adminService;
+        this.usuarioService = usuarioService;
+        this.usuarioMapper = usuarioMapper;
+    }
+
+    @GetMapping("/usuarios/{id}")
+    public ResponseEntity<com.sysacad.backend.dto.usuario.UsuarioResponse> obtenerUsuario(@PathVariable UUID id) {
+        return usuarioService.obtenerPorId(id)
+                .map(usuarioMapper::toDTO)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/inscripciones")
