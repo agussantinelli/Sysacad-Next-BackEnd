@@ -29,6 +29,17 @@ public class AdminCarreraController {
         return ResponseEntity.ok(carreraService.obtenerTodasConEstadisticas());
     }
 
+    @GetMapping("/simples")
+    public ResponseEntity<List<com.sysacad.backend.dto.carrera.CarreraResponse>> obtenerTodasSimples() {
+        return ResponseEntity.ok(carreraService.obtenerTodas());
+    }
+
+    @PostMapping("/{carreraId}/facultades/{facultadId}")
+    public ResponseEntity<Void> asociarCarreraFacultad(@PathVariable UUID carreraId, @PathVariable UUID facultadId) {
+        carreraService.asociarCarreraFacultad(carreraId, facultadId);
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/{carreraId}/plan/{anio}")
     public ResponseEntity<PlanDetalleDTO> obtenerDetallePlan(@PathVariable UUID carreraId, @PathVariable Integer anio) {
         return ResponseEntity.ok(carreraService.obtenerDetallePlan(carreraId, anio));

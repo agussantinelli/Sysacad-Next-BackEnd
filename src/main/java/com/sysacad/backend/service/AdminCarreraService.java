@@ -4,6 +4,9 @@ import com.sysacad.backend.dto.admin.CarreraAdminDTO;
 import com.sysacad.backend.dto.admin.PlanDetalleDTO;
 import com.sysacad.backend.dto.materia.MateriaDetalleDTO;
 import com.sysacad.backend.dto.plan.PlanDeEstudioResponse;
+import com.sysacad.backend.dto.carrera.CarreraResponse;
+import com.sysacad.backend.exception.ResourceNotFoundException;
+import com.sysacad.backend.mapper.CarreraMapper;
 import com.sysacad.backend.modelo.*;
 import com.sysacad.backend.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,16 +25,22 @@ public class AdminCarreraService {
     private final MatriculacionRepository matriculacionRepository;
     private final PlanDeEstudioRepository planDeEstudioRepository;
     private final PlanMateriaRepository planMateriaRepository;
+    private final FacultadRegionalRepository facultadRegionalRepository;
+    private final CarreraMapper carreraMapper;
 
     @Autowired
     public AdminCarreraService(CarreraRepository carreraRepository,
                                MatriculacionRepository matriculacionRepository,
                                PlanDeEstudioRepository planDeEstudioRepository,
-                               PlanMateriaRepository planMateriaRepository) {
+                               PlanMateriaRepository planMateriaRepository,
+                               FacultadRegionalRepository facultadRegionalRepository,
+                               CarreraMapper carreraMapper) {
         this.carreraRepository = carreraRepository;
         this.matriculacionRepository = matriculacionRepository;
         this.planDeEstudioRepository = planDeEstudioRepository;
         this.planMateriaRepository = planMateriaRepository;
+        this.facultadRegionalRepository = facultadRegionalRepository;
+        this.carreraMapper = carreraMapper;
     }
 
     @Transactional(readOnly = true)
@@ -89,5 +98,21 @@ public class AdminCarreraService {
                 plan.getEsVigente(),
                 materiasDTO
         );
+    }
+    @Transactional(readOnly = true)
+    public List<CarreraResponse> obtenerTodas() {
+        return carreraMapper.toDTOs(carreraRepository.findAll());
+    }
+
+    @Transactional
+    public void asociarCarreraFacultad(UUID idCarrera, UUID idFacultad) {
+        Carrera carrera = carreraRepository.findById(idCarrera)
+                .orElseThrow(() -> new ResourceNotFoundException("Carrera no encontrada"));
+
+        FacultadRegional facultad = facultadRegionalRepository.findById(idFacultad)
+                .orElseThrow(() -> new ResourceNotFoundException("Facultad no encontrada"));
+
+        carrera.getFacultades().add(facultad);
+        carreraRepository.save(carrera);
     }
 }
