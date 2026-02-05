@@ -67,7 +67,7 @@ public class AdminCarreraService {
                     Materia m = pm.getMateria();
                     List<String> correlativas = m.getCorrelativas().stream()
                             .filter(c -> c.getPlan().getId().equals(planId))
-                            .map(c -> c.getMateriaCorrelativa().getNombre() + " (" + c.getTipoCorrelatividad() + ")")
+                            .map(c -> c.getCorrelativa().getNombre() + " (" + c.getTipo() + ")")
                             .collect(Collectors.toList());
 
                     return new MateriaDetalleDTO(
@@ -86,7 +86,7 @@ public class AdminCarreraService {
                 carreraId,
                 anio,
                 plan.getNombre(),
-                plan.isEsVigente(),
+                plan.getEsVigente(),
                 materiasDTO
         );
     }

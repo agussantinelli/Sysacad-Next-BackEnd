@@ -7,6 +7,8 @@ import com.sysacad.backend.dto.facultad.FacultadResponse;
 import com.sysacad.backend.dto.carrera.CarreraResponse;
 import com.sysacad.backend.exception.ResourceNotFoundException;
 import com.sysacad.backend.mapper.UsuarioMapper;
+import com.sysacad.backend.mapper.FacultadMapper;
+import com.sysacad.backend.mapper.CarreraMapper;
 import com.sysacad.backend.modelo.*;
 import com.sysacad.backend.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +28,10 @@ public class AdminMatriculacionService {
     private final CarreraRepository carreraRepository; 
     private final PlanDeEstudioRepository planDeEstudioRepository; 
     private final MatriculacionRepository matriculacionRepository; 
+
     private final UsuarioMapper usuarioMapper;
+    private final FacultadMapper facultadMapper;
+    private final CarreraMapper carreraMapper;
 
     @Autowired
     public AdminMatriculacionService(UsuarioRepository usuarioRepository, 
@@ -34,13 +39,17 @@ public class AdminMatriculacionService {
                                      CarreraRepository carreraRepository,
                                      PlanDeEstudioRepository planDeEstudioRepository,
                                      MatriculacionRepository matriculacionRepository,
-                                     UsuarioMapper usuarioMapper) {
+                                     UsuarioMapper usuarioMapper,
+                                     FacultadMapper facultadMapper,
+                                     CarreraMapper carreraMapper) {
         this.usuarioRepository = usuarioRepository;
         this.facultadRegionalRepository = facultadRegionalRepository;
         this.carreraRepository = carreraRepository;
         this.planDeEstudioRepository = planDeEstudioRepository;
         this.matriculacionRepository = matriculacionRepository;
         this.usuarioMapper = usuarioMapper;
+        this.facultadMapper = facultadMapper;
+        this.carreraMapper = carreraMapper;
     }
 
     @Transactional(readOnly = true)
@@ -51,7 +60,7 @@ public class AdminMatriculacionService {
     @Transactional(readOnly = true)
     public List<FacultadResponse> obtenerTodasFacultades() {
         return facultadRegionalRepository.findAll().stream()
-                .map(FacultadResponse::new)
+                .map(facultadMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
@@ -61,14 +70,14 @@ public class AdminMatriculacionService {
                 .orElseThrow(() -> new ResourceNotFoundException("Facultad no encontrada"));
         
         return carreraRepository.findByFacultades_Id(facultadId).stream()
-                .map(CarreraResponse::new)
+                .map(carreraMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public List<PlanDeEstudioResponse> obtenerPlanesPorCarrera(UUID carreraId) {
         return planDeEstudioRepository.findByIdIdCarrera(carreraId).stream()
-                .map(PlanDeEstudioResponse::new)
+                .map(plan -> new PlanDeEstudioResponse(plan))
                 .collect(Collectors.toList());
     }
 
