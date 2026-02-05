@@ -7,6 +7,14 @@ import com.sysacad.backend.dto.plan.PlanDeEstudioResponse;
 import com.sysacad.backend.dto.carrera.CarreraResponse;
 import com.sysacad.backend.exception.ResourceNotFoundException;
 import com.sysacad.backend.mapper.CarreraMapper;
+import com.sysacad.backend.dto.admin.CarreraAdminDTO;
+import com.sysacad.backend.dto.admin.PlanDetalleDTO;
+import com.sysacad.backend.dto.carrera.CarreraRequest;
+import com.sysacad.backend.dto.carrera.CarreraResponse;
+import com.sysacad.backend.dto.materia.MateriaDetalleDTO;
+import com.sysacad.backend.dto.plan.PlanDeEstudioResponse;
+import com.sysacad.backend.exception.ResourceNotFoundException;
+import com.sysacad.backend.mapper.CarreraMapper;
 import com.sysacad.backend.modelo.*;
 import com.sysacad.backend.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -129,5 +137,21 @@ public class AdminCarreraService {
 
         carrera.getFacultades().add(facultad);
         carreraRepository.save(carrera);
+    }
+
+    @Transactional
+    public CarreraResponse registrarCarrera(CarreraRequest request) {
+        Carrera carrera = carreraMapper.toEntity(request);
+
+        if (request.getIdFacultad() != null) {
+            FacultadRegional facultad = facultadRegionalRepository.findById(request.getIdFacultad())
+                    .orElseThrow(() -> new ResourceNotFoundException("Facultad no encontrada"));
+            java.util.Set<FacultadRegional> facultades = new java.util.HashSet<>();
+            facultades.add(facultad);
+            carrera.setFacultades(facultades);
+        }
+
+        Carrera guardada = carreraRepository.save(carrera);
+        return carreraMapper.toDTO(guardada);
     }
 }

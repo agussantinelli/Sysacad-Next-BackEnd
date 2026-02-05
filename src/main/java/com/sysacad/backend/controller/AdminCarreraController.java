@@ -2,8 +2,11 @@ package com.sysacad.backend.controller;
 
 import com.sysacad.backend.dto.admin.CarreraAdminDTO;
 import com.sysacad.backend.dto.admin.PlanDetalleDTO;
+import com.sysacad.backend.dto.carrera.CarreraRequest;
+import com.sysacad.backend.dto.carrera.CarreraResponse;
 import com.sysacad.backend.service.AdminCarreraService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +30,12 @@ public class AdminCarreraController {
     @GetMapping
     public ResponseEntity<List<CarreraAdminDTO>> obtenerCarrerasConEstadisticas() {
         return ResponseEntity.ok(carreraService.obtenerTodasConEstadisticas());
+    }
+
+    @PostMapping
+    public ResponseEntity<CarreraResponse> registrarCarrera(@RequestBody CarreraRequest request) {
+        CarreraResponse response = carreraService.registrarCarrera(request);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping("/simples")

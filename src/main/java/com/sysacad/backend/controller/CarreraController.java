@@ -42,24 +42,6 @@ public class CarreraController {
         this.planDeEstudioMapper = planDeEstudioMapper;
     }
 
-    @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<CarreraResponse> registrarCarrera(@RequestBody CarreraRequest request) {
-        Carrera carrera = carreraMapper.toEntity(request);
-        
-        // Buscar facultad y asociar
-        if (request.getIdFacultad() != null) {
-             com.sysacad.backend.modelo.FacultadRegional facultad = facultadRepository.findById(request.getIdFacultad())
-                     .orElseThrow(() -> new RuntimeException("Facultad no encontrada"));
-             java.util.Set<com.sysacad.backend.modelo.FacultadRegional> facultades = new java.util.HashSet<>();
-             facultades.add(facultad);
-             carrera.setFacultades(facultades);
-        }
-
-        Carrera guardada = carreraService.registrarCarrera(carrera);
-        return new ResponseEntity<>(carreraMapper.toDTO(guardada), HttpStatus.CREATED);
-    }
-
     @GetMapping("/facultad/{idFacultad}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<CarreraResponse>> listarPorFacultad(@PathVariable UUID idFacultad) {
