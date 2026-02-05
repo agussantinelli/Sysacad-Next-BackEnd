@@ -89,4 +89,15 @@ public class AdminService {
 
         return dto;
     }
+
+    @Transactional
+    public void eliminarInscripcion(UUID id, String tipo) {
+        if ("CURSADA".equalsIgnoreCase(tipo)) {
+            inscripcionCursadoRepository.deleteById(id);
+        } else if ("EXAMEN".equalsIgnoreCase(tipo)) {
+            inscripcionExamenRepository.deleteById(id);
+        } else {
+            throw new IllegalArgumentException("Tipo de inscripción no válido: " + tipo);
+        }
+    }
 }

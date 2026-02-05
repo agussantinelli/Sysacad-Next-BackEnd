@@ -36,4 +36,10 @@ public class AdminController {
             @RequestParam(required = false) UUID carreraId) {
         return ResponseEntity.ok(adminService.obtenerEstadisticas(anio, facultadId, carreraId));
     }
+
+    @DeleteMapping("/inscripciones/{id}")
+    public ResponseEntity<Void> eliminarInscripcion(@PathVariable UUID id, @RequestParam String tipo) {
+        adminService.eliminarInscripcion(id, tipo);
+        return ResponseEntity.noContent().build();
+    }
 }
