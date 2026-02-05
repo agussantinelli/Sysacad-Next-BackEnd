@@ -32,6 +32,53 @@ This document enumerates all Data Transfer Objects (DTOs) used in the backend ap
 - `idCarrera` (UUID)
 - `nroPlan` (Integer)
 
+
+### `CarreraAdminDTO`
+- `id` (UUID)
+- `nombre` (String)
+- `alias` (String)
+- `cantidadMatriculados` (long)
+- `planes` (List<PlanDeEstudioResponse>)
+
+### `DetalleMesaRequest`
+- `idMesaExamen` (UUID): The Turno ID.
+- `idMateria` (UUID)
+- `idPresidente` (UUID)
+- `diaExamen` (LocalDate)
+- `horaExamen` (LocalTime)
+
+### `MesaAdminDTO`
+- `idMesaExamen` (UUID)
+- `nroDetalle` (Integer)
+- `materia` (String)
+- `turno` (String)
+- `fecha` (LocalDateTime)
+- `cantidadInscriptos` (long)
+- `abierta` (boolean)
+
+### `MesaExamenRequest`
+- `nombre` (String)
+- `fechaInicio` (LocalDate)
+- `fechaFin` (LocalDate)
+
+### `MesaRequest`
+- `idMateria` (UUID)
+- `turno` (String)
+- `fechaInicio` (LocalDateTime)
+- `fechaFin` (LocalDateTime)
+- `fechaExamen` (LocalDateTime)
+
+### `PlanDetalleDTO`
+- `carreraId` (UUID)
+- `anio` (Integer)
+- `nombre` (String)
+- `esVigente` (boolean)
+- `materias` (List<MateriaDetalleDTO>)
+
+### `FacultadRequest`
+- `ciudad` (String)
+- `provincia` (String)
+
 ---
 
 ## Auth
@@ -236,6 +283,8 @@ Response for `/api/alumnos/mis-carreras-materias`.
 - `ciudad` (String)
 - `provincia` (String)
 - `nombreCompleto` (String)
+- `cantidadMatriculados` (long)
+- `carreras` (List<String>)
 
 ---
 
@@ -419,7 +468,17 @@ Response for `/api/materias/{id}/correlativas`.
 - `idMateria` (UUID)
 - `nombre` (String)
 - `tipoCorrelatividad` (String): "REGULAR", "PROMOCIONADA"
+- `tipoCorrelatividad` (String): "REGULAR", "PROMOCIONADA"
 - `correlativas` (List<CorrelativaArbolDTO>): Recursive list of prerequisites.
+
+### `MateriaDetalleDTO`
+- `id` (UUID)
+- `nombre` (String)
+- `codigo` (String)
+- `nivel` (Integer)
+- `horasCursado` (Short)
+- `tipoMateria` (String)
+- `correlativas` (List<String>)
 
 ---
 
