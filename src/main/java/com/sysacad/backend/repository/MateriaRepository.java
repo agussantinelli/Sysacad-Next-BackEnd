@@ -17,4 +17,7 @@ public interface MateriaRepository extends JpaRepository<Materia, UUID> {
     Optional<Materia> findByNombre(String nombre);
 
     List<Materia> findByTipoMateria(TipoMateria tipoMateria);
+    
+    @org.springframework.data.jpa.repository.Query("SELECT m FROM PlanMateria pm JOIN pm.materia m JOIN pm.plan p JOIN p.carrera c WHERE c.id = :carreraId AND LOWER(m.nombre) LIKE LOWER(CONCAT('%', :nombre, '%'))")
+    List<Materia> findByCarreraIdAndNombreExcluding(@org.springframework.data.repository.query.Param("carreraId") UUID carreraId, @org.springframework.data.repository.query.Param("nombre") String nombre);
 }
