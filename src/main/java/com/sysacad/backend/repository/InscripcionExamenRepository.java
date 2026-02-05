@@ -43,8 +43,8 @@ public interface InscripcionExamenRepository extends JpaRepository<InscripcionEx
     // Estadísticas Admin
     @org.springframework.data.jpa.repository.Query("SELECT COUNT(i) FROM InscripcionExamen i JOIN i.detalleMesaExamen d " +
             "WHERE (:anio IS NULL OR YEAR(d.diaExamen) = :anio) " +
-            "AND (:facultadId IS NULL OR d.materia.plan.carrera.facultades.id = :facultadId) " +
-            "AND (:carreraId IS NULL OR d.materia.plan.carrera.id = :carreraId) " +
+            "AND (:facultadId IS NULL OR EXISTS (SELECT 1 FROM PlanMateria pm JOIN pm.plan p JOIN p.carrera car JOIN car.facultades f WHERE pm.materia.id = d.materia.id AND f.id = :facultadId)) " +
+            "AND (:carreraId IS NULL OR EXISTS (SELECT 1 FROM PlanMateria pm JOIN pm.plan p JOIN p.carrera car WHERE pm.materia.id = d.materia.id AND car.id = :carreraId)) " +
             "AND (:estado IS NULL OR i.estado = :estado)")
     long countExamenesAdmin(@org.springframework.data.repository.query.Param("anio") Integer anio,
                             @org.springframework.data.repository.query.Param("facultadId") UUID facultadId,

@@ -46,8 +46,8 @@ public interface InscripcionCursadoRepository extends JpaRepository<InscripcionC
     // Estadísticas Admin
     @org.springframework.data.jpa.repository.Query("SELECT COUNT(i) FROM InscripcionCursado i JOIN i.comision c " +
             "WHERE (:anio IS NULL OR c.anio = :anio) " +
-            "AND (:facultadId IS NULL OR c.materia.plan.carrera.facultades.id = :facultadId) " + // Asumiendo simple join, podría requerir join explícito si es ManyToMany complejo
-            "AND (:carreraId IS NULL OR c.materia.plan.carrera.id = :carreraId) " + 
+            "AND (:facultadId IS NULL OR EXISTS (SELECT 1 FROM PlanMateria pm JOIN pm.plan p JOIN p.carrera car JOIN car.facultades f WHERE pm.materia.id = i.materia.id AND f.id = :facultadId)) " +
+            "AND (:carreraId IS NULL OR EXISTS (SELECT 1 FROM PlanMateria pm JOIN pm.plan p JOIN p.carrera car WHERE pm.materia.id = i.materia.id AND car.id = :carreraId)) " +
             "AND (:estado IS NULL OR i.estado = :estado)")
     long countAlumnosAdmin(@org.springframework.data.repository.query.Param("anio") Integer anio,
                            @org.springframework.data.repository.query.Param("facultadId") UUID facultadId,
@@ -57,8 +57,8 @@ public interface InscripcionCursadoRepository extends JpaRepository<InscripcionC
     @org.springframework.data.jpa.repository.Query("SELECT AVG(i.notaFinal) FROM InscripcionCursado i JOIN i.comision c " +
             "WHERE i.notaFinal IS NOT NULL " +
             "AND (:anio IS NULL OR c.anio = :anio) " +
-            "AND (:facultadId IS NULL OR c.materia.plan.carrera.facultades.id = :facultadId) " + 
-            "AND (:carreraId IS NULL OR c.materia.plan.carrera.id = :carreraId)")
+            "AND (:facultadId IS NULL OR EXISTS (SELECT 1 FROM PlanMateria pm JOIN pm.plan p JOIN p.carrera car JOIN car.facultades f WHERE pm.materia.id = i.materia.id AND f.id = :facultadId)) " +
+            "AND (:carreraId IS NULL OR EXISTS (SELECT 1 FROM PlanMateria pm JOIN pm.plan p JOIN p.carrera car WHERE pm.materia.id = i.materia.id AND car.id = :carreraId))")
     Double calculateAverageGradeAdmin(@org.springframework.data.repository.query.Param("anio") Integer anio,
                                       @org.springframework.data.repository.query.Param("facultadId") UUID facultadId,
                                       @org.springframework.data.repository.query.Param("carreraId") UUID carreraId);
