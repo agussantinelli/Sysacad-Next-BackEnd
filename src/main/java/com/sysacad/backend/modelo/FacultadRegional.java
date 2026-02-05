@@ -18,4 +18,7 @@ public class FacultadRegional {
 
     @Column(nullable = false, length = 100)
     private String provincia;
+
+    @ManyToMany(mappedBy = "facultades", fetch = FetchType.LAZY)
+    private java.util.Set<Carrera> carreras;
 }

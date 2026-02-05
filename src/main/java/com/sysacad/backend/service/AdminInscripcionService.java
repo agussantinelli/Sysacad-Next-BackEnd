@@ -135,9 +135,8 @@ public class AdminInscripcionService {
     }
 
     // 4. Mesas para Examen
-    @Transactional(readOnly = true)
     public List<MesaExamenDisponibleDTO> obtenerMesasParaExamen(UUID idAlumno, UUID idMateria) {
-        return mesaExamenService.obtenerMesasDisponiblesPorMateria(idMateria, idAlumno);
+        return mesaExamenService.obtenerMesasDisponibles(idMateria, idAlumno);
     }
 
     // 5. Inscribir
