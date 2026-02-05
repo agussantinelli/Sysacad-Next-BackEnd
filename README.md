@@ -351,6 +351,7 @@ El sistema cuenta con un `DbSeeder` (`src/main/java/com/sysacad/backend/config/s
 | Recurso | Métodos | Descripción Breve |
 | :--- | :--- | :--- |
 | **/auth** | `POST` | Login y obtención de Token JWT. |
+| **/admin** | `GET` | Dashboard Admin: Listado global de inscripciones y Estadísticas generales. |
 | **/usuarios** | `POST`, `GET`, `DELETE` | Gestión completa de usuarios (Admin). Búsqueda por legajo. |
 | **/facultades** | `POST`, `GET` | Gestión de facultades regionales. |
 | **/carreras** | `POST`, `GET` | Carreras y Planes de Estudio asociados. |
