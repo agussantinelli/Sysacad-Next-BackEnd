@@ -35,6 +35,8 @@ Base URL: `/api/admin/carreras`
 | Método | Endpoint | Roles / Acceso | Descripción |
 | :--- | :--- | :--- | :--- |
 | `GET` | `/` | ADMIN | Obtener carreras con estadísticas. Retorna `List<CarreraAdminDTO>`. |
+| `GET` | `/simples` | ADMIN | Obtener listado simple de carreras disponibles. Retorna `List<CarreraResponse>`. |
+| `POST` | `/{carreraId}/facultades/{facultadId}` | ADMIN | Asociar una carrera a una facultad. Retorna `Void`. |
 | `GET` | `/{carreraId}/plan/{anio}` | ADMIN | Obtener detalle de plan de estudio. Retorna `PlanDetalleDTO`. |
 
 ## AdminMesaController
