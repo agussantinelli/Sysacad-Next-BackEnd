@@ -213,6 +213,7 @@
 │   │   │   │   └── WebConfig.java             # Configuración CORS y Web
 │   │   │   ├── controller/                    # Controladores REST (Entry Points)
 │   │   │   ├── dto/                           # Data Transfer Objects (Organizados por Dominio)
+│   │   │   │   ├── admin/
 │   │   │   │   ├── alumno/
 │   │   │   │   ├── auth/
 │   │   │   │   ├── aviso/
@@ -232,6 +233,8 @@
 │   │   │   │   ├── materia/
 │   │   │   │   ├── mesa_examen/
 │   │   │   │   ├── plan/
+│   │   │   │   ├── profesor/
+│   │   │   │   ├── reporte/
 │   │   │   │   ├── salon/
 │   │   │   │   ├── sancion/
 │   │   │   │   └── usuario/
