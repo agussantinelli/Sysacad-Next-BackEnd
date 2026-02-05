@@ -1,6 +1,6 @@
 package com.sysacad.backend.service;
 
-import com.sysacad.backend.dto.CarreraResponse;
+import com.sysacad.backend.dto.carrera.CarreraResponse;
 import com.sysacad.backend.dto.materia.SimpleMateriaDTO;
 import com.sysacad.backend.mapper.CarreraMapper;
 import com.sysacad.backend.repository.CarreraRepository;

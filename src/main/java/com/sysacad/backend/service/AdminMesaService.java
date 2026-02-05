@@ -6,6 +6,7 @@ import com.sysacad.backend.modelo.Materia;
 import com.sysacad.backend.modelo.MesaExamen;
 import com.sysacad.backend.repository.InscripcionExamenRepository;
 import com.sysacad.backend.repository.MateriaRepository;
+import com.sysacad.backend.repository.AsignacionMateriaRepository;
 import com.sysacad.backend.repository.MesaExamenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,11 +31,11 @@ public class AdminMesaService {
                             com.sysacad.backend.repository.DetalleMesaExamenRepository detalleMesaRepository,
                             InscripcionExamenRepository inscripcionExamenRepository,
                             MateriaRepository materiaRepository,
-                            com.sysacad.backend.repository.UsuarioRepository usuarioRepository) {
+                            com.sysacad.backend.repository.UsuarioRepository usuarioRepository,
+                            com.sysacad.backend.repository.AsignacionMateriaRepository asignacionMateriaRepository) {
         this.mesaRepository = mesaRepository;
         this.detalleMesaRepository = detalleMesaRepository;
         this.inscripcionExamenRepository = inscripcionExamenRepository;
-        this.materiaRepository = materiaRepository;
         this.materiaRepository = materiaRepository;
         this.usuarioRepository = usuarioRepository;
         this.asignacionMateriaRepository = asignacionMateriaRepository;
