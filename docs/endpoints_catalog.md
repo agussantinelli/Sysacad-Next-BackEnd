@@ -9,6 +9,14 @@ Base URL: `/api/auth`
 | :--- | :--- | :--- | :--- |
 | `POST` | `/login` | Public | Autenticación de usuarios (login). |
 
+## AdminController
+Base URL: `/api/admin`
+
+| Método | Endpoint | Roles / Acceso | Descripción |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/inscripciones` | ADMIN | Listar todas las inscripciones (Cursada y Examen) con detalle. |
+| `GET` | `/estadisticas` | ADMIN | Obtener estadísticas generales filtradas por Año, Facultad y Carrera. |
+
 ## CarreraController
 Base URL: `/api/carreras`
 
