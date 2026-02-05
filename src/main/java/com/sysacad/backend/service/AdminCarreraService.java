@@ -135,6 +135,10 @@ public class AdminCarreraService {
         FacultadRegional facultad = facultadRegionalRepository.findById(idFacultad)
                 .orElseThrow(() -> new ResourceNotFoundException("Facultad no encontrada"));
 
+        if (carrera.getFacultades().contains(facultad)) {
+            throw new RuntimeException("La carrera ya está asociada a esta facultad.");
+        }
+
         carrera.getFacultades().add(facultad);
         carreraRepository.save(carrera);
     }
