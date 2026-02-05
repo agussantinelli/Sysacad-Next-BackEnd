@@ -13,11 +13,15 @@ public class FacultadResponse {
     private String ciudad;
     private String provincia;
     private String nombreCompleto;
+    private long cantidadMatriculados;
+    private java.util.List<String> carreras;
 
-    public FacultadResponse(FacultadRegional facultad) {
+    public FacultadResponse(FacultadRegional facultad, long cantidadMatriculados, java.util.List<String> carreras) {
         this.id = facultad.getId();
         this.ciudad = facultad.getCiudad();
         this.provincia = facultad.getProvincia();
         this.nombreCompleto = "UTN - " + facultad.getCiudad();
+        this.cantidadMatriculados = cantidadMatriculados;
+        this.carreras = carreras;
     }
 }

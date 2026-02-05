@@ -18,4 +18,6 @@ public interface MatriculacionRepository extends JpaRepository<Matriculacion, Ma
     boolean existsByFacultad_Id(UUID idFacultad);
 
     long countByIdIdCarrera(UUID idCarrera);
+
+    long countByFacultad_Id(UUID idFacultad);
 }
