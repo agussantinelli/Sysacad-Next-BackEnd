@@ -2,6 +2,24 @@
 
 This document enumerates all Data Transfer Objects (DTOs) used in the backend application, grouped by their package structure in `src/main/java/com/sysacad/backend/dto`.
 
+## Admin
+
+### `AdminInscripcionDTO`
+- `id` (UUID)
+- `tipo` (String): "CURSADA" o "EXAMEN".
+- `nombreAlumno` (String)
+- `legajoAlumno` (String)
+- `nombreMateria` (String)
+- `comision` (String): Nombre de comisión (solo para Cursada, "N/A" para examen).
+- `fechaInscripcion` (LocalDateTime)
+- `estado` (String)
+
+### `AdminEstadisticasDTO`
+- Inherits from `ProfesorEstadisticasDTO` (see below).
+- Provides aggregated statistics filtered by Year, Faculty, and Career.
+
+---
+
 ## Auth
 
 ### `LoginRequest`
