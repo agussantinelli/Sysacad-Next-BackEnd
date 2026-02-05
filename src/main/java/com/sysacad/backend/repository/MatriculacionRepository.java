@@ -12,4 +12,6 @@ import java.util.UUID;
 public interface MatriculacionRepository extends JpaRepository<Matriculacion, MatriculacionId> {
     
     List<Matriculacion> findByIdIdUsuario(UUID idUsuario);
+
+    List<Matriculacion> findByUsuario_Id(UUID idUsuario);
 }

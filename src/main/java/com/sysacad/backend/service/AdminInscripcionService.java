@@ -79,7 +79,7 @@ public class AdminInscripcionService {
             .forEach(i -> materiasConCursadaActivaOAprobada.add(i.getMateria().getId()));
 
 
-        List<Matriculacion> matriculaciones = matriculacionRepository.findByIdIdUsuario(idAlumno);
+        List<Matriculacion> matriculaciones = matriculacionRepository.findByUsuario_Id(idAlumno);
 
         // Obtener todas las materias de esos planes
         return matriculaciones.stream()
@@ -117,7 +117,7 @@ public class AdminInscripcionService {
         var cursadasPromocionadas = inscripcionCursadoRepository.findByUsuarioIdAndEstado(idAlumno, com.sysacad.backend.modelo.enums.EstadoCursada.PROMOCIONADO)
                 .stream().map(c -> c.getMateria().getId()).collect(Collectors.toSet());
 
-        List<Matriculacion> matriculaciones = matriculacionRepository.findByIdIdUsuario(idAlumno);
+        List<Matriculacion> matriculaciones = matriculacionRepository.findByUsuario_Id(idAlumno);
 
         return matriculaciones.stream()
                 .flatMap(m -> m.getPlan().getPlanMaterias().stream().map(PlanMateria::getMateria))
