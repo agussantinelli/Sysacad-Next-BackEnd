@@ -19,6 +19,12 @@ This document enumerates all Data Transfer Objects (DTOs) used in the backend ap
 - Inherits from `ProfesorEstadisticasDTO` (see below).
 - Provides aggregated statistics filtered by Year, Faculty, and Career.
 
+### `MatriculacionRequest`
+- `idUsuario` (UUID)
+- `idFacultad` (UUID)
+- `idCarrera` (UUID)
+- `nroPlan` (Integer)
+
 ---
 
 ## Auth
