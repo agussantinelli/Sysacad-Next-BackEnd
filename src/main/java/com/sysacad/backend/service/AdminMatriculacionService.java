@@ -60,7 +60,7 @@ public class AdminMatriculacionService {
         FacultadRegional facultad = facultadRegionalRepository.findById(facultadId)
                 .orElseThrow(() -> new ResourceNotFoundException("Facultad no encontrada"));
         
-        return facultad.getCarreras().stream()
+        return carreraRepository.findByFacultades_Id(facultadId).stream()
                 .map(CarreraResponse::new)
                 .collect(Collectors.toList());
     }
