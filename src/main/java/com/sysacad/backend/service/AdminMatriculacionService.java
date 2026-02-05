@@ -92,12 +92,16 @@ public class AdminMatriculacionService {
                 request.getIdCarrera(),
                 request.getNroPlan()
         );
+
+        if (matriculacionRepository.existsById(id)) {
+            throw new RuntimeException("El alumno ya se encuentra matriculado en esta carrera.");
+        }
         matriculacion.setId(id);
         matriculacion.setUsuario(usuario);
         matriculacion.setFacultad(facultad);
         matriculacion.setPlan(plan);
         matriculacion.setFechaInscripcion(LocalDate.now());
-        matriculacion.setEstado("ACTIVO"); // Or Enum
+        matriculacion.setEstado("ACTIVO");
 
         matriculacionRepository.save(matriculacion);
     }
