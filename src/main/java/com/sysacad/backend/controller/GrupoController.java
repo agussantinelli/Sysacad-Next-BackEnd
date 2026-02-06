@@ -52,6 +52,20 @@ public class GrupoController {
         return new ResponseEntity<>(grupoMapper.toDTO(grupo), HttpStatus.CREATED);
     }
 
+    @GetMapping("/alumno")
+    public ResponseEntity<List<GrupoResponse>> listarGruposAlumno() {
+        UUID idUsuario = getAuthenticatedUserId();
+        List<Grupo> grupos = grupoService.obtenerGruposAlumno(idUsuario);
+        return ResponseEntity.ok(grupoMapper.toDTOs(grupos));
+    }
+
+    @GetMapping("/profesor")
+    public ResponseEntity<List<GrupoResponse>> listarGruposProfesor() {
+        UUID idUsuario = getAuthenticatedUserId();
+        List<Grupo> grupos = grupoService.obtenerGruposDocente(idUsuario);
+        return ResponseEntity.ok(grupoMapper.toDTOs(grupos));
+    }
+
     @GetMapping("/mis-grupos")
     public ResponseEntity<List<GrupoResponse>> listarMisGrupos() {
         UUID idUsuario = getAuthenticatedUserId();

@@ -118,21 +118,27 @@ public class GrupoService {
     }
 
     @Transactional
-    public List<Grupo> obtenerMisGrupos(UUID idUsuario) {
-        // 1. Sincronizar membresías (Asegurar que esté en los grupos de sus materias/comisiones)
+    public List<Grupo> obtenerGruposAlumno(UUID idUsuario) {
         sincronizarMembresias(idUsuario);
-
-        Usuario usuario = usuarioRepository.getReferenceById(idUsuario);
-        boolean esAdminSistema = usuario.getRoles().stream()
-                .anyMatch(r -> r.getNombre().equalsIgnoreCase("ADMIN") || r.getNombre().equalsIgnoreCase("DIRECTIVO"));
-
         return miembroGrupoRepository.findByUsuario_Id(idUsuario).stream()
-                .filter(m -> {
-                    // Si es ADMIN del grupo, siempre lo ve
-                    if (m.getRol() == RolGrupo.ADMIN) return true;
-                    // Si es MIEMBRO (Alumno), solo lo ve si esVisible es true
-                    return Boolean.TRUE.equals(m.getGrupo().getEsVisible());
-                })
+                .filter(m -> Boolean.TRUE.equals(m.getGrupo().getEsVisible()))
+                .map(MiembroGrupo::getGrupo)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public List<Grupo> obtenerGruposDocente(UUID idUsuario) {
+        sincronizarMembresias(idUsuario);
+        return miembroGrupoRepository.findByUsuario_Id(idUsuario).stream()
+                .map(MiembroGrupo::getGrupo)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public List<Grupo> obtenerMisGrupos(UUID idUsuario) {
+        // Fallback or general sync
+        sincronizarMembresias(idUsuario);
+        return miembroGrupoRepository.findByUsuario_Id(idUsuario).stream()
                 .map(MiembroGrupo::getGrupo)
                 .collect(Collectors.toList());
     }
