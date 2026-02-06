@@ -10,4 +10,6 @@ import java.util.UUID;
 public class MensajeGrupoRequest {
     private String contenido;
     private UUID idUsuarioRemitente; // Opcional si se toma del token
+    private UUID idComision; // Para auto-creación
+    private UUID idMateria;  // Para auto-creación
 }
