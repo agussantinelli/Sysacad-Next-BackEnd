@@ -2,6 +2,7 @@ package com.sysacad.backend.mapper;
 
 import com.sysacad.backend.dto.materia.MateriaRequest;
 import com.sysacad.backend.dto.materia.MateriaResponse;
+import com.sysacad.backend.dto.materia.SimpleMateriaDTO;
 import com.sysacad.backend.modelo.Materia;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
