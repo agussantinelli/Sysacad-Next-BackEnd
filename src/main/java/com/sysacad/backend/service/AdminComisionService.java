@@ -89,6 +89,9 @@ public class AdminComisionService {
                 comision.getNombre(),
                 comision.getTurno(),
                 comision.getAnio(),
+                comision.getNivel(),
+                comision.getCarrera() != null ? comision.getCarrera().getId() : null,
+                comision.getCarrera() != null ? comision.getCarrera().getNombre() : null,
                 comision.getSalon() != null ? comision.getSalon().getNombre() : "Sin Salón",
                 materiasAdmin
         );

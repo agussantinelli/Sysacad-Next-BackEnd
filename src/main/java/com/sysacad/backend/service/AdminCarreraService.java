@@ -73,9 +73,13 @@ public class AdminCarreraService {
 
     @Transactional(readOnly = true)
     public PlanDetalleDTO obtenerDetallePlan(UUID carreraId, Integer anio) {
-        PlanDeEstudio.PlanId planId = new PlanDeEstudio.PlanId(carreraId, anio);
-        PlanDeEstudio plan = planDeEstudioRepository.findById(planId)
-                .orElseThrow(() -> new RuntimeException("Plan de estudio no encontrado"));
+        List<PlanDeEstudio> planesVigentes = planDeEstudioRepository.findByIdIdCarreraAndEsVigenteTrue(carreraId);
+        
+        if (planesVigentes.isEmpty()) {
+            throw new RuntimeException("No hay plan de estudio vigente para esta carrera");
+        }
+        
+        PlanDeEstudio plan = planesVigentes.get(0);
 
         return mapToPlanDetalleDTO(plan);
     }

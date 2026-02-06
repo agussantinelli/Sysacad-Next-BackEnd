@@ -15,6 +15,9 @@ public class AdminComisionDTO {
     private String nombre;
     private String turno;
     private Integer anio;
+    private Integer nivel;
+    private UUID idCarrera;
+    private String nombreCarrera;
     private String nombreSalon;
     private List<AdminMateriaComisionDTO> materias;
 }
