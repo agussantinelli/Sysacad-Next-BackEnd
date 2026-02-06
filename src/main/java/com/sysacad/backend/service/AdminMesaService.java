@@ -118,6 +118,38 @@ public class AdminMesaService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
+    public List<com.sysacad.backend.dto.mesa_examen.MesaExamenResponse> obtenerTurnos() {
+        return mesaRepository.findAll().stream()
+                .map(mesa -> {
+                    com.sysacad.backend.dto.mesa_examen.MesaExamenResponse response = new com.sysacad.backend.dto.mesa_examen.MesaExamenResponse();
+                    response.setId(mesa.getId());
+                    response.setNombre(mesa.getNombre());
+                    response.setFechaInicio(mesa.getFechaInicio());
+                    response.setFechaFin(mesa.getFechaFin());
+                    
+                    List<com.sysacad.backend.modelo.DetalleMesaExamen> detalles = detalleMesaRepository.findByMesaExamenId(mesa.getId());
+                    
+                    long totalInscriptos = detalles.stream()
+                            .mapToLong(d -> inscripcionExamenRepository.countByDetalleMesaExamenId(d.getId()))
+                            .sum();
+                    
+                    response.setCantidadInscriptos(totalInscriptos);
+                    
+                    // We don't necessarily need to populate details list for this high-level view, 
+                    // or user might want it. Based on request "Agrega este datos para mesa dto", 
+                    // and typically list views are summary. 
+                    // But wait, the user said "endpoint que trae la mesa".
+                    // If I leave details null, it's fine for a summary list. 
+                    // I'll leave details as null or empty list to avoid N+1 payload bloat unless requested.
+                    // Actually, let's map details sparsely or just leave null if not needed.
+                    // Given the loop, let's keep it efficient.
+                    
+                    return response;
+                })
+                .collect(Collectors.toList());
+    }
+
     @Transactional
     public void eliminarDetalleMesa(UUID idMesa, Integer nroDetalle) {
         com.sysacad.backend.modelo.DetalleMesaExamen.DetalleId id = new com.sysacad.backend.modelo.DetalleMesaExamen.DetalleId(idMesa, nroDetalle);

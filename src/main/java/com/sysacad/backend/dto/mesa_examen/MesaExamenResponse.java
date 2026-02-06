@@ -12,5 +12,6 @@ public class MesaExamenResponse {
     private String nombre;
     private LocalDate fechaInicio;
     private LocalDate fechaFin;
+    private Long cantidadInscriptos;
     private List<DetalleMesaExamenResponse> detalles;
 }

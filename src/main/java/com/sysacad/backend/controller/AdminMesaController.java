@@ -54,6 +54,11 @@ public class AdminMesaController {
         return ResponseEntity.ok(mesaService.obtenerProfesoresDisponibles(idMateria, fecha, hora));
     }
 
+    @GetMapping("/turnos")
+    public ResponseEntity<List<com.sysacad.backend.dto.mesa_examen.MesaExamenResponse>> obtenerTurnos() {
+       return ResponseEntity.ok(mesaService.obtenerTurnos());
+    }
+
     @DeleteMapping("/{idMesa}/detalle/{nroDetalle}")
     public ResponseEntity<Void> eliminarDetalleMesa(@PathVariable UUID idMesa, @PathVariable Integer nroDetalle) {
         mesaService.eliminarDetalleMesa(idMesa, nroDetalle);
