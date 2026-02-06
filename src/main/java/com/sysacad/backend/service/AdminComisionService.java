@@ -89,8 +89,20 @@ public class AdminComisionService {
 
     @Transactional
     public void crearComision(ComisionRequest request) {
+        String nombre = request.getNombre().trim();
+        
+        // Format Name: Uppercase the middle letter (e.g., 1k1 -> 1K1)
+        if (nombre.matches("^\\d[a-zA-Z]\\d$")) {
+            nombre = nombre.toUpperCase();
+        }
+        
+        // Unique Validation
+        if (comisionRepository.existsByNombre(nombre)) {
+            throw new com.sysacad.backend.exception.BusinessLogicException("Ya existe una comisión con el nombre '" + nombre + "'.");
+        }
+
         Comision comision = new Comision();
-        comision.setNombre(request.getNombre());
+        comision.setNombre(nombre);
         comision.setTurno(request.getTurno());
         comision.setAnio(request.getAnio());
 
@@ -98,6 +110,8 @@ public class AdminComisionService {
             Salon salon = salonRepository.findById(request.getIdSalon())
                     .orElseThrow(() -> new ResourceNotFoundException("Salón no encontrado"));
             comision.setSalon(salon);
+        } else {
+            comision.setSalon(null);
         }
 
         comisionRepository.save(comision);
@@ -127,6 +141,8 @@ public class AdminComisionService {
         return busyProfessors;
     }
 
+import com.sysacad.backend.dto.salon.SalonResponse;
+
     @Transactional(readOnly = true)
     public List<ProfesorDisponibleDTO> obtenerProfesoresDisponibles(UUID idMateria, List<AsignarMateriaComisionRequest.HorarioRequestDTO> horarios) {
         // 1. Get all qualified professors
@@ -140,6 +156,28 @@ public class AdminComisionService {
         return candidatos.stream()
                 .filter(p -> !busyProfessors.contains(p.getId()))
                 .map(p -> new ProfesorDisponibleDTO(p.getId(), p.getNombre(), p.getApellido(), p.getLegajo()))
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<SalonResponse> obtenerSalonesDisponibles(String turno, Integer anio) {
+        List<Salon> todosSalones = salonRepository.findAll();
+        List<Comision> comisionesOcupadas = comisionRepository.findByTurnoAndAnio(turno, anio);
+        
+        java.util.Set<UUID> salonesOcupados = comisionesOcupadas.stream()
+                .filter(c -> c.getSalon() != null)
+                .map(c -> c.getSalon().getId())
+                .collect(Collectors.toSet());
+        
+        return todosSalones.stream()
+                .filter(s -> !salonesOcupados.contains(s.getId()))
+                .map(s -> new SalonResponse(
+                        s.getId(),
+                        s.getFacultad().getId(),
+                        s.getFacultad().getNombre(),
+                        s.getNombre(),
+                        s.getPiso()
+                ))
                 .collect(Collectors.toList());
     }
 

@@ -24,4 +24,8 @@ public interface ComisionRepository extends JpaRepository<Comision, UUID> {
 
     @org.springframework.data.jpa.repository.Query("SELECT DISTINCT c.anio FROM Comision c JOIN c.profesores p WHERE p.id = :profesorId ORDER BY c.anio DESC")
     List<Integer> findDistinctAniosByProfesorId(@org.springframework.data.repository.query.Param("profesorId") UUID profesorId);
+    
+    List<Comision> findByTurnoAndAnio(String turno, Integer anio);
+
+    boolean existsByNombre(String nombre);
 }

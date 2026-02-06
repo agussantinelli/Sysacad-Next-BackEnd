@@ -15,7 +15,7 @@ public class Comision {
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_salon", nullable = false)
+    @JoinColumn(name = "id_salon", nullable = true)
     private Salon salon;
 
     @Column(nullable = false, length = 50)
