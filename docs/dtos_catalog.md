@@ -367,6 +367,7 @@ Response for `/api/alumnos/mis-carreras-materias`.
 - `fechaCreacion` (LocalDateTime)
 - `idComision` (UUID)
 - `idMateria` (UUID)
+- `esVisible` (Boolean)
 
 ### `MiembroGrupoRequest`
 - `idUsuario` (UUID)

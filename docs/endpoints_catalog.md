@@ -213,7 +213,9 @@ Base URL: `/api/grupos`
 | Método | Endpoint | Roles / Acceso | Descripción |
 | :--- | :--- | :--- | :--- |
 | `POST` | `/` | Authenticated | Crear un nuevo grupo de chat. |
-| `GET` | `/mis-grupos` | Authenticated | Listar grupos a los que pertenece el usuario. |
+| `GET` | `/alumno` | ESTUDIANTE | Listar grupos visibles para el alumno (activados por mensaje). |
+| `GET` | `/profesor` | PROFESOR | Listar todos los grupos asignados al docente. |
+| `GET` | `/mis-grupos` | Authenticated | Listar todos los grupos (General). |
 | `GET` | `/{id}` | Authenticated | Ver detalle de un grupo. |
 | `POST` | `/{id}/miembros` | Authenticated | Agregar miembro a un grupo. |
 | `DELETE` | `/{id}/miembros/{idUsuario}` | Authenticated | Eliminar miembro de un grupo. |
