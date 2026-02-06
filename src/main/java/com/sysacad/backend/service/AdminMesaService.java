@@ -164,4 +164,26 @@ public class AdminMesaService {
         detalleMesaRepository.deleteById(id);
     }
 
+    @Transactional
+    public void eliminarTurno(UUID idMesaExamen) {
+        MesaExamen mesa = mesaRepository.findById(idMesaExamen)
+                .orElseThrow(() -> new RuntimeException("Turno de examen no encontrado"));
+
+        List<com.sysacad.backend.modelo.DetalleMesaExamen> detalles = detalleMesaRepository.findByMesaExamenId(idMesaExamen);
+
+        long totalInscriptos = detalles.stream()
+                .mapToLong(d -> inscripcionExamenRepository.countByDetalleMesaExamenId(d.getId()))
+                .sum();
+
+        if (totalInscriptos > 0) {
+            throw new RuntimeException("No se puede eliminar el turno porque tiene alumnos inscriptos en una o más materias.");
+        }
+
+        // Si no hay inscriptos, eliminar todos los detalles primero
+        detalleMesaRepository.deleteAll(detalles);
+
+        // Finalmente eliminar el turno
+        mesaRepository.delete(mesa);
+    }
+
 }

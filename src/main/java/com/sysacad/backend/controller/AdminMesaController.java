@@ -64,4 +64,10 @@ public class AdminMesaController {
         mesaService.eliminarDetalleMesa(idMesa, nroDetalle);
         return ResponseEntity.noContent().build();
     }
+
+    @DeleteMapping("/turnos/{id}")
+    public ResponseEntity<Void> eliminarTurno(@PathVariable UUID id) {
+        mesaService.eliminarTurno(id);
+        return ResponseEntity.noContent().build();
+    }
 }
