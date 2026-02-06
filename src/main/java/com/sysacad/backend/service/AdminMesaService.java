@@ -66,8 +66,39 @@ public class AdminMesaService {
 
     @Transactional
     public void crearMesaExamen(com.sysacad.backend.dto.admin.MesaExamenRequest request) {
+        String nombre = request.getNombre();
+        if (nombre == null || !nombre.trim().toLowerCase().startsWith("turno")) {
+            nombre = "Turno " + (nombre == null ? "" : nombre.trim());
+        }
+
+        // Validate overlap
+        if (mesaRepository.existsByFechaFinAfterAndFechaInicioBefore(request.getFechaInicio(), request.getFechaFin())) {
+             throw new RuntimeException("El rango de fechas se superpone con un Turno de Examen existente.");
+        }
+
         MesaExamen mesa = new MesaExamen();
-        mesa.setNombre(request.getNombre());
+        mesa.setNombre(nombre);
+        mesa.setFechaInicio(request.getFechaInicio());
+        mesa.setFechaFin(request.getFechaFin());
+        mesaRepository.save(mesa);
+    }
+
+    @Transactional
+    public void editarMesaExamen(UUID id, com.sysacad.backend.dto.admin.MesaExamenRequest request) {
+        MesaExamen mesa = mesaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Turno de examen no encontrado"));
+
+        String nombre = request.getNombre();
+        if (nombre == null || !nombre.trim().toLowerCase().startsWith("turno")) {
+            nombre = "Turno " + (nombre == null ? "" : nombre.trim());
+        }
+
+        // Validate overlap excluding self
+        if (mesaRepository.existsByFechaFinAfterAndFechaInicioBeforeAndIdNot(request.getFechaInicio(), request.getFechaFin(), id)) {
+             throw new RuntimeException("El rango de fechas se superpone con otro Turno de Examen existente.");
+        }
+
+        mesa.setNombre(nombre);
         mesa.setFechaInicio(request.getFechaInicio());
         mesa.setFechaFin(request.getFechaFin());
         mesaRepository.save(mesa);
@@ -90,9 +121,14 @@ public class AdminMesaService {
                 detalleMesaRepository.findMaxNroDetalle(mesa.getId()).orElse(0) + 1 // Auto-increment nro_detalle
         );
         
-        // Validar disponibilidad del presidente
+        // Validate availability of president
         if (detalleMesaRepository.existsByProfesorAndFechaAndHora(request.getIdPresidente(), request.getDiaExamen(), request.getHoraExamen())) {
              throw new RuntimeException("El profesor seleccionado ya tiene una mesa asignada en ese horario.");
+        }
+
+        // Validate date within Turn range
+        if (request.getDiaExamen().isBefore(mesa.getFechaInicio()) || request.getDiaExamen().isAfter(mesa.getFechaFin())) {
+            throw new RuntimeException("La fecha del examen (" + request.getDiaExamen() + ") debe estar dentro del rango del Turno (" + mesa.getFechaInicio() + " - " + mesa.getFechaFin() + ").");
         }
 
         detalle.setId(id);
@@ -136,14 +172,22 @@ public class AdminMesaService {
                     
                     response.setCantidadInscriptos(totalInscriptos);
                     
-                    // We don't necessarily need to populate details list for this high-level view, 
-                    // or user might want it. Based on request "Agrega este datos para mesa dto", 
-                    // and typically list views are summary. 
-                    // But wait, the user said "endpoint que trae la mesa".
-                    // If I leave details null, it's fine for a summary list. 
-                    // I'll leave details as null or empty list to avoid N+1 payload bloat unless requested.
-                    // Actually, let's map details sparsely or just leave null if not needed.
-                    // Given the loop, let's keep it efficient.
+                    List<com.sysacad.backend.dto.detalle_mesa_examen.DetalleMesaExamenResponse> detalleResponses = detalles.stream()
+                            .map(d -> {
+                                com.sysacad.backend.dto.detalle_mesa_examen.DetalleMesaExamenResponse dr = new com.sysacad.backend.dto.detalle_mesa_examen.DetalleMesaExamenResponse();
+                                dr.setIdMesaExamen(d.getId().getIdMesaExamen());
+                                dr.setNroDetalle(d.getId().getNroDetalle());
+                                dr.setIdMateria(d.getMateria().getId());
+                                dr.setNombreMateria(d.getMateria().getNombre());
+                                dr.setIdPresidente(d.getPresidente().getId());
+                                dr.setNombrePresidente(d.getPresidente().getNombre() + " " + d.getPresidente().getApellido());
+                                dr.setDiaExamen(d.getDiaExamen());
+                                dr.setHoraExamen(d.getHoraExamen());
+                                return dr;
+                            })
+                            .collect(Collectors.toList());
+
+                    response.setDetalles(detalleResponses);
                     
                     return response;
                 })

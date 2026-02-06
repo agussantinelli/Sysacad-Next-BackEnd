@@ -70,4 +70,10 @@ public class AdminMesaController {
         mesaService.eliminarTurno(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/turnos/{id}")
+    public ResponseEntity<Void> editarTurno(@PathVariable UUID id, @RequestBody com.sysacad.backend.dto.admin.MesaExamenRequest request) {
+        mesaService.editarMesaExamen(id, request);
+        return ResponseEntity.ok().build();
+    }
 }

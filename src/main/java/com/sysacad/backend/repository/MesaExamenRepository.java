@@ -9,5 +9,7 @@ import java.util.UUID;
 @Repository
 public interface MesaExamenRepository extends JpaRepository<MesaExamen, UUID> {
 
-    // Vacio Aún
+    boolean existsByFechaFinAfterAndFechaInicioBefore(java.time.LocalDate inicio, java.time.LocalDate fin);
+
+    boolean existsByFechaFinAfterAndFechaInicioBeforeAndIdNot(java.time.LocalDate inicio, java.time.LocalDate fin, UUID id);
 }
