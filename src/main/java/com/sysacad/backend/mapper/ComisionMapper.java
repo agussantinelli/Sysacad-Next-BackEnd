@@ -51,6 +51,7 @@ public abstract class ComisionMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "materias", ignore = true) 
     @Mapping(target = "profesores", ignore = true)
+    @Mapping(target = "salon", ignore = true)
     public abstract Comision toEntity(ComisionRequest request);
 
     public abstract List<ComisionResponse> toDTOs(List<Comision> comisiones);
@@ -58,5 +59,6 @@ public abstract class ComisionMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "materias", ignore = true)
     @Mapping(target = "profesores", ignore = true)
+    @Mapping(target = "salon", ignore = true)
     public abstract void updateEntityFromRequest(ComisionRequest request, @MappingTarget Comision comision);
 }
