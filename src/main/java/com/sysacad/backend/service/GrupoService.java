@@ -16,6 +16,7 @@ import com.sysacad.backend.repository.UsuarioRepository;
 import com.sysacad.backend.repository.ComisionRepository;
 import com.sysacad.backend.repository.MateriaRepository;
 import com.sysacad.backend.repository.AsignacionMateriaRepository;
+import com.sysacad.backend.repository.InscripcionCursadoRepository;
 import com.sysacad.backend.modelo.Comision;
 import com.sysacad.backend.modelo.Materia;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,7 @@ public class GrupoService {
     private final ComisionRepository comisionRepository;
     private final MateriaRepository materiaRepository;
     private final AsignacionMateriaRepository asignacionMateriaRepository;
+    private final InscripcionCursadoRepository inscripcionCursadoRepository;
 
     @Transactional
     public Grupo crearGrupo(GrupoRequest request, UUID idUsuarioCreador) {
@@ -130,30 +132,25 @@ public class GrupoService {
                         g.setIdComision(comision.getId());
                         g.setIdMateria(materia.getId());
                         g.setTipo("COMISION_MATERIA");
-                        return grupoRepository.save(g);
+                        g = grupoRepository.save(g);
+                        
+                        poblarMiembrosAutomaticamente(g);
+                        return g;
                     });
         } else {
             grupo = grupoRepository.findById(idGrupo)
                     .orElseThrow(() -> new ResourceNotFoundException("Grupo no encontrado"));
         }
 
-        // Autorización Estricta: Solo Profesores de la comisión o Jefe de Cátedra
-        boolean esJefe = asignacionMateriaRepository.findByIdIdUsuarioAndCargo(idRemitente, com.sysacad.backend.modelo.enums.RolCargo.JEFE_CATEDRA)
-                .stream().anyMatch(a -> a.getMateria().getId().equals(grupo.getIdMateria()));
-        
-        boolean esProfesorComision = false;
-        if (!esJefe && grupo.getIdComision() != null) {
-            Comision comision = comisionRepository.getReferenceById(grupo.getIdComision());
-            esProfesorComision = comision.getProfesores().stream().anyMatch(p -> p.getId().equals(idRemitente));
-        }
+        // Asegurar que el remitente sea ADMIN si es elegible y no lo es aún
+        asegurarMiembroAdminSiEligible(grupo, idRemitente);
 
-        if (!esJefe && !esProfesorComision) {
-            throw new BusinessLogicException("Solo los profesores de esta materia/comisión o el jefe de cátedra pueden enviar mensajes.");
-        }
+        // Autorización Estricta: Solo miembros con rol ADMIN pueden enviar mensajes
+        MiembroGrupo miembro = miembroGrupoRepository.findById(new MiembroGrupo.MiembroGrupoId(grupo.getId(), idRemitente))
+                .orElseThrow(() -> new BusinessLogicException("No tienes permiso para enviar mensajes en este grupo."));
 
-        // Asegurar que el remitente sea miembro (para listar sus grupos luego)
-        if (!miembroGrupoRepository.existsByGrupo_IdAndUsuario_Id(grupo.getId(), idRemitente)) {
-            agregarMiembro(grupo.getId(), idRemitente, RolGrupo.ADMIN);
+        if (miembro.getRol() != RolGrupo.ADMIN) {
+            throw new BusinessLogicException("Solo los administradores pueden enviar mensajes en este grupo.");
         }
 
         Usuario usuario = usuarioRepository.getReferenceById(idRemitente);
@@ -164,6 +161,50 @@ public class GrupoService {
         mensaje.setContenido(request.getContenido());
         
         return mensajeGrupoRepository.save(mensaje);
+    }
+
+    private void poblarMiembrosAutomaticamente(Grupo grupo) {
+        if (grupo.getIdComision() == null || grupo.getIdMateria() == null) return;
+
+        // 1. Agregar Jefe de Cátedra como ADMIN
+        asignacionMateriaRepository.findByIdIdMateriaAndCargo(grupo.getIdMateria(), com.sysacad.backend.modelo.enums.RolCargo.JEFE_CATEDRA)
+                .forEach(a -> agregarMiembro(grupo.getId(), a.getUsuario().getId(), RolGrupo.ADMIN));
+
+        // 2. Agregar Profesores de la comisión como ADMIN
+        comisionRepository.findById(grupo.getIdComision()).ifPresent(c -> {
+            c.getProfesores().forEach(p -> agregarMiembro(grupo.getId(), p.getId(), RolGrupo.ADMIN));
+        });
+
+        // 3. Agregar Alumnos cursando como MIEMBRO
+        inscripcionCursadoRepository.findByComisionIdAndMateriaIdAndEstado(
+                grupo.getIdComision(), grupo.getIdMateria(), com.sysacad.backend.modelo.enums.EstadoCursada.CURSANDO)
+                .forEach(i -> agregarMiembro(grupo.getId(), i.getUsuario().getId(), RolGrupo.MIEMBRO));
+    }
+
+    private void asegurarMiembroAdminSiEligible(Grupo grupo, UUID idUsuario) {
+        if (grupo.getIdComision() == null || grupo.getIdMateria() == null) return;
+
+        // Si ya es ADMIN, no hacer nada
+        boolean yaEsAdmin = miembroGrupoRepository.findById(new MiembroGrupo.MiembroGrupoId(grupo.getId(), idUsuario))
+                .map(m -> m.getRol() == RolGrupo.ADMIN).orElse(false);
+        if (yaEsAdmin) return;
+
+        // Verificar si es Jefe de Cátedra
+        boolean esJefe = asignacionMateriaRepository.findByIdIdUsuarioAndCargo(idUsuario, com.sysacad.backend.modelo.enums.RolCargo.JEFE_CATEDRA)
+                .stream().anyMatch(a -> a.getMateria().getId().equals(grupo.getIdMateria()));
+        
+        if (esJefe) {
+            agregarMiembro(grupo.getId(), idUsuario, RolGrupo.ADMIN);
+            return;
+        }
+
+        // Verificar si es profesor de la comisión
+        boolean esProfesorComision = comisionRepository.findById(grupo.getIdComision())
+                .map(c -> c.getProfesores().stream().anyMatch(p -> p.getId().equals(idUsuario))).orElse(false);
+
+        if (esProfesorComision) {
+            agregarMiembro(grupo.getId(), idUsuario, RolGrupo.ADMIN);
+        }
     }
 
     @Transactional(readOnly = true)
