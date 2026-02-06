@@ -27,6 +27,13 @@ public class Comision {
     @Column(nullable = false)
     private Integer anio;
 
+    @Column(nullable = false)
+    private Integer nivel;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_carrera", nullable = false)
+    private Carrera carrera;
+
     @ManyToMany
     @JoinTable(
             name = "materias_comisiones",
