@@ -84,6 +84,13 @@ public class GrupoController {
         return ResponseEntity.ok(mensajeGrupoMapper.toDTO(mensaje));
     }
 
+    @PostMapping("/mensajes")
+    public ResponseEntity<MensajeGrupoResponse> enviarMensajeSinId(@RequestBody MensajeGrupoRequest request) {
+        UUID idRemitente = getAuthenticatedUserId();
+        MensajeGrupo mensaje = grupoService.enviarMensaje(null, request, idRemitente);
+        return ResponseEntity.ok(mensajeGrupoMapper.toDTO(mensaje));
+    }
+
     @GetMapping("/{id}/mensajes")
     public ResponseEntity<Page<MensajeGrupoResponse>> obtenerMensajes(@PathVariable UUID id, Pageable pageable) {
         Page<MensajeGrupo> mensajes = grupoService.obtenerMensajes(id, pageable);

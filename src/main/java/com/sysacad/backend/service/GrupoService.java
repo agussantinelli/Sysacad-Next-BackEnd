@@ -32,6 +32,9 @@ public class GrupoService {
     private final MiembroGrupoRepository miembroGrupoRepository;
     private final MensajeGrupoRepository mensajeGrupoRepository;
     private final UsuarioRepository usuarioRepository;
+    private final ComisionRepository comisionRepository;
+    private final MateriaRepository materiaRepository;
+    private final AsignacionMateriaRepository asignacionMateriaRepository;
 
     @Transactional
     public Grupo crearGrupo(GrupoRequest request, UUID idUsuarioCreador) {
@@ -105,12 +108,49 @@ public class GrupoService {
 
     @Transactional
     public MensajeGrupo enviarMensaje(UUID idGrupo, MensajeGrupoRequest request, UUID idRemitente) {
-        // Validar que el remitente sea miembro del grupo
-        if (!miembroGrupoRepository.existsByGrupo_IdAndUsuario_Id(idGrupo, idRemitente)) {
-            throw new BusinessLogicException("El remitente no pertenece al grupo");
+        Grupo grupo;
+        if (idGrupo == null) {
+            if (request.getIdComision() == null || request.getIdMateria() == null) {
+                throw new BusinessLogicException("Debe proporcionar el ID del grupo o IDs de comisión y materia");
+            }
+            grupo = grupoRepository.findByIdComisionAndIdMateria(request.getIdComision(), request.getIdMateria())
+                    .orElseGet(() -> {
+                        Comision comision = comisionRepository.findById(request.getIdComision())
+                                .orElseThrow(() -> new ResourceNotFoundException("Comisión no encontrada"));
+                        Materia materia = materiaRepository.findById(request.getIdMateria())
+                                .orElseThrow(() -> new ResourceNotFoundException("Materia no encontrada"));
+                        
+                        Grupo g = new Grupo();
+                        g.setNombre(comision.getNombre() + " - " + materia.getNombre());
+                        g.setIdComision(comision.getId());
+                        g.setIdMateria(materia.getId());
+                        g.setTipo("COMISION_MATERIA");
+                        return grupoRepository.save(g);
+                    });
+        } else {
+            grupo = grupoRepository.findById(idGrupo)
+                    .orElseThrow(() -> new ResourceNotFoundException("Grupo no encontrado"));
         }
 
-        Grupo grupo = grupoRepository.getReferenceById(idGrupo);
+        // Autorización Estricta: Solo Profesores de la comisión o Jefe de Cátedra
+        boolean esJefe = asignacionMateriaRepository.findByIdIdUsuarioAndCargo(idRemitente, com.sysacad.backend.modelo.enums.RolCargo.JEFE_CATEDRA)
+                .stream().anyMatch(a -> a.getMateria().getId().equals(grupo.getIdMateria()));
+        
+        boolean esProfesorComision = false;
+        if (!esJefe && grupo.getIdComision() != null) {
+            Comision comision = comisionRepository.getReferenceById(grupo.getIdComision());
+            esProfesorComision = comision.getProfesores().stream().anyMatch(p -> p.getId().equals(idRemitente));
+        }
+
+        if (!esJefe && !esProfesorComision) {
+            throw new BusinessLogicException("Solo los profesores de esta materia/comisión o el jefe de cátedra pueden enviar mensajes.");
+        }
+
+        // Asegurar que el remitente sea miembro (para listar sus grupos luego)
+        if (!miembroGrupoRepository.existsByGrupo_IdAndUsuario_Id(grupo.getId(), idRemitente)) {
+            agregarMiembro(grupo.getId(), idRemitente, RolGrupo.ADMIN);
+        }
+
         Usuario usuario = usuarioRepository.getReferenceById(idRemitente);
 
         MensajeGrupo mensaje = new MensajeGrupo();
