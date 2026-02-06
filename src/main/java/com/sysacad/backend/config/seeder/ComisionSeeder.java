@@ -4,6 +4,7 @@ import com.sysacad.backend.modelo.*;
 import com.sysacad.backend.modelo.enums.DiaSemana;
 import com.sysacad.backend.modelo.enums.RolCargo;
 import com.sysacad.backend.repository.*;
+import com.sysacad.backend.service.GrupoService;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 

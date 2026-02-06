@@ -186,28 +186,6 @@ public class GrupoService {
             .orElseThrow(() -> new ResourceNotFoundException("Grupo no encontrado con ID: " + id));
     }
 
-    // Lógica Mensajes
-
-        if (yaEsAdmin) return;
-
-        // Verificar si es Jefe de Cátedra
-        boolean esJefe = asignacionMateriaRepository.findByIdIdUsuarioAndCargo(idUsuario, com.sysacad.backend.modelo.enums.RolCargo.JEFE_CATEDRA)
-                .stream().anyMatch(a -> a.getMateria().getId().equals(grupo.getIdMateria()));
-        
-        if (esJefe) {
-            agregarMiembro(grupo.getId(), idUsuario, RolGrupo.ADMIN);
-            return;
-        }
-
-        // Verificar si es profesor de la comisión
-        boolean esProfesorComision = comisionRepository.findById(grupo.getIdComision())
-                .map(c -> c.getProfesores().stream().anyMatch(p -> p.getId().equals(idUsuario))).orElse(false);
-
-        if (esProfesorComision) {
-            agregarMiembro(grupo.getId(), idUsuario, RolGrupo.ADMIN);
-        }
-    }
-
     @Transactional
     public MensajeGrupo enviarMensaje(UUID idGrupo, MensajeGrupoRequest request, UUID idRemitente) {
         Grupo grupo;
@@ -270,7 +248,7 @@ public class GrupoService {
 
         // 1. Agregar Jefe de Cátedra como ADMIN
         asignacionMateriaRepository.findByIdIdMateriaAndCargo(grupo.getIdMateria(), com.sysacad.backend.modelo.enums.RolCargo.JEFE_CATEDRA)
-                .forEach(a -> agregarMiembro(grupo.getId(), a.getUsuario().getId(), RolGrupo.ADMIN));
+                .forEach(a -> agregarMiembro(grupo.getId(), a.getProfesor().getId(), RolGrupo.ADMIN));
 
         // 2. Agregar Profesores de la comisión como ADMIN
         comisionRepository.findById(grupo.getIdComision()).ifPresent(c -> {
