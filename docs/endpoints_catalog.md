@@ -49,6 +49,7 @@ Base URL: `/api/admin/mesas`
 | `GET` | `/` | ADMIN | Obtener mesas con estadísticas. Retorna `List<MesaAdminDTO>`. |
 | `GET` | `/turnos` | ADMIN | Obtener turnos de examen con estadísticas globales. Retorna `List<MesaExamenResponse>`. |
 | `POST` | `/turnos` | ADMIN | Crear turno de examen. Body: `MesaExamenRequest`. |
+| `DELETE` | `/turnos/{id}` | ADMIN | Eliminar turno de examen. Valida que no tenga alumnos inscriptos. |
 | `POST` | `/detalles` | ADMIN | Agregar detalle a una mesa. Body: `DetalleMesaRequest`. |
 | `DELETE` | `/{idMesa}/detalle/{nroDetalle}` | ADMIN | Eliminar detalle de mesa. |
 | `GET` | `/profesores-disponibles` | ADMIN | Buscar profesores para mesa. Params: `idMateria`, `fecha`, `hora`. Retorna `List<ProfesorDisponibleDTO>`. |
