@@ -288,7 +288,9 @@ CREATE TABLE grupos (
     descripcion TEXT,
     tipo VARCHAR(50), -- Opcional: 'CATEDRA', 'ESTUDIO', etc.
     estado VARCHAR(20) NOT NULL DEFAULT 'ACTIVO',
-    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    id_comision UUID,
+    id_materia UUID
 );
 
 CREATE TABLE miembros_grupo (
