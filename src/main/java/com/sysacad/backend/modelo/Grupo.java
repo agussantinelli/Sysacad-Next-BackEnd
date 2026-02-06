@@ -35,4 +35,7 @@ public class Grupo {
 
     @Column(name = "id_materia")
     private UUID idMateria;
+
+    @Column(name = "es_visible")
+    private Boolean esVisible = false;
 }
