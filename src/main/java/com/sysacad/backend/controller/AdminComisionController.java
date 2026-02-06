@@ -4,6 +4,7 @@ import com.sysacad.backend.dto.admin.AdminComisionDTO;
 import com.sysacad.backend.dto.admin.AsignarMateriaComisionRequest;
 import com.sysacad.backend.dto.admin.ProfesorDisponibleDTO;
 import com.sysacad.backend.dto.comision.ComisionRequest;
+import com.sysacad.backend.dto.salon.SalonResponse;
 import com.sysacad.backend.service.AdminComisionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +35,13 @@ public class AdminComisionController {
     public ResponseEntity<Void> crearComision(@RequestBody ComisionRequest request) {
         adminComisionService.crearComision(request);
         return ResponseEntity.status(201).build();
+    }
+
+    @GetMapping("/salones-disponibles")
+    public ResponseEntity<List<SalonResponse>> obtenerSalonesDisponibles(
+            @RequestParam String turno,
+            @RequestParam Integer anio) {
+        return ResponseEntity.ok(adminComisionService.obtenerSalonesDisponibles(turno, anio)); // Changed comisionService to adminComisionService
     }
 
     @PostMapping("/{id}/materias")
