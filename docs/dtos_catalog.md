@@ -365,6 +365,8 @@ Response for `/api/alumnos/mis-carreras-materias`.
 - `tipo` (String)
 - `estado` (EstadoGrupo enum)
 - `fechaCreacion` (LocalDateTime)
+- `idComision` (UUID)
+- `idMateria` (UUID)
 
 ### `MiembroGrupoRequest`
 - `idUsuario` (UUID)
@@ -381,6 +383,8 @@ Response for `/api/alumnos/mis-carreras-materias`.
 ### `MensajeGrupoRequest`
 - `contenido` (String)
 - `idUsuarioRemitente` (UUID): Optional/Ignored (inferred from token).
+- `idComision` (UUID): Used for automatic group creation.
+- `idMateria` (UUID): Used for automatic group creation.
 
 ### `MensajeGrupoResponse`
 - `id` (UUID)

@@ -217,7 +217,8 @@ Base URL: `/api/grupos`
 | `GET` | `/{id}` | Authenticated | Ver detalle de un grupo. |
 | `POST` | `/{id}/miembros` | Authenticated | Agregar miembro a un grupo. |
 | `DELETE` | `/{id}/miembros/{idUsuario}` | Authenticated | Eliminar miembro de un grupo. |
-| `POST` | `/{id}/mensajes` | Authenticated | Enviar un mensaje al grupo. |
+| `POST` | `/{id}/mensajes` | Authenticated | Enviar un mensaje al grupo (Requiere ser Profesor de la comisión o Jefe de Catedra). |
+| `POST` | `/mensajes` | Authenticated | Enviar mensaje por Comisión/Materia (Crea el grupo automáticamente si no existe). Body: `MensajeGrupoRequest` con `idComision` e `idMateria`. |
 | `GET` | `/{id}/mensajes` | Authenticated | Leer historial de mensajes (paginado). |
 | `POST` | `/{id}/marcar-leido` | Authenticated | Marcar el grupo como leído por el usuario. |
 | `GET` | `/{id}/miembros` | Authenticated | Obtener miembros con fecha de último acceso. |
