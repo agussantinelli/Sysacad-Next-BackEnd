@@ -24,6 +24,7 @@ public class AdminComisionService {
     private final UsuarioRepository usuarioRepository;
     private final AsignacionMateriaRepository asignacionMateriaRepository;
     private final InscripcionCursadoRepository inscripcionCursadoRepository;
+    private final CarreraRepository carreraRepository;
     private final HorarioCursadoRepository horarioCursadoRepository;
 
     @Autowired
@@ -33,6 +34,7 @@ public class AdminComisionService {
                                 UsuarioRepository usuarioRepository,
                                 AsignacionMateriaRepository asignacionMateriaRepository,
                                 InscripcionCursadoRepository inscripcionCursadoRepository,
+                                CarreraRepository carreraRepository,
                                 HorarioCursadoRepository horarioCursadoRepository) {
         this.comisionRepository = comisionRepository;
         this.materiaRepository = materiaRepository;
@@ -40,6 +42,7 @@ public class AdminComisionService {
         this.usuarioRepository = usuarioRepository;
         this.asignacionMateriaRepository = asignacionMateriaRepository;
         this.inscripcionCursadoRepository = inscripcionCursadoRepository;
+        this.carreraRepository = carreraRepository;
         this.horarioCursadoRepository = horarioCursadoRepository;
     }
 
@@ -99,6 +102,12 @@ public class AdminComisionService {
         if (request.getAnio() == null) {
             throw new IllegalArgumentException("El año de la comisión es obligatorio");
         }
+        if (request.getNivel() == null) {
+            throw new IllegalArgumentException("El nivel de la comisión es obligatorio");
+        }
+        if (request.getIdCarrera() == null) {
+            throw new IllegalArgumentException("La carrera de la comisión es obligatoria");
+        }
 
         String nombre = request.getNombre().trim();
         
@@ -116,6 +125,11 @@ public class AdminComisionService {
         comision.setNombre(nombre);
         comision.setTurno(request.getTurno());
         comision.setAnio(request.getAnio());
+        comision.setNivel(request.getNivel());
+        
+        Carrera carrera = carreraRepository.findById(request.getIdCarrera())
+                .orElseThrow(() -> new ResourceNotFoundException("Carrera no encontrada con ID: " + request.getIdCarrera()));
+        comision.setCarrera(carrera);
 
         if (request.getIdSalon() != null) {
             Salon salon = salonRepository.findById(request.getIdSalon())
