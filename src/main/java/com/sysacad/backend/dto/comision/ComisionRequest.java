@@ -22,10 +22,16 @@ public class ComisionRequest {
     @NotNull(message = "El año es obligatorio")
     private Integer anio;
 
+    @NotNull(message = "El nivel es obligatorio")
+    private Integer nivel;
+
+    @NotNull(message = "La carrera es obligatoria")
+    private UUID idCarrera;
+
+
     private UUID idSalon;
     
     private String salon; // Nombre del salón (compatibilidad frontend)
-    private UUID idCarrera; // Compatibilidad frontend
 
     private List<UUID> idsMaterias; 
     private List<UUID> idsProfesores;
