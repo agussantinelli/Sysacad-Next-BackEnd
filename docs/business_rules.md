@@ -9,6 +9,8 @@ Este documento detalla las reglas de negocio y consideraciones técnicas derivad
     - Una Carrera puede dictarse en muchas Facultades (Relación Muchos a Muchos).
     - Las Carreras son entidades únicas (ej. "Ingeniería en Sistemas" es la misma entidad dictada en Rosario o Córdoba), identificadas por un ID único.
 
+    - **Identificador de Plan (`anioPlan`)**: Cada carrera expone su plan vigente (nroPlan) en las respuestas de usuario para facilitar la navegación en el frontend.
+
 2.  **Planes de Estudio**:
     - Los Planes de Estudio pertenecen a una Carrera específica.
     - Se identifican por un año (ej. 2008, 2023) dentro de una Carrera.
@@ -68,6 +70,14 @@ El **Jefe de Cátedra** tiene permisos extendidos sobre las materias que lidera:
 - Puede ver **todas las comisiones** de la materia, no solo aquellas donde dicta clases.
 - Puede cargar notas y gestionar exámenes para **cualquier comisión** de dicha materia.
 - En los listados, se le muestra la información completa de todos los profesores y alumnos de la cátedra.
+- **Mensajería**: Tiene permiso para enviar mensajes a los grupos de **cualquier comisión** de su materia, sin necesidad de estar asignado como docente frente a curso.
+
+### Mensajería y Grupos
+El sistema de comunicación se rige por las siguientes reglas:
+- **Vinculación Estricta**: Un grupo de chat coincide con una dupla única de **Comisión + Materia**.
+- **Auto-creación**: Si se intenta enviar un mensaje y el grupo aún no existe, el sistema lo crea automáticamente bajo el formato `{Nombre Comisión} - {Nombre Materia}`.
+- **Restricción de Emisión**: Solo los usuarios con rol `PROFESOR` que estén asignados a la comisión específica (o el `JEFE_CATEDRA` de la materia) pueden enviar mensajes.
+- **Rol de Estudiante**: Los alumnos inscriptos en la comisión para esa materia actúan como receptores; pueden leer el historial pero no tienen permisos de escritura.
 
     - **Gestión de Mesas de Examen**:
         - **Nombres de Turno**: Por convención, todos los turnos deben comenzar con la palabra "Turno". Si el usuario ingresa un nombre sin este prefijo, el sistema lo antepone automáticamente (ej. "Febrero 2026" -> "Turno Febrero 2026").
