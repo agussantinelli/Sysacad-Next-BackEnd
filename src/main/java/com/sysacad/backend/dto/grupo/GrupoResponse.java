@@ -17,4 +17,6 @@ public class GrupoResponse {
     private String tipo;
     private String estado;
     private LocalDateTime fechaCreacion;
+    private UUID idComision;
+    private UUID idMateria;
 }
