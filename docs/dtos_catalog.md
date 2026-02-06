@@ -677,6 +677,7 @@ Response for `/api/materias/{idMateria}/mesas`.
 #### Inner Class: `InfoCarrera`
 - `nombreCarrera` (String)
 - `facultad` (String)
+- `anioPlan` (Integer): Plan year/number (nroPlan)
 
 ---
 
