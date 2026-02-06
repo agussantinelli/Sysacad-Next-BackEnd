@@ -140,8 +140,9 @@ public class InscripcionCursadoService {
 
         // Validaciones Reglas de Negocio
         if (estado == com.sysacad.backend.modelo.enums.EstadoCursada.REGULAR) {
-            if (notaFinal.compareTo(new java.math.BigDecimal("4.00")) < 0 || notaFinal.compareTo(new java.math.BigDecimal("5.50")) > 0) {
-                 throw new BusinessLogicException("Para regularizar, la nota debe estar entre 4.00 y 5.50");
+            // Entre 4 (inclusive) y 6 (exclusive)
+            if (notaFinal.compareTo(new java.math.BigDecimal("4.00")) < 0 || notaFinal.compareTo(new java.math.BigDecimal("6.00")) >= 0) {
+                 throw new BusinessLogicException("Para regularizar, la nota debe estar entre 4.00 (inclusize) y 6.00 (exclusive)");
             }
         } else if (estado == com.sysacad.backend.modelo.enums.EstadoCursada.PROMOCIONADO) {
             if (notaFinal.compareTo(new java.math.BigDecimal("6.00")) < 0) {
