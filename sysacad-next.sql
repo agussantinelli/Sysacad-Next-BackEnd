@@ -290,7 +290,8 @@ CREATE TABLE grupos (
     estado VARCHAR(20) NOT NULL DEFAULT 'ACTIVO',
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     id_comision UUID,
-    id_materia UUID
+    id_materia UUID,
+    es_visible BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE miembros_grupo (
