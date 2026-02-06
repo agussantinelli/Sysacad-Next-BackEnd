@@ -204,6 +204,45 @@ public class AdminMesaService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
+    public com.sysacad.backend.dto.mesa_examen.MesaExamenResponse obtenerTurnoPorId(UUID id) {
+        MesaExamen mesa = mesaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Turno de examen no encontrado"));
+
+        com.sysacad.backend.dto.mesa_examen.MesaExamenResponse response = new com.sysacad.backend.dto.mesa_examen.MesaExamenResponse();
+        response.setId(mesa.getId());
+        response.setNombre(mesa.getNombre());
+        response.setFechaInicio(mesa.getFechaInicio());
+        response.setFechaFin(mesa.getFechaFin());
+
+        List<com.sysacad.backend.modelo.DetalleMesaExamen> detalles = detalleMesaRepository.findByMesaExamenId(mesa.getId());
+
+        long totalInscriptos = detalles.stream()
+                .mapToLong(d -> inscripcionExamenRepository.countByDetalleMesaExamenId(d.getId()))
+                .sum();
+
+        response.setCantidadInscriptos(totalInscriptos);
+
+        List<com.sysacad.backend.dto.detalle_mesa_examen.DetalleMesaExamenResponse> detalleResponses = detalles.stream()
+                .map(d -> {
+                    com.sysacad.backend.dto.detalle_mesa_examen.DetalleMesaExamenResponse dr = new com.sysacad.backend.dto.detalle_mesa_examen.DetalleMesaExamenResponse();
+                    dr.setIdMesaExamen(d.getId().getIdMesaExamen());
+                    dr.setNroDetalle(d.getId().getNroDetalle());
+                    dr.setIdMateria(d.getMateria().getId());
+                    dr.setNombreMateria(d.getMateria().getNombre());
+                    dr.setIdPresidente(d.getPresidente().getId());
+                    dr.setNombrePresidente(d.getPresidente().getNombre() + " " + d.getPresidente().getApellido());
+                    dr.setDiaExamen(d.getDiaExamen());
+                    dr.setHoraExamen(d.getHoraExamen());
+                    return dr;
+                })
+                .collect(Collectors.toList());
+
+        response.setDetalles(detalleResponses);
+
+        return response;
+    }
+
     @Transactional
     public void eliminarDetalleMesa(UUID idMesa, Integer nroDetalle) {
         com.sysacad.backend.modelo.DetalleMesaExamen.DetalleId id = new com.sysacad.backend.modelo.DetalleMesaExamen.DetalleId(idMesa, nroDetalle);
