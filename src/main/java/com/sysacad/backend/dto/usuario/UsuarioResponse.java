@@ -45,5 +45,6 @@ public class UsuarioResponse {
     public static class InfoCarrera {
         private String nombreCarrera;
         private String facultad;
+        private Integer anioPlan;
     }
 }

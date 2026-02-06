@@ -199,7 +199,8 @@ public class UsuarioController {
                             e.getPlan().getCarrera().getFacultades().stream()
                                     .findFirst()
                                     .map(f -> f.getCiudad() + ", " + f.getProvincia())
-                                    .orElse("Sin Facultad")))
+                                    .orElse("Sin Facultad"),
+                            e.getPlan().getId().getNroPlan()))
                     .collect(Collectors.toList());
             dto.setCarreras(carrerasInfo);
             estudios.stream()

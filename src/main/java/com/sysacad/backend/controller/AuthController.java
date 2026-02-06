@@ -52,7 +52,8 @@ public class AuthController {
                                                         e.getPlan().getCarrera().getFacultades().stream()
                                                                 .findFirst()
                                                                 .map(f -> f.getCiudad() + ", " + f.getProvincia())
-                                                                .orElse("Sin Facultad")))
+                                                                .orElse("Sin Facultad"),
+                                                        e.getPlan().getId().getNroPlan()))
                                         .collect(Collectors.toList());
                         usuarioResponse.setCarreras(carrerasInfo);
 
