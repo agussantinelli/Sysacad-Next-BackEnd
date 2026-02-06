@@ -47,6 +47,7 @@ Base URL: `/api/admin/mesas`
 | Método | Endpoint | Roles / Acceso | Descripción |
 | :--- | :--- | :--- | :--- |
 | `GET` | `/` | ADMIN | Obtener mesas con estadísticas. Retorna `List<MesaAdminDTO>`. |
+| `GET` | `/turnos` | ADMIN | Obtener turnos de examen con estadísticas globales. Retorna `List<MesaExamenResponse>`. |
 | `POST` | `/turnos` | ADMIN | Crear turno de examen. Body: `MesaExamenRequest`. |
 | `POST` | `/detalles` | ADMIN | Agregar detalle a una mesa. Body: `DetalleMesaRequest`. |
 | `DELETE` | `/{idMesa}/detalle/{nroDetalle}` | ADMIN | Eliminar detalle de mesa. |
