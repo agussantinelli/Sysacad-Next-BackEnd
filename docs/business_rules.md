@@ -63,3 +63,10 @@ El **Jefe de Cátedra** tiene permisos extendidos sobre las materias que lidera:
 - Puede ver **todas las comisiones** de la materia, no solo aquellas donde dicta clases.
 - Puede cargar notas y gestionar exámenes para **cualquier comisión** de dicha materia.
 - En los listados, se le muestra la información completa de todos los profesores y alumnos de la cátedra.
+
+    - **Gestión de Mesas de Examen**:
+        - **Nombres de Turno**: Por convención, todos los turnos deben comenzar con la palabra "Turno". Si el usuario ingresa un nombre sin este prefijo, el sistema lo antepone automáticamente (ej. "Febrero 2026" -> "Turno Febrero 2026").
+        - **Superposición de Turnos**: No está permitido crear o modificar un Turno de Examen de manera que su rango de fechas (Inicio-Fin) se superponga con el rango de otro turno existente.
+        - **Coherencia de Fechas**: La fecha específica de un examen (Mesa de una Materia) debe estar estrictamente comprendida dentro del rango de fechas definido para el Turno de Examen al que pertenece.
+        - **Disponibilidad Docente**: El sistema valida que el profesor asignado como Presidente de Mesa no tenga asignada otra mesa de examen en la misma fecha y hora.
+        - **Eliminación Segura**: Un Turno de Examen solo puede ser eliminado si **no existen alumnos inscriptos** en ninguna de las materias que lo componen. Si hay inscriptos, la operación se bloquea para preservar la integridad de los datos académicos.
