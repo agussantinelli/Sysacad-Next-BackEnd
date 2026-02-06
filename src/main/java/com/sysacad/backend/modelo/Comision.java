@@ -30,7 +30,7 @@ public class Comision {
     @Column(nullable = false)
     private Integer nivel;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_carrera", nullable = false)
     private Carrera carrera;
 
