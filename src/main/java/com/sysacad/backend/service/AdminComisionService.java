@@ -276,6 +276,23 @@ public class AdminComisionService {
         
         comision.getMaterias().add(materia);
         
+        // Hours Validation: Verify total scheduled hours match subject's required hours
+        if (request.getHorarios() != null && !request.getHorarios().isEmpty()) {
+            long totalMinutes = request.getHorarios().stream()
+                    .mapToLong(h -> java.time.Duration.between(h.getHoraDesde(), h.getHoraHasta()).toMinutes())
+                    .sum();
+            
+            long totalHours = totalMinutes / 60;
+            long requiredHours = materia.getHorasCursado();
+            
+            if (totalHours != requiredHours) {
+                throw new com.sysacad.backend.exception.BusinessLogicException(
+                    "La materia '" + materia.getNombre() + "' requiere " + requiredHours + 
+                    " horas de cursado, pero se asignaron " + totalHours + " horas en los horarios."
+                );
+            }
+        }
+        
         for (UUID idProfesor : request.getIdsProfesores()) {
             Usuario profesor = usuarioRepository.findById(idProfesor)
                     .orElseThrow(() -> new ResourceNotFoundException("Profesor no encontrado: " + idProfesor));
