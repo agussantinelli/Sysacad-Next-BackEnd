@@ -32,7 +32,7 @@ public class AdminComisionController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> crearComision(@RequestBody ComisionRequest request) {
+    public ResponseEntity<Void> crearComision(@RequestBody @jakarta.validation.Valid ComisionRequest request) {
         adminComisionService.crearComision(request);
         return ResponseEntity.status(201).build();
     }
