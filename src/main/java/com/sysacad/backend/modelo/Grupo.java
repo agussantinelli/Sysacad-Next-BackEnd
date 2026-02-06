@@ -29,5 +29,10 @@ public class Grupo {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private com.sysacad.backend.modelo.enums.EstadoGrupo estado = com.sysacad.backend.modelo.enums.EstadoGrupo.ACTIVO;
-    
+
+    @Column(name = "id_comision")
+    private UUID idComision;
+
+    @Column(name = "id_materia")
+    private UUID idMateria;
 }
