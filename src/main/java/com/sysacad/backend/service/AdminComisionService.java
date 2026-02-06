@@ -2,6 +2,7 @@ package com.sysacad.backend.service;
 
 import com.sysacad.backend.dto.admin.*;
 import com.sysacad.backend.dto.comision.ComisionRequest;
+import com.sysacad.backend.dto.salon.SalonResponse;
 import com.sysacad.backend.exception.ResourceNotFoundException;
 import com.sysacad.backend.modelo.*;
 import com.sysacad.backend.repository.*;
@@ -141,7 +142,7 @@ public class AdminComisionService {
         return busyProfessors;
     }
 
-import com.sysacad.backend.dto.salon.SalonResponse;
+
 
     @Transactional(readOnly = true)
     public List<ProfesorDisponibleDTO> obtenerProfesoresDisponibles(UUID idMateria, List<AsignarMateriaComisionRequest.HorarioRequestDTO> horarios) {
@@ -162,7 +163,7 @@ import com.sysacad.backend.dto.salon.SalonResponse;
     @Transactional(readOnly = true)
     public List<SalonResponse> obtenerSalonesDisponibles(String turno, Integer anio) {
         List<Salon> todosSalones = salonRepository.findAll();
-        List<Comision> comisionesOcupadas = comisionRepository.findByTurnoAndAnio(turno, anio);
+        List<Comision> comisionesOcupadas = comisionRepository.findByTurnoIgnoreCaseAndAnio(turno, anio);
         
         java.util.Set<UUID> salonesOcupados = comisionesOcupadas.stream()
                 .filter(c -> c.getSalon() != null)
@@ -171,13 +172,7 @@ import com.sysacad.backend.dto.salon.SalonResponse;
         
         return todosSalones.stream()
                 .filter(s -> !salonesOcupados.contains(s.getId()))
-                .map(s -> new SalonResponse(
-                        s.getId(),
-                        s.getFacultad().getId(),
-                        s.getFacultad().getNombre(),
-                        s.getNombre(),
-                        s.getPiso()
-                ))
+                .map(SalonResponse::new)
                 .collect(Collectors.toList());
     }
 
@@ -189,23 +184,17 @@ import com.sysacad.backend.dto.salon.SalonResponse;
         Materia materia = materiaRepository.findById(request.getIdMateria())
                 .orElseThrow(() -> new ResourceNotFoundException("Materia no encontrada"));
         
-        // Add Materia to Comision if not present
         if (!comision.getMaterias().contains(materia)) {
              comision.getMaterias().add(materia);
         }
-
-        // Add Professors
         for (UUID idProfesor : request.getIdsProfesores()) {
             Usuario profesor = usuarioRepository.findById(idProfesor)
                     .orElseThrow(() -> new ResourceNotFoundException("Profesor no encontrado: " + idProfesor));
             
-            // Validate qualification
             if (!asignacionMateriaRepository.existsByIdIdUsuarioAndIdIdMateria(idProfesor, materia.getId())) {
                  throw new RuntimeException("El profesor " + profesor.getApellido() + " no está habilitado para dar esta materia.");
             }
 
-            // Validar disponibilidad (Check availability again closely)
-            // Ideally we repeat the logic from obtenerProfesoresDisponibles for these specific professors.
             java.util.Set<UUID> busyProfessors = obtenerProfesoresOcupados(request.getHorarios());
             if (busyProfessors.contains(idProfesor)) {
                  throw new RuntimeException("El profesor " + profesor.getNombre() + " " + profesor.getApellido() + " tiene superposición horaria.");

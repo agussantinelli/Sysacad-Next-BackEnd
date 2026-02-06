@@ -27,5 +27,7 @@ public interface ComisionRepository extends JpaRepository<Comision, UUID> {
     
     List<Comision> findByTurnoAndAnio(String turno, Integer anio);
 
+    List<Comision> findByTurnoIgnoreCaseAndAnio(String turno, Integer anio);
+
     boolean existsByNombre(String nombre);
 }
