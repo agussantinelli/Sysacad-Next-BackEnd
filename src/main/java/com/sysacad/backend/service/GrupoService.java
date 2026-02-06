@@ -44,6 +44,25 @@ public class GrupoService {
     private final InscripcionCursadoRepository inscripcionCursadoRepository;
 
     @Transactional
+    public void crearGruposParaComision(Comision comision) {
+        if (comision.getMaterias() == null) return;
+        
+        comision.getMaterias().forEach(materia -> {
+            boolean existe = grupoRepository.findByIdComisionAndIdMateria(comision.getId(), materia.getId()).isPresent();
+            if (!existe) {
+                Grupo g = new Grupo();
+                g.setNombre(comision.getNombre() + " - " + materia.getNombre());
+                g.setIdComision(comision.getId());
+                g.setIdMateria(materia.getId());
+                g.setTipo("COMISION_MATERIA");
+                g.setEsVisible(false); // Siempre oculto hasta primer mensaje
+                grupoRepository.save(g);
+                poblarMiembrosAutomaticamente(g);
+            }
+        });
+    }
+
+    @Transactional
     public Grupo crearGrupo(GrupoRequest request, UUID idUsuarioCreador) {
         Grupo grupo = new Grupo();
         grupo.setNombre(request.getNombre());
@@ -98,11 +117,61 @@ public class GrupoService {
         miembroGrupoRepository.deleteById(id);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public List<Grupo> obtenerMisGrupos(UUID idUsuario) {
+        // 1. Sincronizar membresías (Asegurar que esté en los grupos de sus materias/comisiones)
+        sincronizarMembresias(idUsuario);
+
+        Usuario usuario = usuarioRepository.getReferenceById(idUsuario);
+        boolean esAdminSistema = usuario.getRoles().stream()
+                .anyMatch(r -> r.getNombre().equalsIgnoreCase("ADMIN") || r.getNombre().equalsIgnoreCase("DIRECTIVO"));
+
         return miembroGrupoRepository.findByUsuario_Id(idUsuario).stream()
+                .filter(m -> {
+                    // Si es ADMIN del grupo, siempre lo ve
+                    if (m.getRol() == RolGrupo.ADMIN) return true;
+                    // Si es MIEMBRO (Alumno), solo lo ve si esVisible es true
+                    return Boolean.TRUE.equals(m.getGrupo().getEsVisible());
+                })
                 .map(MiembroGrupo::getGrupo)
                 .collect(Collectors.toList());
+    }
+
+    private void sincronizarMembresias(UUID idUsuario) {
+        // A. Sincronizar como Alumno (Inscripciones cursando)
+        inscripcionCursadoRepository.findByUsuarioIdAndEstado(idUsuario, com.sysacad.backend.modelo.enums.EstadoCursada.CURSANDO)
+                .forEach(i -> {
+                    grupoRepository.findByIdComisionAndIdMateria(i.getComision().getId(), i.getMateria().getId())
+                            .ifPresent(g -> {
+                                if (!miembroGrupoRepository.existsByGrupo_IdAndUsuario_Id(g.getId(), idUsuario)) {
+                                    agregarMiembro(g.getId(), idUsuario, RolGrupo.MIEMBRO);
+                                }
+                            });
+                });
+
+        // B. Sincronizar como Profesor/Jefe (Asignaciones)
+        // Ya cubierto por asegurarMiembroAdminSiEligible al enviar, 
+        // pero lo hacemos aquí también para visibilidad inicial
+        asignacionMateriaRepository.findByIdIdUsuario(idUsuario).forEach(a -> {
+            // Como jefe de todas las comisiones de la materia
+            grupoRepository.findAll().stream()
+                .filter(g -> g.getIdMateria() != null && g.getIdMateria().equals(a.getMateria().getId()))
+                .forEach(g -> {
+                    if (a.getCargo() == com.sysacad.backend.modelo.enums.RolCargo.JEFE_CATEDRA) {
+                        if (!miembroGrupoRepository.existsByGrupo_IdAndUsuario_Id(g.getId(), idUsuario)) {
+                            agregarMiembro(g.getId(), idUsuario, RolGrupo.ADMIN);
+                        }
+                    } else if (g.getIdComision() != null) {
+                        // Como profesor de una comisión específica
+                        boolean esDeComision = comisionRepository.findById(g.getIdComision())
+                            .map(c -> c.getProfesores().stream().anyMatch(p -> p.getId().equals(idUsuario)))
+                            .orElse(false);
+                        if (esDeComision && !miembroGrupoRepository.existsByGrupo_IdAndUsuario_Id(g.getId(), idUsuario)) {
+                            agregarMiembro(g.getId(), idUsuario, RolGrupo.ADMIN);
+                        }
+                    }
+                });
+        });
     }
 
     @Transactional(readOnly = true)
@@ -112,6 +181,26 @@ public class GrupoService {
     }
 
     // Lógica Mensajes
+
+        if (yaEsAdmin) return;
+
+        // Verificar si es Jefe de Cátedra
+        boolean esJefe = asignacionMateriaRepository.findByIdIdUsuarioAndCargo(idUsuario, com.sysacad.backend.modelo.enums.RolCargo.JEFE_CATEDRA)
+                .stream().anyMatch(a -> a.getMateria().getId().equals(grupo.getIdMateria()));
+        
+        if (esJefe) {
+            agregarMiembro(grupo.getId(), idUsuario, RolGrupo.ADMIN);
+            return;
+        }
+
+        // Verificar si es profesor de la comisión
+        boolean esProfesorComision = comisionRepository.findById(grupo.getIdComision())
+                .map(c -> c.getProfesores().stream().anyMatch(p -> p.getId().equals(idUsuario))).orElse(false);
+
+        if (esProfesorComision) {
+            agregarMiembro(grupo.getId(), idUsuario, RolGrupo.ADMIN);
+        }
+    }
 
     @Transactional
     public MensajeGrupo enviarMensaje(UUID idGrupo, MensajeGrupoRequest request, UUID idRemitente) {
@@ -132,6 +221,7 @@ public class GrupoService {
                         g.setIdComision(comision.getId());
                         g.setIdMateria(materia.getId());
                         g.setTipo("COMISION_MATERIA");
+                        g.setEsVisible(false); // Por defecto oculto hasta primer mensaje
                         g = grupoRepository.save(g);
                         
                         poblarMiembrosAutomaticamente(g);
@@ -140,6 +230,12 @@ public class GrupoService {
         } else {
             grupo = grupoRepository.findById(idGrupo)
                     .orElseThrow(() -> new ResourceNotFoundException("Grupo no encontrado"));
+        }
+
+        // Si el grupo no es visible todavía (primer mensaje), lo activamos
+        if (Boolean.FALSE.equals(grupo.getEsVisible())) {
+            grupo.setEsVisible(true);
+            grupoRepository.save(grupo);
         }
 
         // Asegurar que el remitente sea ADMIN si es elegible y no lo es aún
