@@ -15,6 +15,11 @@ public class ComisionResponse {
     private String nombre;
     private String turno;
     private Integer anio;
+    private Integer nivel;
+
+    private String nombreCarrera;
+    private UUID idCarrera;
+
 
     private String nombreSalon;
     private String ubicacionSalon; // Ej: "Aula 302 - Facultad Rosario"
@@ -31,6 +36,13 @@ public class ComisionResponse {
         this.nombre = comision.getNombre();
         this.turno = comision.getTurno();
         this.anio = comision.getAnio();
+        this.nivel = comision.getNivel();
+
+        if (comision.getCarrera() != null) {
+            this.nombreCarrera = comision.getCarrera().getNombre();
+            this.idCarrera = comision.getCarrera().getId();
+        }
+
 
         if (comision.getSalon() != null) {
             this.nombreSalon = comision.getSalon().getNombre();

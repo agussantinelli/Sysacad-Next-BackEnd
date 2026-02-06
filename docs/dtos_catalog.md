@@ -78,6 +78,14 @@ This document enumerates all Data Transfer Objects (DTOs) used in the backend ap
 - `apellido` (String)
 - `legajo` (String)
 
+### `MateriaDisponibleDTO`
+- `id` (UUID)
+- `nombre` (String)
+- `codigo` (String, nullable)
+- `nivel` (Short)
+- `horasCursado` (Short)
+- `cuatrimestreDictado` (String, nullable): Enum value (e.g., "PRIMERO", "SEGUNDO")
+- `esElectiva` (Boolean)
 
 ### `CarreraAdminDTO`
 - `id` (UUID)
@@ -207,6 +215,8 @@ Response for `/api/alumnos/mis-carreras-materias`.
 - `nombre` (String)
 - `turno` (String)
 - `anio` (Integer)
+- `nivel` (Integer): Academic level (1-5)
+- `idCarrera` (UUID): Career ID
 - `idSalon` (UUID)
 - `idsMaterias` (List<UUID>)
 - `idsProfesores` (List<UUID>)
@@ -216,10 +226,14 @@ Response for `/api/alumnos/mis-carreras-materias`.
 - `nombre` (String)
 - `turno` (String)
 - `anio` (Integer)
+- `nivel` (Integer): Academic level
+- `nombreCarrera` (String): Career name
+- `idCarrera` (UUID): Career ID
 - `nombreSalon` (String)
 - `ubicacionSalon` (String)
 - `materiasNombres` (List<String>)
 - `profesores` (List<ProfesorResumenDTO>)
+- `materiasDetalle` (List<MateriaDetalleDTO>): Detailed list of subjects with assigned professors
 
 #### Inner Class: `ProfesorResumenDTO`
 - `legajo` (String)

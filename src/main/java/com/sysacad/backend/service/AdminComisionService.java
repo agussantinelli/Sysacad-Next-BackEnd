@@ -24,7 +24,9 @@ public class AdminComisionService {
     private final UsuarioRepository usuarioRepository;
     private final AsignacionMateriaRepository asignacionMateriaRepository;
     private final InscripcionCursadoRepository inscripcionCursadoRepository;
+    private final CarreraRepository carreraRepository;
     private final HorarioCursadoRepository horarioCursadoRepository;
+    private final PlanMateriaRepository planMateriaRepository;
 
     @Autowired
     public AdminComisionService(ComisionRepository comisionRepository,
@@ -33,14 +35,18 @@ public class AdminComisionService {
                                 UsuarioRepository usuarioRepository,
                                 AsignacionMateriaRepository asignacionMateriaRepository,
                                 InscripcionCursadoRepository inscripcionCursadoRepository,
-                                HorarioCursadoRepository horarioCursadoRepository) {
+                                CarreraRepository carreraRepository,
+                                HorarioCursadoRepository horarioCursadoRepository,
+                                PlanMateriaRepository planMateriaRepository) {
         this.comisionRepository = comisionRepository;
         this.materiaRepository = materiaRepository;
         this.salonRepository = salonRepository;
         this.usuarioRepository = usuarioRepository;
         this.asignacionMateriaRepository = asignacionMateriaRepository;
         this.inscripcionCursadoRepository = inscripcionCursadoRepository;
+        this.carreraRepository = carreraRepository;
         this.horarioCursadoRepository = horarioCursadoRepository;
+        this.planMateriaRepository = planMateriaRepository;
     }
 
     @Transactional(readOnly = true)
@@ -99,6 +105,12 @@ public class AdminComisionService {
         if (request.getAnio() == null) {
             throw new IllegalArgumentException("El año de la comisión es obligatorio");
         }
+        if (request.getNivel() == null) {
+            throw new IllegalArgumentException("El nivel de la comisión es obligatorio");
+        }
+        if (request.getIdCarrera() == null) {
+            throw new IllegalArgumentException("La carrera de la comisión es obligatoria");
+        }
 
         String nombre = request.getNombre().trim();
         
@@ -116,6 +128,11 @@ public class AdminComisionService {
         comision.setNombre(nombre);
         comision.setTurno(request.getTurno());
         comision.setAnio(request.getAnio());
+        comision.setNivel(request.getNivel());
+        
+        Carrera carrera = carreraRepository.findById(request.getIdCarrera())
+                .orElseThrow(() -> new ResourceNotFoundException("Carrera no encontrada con ID: " + request.getIdCarrera()));
+        comision.setCarrera(carrera);
 
         if (request.getIdSalon() != null) {
             Salon salon = salonRepository.findById(request.getIdSalon())
@@ -190,6 +207,43 @@ public class AdminComisionService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
+    public List<MateriaDisponibleDTO> obtenerMateriasDisponibles(UUID idComision) {
+        Comision comision = comisionRepository.findById(idComision)
+                .orElseThrow(() -> new ResourceNotFoundException("Comisión no encontrada"));
+        
+        // Get subjects for this commission's career and level
+        List<PlanMateria> planMaterias = planMateriaRepository.findByIdIdCarreraAndNivel(
+                comision.getCarrera().getId(), 
+                comision.getNivel().shortValue()
+        );
+        
+        // Get IDs of subjects already assigned to this commission
+        java.util.Set<UUID> assignedMateriaIds = comision.getMaterias().stream()
+                .map(Materia::getId)
+                .collect(Collectors.toSet());
+        
+        // Filter out already assigned subjects and map to DTO
+        return planMaterias.stream()
+                .map(pm -> materiaRepository.findById(pm.getId().getIdMateria()).orElse(null))
+                .filter(java.util.Objects::nonNull)
+                .filter(m -> !assignedMateriaIds.contains(m.getId()))
+                .map(m -> new MateriaDisponibleDTO(
+                        m.getId(),
+                        m.getNombre(),
+                        null, // codigo - we don't have this in Materia entity
+                        planMaterias.stream()
+                                .filter(pm -> pm.getId().getIdMateria().equals(m.getId()))
+                                .findFirst()
+                                .map(PlanMateria::getNivel)
+                                .orElse(null),
+                        m.getHorasCursado(),
+                        m.getCuatrimestreDictado() != null ? m.getCuatrimestreDictado().name() : null,
+                        m.getOptativa()
+                ))
+                .collect(Collectors.toList());
+    }
+
     @Transactional
     public void asignarMateria(UUID idComision, AsignarMateriaComisionRequest request) {
         Comision comision = comisionRepository.findById(idComision)
@@ -198,9 +252,30 @@ public class AdminComisionService {
         Materia materia = materiaRepository.findById(request.getIdMateria())
                 .orElseThrow(() -> new ResourceNotFoundException("Materia no encontrada"));
         
-        if (!comision.getMaterias().contains(materia)) {
-             comision.getMaterias().add(materia);
+        // PK Validation: Check if materia is already assigned to this commission
+        if (comision.getMaterias().contains(materia)) {
+            throw new com.sysacad.backend.exception.BusinessLogicException(
+                "La materia '" + materia.getNombre() + "' ya está asignada a esta comisión."
+            );
         }
+        
+        // Career/Level Validation: Verify subject belongs to commission's career and level
+        List<PlanMateria> planMaterias = planMateriaRepository.findByIdIdCarreraAndNivel(
+                comision.getCarrera().getId(), 
+                comision.getNivel().shortValue()
+        );
+        boolean isValidSubject = planMaterias.stream()
+                .anyMatch(pm -> pm.getId().getIdMateria().equals(materia.getId()));
+        
+        if (!isValidSubject) {
+            throw new com.sysacad.backend.exception.BusinessLogicException(
+                "La materia '" + materia.getNombre() + "' no corresponde al nivel " + 
+                comision.getNivel() + " de la carrera " + comision.getCarrera().getNombre() + "."
+            );
+        }
+        
+        comision.getMaterias().add(materia);
+        
         for (UUID idProfesor : request.getIdsProfesores()) {
             Usuario profesor = usuarioRepository.findById(idProfesor)
                     .orElseThrow(() -> new ResourceNotFoundException("Profesor no encontrado: " + idProfesor));

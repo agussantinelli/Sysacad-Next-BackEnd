@@ -22,11 +22,14 @@ public class ComisionSeeder {
     private final HorarioCursadoRepository horarioCursadoRepository;
     private final AsignacionMateriaRepository asignacionMateriaRepository;
     private final UsuarioRepository usuarioRepository;
+    private final CarreraRepository carreraRepository;
+    private final PlanMateriaRepository planMateriaRepository;
 
     public ComisionSeeder(ComisionRepository comisionRepository, SalonRepository salonRepository,
                           FacultadRegionalRepository facultadRepository, MateriaRepository materiaRepository,
                           HorarioCursadoRepository horarioCursadoRepository, AsignacionMateriaRepository asignacionMateriaRepository,
-                          UsuarioRepository usuarioRepository) {
+                          UsuarioRepository usuarioRepository, CarreraRepository carreraRepository,
+                          PlanMateriaRepository planMateriaRepository) {
         this.comisionRepository = comisionRepository;
         this.salonRepository = salonRepository;
         this.facultadRepository = facultadRepository;
@@ -34,6 +37,8 @@ public class ComisionSeeder {
         this.horarioCursadoRepository = horarioCursadoRepository;
         this.asignacionMateriaRepository = asignacionMateriaRepository;
         this.usuarioRepository = usuarioRepository;
+        this.carreraRepository = carreraRepository;
+        this.planMateriaRepository = planMateriaRepository;
     }
 
     @Transactional
@@ -62,6 +67,12 @@ public class ComisionSeeder {
                 System.out.println(">> ComisionSeeder: Faltan profesores esenciales, abortando seed parcial.");
                 return;
             }
+
+            Carrera carreraSistemas = carreraRepository.findAll().stream()
+                    .filter(c -> c.getNombre().toLowerCase().contains("sistemas"))
+                    .findFirst()
+                    .orElseThrow(() -> new RuntimeException("Error: Carrera Sistemas no encontrada."));
+
 
             // SALONES
             Salon lab305 = createSalon(frro, "Lab. Computación 305", "3");
@@ -129,106 +140,128 @@ public class ComisionSeeder {
             // 1K1 (Todas las de Primero - Mañana)
             Comision c1k1 = createComisionIfNotExists("1K1", 2025, "MAÑANA", lab305,
                     Arrays.asList(analisis1, algebra, fisica1, ingles1, logica, algoritmos, arquitectura, sistemas),
-                    List.of(profeNicolas, profeAna, profeSandra, profeRoberto, profeGustavo, profeCristian, profeValeria));
+                    List.of(profeNicolas, profeAna, profeSandra, profeRoberto, profeGustavo, profeCristian, profeValeria),
+                    carreraSistemas);
 
             // 1K2 (Todas las de Primero - Noche)
             Comision c1k2 = createComisionIfNotExists("1K2", 2025, "NOCHE", aula401,
                     Arrays.asList(analisis1, algebra, fisica1, ingles1, logica, algoritmos, arquitectura, sistemas),
-                    List.of(profeGustavo, profeClaudia, profeJorge, profeValeria));
+                    List.of(profeGustavo, profeClaudia, profeJorge, profeValeria),
+                    carreraSistemas);
 
             // 2K1 (Todas las de Segundo - Tarde)
             Comision c2k1 = createComisionIfNotExists("2K1", 2025, "TARDE", aula201,
                     Arrays.asList(analisis2, fisica2, ingSociedad, ingles2, sintaxis, paradigmas, sistemasOp, analisisSist),
-                    List.of(profeCristian, profeRoberto, profeLaura, profeAna, profeNicolas, profeGustavo, profeClaudia, profeJorge));
+                    List.of(profeCristian, profeRoberto, profeLaura, profeAna, profeNicolas, profeGustavo, profeClaudia, profeJorge),
+                    carreraSistemas);
 
             // 3K1 (Todas las de Tercero - Noche)
             Comision c3k1 = createComisionIfNotExists("3K1", 2025, "NOCHE", lab305,
                     Arrays.asList(probEst, economia, basesDatos, desSoft, comDatos, analisisNumerico, disenio),
-                    List.of(profeSandra, profeValeria, profeLaura, profeNicolas, profeCristian, profeRoberto));
+                    List.of(profeSandra, profeValeria, profeLaura, profeNicolas, profeCristian, profeRoberto),
+                    carreraSistemas);
 
             // 4K1 (Todas las de Cuarto - Noche)
             Comision c4k1 = createComisionIfNotExists("4K1", 2025, "NOCHE", aulaMagna,
                     Arrays.asList(legislacion, ingCalidad, redes, invOp, simulacion, tecAuto, adminSist),
-                    List.of(profeLaura, profeCristian, profeRoberto, profeSandra, profeGustavo));
+                    List.of(profeLaura, profeCristian, profeRoberto, profeSandra, profeGustavo),
+                    carreraSistemas);
 
             // 5K1 (Todas las de Quinto - Noche)
             Comision c5k1 = createComisionIfNotExists("5K1", 2025, "NOCHE", aulaMagna,
                     Arrays.asList(ia, dataScience, sistGestion, gestionGer, seguridad, proyectoFinal),
-                    List.of(profeNicolas, profeLaura, profeJorge, profeCristian));
+                    List.of(profeNicolas, profeLaura, profeJorge, profeCristian),
+                    carreraSistemas);
 
             // Electivas
             Comision cElectivas = createComisionIfNotExists("Electivas 2025 - Noche", 2025, "NOCHE", aulaMagna,
                     Arrays.asList(entornos, emprendedores, metAgiles, mineria),
-                    List.of(profeNicolas, profeClaudia));
+                    List.of(profeNicolas, profeClaudia),
+                    carreraSistemas);
 
             // NUEVAS COMISIONES MASIVAS
             Comision c1k3 = createComisionIfNotExists("1K3", 2025, "TARDE", aula101,
                     Arrays.asList(analisis1, algebra, fisica1, ingles1, logica, algoritmos, arquitectura, sistemas),
-                    List.of(profeLaura, profeNicolas, profeSandra, profeRoberto, profeAna, profeCristian));
+                    List.of(profeLaura, profeNicolas, profeSandra, profeRoberto, profeAna, profeCristian),
+                    carreraSistemas);
             
             Comision c1k4 = createComisionIfNotExists("1K4", 2025, "MAÑANA", aula301,
                     Arrays.asList(analisis1, algebra, fisica1, ingles1, logica, algoritmos, arquitectura, sistemas),
-                    List.of(profeCristian, profeGustavo, profeSandra, profeRoberto, profeAna));
+                    List.of(profeCristian, profeGustavo, profeSandra, profeRoberto, profeAna),
+                    carreraSistemas);
 
             Comision c2k2 = createComisionIfNotExists("2K2", 2025, "NOCHE", aula402,
                     Arrays.asList(analisis2, fisica2, ingSociedad, ingles2, sintaxis, paradigmas, sistemasOp, analisisSist),
-                    List.of(profeRoberto, profeAna, profeJorge, profeCristian, profeNicolas, profeLaura));
+                    List.of(profeRoberto, profeAna, profeJorge, profeCristian, profeNicolas, profeLaura),
+                    carreraSistemas);
 
             Comision c2k3 = createComisionIfNotExists("2K3", 2025, "MAÑANA", aulaMagna,
                     Arrays.asList(analisis2, fisica2, ingSociedad, ingles2, sintaxis, paradigmas, sistemasOp, analisisSist),
-                    List.of(profeSandra, profeClaudia, profeRoberto, profeAna, profeCristian, profeNicolas, profeLaura));
+                    List.of(profeSandra, profeClaudia, profeRoberto, profeAna, profeCristian, profeNicolas, profeLaura),
+                    carreraSistemas);
 
             Comision c3k2 = createComisionIfNotExists("3K2", 2025, "NOCHE", sum,
                     Arrays.asList(probEst, economia, basesDatos, desSoft, comDatos, analisisNumerico, disenio),
-                    List.of(profeLaura, profeSandra, profeValeria, profeCristian, profeRoberto, profeNicolas));
+                    List.of(profeLaura, profeSandra, profeValeria, profeCristian, profeRoberto, profeNicolas),
+                    carreraSistemas);
 
             Comision c4k2 = createComisionIfNotExists("4K2", 2025, "NOCHE", aula201,
                     Arrays.asList(legislacion, ingCalidad, redes, invOp, simulacion, tecAuto, adminSist),
-                    List.of(profeRoberto, profeLaura, profeGustavo, profeCristian, profeSandra));
+                    List.of(profeRoberto, profeLaura, profeGustavo, profeCristian, profeSandra),
+                    carreraSistemas);
 
             Comision c5k2 = createComisionIfNotExists("5K2", 2025, "NOCHE", aula402,
                     Arrays.asList(ia, dataScience, sistGestion, gestionGer, seguridad, proyectoFinal),
-                    List.of(profeCristian, profeJorge, profeNicolas, profeLaura));
+                    List.of(profeCristian, profeJorge, profeNicolas, profeLaura),
+                    carreraSistemas);
 
             Comision cElec2 = createComisionIfNotExists("Electivas 2025 - Mañana", 2025, "MAÑANA", aula101,
                     Arrays.asList(entornos, emprendedores, metAgiles, mineria),
-                    List.of(profeLaura, profeClaudia, profeNicolas));
+                    List.of(profeLaura, profeClaudia, profeNicolas),
+                    carreraSistemas);
 
             // NUEVAS COMISIONES (Total 4 por nivel)
             // 2K4
              Comision c2k4 = createComisionIfNotExists("2K4", 2025, "MAÑANA", aula301,
                     Arrays.asList(analisis2, fisica2, ingSociedad, ingles2, sintaxis, paradigmas, sistemasOp, analisisSist),
-                    List.of(profeGustavo, profeJorge, profeValeria, profeSandra, profeNicolas));
+                    List.of(profeGustavo, profeJorge, profeValeria, profeSandra, profeNicolas),
+                    carreraSistemas);
 
             // 3K3
             Comision c3k3 = createComisionIfNotExists("3K3", 2025, "TARDE", lab305,
                     Arrays.asList(probEst, economia, basesDatos, desSoft, comDatos, analisisNumerico, disenio),
-                    List.of(profeCristian, profeAna, profeClaudia, profeRoberto));
+                    List.of(profeCristian, profeAna, profeClaudia, profeRoberto),
+                    carreraSistemas);
 
             // 3K4
             Comision c3k4 = createComisionIfNotExists("3K4", 2025, "MAÑANA", aula201,
                     Arrays.asList(probEst, economia, basesDatos, desSoft, comDatos, analisisNumerico, disenio),
-                    List.of(profeSandra, profeValeria, profeLaura, profeNicolas));
+                    List.of(profeSandra, profeValeria, profeLaura, profeNicolas),
+                    carreraSistemas);
 
             // 4K3
             Comision c4k3 = createComisionIfNotExists("4K3", 2025, "TARDE", aulaMagna,
                     Arrays.asList(legislacion, ingCalidad, redes, invOp, simulacion, tecAuto, adminSist),
-                    List.of(profeRoberto, profeCristian, profeAna, profeJorge));
+                    List.of(profeRoberto, profeCristian, profeAna, profeJorge),
+                    carreraSistemas);
 
             // 4K4
             Comision c4k4 = createComisionIfNotExists("4K4", 2025, "MAÑANA", aula401,
                     Arrays.asList(legislacion, ingCalidad, redes, invOp, simulacion, tecAuto, adminSist),
-                    List.of(profeGustavo, profeLaura, profeSandra, profeValeria));
+                    List.of(profeGustavo, profeLaura, profeSandra, profeValeria),
+                    carreraSistemas);
             
             // 5K3
             Comision c5k3 = createComisionIfNotExists("5K3", 2025, "TARDE", aula402,
                     Arrays.asList(ia, dataScience, sistGestion, gestionGer, seguridad, proyectoFinal),
-                    List.of(profeNicolas, profeJorge, profeCristian, profeLaura));
+                    List.of(profeNicolas, profeJorge, profeCristian, profeLaura),
+                    carreraSistemas);
 
             // 5K4
             Comision c5k4 = createComisionIfNotExists("5K4", 2025, "MAÑANA", sum,
                     Arrays.asList(ia, dataScience, sistGestion, gestionGer, seguridad, proyectoFinal),
-                    List.of(profeAna, profeRoberto, profeClaudia, profeSandra));
+                    List.of(profeAna, profeRoberto, profeClaudia, profeSandra),
+                    carreraSistemas);
 
 
             // -------------------------------------------------------------------------
@@ -533,7 +566,7 @@ public class ComisionSeeder {
     }
 
     private Comision createComisionIfNotExists(String nombre, Integer anio, String turno, Salon salon,
-                                    List<Materia> materias, List<Usuario> profes) {
+                                    List<Materia> materias, List<Usuario> profes, Carrera carrera) {
         
         Comision existing = comisionRepository.findAll().stream()
                 .filter(c -> c.getNombre().equals(nombre) && c.getAnio().equals(anio))
@@ -543,6 +576,44 @@ public class ComisionSeeder {
         if (existing != null) {
             return existing;
         }
+        
+        // Extract Nivel
+        Integer nivel = 0;
+        if (Character.isDigit(nombre.charAt(0))) {
+            nivel = Character.getNumericValue(nombre.charAt(0));
+        } else {
+            // Fallback: Look up level from first subject in the commission
+            if (materias != null && !materias.isEmpty()) {
+                Materia firstMateria = materias.get(0);
+                // Assume Plan 2023 for now since it's hardcoded in UTNSeeder
+                Integer nroPlan = 2023;
+                
+                // Find PlanMateria for this subject, career, and plan
+                // We need to use findByIdIdCarreraAndIdNroPlan... wait, we need to search by materia specifically?
+                // PlanMateriaRepository has findByIdIdMateria(idMateria)
+                // Let's use that and filter by our career/plan.
+                
+                List<PlanMateria> matchingPlans = planMateriaRepository.findByIdIdMateria(firstMateria.getId());
+                
+                PlanMateria planMateria = matchingPlans.stream()
+                        .filter(pm -> pm.getId().getIdCarrera().equals(carrera.getId()) && pm.getId().getNroPlan().equals(nroPlan))
+                        .findFirst()
+                        .orElse(null);
+                        
+                if (planMateria != null) {
+                    nivel = Integer.valueOf(planMateria.getNivel());
+                } else {
+                     // Try finding ANY level for this materia if specific one fails
+                     if (!matchingPlans.isEmpty()) {
+                          nivel = Integer.valueOf(matchingPlans.get(0).getNivel());
+                     } else {
+                          nivel = 5; // Ultimate fallback
+                     }
+                }
+            } else {
+                nivel = 5;
+            }
+        }
 
         Comision c = new Comision();
         c.setNombre(nombre);
@@ -551,6 +622,8 @@ public class ComisionSeeder {
         c.setSalon(salon);
         c.setMaterias(materias);
         c.setProfesores(profes);
+        c.setCarrera(carrera);
+        c.setNivel(nivel);
         return comisionRepository.save(c);
     }
 

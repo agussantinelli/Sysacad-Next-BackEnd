@@ -17,11 +17,13 @@ public class DbSeeder {
             ComisionSeeder comisionSeeder,
             InscripcionSeeder inscripcionSeeder,
             AvisoSeeder avisoSeeder,
-            com.sysacad.backend.repository.MateriaRepository materiaRepository
+            com.sysacad.backend.repository.MateriaRepository materiaRepository,
+            com.sysacad.backend.repository.CarreraRepository carreraRepository,
+            com.sysacad.backend.repository.PlanMateriaRepository planMateriaRepository
     ) {
         return args -> {
             // Verificar si ya se ejecutó el seeder
-            if (materiaRepository.count() > 0) {
+            if (materiaRepository.count() > 0 && carreraRepository.count() > 0) {
                 System.out.println(">> DbSeeder: OMITIDO - La base de datos ya contiene datos.");
                 System.out.println(">> Para volver a seedear, eliminar todas las tablas primero.");
                 return;
