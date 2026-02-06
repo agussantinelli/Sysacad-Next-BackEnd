@@ -95,6 +95,7 @@ Base URL: `/api/admin/comisiones`
 | `POST` | `/` | ADMIN | Crear comisión. Body: `ComisionRequest`. | `Void` |
 | `POST` | `/{id}/materias` | ADMIN | Asignar materia y profesores a comisión. Body: `AsignarMateriaComisionRequest`. | `Void` |
 | `POST` | `/profesores-disponibles` | ADMIN | Buscar profesores habilitados y sin superposición horaria. Body: `AsignarMateriaComisionRequest` (usa `idMateria`, `horarios`). | `List<ProfesorDisponibleDTO>` |
+| `GET` | `/salones-disponibles` | ADMIN | Listar salones no ocupados por comisiones en un turno y año específico. Params: `turno`, `anio`. | `List<SalonResponse>` |
 
 ## CarreraController
 Base URL: `/api/carreras`
