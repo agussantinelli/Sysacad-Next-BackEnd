@@ -98,6 +98,16 @@ public class AdminMesaService {
              throw new RuntimeException("El rango de fechas se superpone con otro Turno de Examen existente.");
         }
 
+        // Validate that new dates encompass all existing details
+        List<com.sysacad.backend.modelo.DetalleMesaExamen> detalles = detalleMesaRepository.findByMesaExamenId(id);
+        for (com.sysacad.backend.modelo.DetalleMesaExamen detalle : detalles) {
+            if (detalle.getDiaExamen().isBefore(request.getFechaInicio()) || detalle.getDiaExamen().isAfter(request.getFechaFin())) {
+                throw new RuntimeException("No se puede modificar las fechas del turno porque existe un examen de '" + 
+                    detalle.getMateria().getNombre() + "' programado para el " + detalle.getDiaExamen() + 
+                    ", que quedaría fuera del nuevo rango.");
+            }
+        }
+
         mesa.setNombre(nombre);
         mesa.setFechaInicio(request.getFechaInicio());
         mesa.setFechaFin(request.getFechaFin());
