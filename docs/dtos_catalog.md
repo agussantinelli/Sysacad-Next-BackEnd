@@ -78,6 +78,14 @@ This document enumerates all Data Transfer Objects (DTOs) used in the backend ap
 - `apellido` (String)
 - `legajo` (String)
 
+### `MateriaDisponibleDTO`
+- `id` (UUID)
+- `nombre` (String)
+- `codigo` (String, nullable)
+- `nivel` (Short)
+- `horasCursado` (Short)
+- `cuatrimestreDictado` (String, nullable): Enum value (e.g., "PRIMERO", "SEGUNDO")
+- `esElectiva` (Boolean)
 
 ### `CarreraAdminDTO`
 - `id` (UUID)
