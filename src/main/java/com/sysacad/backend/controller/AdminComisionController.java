@@ -55,4 +55,9 @@ public class AdminComisionController {
         // Reuse the request DTO to pass idMateria and horarios
         return ResponseEntity.ok(adminComisionService.obtenerProfesoresDisponibles(request.getIdMateria(), request.getHorarios()));
     }
+    
+    @GetMapping("/{id}/materias-disponibles")
+    public ResponseEntity<List<com.sysacad.backend.dto.admin.MateriaDisponibleDTO>> obtenerMateriasDisponibles(@PathVariable UUID id) {
+        return ResponseEntity.ok(adminComisionService.obtenerMateriasDisponibles(id));
+    }
 }
