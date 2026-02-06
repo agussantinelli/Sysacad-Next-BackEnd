@@ -127,7 +127,10 @@ CREATE TABLE comisiones (
     nombre VARCHAR(50) NOT NULL,
     turno VARCHAR(20) NOT NULL,
     anio INTEGER NOT NULL,
-    CONSTRAINT fk_comision_salon FOREIGN KEY (id_salon) REFERENCES salones(id)
+    nivel INTEGER NOT NULL,
+    id_carrera UUID NOT NULL,
+    CONSTRAINT fk_comision_salon FOREIGN KEY (id_salon) REFERENCES salones(id),
+    CONSTRAINT fk_comision_carrera FOREIGN KEY (id_carrera) REFERENCES carreras(id_carrera)
 );
 
 CREATE TABLE materias_comisiones (
