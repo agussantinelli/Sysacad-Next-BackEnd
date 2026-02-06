@@ -27,6 +27,7 @@ public class AdminComisionService {
     private final CarreraRepository carreraRepository;
     private final HorarioCursadoRepository horarioCursadoRepository;
     private final PlanMateriaRepository planMateriaRepository;
+    private final GrupoService grupoService;
 
     @Autowired
     public AdminComisionService(ComisionRepository comisionRepository,
@@ -37,7 +38,8 @@ public class AdminComisionService {
                                 InscripcionCursadoRepository inscripcionCursadoRepository,
                                 CarreraRepository carreraRepository,
                                 HorarioCursadoRepository horarioCursadoRepository,
-                                PlanMateriaRepository planMateriaRepository) {
+                                PlanMateriaRepository planMateriaRepository,
+                                GrupoService grupoService) {
         this.comisionRepository = comisionRepository;
         this.materiaRepository = materiaRepository;
         this.salonRepository = salonRepository;
@@ -47,6 +49,7 @@ public class AdminComisionService {
         this.carreraRepository = carreraRepository;
         this.horarioCursadoRepository = horarioCursadoRepository;
         this.planMateriaRepository = planMateriaRepository;
+        this.grupoService = grupoService;
     }
 
     @Transactional(readOnly = true)
@@ -150,6 +153,7 @@ public class AdminComisionService {
         }
 
         comisionRepository.save(comision);
+        grupoService.crearGruposParaComision(comision);
     }
 
     private java.util.Set<UUID> obtenerProfesoresOcupados(List<AsignarMateriaComisionRequest.HorarioRequestDTO> horarios) {
@@ -315,6 +319,7 @@ public class AdminComisionService {
         }
         
         comisionRepository.save(comision);
+        grupoService.crearGruposParaComision(comision);
 
         // Save Schedules
         for (AsignarMateriaComisionRequest.HorarioRequestDTO hDTO : request.getHorarios()) {

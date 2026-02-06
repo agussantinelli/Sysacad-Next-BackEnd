@@ -24,12 +24,13 @@ public class ComisionSeeder {
     private final UsuarioRepository usuarioRepository;
     private final CarreraRepository carreraRepository;
     private final PlanMateriaRepository planMateriaRepository;
+    private final GrupoService grupoService;
 
     public ComisionSeeder(ComisionRepository comisionRepository, SalonRepository salonRepository,
                           FacultadRegionalRepository facultadRepository, MateriaRepository materiaRepository,
                           HorarioCursadoRepository horarioCursadoRepository, AsignacionMateriaRepository asignacionMateriaRepository,
                           UsuarioRepository usuarioRepository, CarreraRepository carreraRepository,
-                          PlanMateriaRepository planMateriaRepository) {
+                          PlanMateriaRepository planMateriaRepository, GrupoService grupoService) {
         this.comisionRepository = comisionRepository;
         this.salonRepository = salonRepository;
         this.facultadRepository = facultadRepository;
@@ -39,6 +40,7 @@ public class ComisionSeeder {
         this.usuarioRepository = usuarioRepository;
         this.carreraRepository = carreraRepository;
         this.planMateriaRepository = planMateriaRepository;
+        this.grupoService = grupoService;
     }
 
     @Transactional
@@ -624,7 +626,9 @@ public class ComisionSeeder {
         c.setProfesores(profes);
         c.setCarrera(carrera);
         c.setNivel(nivel);
-        return comisionRepository.save(c);
+        Comision saved = comisionRepository.save(c);
+        grupoService.crearGruposParaComision(saved);
+        return saved;
     }
 
     private Materia getMateria(String nombre) {

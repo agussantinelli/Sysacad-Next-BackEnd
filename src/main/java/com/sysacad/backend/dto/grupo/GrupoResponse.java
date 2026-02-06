@@ -19,4 +19,5 @@ public class GrupoResponse {
     private LocalDateTime fechaCreacion;
     private UUID idComision;
     private UUID idMateria;
+    private Boolean esVisible;
 }
