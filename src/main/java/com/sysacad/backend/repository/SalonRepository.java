@@ -12,4 +12,6 @@ public interface SalonRepository extends JpaRepository<Salon, UUID> {
 
     List<Salon> findByFacultadId(UUID idFacultad);
 
+    java.util.Optional<Salon> findByNombre(String nombre);
+
 }

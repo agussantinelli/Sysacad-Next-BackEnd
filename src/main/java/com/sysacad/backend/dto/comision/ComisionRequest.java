@@ -23,6 +23,9 @@ public class ComisionRequest {
     private Integer anio;
 
     private UUID idSalon;
+    
+    private String salon; // Nombre del salón (compatibilidad frontend)
+    private UUID idCarrera; // Compatibilidad frontend
 
     private List<UUID> idsMaterias; 
     private List<UUID> idsProfesores;

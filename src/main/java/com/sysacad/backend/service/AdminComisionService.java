@@ -90,6 +90,16 @@ public class AdminComisionService {
 
     @Transactional
     public void crearComision(ComisionRequest request) {
+        if (request.getNombre() == null || request.getNombre().isBlank()) {
+            throw new IllegalArgumentException("El nombre de la comisión es obligatorio");
+        }
+        if (request.getTurno() == null || request.getTurno().isBlank()) {
+            throw new IllegalArgumentException("El turno de la comisión es obligatorio");
+        }
+        if (request.getAnio() == null) {
+            throw new IllegalArgumentException("El año de la comisión es obligatorio");
+        }
+
         String nombre = request.getNombre().trim();
         
         // Format Name: Uppercase the middle letter (e.g., 1k1 -> 1K1)
@@ -109,8 +119,12 @@ public class AdminComisionService {
 
         if (request.getIdSalon() != null) {
             Salon salon = salonRepository.findById(request.getIdSalon())
-                    .orElseThrow(() -> new ResourceNotFoundException("Salón no encontrado"));
+                    .orElseThrow(() -> new ResourceNotFoundException("Salón no encontrado por ID"));
             comision.setSalon(salon);
+        } else if (request.getSalon() != null && !request.getSalon().isBlank()) {
+             Salon salon = salonRepository.findByNombre(request.getSalon())
+                     .orElseThrow(() -> new ResourceNotFoundException("Salón no encontrado por nombre: " + request.getSalon()));
+             comision.setSalon(salon);
         } else {
             comision.setSalon(null);
         }
