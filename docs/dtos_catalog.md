@@ -207,6 +207,8 @@ Response for `/api/alumnos/mis-carreras-materias`.
 - `nombre` (String)
 - `turno` (String)
 - `anio` (Integer)
+- `nivel` (Integer): Academic level (1-5)
+- `idCarrera` (UUID): Career ID
 - `idSalon` (UUID)
 - `idsMaterias` (List<UUID>)
 - `idsProfesores` (List<UUID>)
@@ -216,10 +218,14 @@ Response for `/api/alumnos/mis-carreras-materias`.
 - `nombre` (String)
 - `turno` (String)
 - `anio` (Integer)
+- `nivel` (Integer): Academic level
+- `nombreCarrera` (String): Career name
+- `idCarrera` (UUID): Career ID
 - `nombreSalon` (String)
 - `ubicacionSalon` (String)
 - `materiasNombres` (List<String>)
 - `profesores` (List<ProfesorResumenDTO>)
+- `materiasDetalle` (List<MateriaDetalleDTO>): Detailed list of subjects with assigned professors
 
 #### Inner Class: `ProfesorResumenDTO`
 - `legajo` (String)
