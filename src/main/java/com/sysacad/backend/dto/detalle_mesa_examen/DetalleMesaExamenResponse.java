@@ -15,4 +15,6 @@ public class DetalleMesaExamenResponse {
     private UUID idPresidente;
     private LocalDate diaExamen;
     private LocalTime horaExamen;
+    private Long cantidadInscriptos;
+    private boolean abierta;
 }

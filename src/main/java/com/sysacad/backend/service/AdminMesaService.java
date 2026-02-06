@@ -193,6 +193,13 @@ public class AdminMesaService {
                                 dr.setNombrePresidente(d.getPresidente().getNombre() + " " + d.getPresidente().getApellido());
                                 dr.setDiaExamen(d.getDiaExamen());
                                 dr.setHoraExamen(d.getHoraExamen());
+                                
+                                long inscriptos = inscripcionExamenRepository.countByDetalleMesaExamenId(d.getId());
+                                dr.setCantidadInscriptos(inscriptos);
+                                
+                                boolean abierta = LocalDateTime.now().isBefore(mesa.getFechaFin().atStartOfDay());
+                                dr.setAbierta(abierta);
+                                
                                 return dr;
                             })
                             .collect(Collectors.toList());
@@ -234,6 +241,13 @@ public class AdminMesaService {
                     dr.setNombrePresidente(d.getPresidente().getNombre() + " " + d.getPresidente().getApellido());
                     dr.setDiaExamen(d.getDiaExamen());
                     dr.setHoraExamen(d.getHoraExamen());
+                    
+                    long inscriptos = inscripcionExamenRepository.countByDetalleMesaExamenId(d.getId());
+                    dr.setCantidadInscriptos(inscriptos);
+                    
+                    boolean abierta = LocalDateTime.now().isBefore(mesa.getFechaFin().atStartOfDay());
+                    dr.setAbierta(abierta);
+                    
                     return dr;
                 })
                 .collect(Collectors.toList());
