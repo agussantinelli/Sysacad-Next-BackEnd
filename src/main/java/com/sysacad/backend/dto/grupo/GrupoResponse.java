@@ -20,4 +20,5 @@ public class GrupoResponse {
     private UUID idComision;
     private UUID idMateria;
     private Boolean esVisible;
+    private Long mensajesSinLeer;
 }
