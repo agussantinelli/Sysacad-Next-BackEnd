@@ -149,7 +149,7 @@ This document enumerates all Data Transfer Objects (DTOs) used in the backend ap
 - `bootId` (String): UUID of the current server instance.
 
 ### `ForgotPasswordRequest`
-- `email` (String)
+- `identificador` (String): Legajo o Mail.
 
 ### `ResetPasswordRequest`
 - `token` (String)
