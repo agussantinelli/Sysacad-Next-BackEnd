@@ -127,6 +127,9 @@ public class GrupoService {
                 .map(m -> {
                     com.sysacad.backend.dto.grupo.GrupoResponse dto = grupoMapper.toDTO(m.getGrupo());
                     dto.setMensajesSinLeer(mensajeGrupoRepository.countByGrupoIdAndFechaEnvioAfter(m.getGrupo().getId(), m.getUltimoAcceso()));
+                    java.util.List<com.sysacad.backend.dto.grupo.GrupoIntegranteDTO> integrantes = grupoMapper.toIntegranteDTOs(miembroGrupoRepository.findByGrupo_Id(m.getGrupo().getId()));
+                    dto.setIntegrantes(integrantes);
+                    dto.setCantIntegrantes(integrantes.size());
                     return dto;
                 })
                 .collect(Collectors.toList());
@@ -139,6 +142,9 @@ public class GrupoService {
                 .map(m -> {
                     com.sysacad.backend.dto.grupo.GrupoResponse dto = grupoMapper.toDTO(m.getGrupo());
                     dto.setMensajesSinLeer(mensajeGrupoRepository.countByGrupoIdAndFechaEnvioAfter(m.getGrupo().getId(), m.getUltimoAcceso()));
+                    java.util.List<com.sysacad.backend.dto.grupo.GrupoIntegranteDTO> integrantes = grupoMapper.toIntegranteDTOs(miembroGrupoRepository.findByGrupo_Id(m.getGrupo().getId()));
+                    dto.setIntegrantes(integrantes);
+                    dto.setCantIntegrantes(integrantes.size());
                     return dto;
                 })
                 .collect(Collectors.toList());
@@ -151,6 +157,9 @@ public class GrupoService {
                 .map(m -> {
                     com.sysacad.backend.dto.grupo.GrupoResponse dto = grupoMapper.toDTO(m.getGrupo());
                     dto.setMensajesSinLeer(mensajeGrupoRepository.countByGrupoIdAndFechaEnvioAfter(m.getGrupo().getId(), m.getUltimoAcceso()));
+                    java.util.List<com.sysacad.backend.dto.grupo.GrupoIntegranteDTO> integrantes = grupoMapper.toIntegranteDTOs(miembroGrupoRepository.findByGrupo_Id(m.getGrupo().getId()));
+                    dto.setIntegrantes(integrantes);
+                    dto.setCantIntegrantes(integrantes.size());
                     return dto;
                 })
                 .collect(Collectors.toList());

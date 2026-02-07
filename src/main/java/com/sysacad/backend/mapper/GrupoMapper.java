@@ -4,6 +4,7 @@ import com.sysacad.backend.dto.grupo.GrupoResponse;
 import com.sysacad.backend.modelo.Grupo;
 import com.sysacad.backend.modelo.MiembroGrupo;
 import com.sysacad.backend.dto.grupo.MiembroGrupoResponse;
+import com.sysacad.backend.dto.grupo.GrupoIntegranteDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -28,4 +29,13 @@ public interface GrupoMapper {
     MiembroGrupoResponse toMiembroDTO(MiembroGrupo miembro);
 
     List<MiembroGrupoResponse> toMiembroDTOs(List<MiembroGrupo> miembros);
+
+    @Mapping(source = "usuario.id", target = "idUsuario")
+    @Mapping(source = "usuario.nombre", target = "nombre")
+    @Mapping(source = "usuario.apellido", target = "apellido")
+    @Mapping(source = "usuario.fotoPerfil", target = "foto")
+    @Mapping(source = "rol", target = "rol")
+    GrupoIntegranteDTO toIntegranteDTO(MiembroGrupo miembro);
+
+    List<GrupoIntegranteDTO> toIntegranteDTOs(List<MiembroGrupo> miembros);
 }
