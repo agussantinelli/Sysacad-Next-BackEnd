@@ -287,7 +287,7 @@ public class GrupoService {
 
         // Notificación por Email a los demás miembros
         try {
-            List<MiembroGrupo> miembros = miembroGrupoRepository.findByGrupoId(grupo.getId());
+            List<MiembroGrupo> miembros = miembroGrupoRepository.findByGrupo_Id(grupo.getId());
             for (MiembroGrupo m : miembros) {
                 if (!m.getUsuario().getId().equals(idRemitente)) {
                     Map<String, Object> vars = new HashMap<>();
