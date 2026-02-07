@@ -15,7 +15,10 @@ public class MensajeGrupoResponse {
     private UUID idGrupo;
     private UUID idUsuarioRemitente;
     private String nombreRemitente;
+    private String apellidoRemitente;
+    private String fotoRemitente;
     private String contenido;
     private Boolean editado;
     private LocalDateTime fechaEnvio;
+    private Boolean leido;
 }

@@ -10,6 +10,6 @@ public record ComisionHorarioDTO(
         String turno,
         String salon,
         List<String> horarios,
-        List<String> profesores,  // Si es jefe: profesores de la comisión; Si no: solo el jefe
-        Long cantidadAlumnos  // Cantidad de alumnos cursando esta materia en esta comisión
+        List<String> profesores,
+        Long cantidadAlumnos
 ) {}

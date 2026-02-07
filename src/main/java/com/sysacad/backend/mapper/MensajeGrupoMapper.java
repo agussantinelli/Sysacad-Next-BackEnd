@@ -15,8 +15,11 @@ public interface MensajeGrupoMapper {
 
     @Mapping(source = "grupo.id", target = "idGrupo")
     @Mapping(source = "usuario.id", target = "idUsuarioRemitente")
-    @Mapping(target = "nombreRemitente", expression = "java(mensaje.getUsuario().getNombre() + \" \" + mensaje.getUsuario().getApellido())")
+    @Mapping(source = "usuario.nombre", target = "nombreRemitente")
+    @Mapping(source = "usuario.apellido", target = "apellidoRemitente")
+    @Mapping(source = "usuario.fotoPerfil", target = "fotoRemitente")
     @Mapping(source = "fechaEnvio", target = "fechaEnvio")
+    @Mapping(target = "leido", ignore = true)
     MensajeGrupoResponse toDTO(MensajeGrupo mensaje);
 
     List<MensajeGrupoResponse> toDTOs(List<MensajeGrupo> mensajes);
