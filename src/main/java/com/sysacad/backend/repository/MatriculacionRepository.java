@@ -14,6 +14,8 @@ public interface MatriculacionRepository extends JpaRepository<Matriculacion, Ma
     List<Matriculacion> findByIdIdUsuario(UUID idUsuario);
 
     List<Matriculacion> findByUsuario_Id(UUID idUsuario);
+    
+    List<Matriculacion> findByIdIdUsuarioAndEstado(UUID idUsuario, String estado);
 
     boolean existsByFacultad_Id(UUID idFacultad);
 

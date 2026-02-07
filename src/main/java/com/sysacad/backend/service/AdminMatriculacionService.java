@@ -105,6 +105,20 @@ public class AdminMatriculacionService {
         if (matriculacionRepository.existsById(id)) {
             throw new RuntimeException("El alumno ya se encuentra matriculado en esta carrera.");
         }
+
+        // RN: Un alumno solo puede tener UNA matriculación ACTIVA
+        List<Matriculacion> matriculacionesActivas = matriculacionRepository
+                .findByIdIdUsuarioAndEstado(request.getIdUsuario(), "ACTIVO");
+        
+        if (!matriculacionesActivas.isEmpty()) {
+            Matriculacion existente = matriculacionesActivas.get(0);
+            throw new com.sysacad.backend.exception.BusinessLogicException(
+                "El alumno ya tiene una matriculación activa en " + 
+                existente.getPlan().getCarrera().getNombre() + 
+                " (Plan " + existente.getId().getNroPlan() + ")"
+            );
+        }
+
         matriculacion.setId(id);
         matriculacion.setUsuario(usuario);
         matriculacion.setFacultad(facultad);
