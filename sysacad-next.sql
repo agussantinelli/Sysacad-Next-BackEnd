@@ -29,6 +29,8 @@ CREATE TABLE usuarios (
     titulo_academico VARCHAR(100), 
     rol VARCHAR(20) NOT NULL CHECK (rol IN ('ADMIN', 'ESTUDIANTE', 'PROFESOR')),
     estado VARCHAR(20) NOT NULL,
+    reset_password_token VARCHAR(255),
+    reset_password_token_expiration TIMESTAMP,
 
     CONSTRAINT uq_usuario_legajo UNIQUE (legajo),
     CONSTRAINT uq_usuario_mail UNIQUE (mail),
