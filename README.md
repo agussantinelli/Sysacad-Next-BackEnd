@@ -312,7 +312,7 @@
 <h3>🌱 Base de Datos y Seeding Automático</h3>
 
 El sistema cuenta con un `DbSeeder` (`src/main/java/com/sysacad/backend/config/seeder/DbSeeder.java`) que pobla la base de datos automáticamente **de forma idempotente** (evita duplicados) al inicio si detecta tablas vacías.
-*   **Carga Estructural:** Crea la UTN Facultad Regional Rosario, carreras (ISI, IM, IQ, IE, IC) y la estructura de materias real.
+*   **Carga Estructural:** Crea la UTN Facultad Regional Rosario, carreras (ISI, IM, IQ, IEE, IC) y la estructura de materias real.
 *   **Simulación de Cursada y Exámenes:** 
     *   Genera comisiones para 2025 con horarios reales y validación de superposición.
     *   Asigna docentes a materias específicas para validar permisos.
@@ -325,7 +325,7 @@ El sistema cuenta con un `DbSeeder` (`src/main/java/com/sysacad/backend/config/s
 | Rol | Legajo | Nombre | Email | Password |
 | :--- | :--- | :--- | :--- | :--- |
 | **ADMIN** | `1` | Homero Simpson | `admin@sysacad.com` | `123456` |
-| **PROFESOR** | `51111` | Nicolas Cabello | `nic@sysacad.com` | `123456` |
+| **PROFESOR** | `51111` | Dario Cvitanich | `dario@sysacad.com` | `123456` |
 | **PROFESOR** | `52222` | Laura Gomez | `laura@sysacad.com` | `123456` |
 | **PROFESOR** | `53333` | Roberto Diaz | `roberto@sysacad.com` | `123456` |
 | **PROFESOR** | `54444` | Ana Martinez | `ana@sysacad.com` | `123456` |
@@ -335,7 +335,7 @@ El sistema cuenta con un `DbSeeder` (`src/main/java/com/sysacad/backend/config/s
 | **PROFESOR** | `55554` | Claudia Lopez | `claudia@sysacad.com` | `123456` |
 | **PROFESOR** | `55556` | Jorge Garcia | `jorge@sysacad.com` | `123456` |
 | **PROFESOR** | `55557` | Valeria Martinez | `valeria@sysacad.com` | `123456` |
-| **ESTUDIANTE** | `55555` | Agustin Santinelli | `agus@sysacad.com` | `123456` |
+| **ESTUDIANTE** | `55555` | Agustin Santinelli | `agustinsantinelli@gmail.com` | `123456` |
 | **ESTUDIANTE** | `56666` | Maria Rodriguez | `maria@sysacad.com` | `123456` |
 | **ESTUDIANTE** | `57777` | Juan Perez | `juan@sysacad.com` | `123456` |
 | **ESTUDIANTE** | `58888` | Sofia Lopez | `sofia@sysacad.com` | `123456` |
