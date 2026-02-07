@@ -369,6 +369,15 @@ Response for `/api/alumnos/mis-carreras-materias`.
 - `idMateria` (UUID)
 - `esVisible` (Boolean)
 - `mensajesSinLeer` (Long)
+- `integrantes` (List<GrupoIntegranteDTO>)
+- `cantIntegrantes` (Integer)
+
+### `GrupoIntegranteDTO`
+- `idUsuario` (UUID)
+- `nombre` (String)
+- `apellido` (String)
+- `rol` (RolGrupo enum)
+- `foto` (String)
 
 ### `MiembroGrupoRequest`
 - `idUsuario` (UUID)
