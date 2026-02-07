@@ -212,18 +212,19 @@ Base URL: `/api/grupos`
 
 | Método | Endpoint | Roles / Acceso | Descripción |
 | :--- | :--- | :--- | :--- |
-| `POST` | `/` | Authenticated | Crear un nuevo grupo de chat. |
-| `GET` | `/alumno` | ESTUDIANTE | Listar grupos visibles para el alumno (activados por mensaje). |
-| `GET` | `/profesor` | PROFESOR | Listar todos los grupos asignados al docente. |
-| `GET` | `/mis-grupos` | Authenticated | Listar todos los grupos (General). |
-| `GET` | `/{id}` | Authenticated | Ver detalle de un grupo. |
-| `POST` | `/{id}/miembros` | Authenticated | Agregar miembro a un grupo. |
-| `DELETE` | `/{id}/miembros/{idUsuario}` | Authenticated | Eliminar miembro de un grupo. |
-| `POST` | `/{id}/mensajes` | Authenticated | Enviar un mensaje al grupo (Requiere ser Profesor de la comisión o Jefe de Catedra). |
-| `POST` | `/mensajes` | Authenticated | Enviar mensaje por Comisión/Materia (Crea el grupo automáticamente si no existe). Body: `MensajeGrupoRequest` con `idComision` e `idMateria`. |
-| `GET` | `/{id}/mensajes` | Authenticated | Leer historial de mensajes (paginado). |
-| `POST` | `/{id}/marcar-leido` | Authenticated | Marcar el grupo como leído por el usuario. |
-| `GET` | `/{id}/miembros` | Authenticated | Obtener miembros con fecha de último acceso. |
+| `POST` | `/` | Authenticated | Crear un nuevo grupo de chat. Retorna `GrupoResponse`. |
+| `GET` | `/alumno` | ESTUDIANTE | Listar grupos visibles para el alumno (activados por mensaje). Retorna `List<GrupoResponse>`. |
+| `GET` | `/profesor` | PROFESOR | Listar todos los grupos asignados al docente. Retorna `List<GrupoResponse>`. |
+| `GET` | `/mis-grupos` | Authenticated | Listar todos los grupos (General). Retorna `List<GrupoResponse>`. |
+| `GET` | `/{id}` | Authenticated | Ver detalle de un grupo. Retorna `GrupoResponse`. |
+| `POST` | `/{id}/miembros` | Authenticated | Agregar miembro a un grupo. Retorna `Void`. |
+| `DELETE` | `/{id}/miembros/{idUsuario}` | Authenticated | Eliminar miembro de un grupo. Retorna `Void`. |
+| `POST` | `/{id}/mensajes` | Authenticated | Enviar un mensaje al grupo. Retorna `MensajeGrupoResponse`. |
+| `POST` | `/mensajes` | Authenticated | Enviar mensaje por Comisión/Materia (Crea el grupo automáticamente si no existe). Retorna `MensajeGrupoResponse`. |
+| `GET` | `/mensajes/sin-leer/total` | Authenticated | Obtener total de mensajes sin leer del usuario en todos sus grupos. Retorna `Long`. |
+| `GET` | `/{id}/mensajes` | Authenticated | Leer historial de mensajes (paginado). Retorna `Page<MensajeGrupoResponse>`. |
+| `POST` | `/{id}/marcar-leido` | Authenticated | Marcar el grupo como leído por el usuario. Retorna `Void`. |
+| `GET` | `/{id}/miembros` | Authenticated | Obtener miembros con fecha de último acceso. Retorna `List<MiembroGrupoResponse>`. |
 
 ## HorarioCursadoController
 Base URL: `/api/horarios`
