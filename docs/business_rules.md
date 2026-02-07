@@ -26,6 +26,10 @@ Este documento detalla las reglas de negocio y consideraciones técnicas derivad
 
 5.  **Notificaciones**:
     - Los avisos pueden ser dirigidos a todos o a personas específicas, con seguimiento de estado (Leído, Enviado, etc.).
+    - Se envían notificaciones por email automáticas ante: Carga de notas (Cursada/Examen), Bienvenida de nuevo usuario, y nuevos mensajes en grupos de chat.
+
+6.  **Recuperación de Contraseña**:
+    - El token de recuperación generado por el sistema tiene una validez de **24 horas**. Pasado ese tiempo, el usuario debe solicitar uno nuevo.
 
 ## Consideraciones de Diseño
 

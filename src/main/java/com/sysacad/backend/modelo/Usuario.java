@@ -83,6 +83,12 @@ public class Usuario implements UserDetails {
     @Column(nullable = false, length = 20)
     private EstadoUsuario estado;
 
+    @Column(name = "reset_password_token", length = 100)
+    private String resetPasswordToken;
+
+    @Column(name = "reset_password_token_expiration")
+    private java.time.LocalDateTime resetPasswordTokenExpiration;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_" + rol.name()));

@@ -55,6 +55,7 @@ public class ProfesorService {
 
     private final InstanciaEvaluacionRepository instanciaEvaluacionRepository;
     private final GrupoService grupoService;
+    private final IEmailService emailService;
 
     @Autowired
     public ProfesorService(AsignacionMateriaRepository asignacionMateriaRepository,
@@ -66,7 +67,8 @@ public class ProfesorService {
                            InscripcionExamenRepository inscripcionExamenRepository,
                            CalificacionCursadaRepository calificacionCursadaRepository,
                            com.sysacad.backend.repository.InstanciaEvaluacionRepository instanciaEvaluacionRepository,
-                           GrupoService grupoService) {
+                           GrupoService grupoService,
+                           IEmailService emailService) {
         this.asignacionMateriaRepository = asignacionMateriaRepository;
         this.comisionRepository = comisionRepository;
         this.horarioCursadoRepository = horarioCursadoRepository;
@@ -77,6 +79,7 @@ public class ProfesorService {
         this.calificacionCursadaRepository = calificacionCursadaRepository;
         this.instanciaEvaluacionRepository = instanciaEvaluacionRepository;
         this.grupoService = grupoService;
+        this.emailService = emailService;
     }
 
     @Transactional(readOnly = true)
@@ -481,6 +484,22 @@ public class ProfesorService {
             }
             
             inscripcionExamenRepository.save(inscripcion);
+
+            // Notificación por Email
+            try {
+                java.util.Map<String, Object> vars = new java.util.HashMap<>();
+                vars.put("nombreAlumno", inscripcion.getUsuario().getNombre());
+                vars.put("materia", detalle.getMateria().getNombre());
+                vars.put("concepto", "Examen Final");
+                vars.put("nota", inscripcion.getNota() != null ? inscripcion.getNota().toString() : "N/A");
+                vars.put("estado", inscripcion.getEstado().name());
+                vars.put("dashboardUrl", "http://localhost:4200/dashboard");
+
+                emailService.sendHtmlEmail(inscripcion.getUsuario().getMail(), 
+                        "Nota de Examen: " + detalle.getMateria().getNombre(), "grade-notification", vars);
+            } catch (Exception e) {
+                System.err.println("Error enviando notificación de nota de examen: " + e.getMessage());
+            }
         }
     }
 
@@ -586,6 +605,21 @@ public class ProfesorService {
             calificacion.setFecha(java.time.LocalDate.now());
             
             calificacionCursadaRepository.save(calificacion);
+
+            // Notificación por Email
+            try {
+                java.util.Map<String, Object> vars = new java.util.HashMap<>();
+                vars.put("nombreAlumno", inscripcion.getUsuario().getNombre());
+                vars.put("materia", inscripcion.getMateria().getNombre());
+                vars.put("concepto", instancia.getNombre());
+                vars.put("nota", calificacion.getNota().toString());
+                vars.put("dashboardUrl", "http://localhost:4200/dashboard");
+
+                emailService.sendHtmlEmail(inscripcion.getUsuario().getMail(),
+                        "Nueva Calificación: " + inscripcion.getMateria().getNombre(), "grade-notification", vars);
+            } catch (Exception e) {
+                System.err.println("Error enviando notificación de calificación de cursada: " + e.getMessage());
+            }
         }
     }
 

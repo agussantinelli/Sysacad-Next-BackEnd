@@ -25,6 +25,7 @@
     <img src="https://img.shields.io/badge/Project%20Lombok-Enables-BC0230?style=for-the-badge&logo=lombok&logoColor=white" alt="Lombok Badge"/>
     <img src="https://img.shields.io/badge/JUnit-5-25A162?style=for-the-badge&logo=junit5&logoColor=white" alt="JUnit Badge"/>
     <img src="https://img.shields.io/badge/MapStruct-Mapping-000000?style=for-the-badge&logo=mapstruct&logoColor=white" alt="MapStruct Badge"/>
+    <img src="https://img.shields.io/badge/Thymeleaf-3.x-005F0F?style=for-the-badge&logo=thymeleaf&logoColor=white" alt="Thymeleaf Badge"/>
     <img src="https://img.shields.io/badge/OpenPDF-PDF_Engine-B52E31?style=for-the-badge&logo=adobeacrobatreader&logoColor=white" alt="OpenPDF Badge"/>
 </div>
 
@@ -71,6 +72,7 @@
     <li><strong>Validación Robusta:</strong> Reglas de negocio forzadas en la capa de servicio (Domain Driven Design).</li>
     <li><strong>Optimización (N+1):</strong> Uso estratégico de <code>JOIN FETCH</code> en JPQL y DTOs projections.</li>
     <li><strong>Manejo de Errores Global:</strong> <code>@ControllerAdvice</code> para respuestas JSON estandarizadas en excepciones.</li>
+    <li><strong>Email HTML Service:</strong> Integración con Thymeleaf para el envío de correos institucionales con diseño premium y CIDs.</li>
     <li><strong>Session Invalidation (Boot ID):</strong> Mecanismo de seguridad que invalida todos los tokens JWT activos al reiniciar el servidor.</li>
 </ul>
 
@@ -122,7 +124,12 @@
         <tr>
             <td><strong>📝 Ciclo del Alumno</strong></td>
             <td><code>matriculaciones</code>, <code>inscripciones</code>, <code>calificaciones</code>, <code>solicitudes_certificado</code></td>
-            <td>Trazabilidad total: Matriculación en carrera, inscripción a cursada/examen, registro de historia académica y **Auditoría de emisión de certificados**.</td>
+            <td>Trazabilidad total: Matriculación, cursada/examen, historia académica y **Auditoría de emisión de certificados**.</td>
+        </tr>
+        <tr>
+            <td><strong>📧 Notificaciones y Seguridad</strong></td>
+            <td>-</td>
+            <td><strong>Emails Automáticos:</strong> Bienvenida, Notas parciales/finales, y Recuperación de Contraseña con tokens de 24h.</td>
         </tr>
     </tbody>
 </table>
@@ -193,6 +200,12 @@
             <td>OpenPDF</td>
             <td>1.3.30</td>
             <td>Generación de documentos PDF (Certificados).</td>
+        </tr>
+        <tr>
+            <td><strong>Email Templating</strong></td>
+            <td>Thymeleaf</td>
+            <td>3.x (Spring Starter)</td>
+            <td>Generación de correos HTML premium con branding UTN.</td>
         </tr>
     </tbody>
 </table>
@@ -301,13 +314,39 @@
 <h3>🚀 Ejecución</h3>
 
 1.  **Clonar el repositorio.**
-2.  **Configurar Base de Datos**: Asegúrate de tener PostgreSQL corriendo en el puerto `5432`. El `application.properties` intentará crear la DB `sysacad_db` si no existe.
-3.  **Compilar y Correr**:
+2.  **Configurar Archivos de Propiedades**: El sistema utiliza una división entre configuración pública y privada. Crea los siguientes archivos en `src/main/resources/`:
+
+    **`application.properties` (Fijo)**
+    ```properties
+    spring.config.import=optional:classpath:application-secret.properties
+    spring.datasource.url=jdbc:postgresql://localhost:5432/sysacad_db
+    spring.datasource.driver-class-name=org.postgresql.Driver
+    spring.jpa.hibernate.ddl-auto=update
+    spring.jpa.show-sql=true
+    server.port=8080
+    spring.mail.host=smtp.gmail.com
+    spring.mail.port=587
+    ```
+
+    **`application-secret.properties` (Privado - No se versiona)**
+    ```properties
+    spring.datasource.username=tu_usuario_postgres
+    spring.datasource.password=tu_contraseña
+    jwt.secret=tu_clave_secreta_jwt_de_64_caracteres
+    spring.mail.username=tu_email@gmail.com
+    spring.mail.password=tu_contraseña_de_aplicacion_google
+    spring.mail.properties.mail.smtp.auth=true
+    spring.mail.properties.mail.smtp.starttls.enable=true
+    ```
+
+3.  **Configurar Base de Datos**: Asegúrate de tener PostgreSQL corriendo en el puerto `5432`. El `application.properties` intentará conectarse a la DB `sysacad_db`.
+4.  **Habilitar Email (Opcional)**: Para que funcionen las notificaciones, recuerda usar una **Contraseña de Aplicación** de Google en el campo `spring.mail.password` del archivo secret.
+5.  **Compilar y Correr**:
     ```bash
     mvn spring-boot:run
     ```
-4.  **Puerto**: El servidor iniciará en el puerto **8080** (`http://localhost:8080`).
-5.  **CORS**: Configurado para aceptar peticiones desde `http://localhost:4200` (Frontend Angular).
+6.  **Puerto**: El servidor iniciará en el puerto **8080** (`http://localhost:8080`).
+7.  **CORS**: Configurado para aceptar peticiones desde `http://localhost:4200` (Frontend Angular).
 
 <h3>🌱 Base de Datos y Seeding Automático</h3>
 
