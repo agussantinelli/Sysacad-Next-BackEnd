@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8;
+            color: #002060;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 32, 96, 0.08);
+        }
+
+        .header {
+            background-color: #0099e6;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header img {
+            max-width: 180px;
+            height: auto;
+        }
+
+        .content {
+            padding: 40px 30px;
+            line-height: 1.6;
+        }
+
+        .content h1 {
+            color: #002060;
+            font-size: 24px;
+            margin-top: 0;
+        }
+
+        .content p {
+            color: #475569;
+            font-size: 16px;
+        }
+
+        .message-bubble {
+            background-color: #f1f5f9;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #0099e6;
+        }
+
+        .message-bubble strong {
+            display: block;
+            margin-bottom: 5px;
+            color: #002060;
+        }
+
+        .footer {
+            background-color: #f8fafc;
+            padding: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #94a3b8;
+            border-top: 1px solid #cbd5e1;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #0099e6;
+            color: #ffffff !important;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="cid:logoUtn" alt="UTN Rosario Logo">
+        </div>
+        <div class="content">
+            <h1>Nuevo mensaje en el grupo</h1>
+            <p>Hola <span th:text="${nombreDestinatario}">Usuario</span>,</p>
+            <p>Has recibido un nuevo mensaje en el grupo <strong><span th:text="${grupoNombre}">Grupo</span></strong>.
+            </p>
+
+            <div class="message-bubble">
+                <strong th:text="${remitente}">Juan Perez</strong>
+                <span th:text="${extractoMensaje}">Este es el contenido del mensaje...</span>
+            </div>
+
+            <div style="text-align: center;">
+                <a th:href="${chatUrl}" class="button">Responder Mensaje</a>
+            </div>
+
+            <p style="margin-top: 30px;">
+                Atentamente,<br>
+                <strong>Sysacad Next Mensajería</strong>
+            </p>
+        </div>
+        <div class="footer">
+            &copy; 2026 UTN FRRO - Departamento de Sistemas
+        </div>
+    </div>
+</body>
+
+</html>

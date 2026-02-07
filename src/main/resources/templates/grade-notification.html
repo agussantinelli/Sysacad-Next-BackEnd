@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8;
+            color: #002060;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 32, 96, 0.08);
+        }
+
+        .header {
+            background-color: #0099e6;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header img {
+            max-width: 180px;
+            height: auto;
+        }
+
+        .content {
+            padding: 40px 30px;
+            line-height: 1.6;
+        }
+
+        .content h1 {
+            color: #002060;
+            font-size: 24px;
+            margin-top: 0;
+        }
+
+        .content p {
+            color: #475569;
+            font-size: 16px;
+        }
+
+        .grade-box {
+            background-color: #f0f9ff;
+            border-left: 5px solid #0099e6;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .grade-box h2 {
+            margin: 0 0 10px 0;
+            font-size: 18px;
+            color: #002060;
+        }
+
+        .footer {
+            background-color: #f8fafc;
+            padding: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #94a3b8;
+            border-top: 1px solid #cbd5e1;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #0099e6;
+            color: #ffffff !important;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="cid:logoUtn" alt="UTN Rosario Logo">
+        </div>
+        <div class="content">
+            <h1>Nueva calificación disponible</h1>
+            <p>Hola <span th:text="${nombreAlumno}">Alumno</span>,</p>
+            <p>Se ha registrado una nueva nota en tu historial académico para la materia <strong><span
+                        th:text="${materia}">Materia</span></strong>.</p>
+
+            <div class="grade-box">
+                <h2 th:text="${concepto}">Primer Parcial</h2>
+                <p style="margin: 0;"><strong>Calificación:</strong> <span th:text="${nota}">10</span></p>
+                <p th:if="${estado != null}" style="margin: 5px 0 0 0;"><strong>Estado:</strong> <span
+                        th:text="${estado}">APROBADO</span></p>
+            </div>
+
+            <p>Puedes ver más detalles ingresando a tu estado académico en el portal.</p>
+
+            <div style="text-align: center;">
+                <a th:href="${dashboardUrl}" class="button">Ver en Sysacad</a>
+            </div>
+
+            <p style="margin-top: 30px;">
+                Atentamente,<br>
+                <strong>Sistema de Alumnos Sysacad Next</strong>
+            </p>
+        </div>
+        <div class="footer">
+            &copy; 2026 UTN FRRO - Departamento de Sistemas
+        </div>
+    </div>
+</body>
+
+</html>
