@@ -30,6 +30,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -42,9 +44,10 @@ public class GrupoService {
     private final ComisionRepository comisionRepository;
     private final MateriaRepository materiaRepository;
     private final AsignacionMateriaRepository asignacionMateriaRepository;
-    private final InscripcionCursadoRepository inscripcionCursadoRepository;
+    private final com.sysacad.backend.repository.InscripcionCursadoRepository inscripcionCursadoRepository;
     private final com.sysacad.backend.mapper.MensajeGrupoMapper mensajeGrupoMapper;
     private final com.sysacad.backend.mapper.GrupoMapper grupoMapper;
+    private final IEmailService emailService;
 
     @Transactional
     public void crearGruposParaComision(Comision comision) {
@@ -280,7 +283,31 @@ public class GrupoService {
         mensaje.setUsuario(usuario);
         mensaje.setContenido(request.getContenido());
         
-        return mensajeGrupoRepository.save(mensaje);
+        MensajeGrupo guardado = mensajeGrupoRepository.save(mensaje);
+
+        // Notificación por Email a los demás miembros
+        try {
+            List<MiembroGrupo> miembros = miembroGrupoRepository.findByGrupoId(grupo.getId());
+            for (MiembroGrupo m : miembros) {
+                if (!m.getUsuario().getId().equals(idRemitente)) {
+                    Map<String, Object> vars = new HashMap<>();
+                    vars.put("nombreDestinatario", m.getUsuario().getNombre());
+                    vars.put("grupoNombre", grupo.getNombre());
+                    vars.put("remitente", usuario.getNombre() + " " + usuario.getApellido());
+                    vars.put("extractoMensaje", guardado.getContenido().length() > 50 
+                            ? guardado.getContenido().substring(0, 47) + "..." 
+                            : guardado.getContenido());
+                    vars.put("chatUrl", "http://localhost:4200/messages");
+
+                    emailService.sendHtmlEmail(m.getUsuario().getMail(),
+                            "Nuevo mensaje en " + grupo.getNombre(), "message-notification", vars);
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Error enviando notificaciones de mensaje: " + e.getMessage());
+        }
+
+        return guardado;
     }
 
     private void poblarMiembrosAutomaticamente(Grupo grupo) {
