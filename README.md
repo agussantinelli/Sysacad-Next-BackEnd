@@ -25,6 +25,7 @@
     <img src="https://img.shields.io/badge/Project%20Lombok-Enables-BC0230?style=for-the-badge&logo=lombok&logoColor=white" alt="Lombok Badge"/>
     <img src="https://img.shields.io/badge/JUnit-5-25A162?style=for-the-badge&logo=junit5&logoColor=white" alt="JUnit Badge"/>
     <img src="https://img.shields.io/badge/MapStruct-Mapping-000000?style=for-the-badge&logo=mapstruct&logoColor=white" alt="MapStruct Badge"/>
+    <img src="https://img.shields.io/badge/Thymeleaf-3.x-005F0F?style=for-the-badge&logo=thymeleaf&logoColor=white" alt="Thymeleaf Badge"/>
     <img src="https://img.shields.io/badge/OpenPDF-PDF_Engine-B52E31?style=for-the-badge&logo=adobeacrobatreader&logoColor=white" alt="OpenPDF Badge"/>
 </div>
 
@@ -71,6 +72,7 @@
     <li><strong>Validación Robusta:</strong> Reglas de negocio forzadas en la capa de servicio (Domain Driven Design).</li>
     <li><strong>Optimización (N+1):</strong> Uso estratégico de <code>JOIN FETCH</code> en JPQL y DTOs projections.</li>
     <li><strong>Manejo de Errores Global:</strong> <code>@ControllerAdvice</code> para respuestas JSON estandarizadas en excepciones.</li>
+    <li><strong>Email HTML Service:</strong> Integración con Thymeleaf para el envío de correos institucionales con diseño premium y CIDs.</li>
     <li><strong>Session Invalidation (Boot ID):</strong> Mecanismo de seguridad que invalida todos los tokens JWT activos al reiniciar el servidor.</li>
 </ul>
 
@@ -122,7 +124,12 @@
         <tr>
             <td><strong>📝 Ciclo del Alumno</strong></td>
             <td><code>matriculaciones</code>, <code>inscripciones</code>, <code>calificaciones</code>, <code>solicitudes_certificado</code></td>
-            <td>Trazabilidad total: Matriculación en carrera, inscripción a cursada/examen, registro de historia académica y **Auditoría de emisión de certificados**.</td>
+            <td>Trazabilidad total: Matriculación, cursada/examen, historia académica y **Auditoría de emisión de certificados**.</td>
+        </tr>
+        <tr>
+            <td><strong>📧 Notificaciones y Seguridad</strong></td>
+            <td>N/A (Integration)</td>
+            <td><strong>Emails Automáticos:</strong> Bienvenida, Notas parciales/finales, y Recuperación de Contraseña con tokens de 24h.</td>
         </tr>
     </tbody>
 </table>
@@ -193,6 +200,12 @@
             <td>OpenPDF</td>
             <td>1.3.30</td>
             <td>Generación de documentos PDF (Certificados).</td>
+        </tr>
+        <tr>
+            <td><strong>Email Templating</strong></td>
+            <td>Thymeleaf</td>
+            <td>3.x (Spring Starter)</td>
+            <td>Generación de correos HTML premium con branding UTN.</td>
         </tr>
     </tbody>
 </table>
@@ -302,12 +315,15 @@
 
 1.  **Clonar el repositorio.**
 2.  **Configurar Base de Datos**: Asegúrate de tener PostgreSQL corriendo en el puerto `5432`. El `application.properties` intentará crear la DB `sysacad_db` si no existe.
-3.  **Compilar y Correr**:
+3.  **Configuración de Email**: Para habilitar el envío de correos, se requiere configurar las credenciales en `application.properties` (o variables de entorno):
+    - `spring.mail.username`: Tu dirección de Gmail.
+    - `spring.mail.password`: **Contraseña de Aplicación** de Google (16 dígitos).
+4.  **Compilar y Correr**:
     ```bash
     mvn spring-boot:run
     ```
-4.  **Puerto**: El servidor iniciará en el puerto **8080** (`http://localhost:8080`).
-5.  **CORS**: Configurado para aceptar peticiones desde `http://localhost:4200` (Frontend Angular).
+5.  **Puerto**: El servidor iniciará en el puerto **8080** (`http://localhost:8080`).
+6.  **CORS**: Configurado para aceptar peticiones desde `http://localhost:4200` (Frontend Angular).
 
 <h3>🌱 Base de Datos y Seeding Automático</h3>
 
