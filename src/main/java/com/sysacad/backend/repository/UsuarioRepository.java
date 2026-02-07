@@ -31,4 +31,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, UUID> {
     boolean existsByLegajo(String legajo);
 
     boolean existsByTipoDocumentoAndDni(com.sysacad.backend.modelo.enums.TipoDocumento tipoDocumento, String dni);
+
+    Optional<Usuario> findByResetPasswordToken(String token);
 }

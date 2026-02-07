@@ -17,7 +17,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -31,6 +34,7 @@ public class UsuarioService {
     private final InscripcionCursadoRepository inscripcionCursadoRepository;
     private final com.sysacad.backend.repository.DetalleMesaExamenRepository detalleMesaExamenRepository;
     private final FileStorageService fileStorageService;
+    private final IEmailService emailService;
 
     @Autowired
     public UsuarioService(UsuarioRepository usuarioRepository,
@@ -38,13 +42,15 @@ public class UsuarioService {
             AsignacionMateriaRepository asignacionMateriaRepository,
             InscripcionCursadoRepository inscripcionCursadoRepository,
             com.sysacad.backend.repository.DetalleMesaExamenRepository detalleMesaExamenRepository,
-            FileStorageService fileStorageService) {
+            FileStorageService fileStorageService,
+            IEmailService emailService) {
         this.usuarioRepository = usuarioRepository;
         this.passwordEncoder = passwordEncoder;
         this.asignacionMateriaRepository = asignacionMateriaRepository;
         this.inscripcionCursadoRepository = inscripcionCursadoRepository;
         this.detalleMesaExamenRepository = detalleMesaExamenRepository;
         this.fileStorageService = fileStorageService;
+        this.emailService = emailService;
     }
 
     public Usuario autenticar(String identificador, String password) {
@@ -69,13 +75,63 @@ public class UsuarioService {
             throw new BusinessLogicException("Ya existe un usuario con ese Tipo de Documento y DNI.");
         }
 
-        usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
+        String rawPassword = usuario.getPassword();
+        usuario.setPassword(passwordEncoder.encode(rawPassword));
         
         if (usuario.getEstado() == null) {
             usuario.setEstado(com.sysacad.backend.modelo.enums.EstadoUsuario.ACTIVO);
         }
         
-        return usuarioRepository.save(usuario);
+        Usuario guardado = usuarioRepository.save(usuario);
+
+        // Enviar email de bienvenida
+        try {
+            Map<String, Object> vars = new HashMap<>();
+            vars.put("nombre", guardado.getNombre());
+            vars.put("legajo", guardado.getLegajo());
+            vars.put("password", rawPassword);
+            vars.put("loginUrl", "http://localhost:4200/login");
+            emailService.sendHtmlEmail(guardado.getMail(), "¡Bienvenido a Sysacad Next!", "welcome-email", vars);
+        } catch (Exception e) {
+            System.err.println("Error al enviar email de bienvenida: " + e.getMessage());
+        }
+
+        return guardado;
+    }
+
+    @Transactional
+    public void solicitarRecuperacionPassword(String email) {
+        Usuario usuario = usuarioRepository.findByMail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("No existe un usuario registrado con el email: " + email));
+
+        String token = UUID.randomUUID().toString();
+        usuario.setResetPasswordToken(token);
+        usuario.setResetPasswordTokenExpiration(LocalDateTime.now().plusHours(24));
+        usuarioRepository.save(usuario);
+
+        try {
+            Map<String, Object> vars = new HashMap<>();
+            vars.put("nombre", usuario.getNombre());
+            vars.put("resetUrl", "http://localhost:4200/reset-password?token=" + token);
+            emailService.sendHtmlEmail(usuario.getMail(), "Recuperación de Contraseña - Sysacad Next", "forgot-password-email", vars);
+        } catch (Exception e) {
+            System.err.println("Error al enviar email de recuperación: " + e.getMessage());
+        }
+    }
+
+    @Transactional
+    public void resetPassword(String token, String newPassword) {
+        Usuario usuario = usuarioRepository.findByResetPasswordToken(token)
+                .orElseThrow(() -> new BusinessLogicException("Token de recuperación inválido"));
+
+        if (usuario.getResetPasswordTokenExpiration().isBefore(LocalDateTime.now())) {
+            throw new BusinessLogicException("El token de recuperación ha expirado");
+        }
+
+        usuario.setPassword(passwordEncoder.encode(newPassword));
+        usuario.setResetPasswordToken(null);
+        usuario.setResetPasswordTokenExpiration(null);
+        usuarioRepository.save(usuario);
     }
     
     @Transactional

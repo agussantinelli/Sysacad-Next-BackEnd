@@ -72,4 +72,18 @@ public class AuthController {
 
                 return ResponseEntity.ok(authResponse);
         }
+
+        @PostMapping("/forgot-password")
+        public ResponseEntity<?> forgotPassword(@RequestBody com.sysacad.backend.dto.auth.ForgotPasswordRequest request) {
+                usuarioService.solicitarRecuperacionPassword(request.getEmail());
+                return ResponseEntity.ok(java.util.Collections.singletonMap("mensaje", 
+                        "Si el email existe en nuestro sistema, recibirás las instrucciones para recuperar tu contraseña."));
+        }
+
+        @PostMapping("/reset-password")
+        public ResponseEntity<?> resetPassword(@RequestBody com.sysacad.backend.dto.auth.ResetPasswordRequest request) {
+                usuarioService.resetPassword(request.getToken(), request.getNewPassword());
+                return ResponseEntity.ok(java.util.Collections.singletonMap("mensaje", 
+                        "La contraseña ha sido restablecida exitosamente."));
+        }
 }
