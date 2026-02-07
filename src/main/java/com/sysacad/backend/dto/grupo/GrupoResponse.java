@@ -23,4 +23,5 @@ public class GrupoResponse {
     private Long mensajesSinLeer;
     private java.util.List<GrupoIntegranteDTO> integrantes;
     private Integer cantIntegrantes;
+    private java.time.LocalDateTime horaUltimoMensaje;
 }

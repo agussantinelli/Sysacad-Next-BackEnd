@@ -130,6 +130,8 @@ public class GrupoService {
                     java.util.List<com.sysacad.backend.dto.grupo.GrupoIntegranteDTO> integrantes = grupoMapper.toIntegranteDTOs(miembroGrupoRepository.findByGrupo_Id(m.getGrupo().getId()));
                     dto.setIntegrantes(integrantes);
                     dto.setCantIntegrantes(integrantes.size());
+                    mensajeGrupoRepository.findFirstByGrupoIdOrderByFechaEnvioDesc(m.getGrupo().getId())
+                            .ifPresent(lastMsg -> dto.setHoraUltimoMensaje(lastMsg.getFechaEnvio()));
                     return dto;
                 })
                 .collect(Collectors.toList());
@@ -145,6 +147,8 @@ public class GrupoService {
                     java.util.List<com.sysacad.backend.dto.grupo.GrupoIntegranteDTO> integrantes = grupoMapper.toIntegranteDTOs(miembroGrupoRepository.findByGrupo_Id(m.getGrupo().getId()));
                     dto.setIntegrantes(integrantes);
                     dto.setCantIntegrantes(integrantes.size());
+                    mensajeGrupoRepository.findFirstByGrupoIdOrderByFechaEnvioDesc(m.getGrupo().getId())
+                            .ifPresent(lastMsg -> dto.setHoraUltimoMensaje(lastMsg.getFechaEnvio()));
                     return dto;
                 })
                 .collect(Collectors.toList());

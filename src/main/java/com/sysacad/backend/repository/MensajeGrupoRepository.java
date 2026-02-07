@@ -13,5 +13,7 @@ public interface MensajeGrupoRepository extends JpaRepository<MensajeGrupo, UUID
     
     Page<MensajeGrupo> findByGrupoIdOrderByFechaEnvioDesc(UUID idGrupo, Pageable pageable);
 
+    java.util.Optional<MensajeGrupo> findFirstByGrupoIdOrderByFechaEnvioDesc(UUID idGrupo);
+
     long countByGrupoIdAndFechaEnvioAfter(UUID idGrupo, java.time.LocalDateTime fecha);
 }
