@@ -202,30 +202,30 @@
 <h2>📦 Estructura del Proyecto</h2>
 
 <pre><code>Sysacad-Next-BackEnd/
-├── .mvn/                                      # Archivos del Wrapper de Maven
-├── docs/                                      # Documentación técnica adicional
-│   ├── business_rules.md                      # Reglas de negocio y validaciones
-│   ├── correlativity_model.md                 # Modelo de correlatividades
-│   ├── dtos_catalog.md                        # Catálogo de DTOs
-│   ├── endpoints_catalog.md                   # Catálogo de endpoints de la API
-│   ├── enums_catalog.md                       # Catálogo de enumeraciones
-│   └── error_handling.md                      # Manejo de errores y excepciones
+├── .mvn/                                           # Archivos del Wrapper de Maven
+├── docs/                                           # Documentación técnica adicional
+│   ├── business_rules.md                           # Reglas de negocio y validaciones
+│   ├── correlativity_model.md                      # Modelo de correlatividades
+│   ├── dtos_catalog.md                             # Catálogo de DTOs
+│   ├── endpoints_catalog.md                        # Catálogo de endpoints de la API
+│   ├── enums_catalog.md                            # Catálogo de enumeraciones
+│   └── error_handling.md                           # Manejo de errores y excepciones
 ├── src/
 │   ├── main/
 │   │   ├── java/com/sysacad/backend/
-│   │   │   ├── config/                        # Configuración global
-│   │   │   │   ├── security/                  # Seguridad (JWT, Filters)
-│   │   │   │   ├── seeder/                    # Seeders de Base de Datos
-│   │   │   │   └── WebConfig.java             # Configuración CORS y Web
-│   │   │   ├── controller/                    # Controladores REST (Entry Points)
-│   │   │   │   ├── Admin*.java                # Gestión administrativa (Carreras, Comisiones, Facultades, Inscripciones, Matriculaciones, Mesas)
-│   │   │   │   ├── AuthController.java        # Autenticación y autorización
-│   │   │   │   ├── CertificadoController.java # Generación de certificados
-│   │   │   │   ├── CalendarioPdfController.java # Descarga calendario académico
-│   │   │   │   ├── HealthController.java      # Health checks del sistema
-│   │   │   │   └── ...                        # Otros controladores de dominio
-│   │   │   ├── dto/                           # Data Transfer Objects (Organizados por Dominio)
-│   │   │   │   ├── admin/                     # DTOs administrativos (18 archivos)
+│   │   │   ├── config/                             # Configuración global
+│   │   │   │   ├── security/                       # Seguridad (JWT, Filters)
+│   │   │   │   ├── seeder/                         # Seeders de Base de Datos
+│   │   │   │   └── WebConfig.java                  # Configuración CORS y Web
+│   │   │   ├── controller/                         # Controladores REST (Entry Points)
+│   │   │   │   ├── Admin*.java                     # Gestión administrativa (Carreras, Comisiones, Facultades, Inscripciones, Matriculaciones, Mesas)
+│   │   │   │   ├── AuthController.java             # Autenticación y autorización
+│   │   │   │   ├── CertificadoController.java      # Generación de certificados
+│   │   │   │   ├── CalendarioPdfController.java    # Descarga calendario académico
+│   │   │   │   ├── HealthController.java           # Health checks del sistema
+│   │   │   │   └── ...                             # Otros controladores de dominio
+│   │   │   ├── dto/                                # Data Transfer Objects (Organizados por Dominio)
+│   │   │   │   ├── admin/                          # DTOs administrativos (18 archivos)
 │   │   │   │   ├── alumno/
 │   │   │   │   ├── auth/
 │   │   │   │   ├── aviso/
@@ -250,45 +250,45 @@
 │   │   │   │   ├── salon/
 │   │   │   │   ├── sancion/
 │   │   │   │   └── usuario/
-│   │   │   ├── exception/                     # Manejo centralizado de excepciones
-│   │   │   ├── mapper/                        # Mappers (MapStruct) Entity <-> DTO
-│   │   │   ├── modelo/                        # Entidades del dominio (JPA) - 26 entidades
-│   │   │   │   └── enums/                     # Enumeraciones - 18 tipos
-│   │   │   ├── repository/                    # Repositorios (Acceso a Datos)
-│   │   │   ├── service/                       # Lógica de Negocio (Service Layer)
-│   │   │   │   ├── Admin*.java                # Servicios administrativos especializados
-│   │   │   │   ├── ArchivoService.java        # Gestión de archivos
-│   │   │   │   ├── AsignacionDocenteService.java # Asignación de profesores
-│   │   │   │   ├── CertificadoService.java    # Emisión de certificados
-│   │   │   │   ├── CorrelatividadService.java # Validación de correlatividades
-│   │   │   │   ├── EmailService.java          # Envío de correos (IEmailService)
-│   │   │   │   ├── EquivalenciaService.java   # Gestión de equivalencias
-│   │   │   │   ├── EstadisticaService.java    # Cálculo de estadísticas
-│   │   │   │   ├── FileStorageService.java    # Almacenamiento de archivos
-│   │   │   │   ├── pdf/                       # Generadores de PDF (OpenPDF)
-│   │   │   │   │   ├── IPdfGenerator.java     # Interfaz generador PDF
-│   │   │   │   │   └── OpenPdfGenerator.java  # Implementación OpenPDF
-│   │   │   │   └── ...                        # Otros servicios de dominio
-│   │   │   └── BackendApplication.java        # Punto de entrada de la aplicación
+│   │   │   ├── exception/                          # Manejo centralizado de excepciones
+│   │   │   ├── mapper/                             # Mappers (MapStruct) Entity <-> DTO
+│   │   │   ├── modelo/                             # Entidades del dominio (JPA) - 26 entidades
+│   │   │   │   └── enums/                          # Enumeraciones - 18 tipos
+│   │   │   ├── repository/                         # Repositorios (Acceso a Datos)
+│   │   │   ├── service/                            # Lógica de Negocio (Service Layer)
+│   │   │   │   ├── Admin*.java                     # Servicios administrativos especializados
+│   │   │   │   ├── ArchivoService.java             # Gestión de archivos
+│   │   │   │   ├── AsignacionDocenteService.java   # Asignación de profesores
+│   │   │   │   ├── CertificadoService.java         # Emisión de certificados
+│   │   │   │   ├── CorrelatividadService.java      # Validación de correlatividades
+│   │   │   │   ├── EmailService.java               # Envío de correos (IEmailService)
+│   │   │   │   ├── EquivalenciaService.java        # Gestión de equivalencias
+│   │   │   │   ├── EstadisticaService.java         # Cálculo de estadísticas
+│   │   │   │   ├── FileStorageService.java         # Almacenamiento de archivos
+│   │   │   │   ├── pdf/                            # Generadores de PDF (OpenPDF)
+│   │   │   │   │   ├── IPdfGenerator.java          # Interfaz generador PDF
+│   │   │   │   │   └── OpenPdfGenerator.java       # Implementación OpenPDF
+│   │   │   │   └── ...                             # Otros servicios de dominio
+│   │   │   └── BackendApplication.java             # Punto de entrada de la aplicación
 │   │   └── resources/
-│   │       ├── img/                           # Assets para reportes (Logos UTN)
-│   │       ├── static/                        # Archivos estáticos públicos (Calendarios PDF)
-│   │       ├── templates/                     # Plantillas de vista
-│   │       ├── application.properties         # Configuración de Spring Boot
-│   │       └── application-secret.properties  # Credenciales sensibles (No versionado)
-│   └── test/                                  # Tests unitarios y de integración
-├── target/                                    # Salida de compilación (ignorar)
-├── uploads/                                   # Archivos subidos (Avatares, documentos)
-├── .gitignore                                 # Archivos ignorados por Git
-├── build.log                                  # Log de compilación Maven
-├── HELP.md                                    # Documentación de ayuda de Spring Boot
-├── kill_port.ps1                              # Script PowerShell para liberar puerto 8080
-├── mvnw                                       # Script Maven Wrapper (Linux/Mac)
-├── mvnw.cmd                                   # Script Maven Wrapper (Windows)
-├── pom.xml                                    # Definición de dependencias y build (Maven)
-├── README.md                                  # Documentación del proyecto
-├── sysacad-next.sql                           # Script SQL de base de datos
-└── .vscode/                                   # Configuración VS Code
+│   │       ├── img/                                # Assets para reportes (Logos UTN)
+│   │       ├── static/                             # Archivos estáticos públicos (Calendarios PDF)
+│   │       ├── templates/                          # Plantillas de vista
+│   │       ├── application.properties              # Configuración de Spring Boot
+│   │       └── application-secret.properties       # Credenciales sensibles (No versionado)
+│   └── test/                                       # Tests unitarios y de integración
+├── target/                                         # Salida de compilación (ignorar)
+├── uploads/                                        # Archivos subidos (Avatares, documentos)
+├── .gitignore                                      # Archivos ignorados por Git
+├── build.log                                       # Log de compilación Maven
+├── HELP.md                                         # Documentación de ayuda de Spring Boot
+├── kill_port.ps1                                   # Script PowerShell para liberar puerto 8080
+├── mvnw                                            # Script Maven Wrapper (Linux/Mac)
+├── mvnw.cmd                                        # Script Maven Wrapper (Windows)
+├── pom.xml                                         # Definición de dependencias y build (Maven)
+├── README.md                                       # Documentación del proyecto
+├── sysacad-next.sql                                # Script SQL de base de datos
+└── .vscode/                                        # Configuración VS Code
 </code></pre>
 
 
