@@ -18,6 +18,8 @@ Este documento detalla las reglas de negocio y consideraciones técnicas derivad
 3.  **Matriculación**:
     - Un alumno se matricula en una Carrera en una **Facultad específica** (seleccionada de las disponibles para esa carrera), bajo un Plan de Estudio determinado. 
     - La **Facultad** forma parte de la clave primaria de la matriculación, permitiendo que un alumno curse la misma carrera en facultades distintas si fuera necesario (aunque no es común) o distinguiendo administrativamente dónde está inscripto.
+    - **Restricción de Matriculación Única Activa**: Un alumno solo puede tener **una matriculación con estado ACTIVO** a la vez. Si intenta matricularse en otra carrera mientras tiene una matriculación activa, el sistema rechazará la operación indicando en qué carrera y plan está actualmente matriculado.
+
 
 4.  **Cursado y Exámenes**:
     - Las inscripciones a cursado y exámenes están vinculadas a la matriculación del alumno.
