@@ -8,6 +8,8 @@ Base URL: `/api/auth`
 | Método | Endpoint | Roles / Acceso | Descripción |
 | :--- | :--- | :--- | :--- |
 | `POST` | `/login` | Public | Autenticación de usuarios (login). |
+| `POST` | `/forgot-password` | Public | Solicitar recuperación de contraseña (envía email con token). Body: `ForgotPasswordRequest`. |
+| `POST` | `/reset-password` | Public | Restablecer contraseña usando token válido. Body: `ResetPasswordRequest`. |
 
 ## AdminController
 Base URL: `/api/admin`
@@ -114,6 +116,7 @@ Base URL: `/api/health`
 | Método | Endpoint | Roles / Acceso | Descripción |
 | :--- | :--- | :--- | :--- |
 | `GET` | `/` | Public | Verificar estado del servidor (Heartbeat). |
+| `GET` | `/test-email` | ADMIN | Enviar un email de prueba con el template base. (Solo desarrollo/QA). |
 
 ## ComisionController
 Base URL: `/api/comisiones`
@@ -287,7 +290,6 @@ Base URL: `/api/inscripciones-cursado`
 | `POST` | `/` | ADMIN, ESTUDIANTE | Inscribirse a cursar una materia en una comisión. |
 | `GET` | `/mis-cursadas` | ESTUDIANTE | Obtener historial de materias cursadas y notas parciales. |
 | `POST` | `/{id}/notas` | ADMIN, PROFESOR | Cargar una nota parcial a una cursada. |
-| `GET` | `/actuales` | ESTUDIANTE, ADMIN | Obtener materias que cursa actualmente (Admin puede usar `?idUsuario=UUID`). |
 | `GET` | `/actuales` | ESTUDIANTE, ADMIN | Obtener materias que cursa actualmente (Admin puede usar `?idUsuario=UUID`). |
 | `GET` | `/materias/{idMateria}/disponibles` | ESTUDIANTE, ADMIN | Obtener comisiones disponibles. Retorna lista con `habilitada` (boolean) y `mensaje` (motivo de rechazo/éxito), validando horarios y correlativas. |
 | `PUT` | `/{id}/finalizar` | ADMIN, PROFESOR | Finalizar cursada (Cargar nota final y estado: REGULAR/PROMOCIONADO). Valida reglas de negocio (notas 4-5.5 / >=6). |
