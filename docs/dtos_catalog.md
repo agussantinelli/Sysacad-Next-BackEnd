@@ -368,6 +368,7 @@ Response for `/api/alumnos/mis-carreras-materias`.
 - `idComision` (UUID)
 - `idMateria` (UUID)
 - `esVisible` (Boolean)
+- `mensajesSinLeer` (Long)
 
 ### `MiembroGrupoRequest`
 - `idUsuario` (UUID)
@@ -392,9 +393,12 @@ Response for `/api/alumnos/mis-carreras-materias`.
 - `idGrupo` (UUID)
 - `idUsuarioRemitente` (UUID)
 - `nombreRemitente` (String)
+- `apellidoRemitente` (String)
+- `fotoRemitente` (String)
 - `contenido` (String)
 - `editado` (Boolean)
 - `fechaEnvio` (LocalDateTime)
+- `leido` (Boolean)
 
 ---
 
