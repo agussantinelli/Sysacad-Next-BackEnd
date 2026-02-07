@@ -314,16 +314,39 @@
 <h3>🚀 Ejecución</h3>
 
 1.  **Clonar el repositorio.**
-2.  **Configurar Base de Datos**: Asegúrate de tener PostgreSQL corriendo en el puerto `5432`. El `application.properties` intentará crear la DB `sysacad_db` si no existe.
-3.  **Configuración de Email**: Para habilitar el envío de correos, se requiere configurar las credenciales en `application.properties` (o variables de entorno):
-    - `spring.mail.username`: Tu dirección de Gmail.
-    - `spring.mail.password`: **Contraseña de Aplicación** de Google (16 dígitos).
-4.  **Compilar y Correr**:
+2.  **Configurar Archivos de Propiedades**: El sistema utiliza una división entre configuración pública y privada. Crea los siguientes archivos en `src/main/resources/`:
+
+    **`application.properties` (Fijo)**
+    ```properties
+    spring.config.import=optional:classpath:application-secret.properties
+    spring.datasource.url=jdbc:postgresql://localhost:5432/sysacad_db
+    spring.datasource.driver-class-name=org.postgresql.Driver
+    spring.jpa.hibernate.ddl-auto=update
+    spring.jpa.show-sql=true
+    server.port=8080
+    spring.mail.host=smtp.gmail.com
+    spring.mail.port=587
+    ```
+
+    **`application-secret.properties` (Privado - No se versiona)**
+    ```properties
+    spring.datasource.username=tu_usuario_postgres
+    spring.datasource.password=tu_contraseña
+    jwt.secret=tu_clave_secreta_jwt_de_64_caracteres
+    spring.mail.username=tu_email@gmail.com
+    spring.mail.password=tu_contraseña_de_aplicacion_google
+    spring.mail.properties.mail.smtp.auth=true
+    spring.mail.properties.mail.smtp.starttls.enable=true
+    ```
+
+3.  **Configurar Base de Datos**: Asegúrate de tener PostgreSQL corriendo en el puerto `5432`. El `application.properties` intentará conectarse a la DB `sysacad_db`.
+4.  **Habilitar Email (Opcional)**: Para que funcionen las notificaciones, recuerda usar una **Contraseña de Aplicación** de Google en el campo `spring.mail.password` del archivo secret.
+5.  **Compilar y Correr**:
     ```bash
     mvn spring-boot:run
     ```
-5.  **Puerto**: El servidor iniciará en el puerto **8080** (`http://localhost:8080`).
-6.  **CORS**: Configurado para aceptar peticiones desde `http://localhost:4200` (Frontend Angular).
+6.  **Puerto**: El servidor iniciará en el puerto **8080** (`http://localhost:8080`).
+7.  **CORS**: Configurado para aceptar peticiones desde `http://localhost:4200` (Frontend Angular).
 
 <h3>🌱 Base de Datos y Seeding Automático</h3>
 
