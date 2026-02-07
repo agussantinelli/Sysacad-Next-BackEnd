@@ -55,22 +55,19 @@ public class GrupoController {
     @GetMapping("/alumno")
     public ResponseEntity<List<GrupoResponse>> listarGruposAlumno() {
         UUID idUsuario = getAuthenticatedUserId();
-        List<Grupo> grupos = grupoService.obtenerGruposAlumno(idUsuario);
-        return ResponseEntity.ok(grupoMapper.toDTOs(grupos));
+        return ResponseEntity.ok(grupoService.obtenerGruposAlumno(idUsuario));
     }
 
     @GetMapping("/profesor")
     public ResponseEntity<List<GrupoResponse>> listarGruposProfesor() {
         UUID idUsuario = getAuthenticatedUserId();
-        List<Grupo> grupos = grupoService.obtenerGruposDocente(idUsuario);
-        return ResponseEntity.ok(grupoMapper.toDTOs(grupos));
+        return ResponseEntity.ok(grupoService.obtenerGruposDocente(idUsuario));
     }
 
     @GetMapping("/mis-grupos")
     public ResponseEntity<List<GrupoResponse>> listarMisGrupos() {
         UUID idUsuario = getAuthenticatedUserId();
-        List<Grupo> grupos = grupoService.obtenerMisGrupos(idUsuario);
-        return ResponseEntity.ok(grupoMapper.toDTOs(grupos));
+        return ResponseEntity.ok(grupoService.obtenerMisGrupos(idUsuario));
     }
 
     @GetMapping("/{id}")
@@ -105,10 +102,17 @@ public class GrupoController {
         return ResponseEntity.ok(mensajeGrupoMapper.toDTO(mensaje));
     }
 
+    @GetMapping("/mensajes/sin-leer/total")
+    public ResponseEntity<Long> contarMensajesSinLeer() {
+        UUID idUsuario = getAuthenticatedUserId();
+        return ResponseEntity.ok(grupoService.contarMensajesSinLeerTotales(idUsuario));
+    }
+
     @GetMapping("/{id}/mensajes")
     public ResponseEntity<Page<MensajeGrupoResponse>> obtenerMensajes(@PathVariable UUID id, Pageable pageable) {
-        Page<MensajeGrupo> mensajes = grupoService.obtenerMensajes(id, pageable);
-        return ResponseEntity.ok(mensajes.map(mensajeGrupoMapper::toDTO));
+        UUID idUsuario = getAuthenticatedUserId();
+        Page<MensajeGrupoResponse> mensajes = grupoService.obtenerMensajesConEstado(id, idUsuario, pageable);
+        return ResponseEntity.ok(mensajes);
     }
 
     @PostMapping("/{id}/marcar-leido")

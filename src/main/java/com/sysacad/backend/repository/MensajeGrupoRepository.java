@@ -12,4 +12,6 @@ import java.util.UUID;
 public interface MensajeGrupoRepository extends JpaRepository<MensajeGrupo, UUID> {
     
     Page<MensajeGrupo> findByGrupoIdOrderByFechaEnvioDesc(UUID idGrupo, Pageable pageable);
+
+    long countByGrupoIdAndFechaEnvioAfter(UUID idGrupo, java.time.LocalDateTime fecha);
 }
