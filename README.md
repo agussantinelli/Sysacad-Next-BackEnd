@@ -128,7 +128,7 @@
         </tr>
         <tr>
             <td><strong>📧 Notificaciones y Seguridad</strong></td>
-            <td>N/A (Integration)</td>
+            <td>-</td>
             <td><strong>Emails Automáticos:</strong> Bienvenida, Notas parciales/finales, y Recuperación de Contraseña con tokens de 24h.</td>
         </tr>
     </tbody>
