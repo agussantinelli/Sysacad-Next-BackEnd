@@ -100,9 +100,9 @@ public class UsuarioService {
     }
 
     @Transactional
-    public void solicitarRecuperacionPassword(String email) {
-        Usuario usuario = usuarioRepository.findByMail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("No existe un usuario registrado con el email: " + email));
+    public void solicitarRecuperacionPassword(String identificador) {
+        Usuario usuario = usuarioRepository.findByLegajoOrMail(identificador, identificador)
+                .orElseThrow(() -> new ResourceNotFoundException("No existe un usuario con el identificador: " + identificador));
 
         String token = UUID.randomUUID().toString();
         usuario.setResetPasswordToken(token);

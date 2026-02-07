@@ -75,7 +75,7 @@ public class AuthController {
 
         @PostMapping("/forgot-password")
         public ResponseEntity<?> forgotPassword(@RequestBody com.sysacad.backend.dto.auth.ForgotPasswordRequest request) {
-                usuarioService.solicitarRecuperacionPassword(request.getEmail());
+                usuarioService.solicitarRecuperacionPassword(request.getIdentificador());
                 return ResponseEntity.ok(java.util.Collections.singletonMap("mensaje", 
                         "Si el email existe en nuestro sistema, recibirás las instrucciones para recuperar tu contraseña."));
         }
