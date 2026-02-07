@@ -321,7 +321,7 @@ public class GrupoService {
          return mensajeGrupoRepository.findByGrupoIdOrderByFechaEnvioDesc(idGrupo, pageable);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public Page<com.sysacad.backend.dto.grupo.MensajeGrupoResponse> obtenerMensajesConEstado(UUID idGrupo, UUID idUsuario, Pageable pageable) {
         if (!grupoRepository.existsById(idGrupo)) {
             throw new ResourceNotFoundException("Grupo no encontrado");
@@ -330,11 +330,18 @@ public class GrupoService {
         MiembroGrupo miembro = miembroGrupoRepository.findById(new MiembroGrupo.MiembroGrupoId(idGrupo, idUsuario))
                 .orElseThrow(() -> new BusinessLogicException("No eres miembro de este grupo"));
 
+        // Capturamos el último acceso previo para marcar los mensajes correctamente en esta respuesta
+        LocalDateTime accesoPrevio = miembro.getUltimoAcceso();
+        
+        // Actualizamos el acceso al momento actual
+        miembro.setUltimoAcceso(LocalDateTime.now());
+        miembroGrupoRepository.save(miembro);
+
         Page<MensajeGrupo> mensajes = mensajeGrupoRepository.findByGrupoIdOrderByFechaEnvioDesc(idGrupo, pageable);
 
         return mensajes.map(m -> {
             com.sysacad.backend.dto.grupo.MensajeGrupoResponse dto = mensajeGrupoMapper.toDTO(m);
-            dto.setLeido(m.getFechaEnvio().isBefore(miembro.getUltimoAcceso()) || m.getFechaEnvio().isEqual(miembro.getUltimoAcceso()));
+            dto.setLeido(m.getFechaEnvio().isBefore(accesoPrevio) || m.getFechaEnvio().isEqual(accesoPrevio));
             return dto;
         });
     }
