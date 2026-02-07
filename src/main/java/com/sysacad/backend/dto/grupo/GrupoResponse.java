@@ -21,4 +21,6 @@ public class GrupoResponse {
     private UUID idMateria;
     private Boolean esVisible;
     private Long mensajesSinLeer;
+    private java.util.List<GrupoIntegranteDTO> integrantes;
+    private Integer cantIntegrantes;
 }
