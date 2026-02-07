@@ -38,6 +38,15 @@ public class MiembroGrupo {
     @Column(name = "ultimo_acceso")
     private LocalDateTime ultimoAcceso = LocalDateTime.now();
 
+    @PrePersist
+    @PreUpdate
+    private void validarRol() {
+        if (this.usuario != null && 
+            this.usuario.getRol() == com.sysacad.backend.modelo.enums.RolUsuario.ESTUDIANTE) {
+            this.rol = RolGrupo.MIEMBRO;
+        }
+    }
+
     @Data
     @AllArgsConstructor
     @NoArgsConstructor

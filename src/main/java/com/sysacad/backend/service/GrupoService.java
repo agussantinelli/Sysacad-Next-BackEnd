@@ -95,16 +95,36 @@ public class GrupoService {
         Usuario usuario = usuarioRepository.findById(idUsuario)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
 
-        if (miembroGrupoRepository.existsByGrupo_IdAndUsuario_Id(idGrupo, idUsuario)) {
-            // Ya es miembro, no hacemos nada (o podríamos lanzar error)
+        // Seguridad Definitiva: Si es estudiante, NUNCA puede ser ADMIN en un grupo
+        if (usuario.getRol() == com.sysacad.backend.modelo.enums.RolUsuario.ESTUDIANTE) {
+            rol = RolGrupo.MIEMBRO;
+        }
+
+        MiembroGrupo.MiembroGrupoId memberId = new MiembroGrupo.MiembroGrupoId(idGrupo, idUsuario);
+        java.util.Optional<MiembroGrupo> existing = miembroGrupoRepository.findById(memberId);
+
+        if (existing.isPresent()) {
+            MiembroGrupo m = existing.get();
+            // Si es estudiante, forzamos MIEMBRO siempre, si no usamos el rol provisto
+            RolGrupo rolFinal = (usuario.getRol() == com.sysacad.backend.modelo.enums.RolUsuario.ESTUDIANTE) 
+                ? RolGrupo.MIEMBRO : (rol != null ? rol : m.getRol());
+
+            if (m.getRol() != rolFinal) {
+                m.setRol(rolFinal);
+                miembroGrupoRepository.save(m);
+            }
             return;
         }
 
         MiembroGrupo miembro = new MiembroGrupo();
-        miembro.setId(new MiembroGrupo.MiembroGrupoId(idGrupo, idUsuario));
+        miembro.setId(memberId);
         miembro.setGrupo(grupo);
         miembro.setUsuario(usuario);
-        miembro.setRol(rol != null ? rol : RolGrupo.MIEMBRO);
+        
+        // Si es estudiante, forzamos MIEMBRO siempre al crear
+        miembro.setRol(usuario.getRol() == com.sysacad.backend.modelo.enums.RolUsuario.ESTUDIANTE 
+            ? RolGrupo.MIEMBRO : (rol != null ? rol : RolGrupo.MIEMBRO));
+        
         miembro.setUltimoAcceso(LocalDateTime.now());
         
         miembroGrupoRepository.save(miembro);
@@ -119,7 +139,7 @@ public class GrupoService {
         miembroGrupoRepository.deleteById(id);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public List<com.sysacad.backend.dto.grupo.GrupoResponse> obtenerGruposAlumno(UUID idUsuario) {
         sincronizarMembresias(idUsuario);
         return miembroGrupoRepository.findByUsuario_Id(idUsuario).stream()
@@ -127,9 +147,9 @@ public class GrupoService {
                 .map(m -> {
                     com.sysacad.backend.dto.grupo.GrupoResponse dto = grupoMapper.toDTO(m.getGrupo());
                     dto.setMensajesSinLeer(mensajeGrupoRepository.countByGrupoIdAndFechaEnvioAfter(m.getGrupo().getId(), m.getUltimoAcceso()));
-                    java.util.List<com.sysacad.backend.dto.grupo.GrupoIntegranteDTO> integrantes = grupoMapper.toIntegranteDTOs(miembroGrupoRepository.findByGrupo_Id(m.getGrupo().getId()));
-                    dto.setIntegrantes(integrantes);
-                    dto.setCantIntegrantes(integrantes.size());
+                    java.util.List<MiembroGrupo> miembros = obtenerMiembros(m.getGrupo().getId());
+                    dto.setIntegrantes(grupoMapper.toIntegranteDTOs(miembros));
+                    dto.setCantIntegrantes(miembros.size());
                     mensajeGrupoRepository.findFirstByGrupoIdOrderByFechaEnvioDesc(m.getGrupo().getId())
                             .ifPresent(lastMsg -> dto.setHoraUltimoMensaje(lastMsg.getFechaEnvio()));
                     return dto;
@@ -137,16 +157,16 @@ public class GrupoService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public List<com.sysacad.backend.dto.grupo.GrupoResponse> obtenerGruposDocente(UUID idUsuario) {
         sincronizarMembresias(idUsuario);
         return miembroGrupoRepository.findByUsuario_Id(idUsuario).stream()
                 .map(m -> {
                     com.sysacad.backend.dto.grupo.GrupoResponse dto = grupoMapper.toDTO(m.getGrupo());
                     dto.setMensajesSinLeer(mensajeGrupoRepository.countByGrupoIdAndFechaEnvioAfter(m.getGrupo().getId(), m.getUltimoAcceso()));
-                    java.util.List<com.sysacad.backend.dto.grupo.GrupoIntegranteDTO> integrantes = grupoMapper.toIntegranteDTOs(miembroGrupoRepository.findByGrupo_Id(m.getGrupo().getId()));
-                    dto.setIntegrantes(integrantes);
-                    dto.setCantIntegrantes(integrantes.size());
+                    java.util.List<MiembroGrupo> miembros = obtenerMiembros(m.getGrupo().getId());
+                    dto.setIntegrantes(grupoMapper.toIntegranteDTOs(miembros));
+                    dto.setCantIntegrantes(miembros.size());
                     mensajeGrupoRepository.findFirstByGrupoIdOrderByFechaEnvioDesc(m.getGrupo().getId())
                             .ifPresent(lastMsg -> dto.setHoraUltimoMensaje(lastMsg.getFechaEnvio()));
                     return dto;
@@ -154,16 +174,16 @@ public class GrupoService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public List<com.sysacad.backend.dto.grupo.GrupoResponse> obtenerMisGrupos(UUID idUsuario) {
         sincronizarMembresias(idUsuario);
         return miembroGrupoRepository.findByUsuario_Id(idUsuario).stream()
                 .map(m -> {
                     com.sysacad.backend.dto.grupo.GrupoResponse dto = grupoMapper.toDTO(m.getGrupo());
                     dto.setMensajesSinLeer(mensajeGrupoRepository.countByGrupoIdAndFechaEnvioAfter(m.getGrupo().getId(), m.getUltimoAcceso()));
-                    java.util.List<com.sysacad.backend.dto.grupo.GrupoIntegranteDTO> integrantes = grupoMapper.toIntegranteDTOs(miembroGrupoRepository.findByGrupo_Id(m.getGrupo().getId()));
-                    dto.setIntegrantes(integrantes);
-                    dto.setCantIntegrantes(integrantes.size());
+                    java.util.List<MiembroGrupo> miembros = obtenerMiembros(m.getGrupo().getId());
+                    dto.setIntegrantes(grupoMapper.toIntegranteDTOs(miembros));
+                    dto.setCantIntegrantes(miembros.size());
                     return dto;
                 })
                 .collect(Collectors.toList());
@@ -175,34 +195,27 @@ public class GrupoService {
                 .forEach(i -> {
                     grupoRepository.findByIdComisionAndIdMateria(i.getComision().getId(), i.getMateria().getId())
                             .ifPresent(g -> {
-                                if (!miembroGrupoRepository.existsByGrupo_IdAndUsuario_Id(g.getId(), idUsuario)) {
-                                    agregarMiembro(g.getId(), idUsuario, RolGrupo.MIEMBRO);
-                                }
+                                agregarMiembro(g.getId(), idUsuario, RolGrupo.MIEMBRO);
                             });
                 });
 
         // B. Sincronizar como Profesor/Jefe (Asignaciones)
-        // Ya cubierto por asegurarMiembroAdminSiEligible al enviar, 
-        // pero lo hacemos aquí también para visibilidad inicial
         asignacionMateriaRepository.findByIdIdUsuario(idUsuario).forEach(a -> {
-            // Como jefe de todas las comisiones de la materia
-            grupoRepository.findAll().stream()
-                .filter(g -> g.getIdMateria() != null && g.getIdMateria().equals(a.getMateria().getId()))
-                .forEach(g -> {
-                    if (a.getCargo() == com.sysacad.backend.modelo.enums.RolCargo.JEFE_CATEDRA) {
-                        if (!miembroGrupoRepository.existsByGrupo_IdAndUsuario_Id(g.getId(), idUsuario)) {
-                            agregarMiembro(g.getId(), idUsuario, RolGrupo.ADMIN);
-                        }
-                    } else if (g.getIdComision() != null) {
-                        // Como profesor de una comisión específica
-                        boolean esDeComision = comisionRepository.findById(g.getIdComision())
-                            .map(c -> c.getProfesores().stream().anyMatch(p -> p.getId().equals(idUsuario)))
-                            .orElse(false);
-                        if (esDeComision && !miembroGrupoRepository.existsByGrupo_IdAndUsuario_Id(g.getId(), idUsuario)) {
-                            agregarMiembro(g.getId(), idUsuario, RolGrupo.ADMIN);
-                        }
+            // Como jefe de todas las comisiones de la materia o profesor de una específica
+            List<Grupo> gruposMateria = grupoRepository.findByIdMateria(a.getMateria().getId());
+            gruposMateria.forEach(g -> {
+                if (a.getCargo() == com.sysacad.backend.modelo.enums.RolCargo.JEFE_CATEDRA) {
+                    agregarMiembro(g.getId(), idUsuario, RolGrupo.ADMIN);
+                } else if (g.getIdComision() != null) {
+                    // Como profesor de una comisión específica
+                    boolean esDeComision = comisionRepository.findById(g.getIdComision())
+                        .map(c -> c.getProfesores().stream().anyMatch(p -> p.getId().equals(idUsuario)))
+                        .orElse(false);
+                    if (esDeComision) {
+                        agregarMiembro(g.getId(), idUsuario, RolGrupo.ADMIN);
                     }
-                });
+                }
+            });
         });
     }
 
@@ -290,6 +303,18 @@ public class GrupoService {
     private void asegurarMiembroAdminSiEligible(Grupo grupo, UUID idUsuario) {
         if (grupo.getIdComision() == null || grupo.getIdMateria() == null) return;
 
+        // Primero verificamos si es ESTUDIANTE para degradarlo si es necesario (Fix para bug de roles)
+        Usuario u = usuarioRepository.findById(idUsuario).orElse(null);
+        if (u != null && u.getRol() == com.sysacad.backend.modelo.enums.RolUsuario.ESTUDIANTE) {
+            miembroGrupoRepository.findById(new MiembroGrupo.MiembroGrupoId(grupo.getId(), idUsuario)).ifPresent(m -> {
+                if (m.getRol() == RolGrupo.ADMIN) {
+                    m.setRol(RolGrupo.MIEMBRO);
+                    miembroGrupoRepository.save(m);
+                }
+            });
+            return;
+        }
+
         // Si ya es ADMIN, no hacer nada
         boolean yaEsAdmin = miembroGrupoRepository.findById(new MiembroGrupo.MiembroGrupoId(grupo.getId(), idUsuario))
                 .map(m -> m.getRol() == RolGrupo.ADMIN).orElse(false);
@@ -375,6 +400,13 @@ public class GrupoService {
         if (!grupoRepository.existsById(idGrupo)) {
             throw new ResourceNotFoundException("Grupo no encontrado");
         }
-        return miembroGrupoRepository.findByGrupo_Id(idGrupo);
+        List<MiembroGrupo> miembros = miembroGrupoRepository.findByGrupo_Id(idGrupo);
+        // "Abajo de todo": Si tiene rol de estudiante, automáticamente no es admin en la respuesta
+        miembros.forEach(m -> {
+            if (m.getUsuario().getRol() == com.sysacad.backend.modelo.enums.RolUsuario.ESTUDIANTE) {
+                m.setRol(RolGrupo.MIEMBRO);
+            }
+        });
+        return miembros;
     }
 }
