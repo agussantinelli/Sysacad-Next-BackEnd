@@ -46,6 +46,12 @@ public class InscripcionCursadoService {
     @Autowired
     private CorrelatividadService correlatividadService;
 
+    @Autowired
+    private GrupoService grupoService;
+
+    @Autowired
+    private GrupoRepository grupoRepository;
+
     public InscripcionCursadoResponse inscribir(InscripcionCursadoRequest request) {
 
         // Validar Usuario
@@ -99,6 +105,17 @@ public class InscripcionCursadoService {
         insc.setEstado(com.sysacad.backend.modelo.enums.EstadoCursada.CURSANDO); // Estado inicial
 
         insc = inscripcionCursadoRepository.save(insc);
+
+        // Agregar automáticamente al grupo de la comisión-materia
+        grupoRepository.findByIdComisionAndIdMateria(comision.getId(), materia.getId())
+                .ifPresent(grupo -> {
+                    grupoService.agregarMiembro(
+                        grupo.getId(), 
+                        alumno.getId(), 
+                        com.sysacad.backend.modelo.enums.RolGrupo.MIEMBRO
+                    );
+                });
+
         return inscripcionCursadoMapper.toDTO(insc);
     }
 
