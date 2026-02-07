@@ -54,6 +54,7 @@ public class ProfesorService {
     private final CalificacionCursadaRepository calificacionCursadaRepository;
 
     private final InstanciaEvaluacionRepository instanciaEvaluacionRepository;
+    private final GrupoService grupoService;
 
     @Autowired
     public ProfesorService(AsignacionMateriaRepository asignacionMateriaRepository,
@@ -64,7 +65,8 @@ public class ProfesorService {
                            DetalleMesaExamenRepository detalleMesaExamenRepository,
                            InscripcionExamenRepository inscripcionExamenRepository,
                            CalificacionCursadaRepository calificacionCursadaRepository,
-                           com.sysacad.backend.repository.InstanciaEvaluacionRepository instanciaEvaluacionRepository) {
+                           com.sysacad.backend.repository.InstanciaEvaluacionRepository instanciaEvaluacionRepository,
+                           GrupoService grupoService) {
         this.asignacionMateriaRepository = asignacionMateriaRepository;
         this.comisionRepository = comisionRepository;
         this.horarioCursadoRepository = horarioCursadoRepository;
@@ -74,6 +76,7 @@ public class ProfesorService {
         this.inscripcionExamenRepository = inscripcionExamenRepository;
         this.calificacionCursadaRepository = calificacionCursadaRepository;
         this.instanciaEvaluacionRepository = instanciaEvaluacionRepository;
+        this.grupoService = grupoService;
     }
 
     @Transactional(readOnly = true)
@@ -194,7 +197,6 @@ public class ProfesorService {
                 horarioFormateado,
                 profesores,
                 cantidadAlumnos
-
         );
     }
 
@@ -226,14 +228,14 @@ public class ProfesorService {
                         .anyMatch(a -> a.getMateria().getId().equals(materia.getId()) &&
                                 a.getCargo() == com.sysacad.backend.modelo.enums.RolCargo.JEFE_CATEDRA);
 
-                resultado.add(mapToComisionDetalladaDTO(comision, materia, esJefe));
+                resultado.add(mapToComisionDetalladaDTO(comision, materia, esJefe, idProfesor));
             }
         }
 
         return resultado;
     }
 
-    private ComisionDetalladaDTO mapToComisionDetalladaDTO(Comision comision, Materia materia, boolean esJefeCatedra) {
+    private ComisionDetalladaDTO mapToComisionDetalladaDTO(Comision comision, Materia materia, boolean esJefeCatedra, UUID idProfesor) {
         // Obtenemos el DTO base reutilizando lógica similar (pero adaptada)
         // Fetch schedules for this commission-subject pair
         List<HorarioCursado> horarios = horarioCursadoRepository.findByIdIdComisionAndIdIdMateria(

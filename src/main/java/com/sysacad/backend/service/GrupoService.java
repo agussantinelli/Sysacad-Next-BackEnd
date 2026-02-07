@@ -42,6 +42,8 @@ public class GrupoService {
     private final MateriaRepository materiaRepository;
     private final AsignacionMateriaRepository asignacionMateriaRepository;
     private final InscripcionCursadoRepository inscripcionCursadoRepository;
+    private final com.sysacad.backend.mapper.MensajeGrupoMapper mensajeGrupoMapper;
+    private final com.sysacad.backend.mapper.GrupoMapper grupoMapper;
 
     @Transactional
     public void crearGruposParaComision(Comision comision) {
@@ -117,29 +119,40 @@ public class GrupoService {
         miembroGrupoRepository.deleteById(id);
     }
 
-    @Transactional
-    public List<Grupo> obtenerGruposAlumno(UUID idUsuario) {
+    @Transactional(readOnly = true)
+    public List<com.sysacad.backend.dto.grupo.GrupoResponse> obtenerGruposAlumno(UUID idUsuario) {
         sincronizarMembresias(idUsuario);
         return miembroGrupoRepository.findByUsuario_Id(idUsuario).stream()
                 .filter(m -> Boolean.TRUE.equals(m.getGrupo().getEsVisible()))
-                .map(MiembroGrupo::getGrupo)
+                .map(m -> {
+                    com.sysacad.backend.dto.grupo.GrupoResponse dto = grupoMapper.toDTO(m.getGrupo());
+                    dto.setMensajesSinLeer(mensajeGrupoRepository.countByGrupoIdAndFechaEnvioAfter(m.getGrupo().getId(), m.getUltimoAcceso()));
+                    return dto;
+                })
                 .collect(Collectors.toList());
     }
 
-    @Transactional
-    public List<Grupo> obtenerGruposDocente(UUID idUsuario) {
+    @Transactional(readOnly = true)
+    public List<com.sysacad.backend.dto.grupo.GrupoResponse> obtenerGruposDocente(UUID idUsuario) {
         sincronizarMembresias(idUsuario);
         return miembroGrupoRepository.findByUsuario_Id(idUsuario).stream()
-                .map(MiembroGrupo::getGrupo)
+                .map(m -> {
+                    com.sysacad.backend.dto.grupo.GrupoResponse dto = grupoMapper.toDTO(m.getGrupo());
+                    dto.setMensajesSinLeer(mensajeGrupoRepository.countByGrupoIdAndFechaEnvioAfter(m.getGrupo().getId(), m.getUltimoAcceso()));
+                    return dto;
+                })
                 .collect(Collectors.toList());
     }
 
-    @Transactional
-    public List<Grupo> obtenerMisGrupos(UUID idUsuario) {
-        // Fallback or general sync
+    @Transactional(readOnly = true)
+    public List<com.sysacad.backend.dto.grupo.GrupoResponse> obtenerMisGrupos(UUID idUsuario) {
         sincronizarMembresias(idUsuario);
         return miembroGrupoRepository.findByUsuario_Id(idUsuario).stream()
-                .map(MiembroGrupo::getGrupo)
+                .map(m -> {
+                    com.sysacad.backend.dto.grupo.GrupoResponse dto = grupoMapper.toDTO(m.getGrupo());
+                    dto.setMensajesSinLeer(mensajeGrupoRepository.countByGrupoIdAndFechaEnvioAfter(m.getGrupo().getId(), m.getUltimoAcceso()));
+                    return dto;
+                })
                 .collect(Collectors.toList());
     }
 
@@ -293,6 +306,38 @@ public class GrupoService {
              throw new ResourceNotFoundException("Grupo no encontrado");
          }
          return mensajeGrupoRepository.findByGrupoIdOrderByFechaEnvioDesc(idGrupo, pageable);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<com.sysacad.backend.dto.grupo.MensajeGrupoResponse> obtenerMensajesConEstado(UUID idGrupo, UUID idUsuario, Pageable pageable) {
+        if (!grupoRepository.existsById(idGrupo)) {
+            throw new ResourceNotFoundException("Grupo no encontrado");
+        }
+
+        MiembroGrupo miembro = miembroGrupoRepository.findById(new MiembroGrupo.MiembroGrupoId(idGrupo, idUsuario))
+                .orElseThrow(() -> new BusinessLogicException("No eres miembro de este grupo"));
+
+        Page<MensajeGrupo> mensajes = mensajeGrupoRepository.findByGrupoIdOrderByFechaEnvioDesc(idGrupo, pageable);
+
+        return mensajes.map(m -> {
+            com.sysacad.backend.dto.grupo.MensajeGrupoResponse dto = mensajeGrupoMapper.toDTO(m);
+            dto.setLeido(m.getFechaEnvio().isBefore(miembro.getUltimoAcceso()) || m.getFechaEnvio().isEqual(miembro.getUltimoAcceso()));
+            return dto;
+        });
+    }
+
+    @Transactional(readOnly = true)
+    public long contarMensajesSinLeerTotales(UUID idUsuario) {
+        return miembroGrupoRepository.findByUsuario_Id(idUsuario).stream()
+                .mapToLong(m -> mensajeGrupoRepository.countByGrupoIdAndFechaEnvioAfter(m.getGrupo().getId(), m.getUltimoAcceso()))
+                .sum();
+    }
+
+    @Transactional(readOnly = true)
+    public long contarMensajesSinLeerPorGrupo(UUID idGrupo, UUID idUsuario) {
+        return miembroGrupoRepository.findById(new MiembroGrupo.MiembroGrupoId(idGrupo, idUsuario))
+                .map(m -> mensajeGrupoRepository.countByGrupoIdAndFechaEnvioAfter(idGrupo, m.getUltimoAcceso()))
+                .orElse(0L);
     }
 
     @Transactional
