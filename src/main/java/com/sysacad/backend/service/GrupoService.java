@@ -19,6 +19,7 @@ import com.sysacad.backend.repository.AsignacionMateriaRepository;
 import com.sysacad.backend.repository.InscripcionCursadoRepository;
 import com.sysacad.backend.modelo.Comision;
 import com.sysacad.backend.modelo.Materia;
+import com.sysacad.backend.modelo.AsignacionMateria;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
