@@ -25,6 +25,8 @@ public class InscripcionSeeder {
     private final ComisionRepository comisionRepository;
     private final UsuarioRepository usuarioRepository;
     private final InstanciaEvaluacionRepository instanciaEvaluacionRepository;
+    private final com.sysacad.backend.service.GrupoService grupoService;
+    private final com.sysacad.backend.repository.GrupoRepository grupoRepository;
 
     public InscripcionSeeder(InscripcionCursadoRepository inscripcionCursadoRepository,
                              CalificacionCursadaRepository calificacionCursadaRepository,
@@ -34,7 +36,9 @@ public class InscripcionSeeder {
                              MateriaRepository materiaRepository,
                              ComisionRepository comisionRepository,
                              UsuarioRepository usuarioRepository,
-                             InstanciaEvaluacionRepository instanciaEvaluacionRepository) {
+                             InstanciaEvaluacionRepository instanciaEvaluacionRepository,
+                             com.sysacad.backend.service.GrupoService grupoService,
+                             com.sysacad.backend.repository.GrupoRepository grupoRepository) {
         this.inscripcionCursadoRepository = inscripcionCursadoRepository;
         this.calificacionCursadaRepository = calificacionCursadaRepository;
         this.mesaExamenRepository = mesaExamenRepository;
@@ -44,6 +48,8 @@ public class InscripcionSeeder {
         this.comisionRepository = comisionRepository;
         this.usuarioRepository = usuarioRepository;
         this.instanciaEvaluacionRepository = instanciaEvaluacionRepository;
+        this.grupoService = grupoService;
+        this.grupoRepository = grupoRepository;
     }
 
     @Transactional
@@ -636,7 +642,19 @@ public class InscripcionSeeder {
         insc.setMateria(materia);
         insc.setFechaInscripcion(LocalDateTime.now());
         insc.setEstado(EstadoCursada.CURSANDO);
-        return inscripcionCursadoRepository.save(insc);
+        insc = inscripcionCursadoRepository.save(insc);
+
+        // Agregar automáticamente al grupo de la comisión-materia
+        grupoRepository.findByIdComisionAndIdMateria(comision.getId(), materia.getId())
+                .ifPresent(grupo -> {
+                    grupoService.agregarMiembro(
+                        grupo.getId(), 
+                        alumno.getId(), 
+                        com.sysacad.backend.modelo.enums.RolGrupo.MIEMBRO
+                    );
+                });
+
+        return insc;
     }
 
     private void cargarNotaCursada(InscripcionCursado insc, String descripcion, String valor) {

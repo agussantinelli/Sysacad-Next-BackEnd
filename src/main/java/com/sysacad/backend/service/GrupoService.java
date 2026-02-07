@@ -285,19 +285,25 @@ public class GrupoService {
     private void poblarMiembrosAutomaticamente(Grupo grupo) {
         if (grupo.getIdComision() == null || grupo.getIdMateria() == null) return;
 
-        // 1. Agregar Jefe de Cátedra como ADMIN
+        // 1. Agregar Jefe de Cátedra de esta materia como ADMIN
         asignacionMateriaRepository.findByIdIdMateriaAndCargo(grupo.getIdMateria(), com.sysacad.backend.modelo.enums.RolCargo.JEFE_CATEDRA)
                 .forEach(a -> agregarMiembro(grupo.getId(), a.getProfesor().getId(), RolGrupo.ADMIN));
 
-        // 2. Agregar Profesores de la comisión como ADMIN
+        // 2. Agregar solo los profesores que dictan ESTA materia en la comisión como ADMIN
         comisionRepository.findById(grupo.getIdComision()).ifPresent(c -> {
-            c.getProfesores().forEach(p -> agregarMiembro(grupo.getId(), p.getId(), RolGrupo.ADMIN));
+            c.getProfesores().forEach(p -> {
+                // Verificar si el profesor tiene asignación para esta materia específica
+                AsignacionMateria.AsignacionMateriaId asignacionId = 
+                    new AsignacionMateria.AsignacionMateriaId(p.getId(), grupo.getIdMateria());
+                
+                if (asignacionMateriaRepository.existsById(asignacionId)) {
+                    agregarMiembro(grupo.getId(), p.getId(), RolGrupo.ADMIN);
+                }
+            });
         });
 
-        // 3. Agregar Alumnos cursando como MIEMBRO
-        inscripcionCursadoRepository.findByComisionIdAndMateriaIdAndEstado(
-                grupo.getIdComision(), grupo.getIdMateria(), com.sysacad.backend.modelo.enums.EstadoCursada.CURSANDO)
-                .forEach(i -> agregarMiembro(grupo.getId(), i.getUsuario().getId(), RolGrupo.MIEMBRO));
+        // 3. Los alumnos se agregarán automáticamente cuando se inscriban al cursado
+        //    (ver InscripcionCursadoService.inscribir)
     }
 
     private void asegurarMiembroAdminSiEligible(Grupo grupo, UUID idUsuario) {
