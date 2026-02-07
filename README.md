@@ -204,6 +204,12 @@
 <pre><code>Sysacad-Next-BackEnd/
 ├── .mvn/                                      # Archivos del Wrapper de Maven
 ├── docs/                                      # Documentación técnica adicional
+│   ├── business_rules.md                      # Reglas de negocio y validaciones
+│   ├── correlativity_model.md                 # Modelo de correlatividades
+│   ├── dtos_catalog.md                        # Catálogo de DTOs
+│   ├── endpoints_catalog.md                   # Catálogo de endpoints de la API
+│   ├── enums_catalog.md                       # Catálogo de enumeraciones
+│   └── error_handling.md                      # Manejo de errores y excepciones
 ├── src/
 │   ├── main/
 │   │   ├── java/com/sysacad/backend/
@@ -212,8 +218,14 @@
 │   │   │   │   ├── seeder/                    # Seeders de Base de Datos
 │   │   │   │   └── WebConfig.java             # Configuración CORS y Web
 │   │   │   ├── controller/                    # Controladores REST (Entry Points)
+│   │   │   │   ├── Admin*.java                # Gestión administrativa (Carreras, Comisiones, Facultades, Inscripciones, Matriculaciones, Mesas)
+│   │   │   │   ├── AuthController.java        # Autenticación y autorización
+│   │   │   │   ├── CertificadoController.java # Generación de certificados
+│   │   │   │   ├── CalendarioPdfController.java # Descarga calendario académico
+│   │   │   │   ├── HealthController.java      # Health checks del sistema
+│   │   │   │   └── ...                        # Otros controladores de dominio
 │   │   │   ├── dto/                           # Data Transfer Objects (Organizados por Dominio)
-│   │   │   │   ├── admin/
+│   │   │   │   ├── admin/                     # DTOs administrativos (18 archivos)
 │   │   │   │   ├── alumno/
 │   │   │   │   ├── auth/
 │   │   │   │   ├── aviso/
@@ -240,29 +252,45 @@
 │   │   │   │   └── usuario/
 │   │   │   ├── exception/                     # Manejo centralizado de excepciones
 │   │   │   ├── mapper/                        # Mappers (MapStruct) Entity <-> DTO
-│   │   │   ├── modelo/                        # Entidades del dominio (JPA)
-│   │   │   │   └── enums/                     # Enumeraciones
+│   │   │   ├── modelo/                        # Entidades del dominio (JPA) - 26 entidades
+│   │   │   │   └── enums/                     # Enumeraciones - 18 tipos
 │   │   │   ├── repository/                    # Repositorios (Acceso a Datos)
 │   │   │   ├── service/                       # Lógica de Negocio (Service Layer)
-│   │   │   │   └── pdf/                       # Generadores de PDF (OpenPDF)
+│   │   │   │   ├── Admin*.java                # Servicios administrativos especializados
+│   │   │   │   ├── ArchivoService.java        # Gestión de archivos
+│   │   │   │   ├── AsignacionDocenteService.java # Asignación de profesores
+│   │   │   │   ├── CertificadoService.java    # Emisión de certificados
+│   │   │   │   ├── CorrelatividadService.java # Validación de correlatividades
+│   │   │   │   ├── EmailService.java          # Envío de correos (IEmailService)
+│   │   │   │   ├── EquivalenciaService.java   # Gestión de equivalencias
+│   │   │   │   ├── EstadisticaService.java    # Cálculo de estadísticas
+│   │   │   │   ├── FileStorageService.java    # Almacenamiento de archivos
+│   │   │   │   ├── pdf/                       # Generadores de PDF (OpenPDF)
+│   │   │   │   │   ├── IPdfGenerator.java     # Interfaz generador PDF
+│   │   │   │   │   └── OpenPdfGenerator.java  # Implementación OpenPDF
+│   │   │   │   └── ...                        # Otros servicios de dominio
 │   │   │   └── BackendApplication.java        # Punto de entrada de la aplicación
 │   │   └── resources/
-│   │       ├── img/                           # Assets para reportes (Logos)
-│   │       ├── static/                        # Archivos estáticos públicos (Calendarios)
+│   │       ├── img/                           # Assets para reportes (Logos UTN)
+│   │       ├── static/                        # Archivos estáticos públicos (Calendarios PDF)
 │   │       ├── templates/                     # Plantillas de vista
 │   │       ├── application.properties         # Configuración de Spring Boot
 │   │       └── application-secret.properties  # Credenciales sensibles (No versionado)
 │   └── test/                                  # Tests unitarios y de integración
 ├── target/                                    # Salida de compilación (ignorar)
+├── uploads/                                   # Archivos subidos (Avatares, documentos)
 ├── .gitignore                                 # Archivos ignorados por Git
+├── build.log                                  # Log de compilación Maven
 ├── HELP.md                                    # Documentación de ayuda de Spring Boot
+├── kill_port.ps1                              # Script PowerShell para liberar puerto 8080
 ├── mvnw                                       # Script Maven Wrapper (Linux/Mac)
 ├── mvnw.cmd                                   # Script Maven Wrapper (Windows)
 ├── pom.xml                                    # Definición de dependencias y build (Maven)
 ├── README.md                                  # Documentación del proyecto
 ├── sysacad-next.sql                           # Script SQL de base de datos
-└── uploads/                                   # Archivos subidos (Avatares, etc.)
+└── .vscode/                                   # Configuración VS Code
 </code></pre>
+
 
 <hr>
 
@@ -349,30 +377,34 @@ El sistema cuenta con un `DbSeeder` (`src/main/java/com/sysacad/backend/config/s
     </a>
 </div>
 
-<h3>Resumen de Endpoints Principales</h3>
+### Resumen de Endpoints Principales
 
 | Recurso | Métodos | Descripción Breve |
 | :--- | :--- | :--- |
 | **/auth** | `POST` | Login y obtención de Token JWT. |
+| **/health** | `GET` | Health check del sistema (status y uptime). |
 | **/admin** | `GET` | Dashboard Admin: Listado global de inscripciones y Estadísticas generales. |
 | **/admin/matriculacion** | `POST`, `GET` | Matriculación manual de alumnos en carreras (Admin). |
 | **/admin/inscripcion** | `POST`, `GET` | Inscripción manual de alumnos a Cursada y Exámenes (Admin). |
 | **/admin/facultades** | `GET`, `POST`, `DELETE` | ABM de Facultades. Lista con estadísticas (matriculados, carreras). |
-| **/admin/carreras** | `GET` | Lista carreras con cantidad de inscriptos y detalle de planes. |
+| **/admin/carreras** | `GET`, `POST`, `DELETE` | ABM de Carreras con cantidad de inscriptos y detalle de planes. |
+| **/admin/comisiones** | `GET`, `POST`, `PUT`, `DELETE` | Gestión administrativa de comisiones (asignación de profesores, materias y horarios). |
 | **/admin/mesas** | `GET`, `POST`, `DELETE` | Gestión de **Turnos** y **Mesas de Examen** (Detalles). |
-| **/usuarios** | `POST`, `GET`, `DELETE` | Gestión completa de usuarios (Admin). Búsqueda por legajo. |
+| **/usuarios** | `POST`, `GET`, `PUT`, `DELETE` | Gestión completa de usuarios (Admin). Búsqueda por legajo. |
 | **/facultades** | `POST`, `GET` | Gestión de facultades regionales. |
 | **/carreras** | `POST`, `GET` | Carreras y Planes de Estudio asociados. |
 | **/planes** | `POST`, `GET` | Planes de estudio independientes. |
 | **/materias** | `POST`, `GET`, `PUT` | ABM de materias, incluyendo correlatividades y <strong>Modalidad</strong>. |
 | **/comisiones** | `POST`, `GET`, `PUT` | Comisiones anuales, asignación de docentes y horarios. |
 | **/inscripciones** | `POST`, `GET` | Inscripción a cursada/finales y consulta de historia académica. |
-| **/avisos** | `POST`, `GET` | Cartelera de novedades (Admin publica, usuarios **marcan como leído**). |
-| **/grupos** | `POST`, `GET` | **Chat Grupal**: Creación de grupos, gestión de miembros y envío de mensajes. |
+| **/avisos** | `POST`, `GET`, `PUT` | Cartelera de novedades (Admin publica, usuarios **marcan como leído**). |
+| **/grupos** | `POST`, `GET`, `PUT` | **Chat Grupal**: Creación de grupos, gestión de miembros y envío de mensajes. |
 | **/salones** | `POST`, `GET` | Gestión de aulas físicas y asignación a facultades. |
 | **/sanciones** | `POST`, `GET` | Registro disciplinario de estudiantes. |
 | **/horarios** | `POST`, `GET`, `DELETE` | Gestión de agenda semanal por comisión y materia. |
 | **/alumnos** | `POST`, `GET` | Matriculación, consulta de plan, **historial académico** y descarga de **Certificados**. |
+| **/profesor** | `GET` | Consulta de materias asignadas, comisiones y estadísticas de exámenes. |
+| **/certificados** | `GET`, `POST` | Emisión y descarga de certificados académicos **en PDF**. |
 | **/mesas** | `POST`, `GET` | Gestión de Turnos de Examen y cronograma de fechas. |
 | **/inscripciones-examen** | `POST`, `GET`, `DELETE` | Inscripción específica a finales y consulta de inscripciones. |
 | **/calendario** | `GET` | Descarga directa del Calendario Académico (PDF). |
