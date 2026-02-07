@@ -371,6 +371,7 @@ Response for `/api/alumnos/mis-carreras-materias`.
 - `mensajesSinLeer` (Long)
 - `integrantes` (List<GrupoIntegranteDTO>)
 - `cantIntegrantes` (Integer)
+- `horaUltimoMensaje` (LocalDateTime)
 
 ### `GrupoIntegranteDTO`
 - `idUsuario` (UUID)
