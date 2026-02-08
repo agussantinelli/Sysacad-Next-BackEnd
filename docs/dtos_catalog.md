@@ -633,25 +633,6 @@ Response for `/api/materias/{idMateria}/mesas`.
 
 ---
 
-## Sancion
-
-### `SancionRequest`
-- `idUsuario` (UUID)
-- `motivo` (String)
-- `fechaInicio` (LocalDate)
-- `fechaFin` (LocalDate)
-
-### `SancionResponse`
-- `id` (UUID)
-- `idUsuario` (UUID)
-- `nombreUsuario` (String)
-- `legajoUsuario` (String)
-- `motivo` (String)
-- `fechaInicio` (LocalDate)
-- `fechaFin` (LocalDate)
-
----
-
 ## Usuario
 
 ### `UsuarioRequest`

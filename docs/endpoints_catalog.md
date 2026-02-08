@@ -246,14 +246,6 @@ Base URL: `/api/salones`
 | `POST` | `/` | ADMIN | Crear un nuevo salón/aula. |
 | `GET` | `/facultad/{idFacultad}` | Authenticated | Listar salones detallados de una facultad. |
 
-## SancionController
-Base URL: `/api/sanciones`
-
-| Método | Endpoint | Roles / Acceso | Descripción |
-| :--- | :--- | :--- | :--- |
-| `POST` | `/` | ADMIN | Aplicar una sanción a un estudiante. |
-| `GET` | `/usuario/{idUsuario}` | ADMIN, ESTUDIANTE | Ver sanciones vigentes e históricas de un usuario. |
-
 ## MatriculacionController
 Base URL: `/api/alumnos`
 
