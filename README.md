@@ -109,8 +109,8 @@
         </tr>
         <tr>
             <td><strong>👤 Actores y Comunicación</strong></td>
-            <td><code>usuarios</code>, <code>sanciones</code>, <code>avisos</code>, <code>avisos_personas</code>, <code>grupos</code>, <code>miembros_grupo</code>, <code>mensajes_grupo</code></td>
-            <td>Gestión de perfiles, roles, disciplina, notificaciones con <strong>estado de lectura (visto)</strong> y <strong>chat grupal (mensajería)</strong>.</td>
+            <td><code>usuarios</code>, <code>avisos</code>, <code>avisos_personas</code>, <code>grupos</code>, <code>miembros_grupo</code>, <code>mensajes_grupo</code></td>
+            <td>Gestión de perfiles, roles, notificaciones con <strong>estado de lectura (visto)</strong> y <strong>chat grupal (mensajería)</strong>.</td>
         </tr>
         <tr>
             <td><strong>📜 Jerarquía Académica</strong></td>
@@ -255,7 +255,7 @@
 │   │   │   │   ├── HealthController.java           # Health checks del sistema
 │   │   │   │   └── ...                             # Otros controladores de dominio
 │   │   │   ├── dto/                                # Data Transfer Objects (Organizados por Dominio)
-│   │   │   │   ├── admin/                          # DTOs administrativos (18 archivos)
+│   │   │   │   ├── admin/                          # DTOs administrativos (17 archivos)
 │   │   │   │   ├── alumno/
 │   │   │   │   ├── auth/
 │   │   │   │   ├── aviso/
@@ -278,11 +278,10 @@
 │   │   │   │   ├── profesor/
 │   │   │   │   ├── reporte/
 │   │   │   │   ├── salon/
-│   │   │   │   ├── sancion/
 │   │   │   │   └── usuario/
 │   │   │   ├── exception/                          # Manejo centralizado de excepciones
 │   │   │   ├── mapper/                             # Mappers (MapStruct) Entity <-> DTO
-│   │   │   ├── modelo/                             # Entidades del dominio (JPA) - 26 entidades
+│   │   │   ├── modelo/                             # Entidades del dominio (JPA) - 25 entidades
 │   │   │   │   └── enums/                          # Enumeraciones - 18 tipos
 │   │   │   ├── repository/                         # Repositorios (Acceso a Datos)
 │   │   │   ├── service/                            # Lógica de Negocio (Service Layer)
@@ -456,7 +455,6 @@ El sistema cuenta con un `DbSeeder` (`src/main/java/com/sysacad/backend/config/s
 | **/avisos** | `POST`, `GET`, `PUT` | Cartelera de novedades (Admin publica, usuarios **marcan como leído**). |
 | **/grupos** | `POST`, `GET`, `PUT` | **Chat Grupal**: Creación de grupos, gestión de miembros y envío de mensajes. |
 | **/salones** | `POST`, `GET` | Gestión de aulas físicas y asignación a facultades. |
-| **/sanciones** | `POST`, `GET` | Registro disciplinario de estudiantes. |
 | **/horarios** | `POST`, `GET`, `DELETE` | Gestión de agenda semanal por comisión y materia. |
 | **/alumnos** | `POST`, `GET` | Matriculación, consulta de plan, **historial académico** y descarga de **Certificados**. |
 | **/profesor** | `GET` | Consulta de materias asignadas, comisiones y estadísticas de exámenes. |
