@@ -64,15 +64,28 @@
 
 <h2>🧠 Arquitectura y Diseño</h2>
 
-<p>Este backend está construido siguiendo principios de <strong>Clean Architecture</strong> y <strong>SOLID</strong>, priorizando la desacoplación y la testabilidad.</p>
+<p>Este backend está construido bajo un enfoque de <strong>Separation of Concerns (SoC)</strong> y <strong>Clean Architecture</strong>, estructurado en capas bien definidas que facilitan la escalabilidad y el mantenimiento:</p>
+
 <ul>
-    <li><strong>Seguridad Stateless & Boot ID:</strong> Autenticación vía JWT con Spring Security (v6+). El sistema utiliza un <strong>Boot ID</strong> único generado en cada reinicio del servidor que invalida automáticamente todos los tokens previos, garantizando que no existan sesiones "huérfanas" tras una actualización de seguridad.</li>
-    <li><strong>Lógica de Notificaciones (Thymeleaf):</strong> Servicio de email integrado que automatiza la comunicación institucional (bienvenida, carga de notas, recuperación de cuenta) mediante plantillas HTML enriquecidas.</li>
-    <li><strong>Validación Robusta:</strong> Reglas de negocio forzadas en la capa de servicio (Domain Driven Design).</li>
-    <li><strong>Optimización (N+1):</strong> Uso estratégico de <code>JOIN FETCH</code> en JPQL y DTOs projections.</li>
-    <li><strong>Manejo de Errores Global:</strong> <code>@ControllerAdvice</code> para respuestas JSON estandarizadas en excepciones.</li>
-    <li><strong>Email HTML Service:</strong> Integración con Thymeleaf para el envío de correos con diseño premium y CIDs.</li>
+    <li><strong>Capa de Controladores (REST API):</strong> Entry points del sistema que manejan la comunicación HTTP y delegan la lógica a los servicios.</li>
+    <li><strong>Capa de Servicios (Lógica de Negocio):</strong> Actúa como el <em>Domain Guardian</em>, donde se procesan las reglas académicas complejas (correlatividades, agendas, validaciones).</li>
+    <li><strong>Capa de Datos (Persistencia):</strong> Implementada con <strong>Spring Data JPA</strong>, utilizando el patrón Repository para desacoplar el motor de base de datos de la lógica.</li>
 </ul>
+
+<h3>🛠️ Patrones y Decisiones Técnicas</h3>
+
+<ul>
+    <li><strong>Seguridad Stateless & Boot ID:</strong> Implementa un <strong>Boot ID</strong> (UUID generado al arranque) inyectado en los claims del JWT. Esto permite la invalidación masiva de tokens al reiniciar el servidor sin necesidad de base de datos de revocación.</li>
+    <li><strong>DTO-First & MapStruct:</strong> Uso exclusivo de DTOs para el intercambio de datos entre capas. <strong>MapStruct</strong> genera los mappers en tiempo de compilación, asegurando un rendimiento óptimo y tipado fuerte.</li>
+    <li><strong>Proyecciones de Datos:</strong> Uso estratégico de proyecciones e interfaces de JPA (<code>JOIN FETCH</code>) para mitigar el problema de N+1 consultas y reducir el <em>overhead</em> de red.</li>
+    <li><strong>Manejo de Errores Global:</strong> Centralizado mediante <code>@ControllerAdvice</code>, devolviendo respuestas estandarizadas y trazables para cualquier excepción del dominio.</li>
+    <li><strong>Transactional Integrity:</strong> Uso riguroso de <code>@Transactional</code> para asegurar la atomicidad en operaciones multi-entidad (ej. inscripción + actualización de cupo).</li>
+    <li><strong>Notificaciones con Thymeleaf:</strong> Motor de plantillas desacoplado para generar correos institucionales dinámicos con soporte para CIDs (imágenes embebidas).</li>
+    <li><strong>Auditoría de Certificados:</strong> Sistema de trazabilidad que registra cada emisión de certificados, asegurando un control sobre la generación de documentos oficiales.</li>
+    <li><strong>Validación Fail-Fast:</strong> Las reglas de negocio se validan preventivamente en la capa de servicio antes de cualquier persistencia, reduciendo estados inconsistentes en la DB.</li>
+</ul>
+
+<hr>
 
 <hr>
 
