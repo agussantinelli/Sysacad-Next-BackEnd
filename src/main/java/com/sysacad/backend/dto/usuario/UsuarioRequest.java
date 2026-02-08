@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class UsuarioRequest {
     private String legajo;
-    private String password; // Solo entra, nunca sale en el Response
+    private String password; 
     private TipoDocumento tipoDocumento;
     private String dni;
     private String nombre;

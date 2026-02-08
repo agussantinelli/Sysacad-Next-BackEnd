@@ -12,7 +12,7 @@ import java.util.UUID;
 @Service
 public class ArchivoService {
 
-    // Carpeta donde se guardarán las fotos (se crea en la raíz del proyecto)
+    
     private final Path rootLocation = Paths.get("uploads");
 
     public ArchivoService() {
@@ -29,14 +29,14 @@ public class ArchivoService {
                 throw new RuntimeException("Error: Archivo vacío");
             }
 
-            // Generamos un nombre único para evitar colisiones (ej. "foto_123e4567.jpg")
+            
             String extension = obtenerExtension(archivo.getOriginalFilename());
             String nombreArchivo = "foto_" + UUID.randomUUID().toString() + extension;
 
-            // Copiamos el archivo al disco
+            
             Files.copy(archivo.getInputStream(), this.rootLocation.resolve(nombreArchivo));
 
-            return nombreArchivo; // Devolvemos el nombre para guardarlo en la Base de Datos
+            return nombreArchivo; 
         } catch (IOException e) {
             throw new RuntimeException("Falló al guardar la foto", e);
         }

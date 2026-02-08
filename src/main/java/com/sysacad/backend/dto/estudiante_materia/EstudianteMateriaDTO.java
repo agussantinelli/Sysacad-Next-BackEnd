@@ -13,8 +13,8 @@ public class EstudianteMateriaDTO {
     private UUID idMateria;
     private String nombre;
     private Short nivel;
-    private String estado; // "PENDIENTE", "CURSANDO", "REGULAR", "APROBADA"
-    private String nota; // "8", "9.50", "-"
+    private String estado; 
+    private String nota; 
     private Boolean sePuedeInscribir;
     private Boolean esElectiva;
     private Short horasCursado;

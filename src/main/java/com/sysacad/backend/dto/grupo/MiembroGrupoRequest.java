@@ -10,5 +10,5 @@ import java.util.UUID;
 @NoArgsConstructor
 public class MiembroGrupoRequest {
     private UUID idUsuario;
-    private RolGrupo rol; // Opcional
+    private RolGrupo rol; 
 }

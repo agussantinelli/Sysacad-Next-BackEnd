@@ -9,6 +9,6 @@ import java.util.UUID;
 @NoArgsConstructor
 public class CarreraRequest {
     private java.util.UUID idFacultad;
-    private String alias; // Ej: "ISI", "IM"
-    private String nombre; // Ej: "Ingeniería en Sistemas de Información"
+    private String alias; 
+    private String nombre; 
 }

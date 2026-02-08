@@ -36,14 +36,14 @@ public class CorrelatividadService {
             return true;
         }
 
-        // Obtener IDs de materias con cursada aprobada (Regular o Promocionado)
+        
         java.util.Set<UUID> materiasRegularizadas = inscripcionCursadoRepository.findByUsuarioId(idAlumno).stream()
                 .filter(i -> i.getEstado() == com.sysacad.backend.modelo.enums.EstadoCursada.REGULAR ||
                              i.getEstado() == com.sysacad.backend.modelo.enums.EstadoCursada.PROMOCIONADO)
                 .map(i -> i.getMateria().getId())
                 .collect(Collectors.toSet());
         
-        // Agregar también las que tienen final aprobado (implica regularizada)
+        
         java.util.Set<UUID> finalesAprobados = inscripcionExamenRepository.findByUsuarioId(idAlumno).stream()
                 .filter(i -> i.getEstado() == com.sysacad.backend.modelo.enums.EstadoExamen.APROBADO)
                 .map(i -> {
@@ -60,7 +60,7 @@ public class CorrelatividadService {
 
         materiasRegularizadas.addAll(finalesAprobados);
         
-        // IDs de materias aprobadas definitivamente (Promocionadas o Final Aprobado)
+        
         java.util.Set<UUID> materiasAprobadas = inscripcionCursadoRepository.findByUsuarioId(idAlumno).stream()
                 .filter(i -> i.getEstado() == com.sysacad.backend.modelo.enums.EstadoCursada.PROMOCIONADO)
                 .map(i -> i.getMateria().getId())
@@ -71,12 +71,12 @@ public class CorrelatividadService {
         for (com.sysacad.backend.modelo.Correlatividad correlatividad : materiaObjetivo.getCorrelativas()) {
             UUID idCorrelativa = correlatividad.getCorrelativa().getId();
             if (correlatividad.getTipo() == com.sysacad.backend.modelo.enums.TipoCorrelatividad.REGULAR) {
-                // Requiere estar regularizada (o aprobada)
+                
                 if (!materiasRegularizadas.contains(idCorrelativa)) {
                     return false;
                 }
             } else {
-                // Requiere estar aprobada (Promocionada o Final)
+                
                 if (!materiasAprobadas.contains(idCorrelativa)) {
                     return false;
                 }
@@ -90,7 +90,7 @@ public class CorrelatividadService {
     public boolean puedeRendir(UUID idAlumno, UUID idMateriaAspirante) {
         Materia materiaObjetivo = materiaRepository.findById(idMateriaAspirante)
                 .orElseThrow(() -> new RuntimeException("Materia no encontrada"));
-        // Si la materia se puede rendir libre, no validar cursada ni correlativas
+        
         if (Boolean.TRUE.equals(materiaObjetivo.getRendirLibre())) {
              return true; 
         }

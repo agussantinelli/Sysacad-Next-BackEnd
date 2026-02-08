@@ -14,7 +14,7 @@ import java.util.List;
 public class ComisionRequest {
 
     @NotBlank(message = "El nombre es obligatorio")
-    private String nombre; // Ej: "Comisión 1K3"
+    private String nombre; 
     
     @NotBlank(message = "El turno es obligatorio")
     private String turno;
@@ -31,7 +31,7 @@ public class ComisionRequest {
 
     private UUID idSalon;
     
-    private String salon; // Nombre del salón (compatibilidad frontend)
+    private String salon; 
 
     private List<UUID> idsMaterias; 
     private List<UUID> idsProfesores;

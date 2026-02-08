@@ -23,7 +23,7 @@ public class ReporteController {
     }
 
     @GetMapping("/certificados")
-    // @PreAuthorize("hasRole('ADMIN')") // Uncomment/Enable if needed
+    
     public ResponseEntity<List<ReporteCertificadoDTO>> obtenerHistorialCertificados() {
         List<ReporteCertificadoDTO> historial = certificadoService.obtenerHistorialDescargas();
         return ResponseEntity.ok(historial);

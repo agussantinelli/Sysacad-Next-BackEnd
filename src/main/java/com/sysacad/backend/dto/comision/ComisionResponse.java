@@ -22,13 +22,13 @@ public class ComisionResponse {
 
 
     private String nombreSalon;
-    private String ubicacionSalon; // Ej: "Aula 302 - Facultad Rosario"
+    private String ubicacionSalon; 
 
-    // Listas simplificadas
+    
     private List<String> materiasNombres;
     private List<ProfesorResumenDTO> profesores;
     
-    // Lista detallada solicitada
+    
     private List<MateriaDetalleDTO> materiasDetalle;
 
     public ComisionResponse(Comision comision) {

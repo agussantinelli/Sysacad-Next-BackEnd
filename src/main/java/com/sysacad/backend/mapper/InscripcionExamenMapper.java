@@ -22,7 +22,7 @@ public interface InscripcionExamenMapper {
 
     List<InscripcionExamenResponse> toDTOs(List<InscripcionExamen> inscripciones);
     
-    // Custom mapping para nombre completo si es necesario
+    
     default String mapNombreCompleto(com.sysacad.backend.modelo.Usuario usuario) {
         return usuario.getNombre() + " " + usuario.getApellido();
     }

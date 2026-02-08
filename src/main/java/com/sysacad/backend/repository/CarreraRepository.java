@@ -12,7 +12,7 @@ public interface CarreraRepository extends JpaRepository<Carrera, UUID> {
 
     List<Carrera> findByFacultades_Id(UUID idFacultad);
 
-    // Búsqueda por alias
+    
     java.util.Optional<Carrera> findByAlias(String alias);
 
     boolean existsByNombre(String nombre);

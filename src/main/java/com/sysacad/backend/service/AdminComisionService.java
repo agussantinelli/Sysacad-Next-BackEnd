@@ -120,12 +120,12 @@ public class AdminComisionService {
 
         String nombre = request.getNombre().trim();
         
-        // Format Name: Uppercase the middle letter (e.g., 1k1 -> 1K1)
+        
         if (nombre.matches("^\\d[a-zA-Z]\\d$")) {
             nombre = nombre.toUpperCase();
         }
         
-        // Unique Validation
+        
         if (comisionRepository.existsByNombre(nombre)) {
             throw new com.sysacad.backend.exception.BusinessLogicException("Ya existe una comisión con el nombre '" + nombre + "'.");
         }
@@ -167,11 +167,11 @@ public class AdminComisionService {
             );
 
             for (HorarioCursado h : solapamientos) {
-                // If a schedule overlaps, logic says: professors in that commission teaching that subject are busy.
+                
                 Comision c = h.getComision();
                 Materia m = h.getMateria();
 
-                // Get professors in that commission who are assigned to that subject
+                
                 c.getProfesores().stream()
                         .filter(p -> asignacionMateriaRepository.existsByIdIdUsuarioAndIdIdMateria(p.getId(), m.getId()))
                         .forEach(p -> busyProfessors.add(p.getId()));
@@ -184,14 +184,14 @@ public class AdminComisionService {
 
     @Transactional(readOnly = true)
     public List<ProfesorDisponibleDTO> obtenerProfesoresDisponibles(UUID idMateria, List<AsignarMateriaComisionRequest.HorarioRequestDTO> horarios) {
-        // 1. Get all qualified professors
+        
         List<AsignacionMateria> asignaciones = asignacionMateriaRepository.findByIdIdMateria(idMateria);
         List<Usuario> candidatos = asignaciones.stream().map(AsignacionMateria::getProfesor).collect(Collectors.toList());
 
-        // 2. Identify busy professors
+        
         java.util.Set<UUID> busyProfessors = obtenerProfesoresOcupados(horarios);
 
-        // 3. Filter candidates
+        
         return candidatos.stream()
                 .filter(p -> !busyProfessors.contains(p.getId()))
                 .map(p -> new ProfesorDisponibleDTO(p.getId(), p.getNombre(), p.getApellido(), p.getLegajo()))
@@ -219,18 +219,18 @@ public class AdminComisionService {
         Comision comision = comisionRepository.findById(idComision)
                 .orElseThrow(() -> new ResourceNotFoundException("Comisión no encontrada"));
         
-        // Get subjects for this commission's career and level
+        
         List<PlanMateria> planMaterias = planMateriaRepository.findByIdIdCarreraAndNivel(
                 comision.getCarrera().getId(), 
                 comision.getNivel().shortValue()
         );
         
-        // Get IDs of subjects already assigned to this commission
+        
         java.util.Set<UUID> assignedMateriaIds = comision.getMaterias().stream()
                 .map(Materia::getId)
                 .collect(Collectors.toSet());
         
-        // Filter out already assigned subjects and map to DTO
+        
         return planMaterias.stream()
                 .map(pm -> materiaRepository.findById(pm.getId().getIdMateria()).orElse(null))
                 .filter(java.util.Objects::nonNull)
@@ -238,7 +238,7 @@ public class AdminComisionService {
                 .map(m -> new MateriaDisponibleDTO(
                         m.getId(),
                         m.getNombre(),
-                        null, // codigo - we don't have this in Materia entity
+                        null, 
                         planMaterias.stream()
                                 .filter(pm -> pm.getId().getIdMateria().equals(m.getId()))
                                 .findFirst()
@@ -259,14 +259,14 @@ public class AdminComisionService {
         Materia materia = materiaRepository.findById(request.getIdMateria())
                 .orElseThrow(() -> new ResourceNotFoundException("Materia no encontrada"));
         
-        // PK Validation: Check if materia is already assigned to this commission
+        
         if (comision.getMaterias().contains(materia)) {
             throw new com.sysacad.backend.exception.BusinessLogicException(
                 "La materia '" + materia.getNombre() + "' ya está asignada a esta comisión."
             );
         }
         
-        // Career/Level Validation: Verify subject belongs to commission's career and level
+        
         List<PlanMateria> planMaterias = planMateriaRepository.findByIdIdCarreraAndNivel(
                 comision.getCarrera().getId(), 
                 comision.getNivel().shortValue()
@@ -283,7 +283,7 @@ public class AdminComisionService {
         
         comision.getMaterias().add(materia);
         
-        // Hours Validation: Verify total scheduled hours match subject's required hours
+        
         if (request.getHorarios() != null && !request.getHorarios().isEmpty()) {
             long totalMinutes = request.getHorarios().stream()
                     .mapToLong(h -> java.time.Duration.between(h.getHoraDesde(), h.getHoraHasta()).toMinutes())
@@ -321,7 +321,7 @@ public class AdminComisionService {
         comisionRepository.save(comision);
         grupoService.crearGruposParaComision(comision);
 
-        // Save Schedules
+        
         for (AsignarMateriaComisionRequest.HorarioRequestDTO hDTO : request.getHorarios()) {
             HorarioCursado.HorarioCursadoId hId = new HorarioCursado.HorarioCursadoId();
             hId.setIdComision(comision.getId());

@@ -7,7 +7,7 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 public class MesaExamenRequest {
-    private String nombre; // e.g., "Turno Febrero"
+    private String nombre; 
     private LocalDate fechaInicio;
     private LocalDate fechaFin;
 }

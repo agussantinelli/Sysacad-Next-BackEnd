@@ -19,7 +19,7 @@ import java.util.UUID;
 public class CertificadoService {
 
     private final UsuarioRepository usuarioRepository;
-    private final MatriculacionRepository matriculacionRepository; // Para saber qué carrera cursa
+    private final MatriculacionRepository matriculacionRepository; 
     private final IPdfGenerator pdfGenerator;
     private final com.sysacad.backend.repository.SolicitudCertificadoRepository solicitudCertificadoRepository;
 
@@ -36,31 +36,31 @@ public class CertificadoService {
 
     @Transactional
     public byte[] generarCertificadoRegular(UUID idUsuario) {
-        // 1. Obtener datos del alumno
+        
         Usuario alumno = usuarioRepository.findById(idUsuario)
                 .orElseThrow(() -> new RuntimeException("Alumno no encontrado"));
         
-        // Log solicitud
+        
         com.sysacad.backend.modelo.SolicitudCertificado solicitud = new com.sysacad.backend.modelo.SolicitudCertificado();
         solicitud.setUsuario(alumno);
         solicitud.setFechaSolicitud(java.time.LocalDateTime.now());
         solicitud.setTipo(com.sysacad.backend.modelo.enums.TipoCertificado.ALUMNO_REGULAR);
         solicitudCertificadoRepository.save(solicitud);
 
-        // 2. Obtener carrera principal (simplificado: tomamos la primera matriculación vigente)
-        // En un caso real, el alumno elegiría de qué carrera quiere el certificado si tiene varias.
+        
+        
         Matriculacion matricula = matriculacionRepository.findByIdIdUsuario(alumno.getId()).stream()
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("El alumno no está inscripto en ninguna carrera"));
 
         String nombreCarrera = matricula.getPlan().getCarrera().getNombre();
-        // Obtener nombre de Facultad. Asumimos que la carrera tiene facultades asociadas, tomamos la primera.
+        
         String nombreFacultad = matricula.getPlan().getCarrera().getFacultades().stream()
                 .findFirst()
-                .map(f -> "Facultad Regional " + f.getCiudad()) // O nombreCompleto si lo tuviera, usaste ciudad en el DTO
-                .orElse("Facultad Regional Rosario"); // Fallback
+                .map(f -> "Facultad Regional " + f.getCiudad()) 
+                .orElse("Facultad Regional Rosario"); 
 
-        // 3. Construir DTO inmutable
+        
         AlumnoCertificadoDTO datos = new AlumnoCertificadoDTO(
                 alumno.getNombre() + " " + alumno.getApellido(),
                 alumno.getDni(),
@@ -70,31 +70,31 @@ public class CertificadoService {
                 LocalDate.now()
         );
 
-        // 4. Generar PDF
+        
         return pdfGenerator.generarCertificado(datos);
     }
 
     @Transactional
     public byte[] generarCertificadoDocente(UUID idUsuario) {
-        // 1. Obtener datos del usuario
+        
         Usuario usuario = usuarioRepository.findById(idUsuario)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         
-        // Log solicitud
+        
         com.sysacad.backend.modelo.SolicitudCertificado solicitud = new com.sysacad.backend.modelo.SolicitudCertificado();
         solicitud.setUsuario(usuario);
         solicitud.setFechaSolicitud(java.time.LocalDateTime.now());
         solicitud.setTipo(com.sysacad.backend.modelo.enums.TipoCertificado.DOCENTE);
         solicitudCertificadoRepository.save(solicitud);
 
-        // 2. Determinar ROL string
+        
         String rolStr = switch (usuario.getRol()) {
             case PROFESOR -> "Docente";
             case ADMIN -> "Administrador";
             default -> "Personal";
         };
 
-        // 3. Construir DTO
+        
         ProfesorCertificadoDTO datos = new ProfesorCertificadoDTO(
                 usuario.getNombre() + " " + usuario.getApellido(),
                 usuario.getDni(),
@@ -103,7 +103,7 @@ public class CertificadoService {
                 LocalDate.now()
         );
 
-        // 4. Generar PDF
+        
         return pdfGenerator.generarCertificadoProfesor(datos);
     }
 
@@ -118,7 +118,7 @@ public class CertificadoService {
                         solicitud.getTipo().name(),
                         solicitud.getFechaSolicitud()
                 ))
-                .sorted((a, b) -> b.getFecha().compareTo(a.getFecha())) // Ordenado por fecha descendente
+                .sorted((a, b) -> b.getFecha().compareTo(a.getFecha())) 
                 .collect(java.util.stream.Collectors.toList());
     }
 }

@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CorrelativaDTO {
     private String nombre;
-    private String condicion; // "REGULAR" o "PROMOCIONADA" (que implica aprobada)
+    private String condicion; 
 }

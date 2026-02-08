@@ -84,7 +84,7 @@ public class UsuarioService {
         
         Usuario guardado = usuarioRepository.save(usuario);
 
-        // Enviar email de bienvenida
+        
         try {
             Map<String, Object> vars = new HashMap<>();
             vars.put("nombre", guardado.getNombre());
@@ -140,7 +140,7 @@ public class UsuarioService {
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con ID: " + id));
 
         if (nuevoEstado == com.sysacad.backend.modelo.enums.EstadoUsuario.INACTIVO) {
-            // Validar que no tenga mesas de examen futuras
+            
             boolean tieneMesasFuturas = detalleMesaExamenRepository.existsByProfesorAndFechaAfter(usuario.getId(), java.time.LocalDate.now());
             if (tieneMesasFuturas) {
                 throw new BusinessLogicException("No se puede desactivar al profesor porque está asignado a mesas de examen futuras.");
@@ -167,7 +167,7 @@ public class UsuarioService {
         usuario.setGenero(request.getGenero());
 
         if (request.getFotoPerfil() != null) {
-            // Si viene una URL externa o vacío, actualizamos.
+            
             usuario.setFotoPerfil(request.getFotoPerfil());
         }
 
@@ -183,7 +183,7 @@ public class UsuarioService {
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con ID: " + id));
 
-        // Delegamos TODA la lógica de archivos al servicio especializado
+        
         String rutaGuardada = fileStorageService.guardarFotoPerfil(
                 archivo,
                 usuario.getLegajo(),
@@ -222,7 +222,7 @@ public class UsuarioService {
 
     @Transactional(readOnly = true)
     public List<Usuario> obtenerAlumnosInscriptosPorMateria(UUID idMateria) {
-        // Obtenemos inscripciones cursado para la materia
+        
         return inscripcionCursadoRepository.findByMateriaId(idMateria).stream()
                 .map(com.sysacad.backend.modelo.InscripcionCursado::getUsuario)
                 .collect(Collectors.toList());
@@ -233,7 +233,7 @@ public class UsuarioService {
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con ID: " + id));
 
-        // Antes de eliminar el usuario, limpiamos su foto del disco para no dejar basura
+        
         fileStorageService.borrarArchivo(usuario.getFotoPerfil());
         usuarioRepository.deleteById(id);
     }

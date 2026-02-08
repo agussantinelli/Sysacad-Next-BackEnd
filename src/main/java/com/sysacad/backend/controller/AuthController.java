@@ -31,21 +31,21 @@ public class AuthController {
 
         @PostMapping("/login")
         public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
-                // Autenticar
+                
                 Usuario usuario = usuarioService.autenticar(request.getIdentificador(), request.getPassword());
 
-                // Token
+                
                 String jwtToken = jwtService.generateToken(usuario);
 
-                // Respuesta Base
+                
                 UsuarioResponse usuarioResponse = usuarioMapper.toDTO(usuario);
                 usuarioResponse.setTipoIdentificador(request.getTipoIdentificador());
 
-                // Enriquecer si es estudiante
+                
                 if (usuario.getRol() == RolUsuario.ESTUDIANTE) {
                         List<Matriculacion> estudios = matriculacionService.obtenerCarrerasPorAlumno(usuario.getId());
 
-                        // Carreras
+                        
                         List<UsuarioResponse.InfoCarrera> carrerasInfo = estudios.stream()
                                         .map(e -> new UsuarioResponse.InfoCarrera(
                                                         e.getPlan().getCarrera().getNombre(),
@@ -57,7 +57,7 @@ public class AuthController {
                                         .collect(Collectors.toList());
                         usuarioResponse.setCarreras(carrerasInfo);
 
-                        // Año Ingreso (Mínimo)
+                        
                         estudios.stream()
                                         .map(Matriculacion::getFechaInscripcion)
                                         .min(LocalDate::compareTo)

@@ -16,16 +16,16 @@ import java.util.UUID;
 public interface HorarioCursadoRepository extends JpaRepository<HorarioCursado, HorarioCursadoId> {
 
 
-    // Obtener todos los horarios de una comisión específica
+    
     List<HorarioCursado> findByIdIdComision(UUID idComision);
 
-    // Obtener todos los horarios de una materia (independiente de la comisión)
+    
     List<HorarioCursado> findByIdIdMateria(UUID idMateria);
 
-    // Obtener horarios por día (útil para reportes de ocupación diaria)
+    
     List<HorarioCursado> findByIdDia(DiaSemana dia);
 
-    // Buscar horario específico de una materia en una comisión
+    
     List<HorarioCursado> findByIdIdComisionAndIdIdMateria(UUID idComision, UUID idMateria);
 
 

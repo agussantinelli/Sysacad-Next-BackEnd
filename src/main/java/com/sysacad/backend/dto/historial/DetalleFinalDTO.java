@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class DetalleFinalDTO {
     private LocalDate fechaExamen;
-    private String turno; // O nombre de mesa
+    private String turno; 
     private String estado;
     private String nota;
     private String tomo;

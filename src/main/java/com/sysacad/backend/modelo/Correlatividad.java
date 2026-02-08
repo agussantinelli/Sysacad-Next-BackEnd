@@ -53,7 +53,7 @@ public class Correlatividad implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Correlatividad that = (Correlatividad) o;
-        // Comparar por el ID de las materias (no las entidades completas) y el tipo y el plan
+        
         return Objects.equals(materia != null ? materia.getId() : null, that.materia != null ? that.materia.getId() : null) &&
                Objects.equals(correlativa != null ? correlativa.getId() : null, that.correlativa != null ? that.correlativa.getId() : null) &&
                tipo == that.tipo &&
@@ -62,7 +62,7 @@ public class Correlatividad implements Serializable {
 
     @Override
     public int hashCode() {
-        // Hash basado en IDs de materias y tipo y plan, no en las entidades
+        
         return Objects.hash(
             materia != null ? materia.getId() : null,
             correlativa != null ? correlativa.getId() : null,

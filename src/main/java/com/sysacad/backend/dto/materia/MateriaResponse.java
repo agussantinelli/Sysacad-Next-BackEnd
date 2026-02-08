@@ -47,5 +47,5 @@ public class MateriaResponse {
         }
     }
 
-    // Inner class removed. Now using standalone DTO.
+    
 }

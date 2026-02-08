@@ -18,5 +18,5 @@ public class InstanciaEvaluacion {
     private UUID id;
 
     @Column(nullable = false, unique = true, length = 100)
-    private String nombre; // Ej: "1er Parcial", "TP Integrador"
+    private String nombre; 
 }

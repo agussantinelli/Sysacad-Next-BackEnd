@@ -45,20 +45,20 @@ public class UTNSeeder {
         System.out
                 .println(">> UTNSeeder: Iniciando carga masiva de planes y correlativas (Dataset Definitivo Final)...");
 
-        // Facultad
+        
         FacultadRegional frro = new FacultadRegional();
         frro.setCiudad("Rosario");
         frro.setProvincia("Santa Fe");
         frro = facultadRepository.save(frro);
 
-        // Cargar Datos
+        
         PlanDeEstudio planISI = cargarCarrera(frro, 1, "ISI", "Ingeniería en Sistemas de Información", 20, getDatasetISI());
         PlanDeEstudio planCivil = cargarCarrera(frro, 2, "IC", "Ingeniería Civil", 11, getDatasetCivil());
         PlanDeEstudio planQuimica = cargarCarrera(frro, 3, "IQ", "Ingeniería Química", 12, getDatasetQuimica());
         PlanDeEstudio planMecanica = cargarCarrera(frro, 4, "IM", "Ingeniería Mecánica", 10, getDatasetMecanica());
         PlanDeEstudio planElectrica = cargarCarrera(frro, 5, "IEE", "Ingeniería en Energía Eléctrica", 10, getDatasetElectrica());
 
-        // Conectar Correlativas
+        
         conectarCorrelativas(1, planISI, getDatasetISI());
         conectarCorrelativas(2, planCivil, getDatasetCivil());
         conectarCorrelativas(3, planQuimica, getDatasetQuimica());
@@ -72,7 +72,7 @@ public class UTNSeeder {
             List<MateriaDef> materias) {
         System.out.println("   -> Procesando Carrera: " + nombreCarrera);
 
-        // Crear Carrera
+        
         Carrera carrera = new Carrera();
         carrera.setNombre(nombreCarrera);
         carrera.setAlias(aliasCarrera);
@@ -84,7 +84,7 @@ public class UTNSeeder {
         
         carrera = carreraRepository.save(carrera);
 
-        // Crear Plan
+        
         PlanDeEstudio plan = new PlanDeEstudio();
         plan.setId(new PlanDeEstudio.PlanId(carrera.getId(), 2023));
         plan.setNombre("Plan 2023");
@@ -108,7 +108,7 @@ public class UTNSeeder {
                     materia.setTipoMateria(def.tipo);
                     materia.setOptativa(def.esElectiva);
                     
-                    // Configurar Rendir Libre para Inglés
+                    
                     if (def.nombre.contains("Inglés")) {
                         materia.setRendirLibre(true);
                     } else {
@@ -142,14 +142,14 @@ public class UTNSeeder {
 
             Set<Correlatividad> correlatividades = new HashSet<>();
 
-            // Regulares
+            
             if (def.correlativasRegulares != null) {
                 for (String codCorr : def.correlativasRegulares) {
                     Materia matCorr = mapaCodigoMateria.get(nroCarrera + "-" + codCorr);
                     if (matCorr != null) {
                          correlatividades.add(new Correlatividad(materiaActual, matCorr, TipoCorrelatividad.REGULAR, plan));
                     } else {
-                         // Manejo de caso especial "3er Año Completo" u otros strings no mapeables si existieran
+                         
                          if(!codCorr.contains("Año")) {
                              System.out.println("      [WARN] (" + nroCarrera + ") No se encontró correlativa REG '" + codCorr + "' para " + def.nombre);
                          }
@@ -157,7 +157,7 @@ public class UTNSeeder {
                 }
             }
 
-            // Promocionadas
+            
             if (def.correlativasPromocionadas != null) {
                 for (String codCorr : def.correlativasPromocionadas) {
                     Materia matCorr = mapaCodigoMateria.get(nroCarrera + "-" + codCorr);
@@ -196,7 +196,7 @@ public class UTNSeeder {
             this.nombre = nombre;
             this.horas = (short) horas;
 
-            // Determinar Duración y Cuatrimestre
+            
             String infoUpper = dictadoInfo != null ? dictadoInfo.toUpperCase() : "ANUAL";
 
             if (infoUpper.contains("ANUAL")) {
@@ -209,7 +209,7 @@ public class UTNSeeder {
                  } else if(infoUpper.contains("2 C") || infoUpper.contains("2DO")) {
                      this.cuatrimestreDictado = CuatrimestreDictado.SEGUNDO;
                  } else {
-                     this.cuatrimestreDictado = CuatrimestreDictado.ANUAL; // Default fallback
+                     this.cuatrimestreDictado = CuatrimestreDictado.ANUAL; 
                  }
             }
 
@@ -232,7 +232,7 @@ public class UTNSeeder {
             this.nombre = nombre;
             this.horas = (short) horas;
 
-            // Determinar Duración y Cuatrimestre
+            
             String infoUpper = dictadoInfo != null ? dictadoInfo.toUpperCase() : "ANUAL";
 
             if (infoUpper.contains("ANUAL")) {
@@ -247,7 +247,7 @@ public class UTNSeeder {
                 } else if (infoUpper.contains("2")) {
                     this.cuatrimestreDictado = CuatrimestreDictado.SEGUNDO;
                 } else {
-                    // Por defecto si es cuatrimestral y no se especifica, asumimos AMBOS para mayor disponibilidad
+                    
                     this.cuatrimestreDictado = CuatrimestreDictado.AMBOS;
                 }
             }
@@ -266,10 +266,10 @@ public class UTNSeeder {
         }
     }
 
-    // INGENIERÍA EN SISTEMAS DE INFORMACIÓN (ISI)
+    
     private List<MateriaDef> getDatasetISI() {
         return List.of(
-                // Nivel 1
+                
                 new MateriaDef("1", "Análisis Matemático I", 5, "ANUAL", 1, false, null, null),
                 new MateriaDef("2", "Álgebra y Geometría Analítica", 5, "ANUAL", 1, false, null, null),
                 new MateriaDef("3", "Física I", 5, "ANUAL", 1, false, null, null),
@@ -279,7 +279,7 @@ public class UTNSeeder {
                 new MateriaDef("7", "Arquitectura de Computadoras", 4, "ANUAL", 1, false, null, null),
                 new MateriaDef("8", "Sistemas y Procesos de Negocio", 3, "ANUAL", 1, false, null, null),
 
-                // Nivel 2
+                
                 new MateriaDef("9", "Análisis Matemático II", 5, "ANUAL", 2, false, List.of("1", "2"), null),
                 new MateriaDef("10", "Física II", 5, "ANUAL", 2, false, List.of("1", "3"), null),
                 new MateriaDef("11", "Ingeniería y Sociedad", 2, "ANUAL", 2, false, null, null),
@@ -289,7 +289,7 @@ public class UTNSeeder {
                 new MateriaDef("15", "Sistemas Operativos", 4, "ANUAL", 2, false, List.of("7"), null),
                 new MateriaDef("16", "Análisis de Sistemas de Información", 6, "ANUAL", 2, false, List.of("6", "8"), null),
 
-                // Nivel 3
+                
                 new MateriaDef("17", "Probabilidad y Estadística", 3, "ANUAL", 3, false, List.of("1", "2"), null),
                 new MateriaDef("18", "Economía", 3, "ANUAL", 3, false, List.of("1", "2"), null),
                 new MateriaDef("19", "Bases de Datos", 4, "ANUAL", 3, false, List.of("13", "16"), List.of("5", "6")),
@@ -298,7 +298,7 @@ public class UTNSeeder {
                 new MateriaDef("22", "Análisis Numérico", 3, "ANUAL", 3, false, List.of("1", "2"), null),
                 new MateriaDef("23", "Diseño de Sistemas de Información", 6, "ANUAL", 3, false, List.of("14", "16"), List.of("9")),
 
-                // Nivel 4
+                
                 new MateriaDef("24", "Legislación", 2, "ANUAL", 4, false, List.of("11"), null),
                 new MateriaDef("25", "Ingeniería y Calidad de Software", 3, "ANUAL", 4, false, List.of("19", "20", "23"), List.of("13", "14")),
                 new MateriaDef("26", "Redes de Datos", 4, "ANUAL", 4, false, List.of("15", "21"), null),
@@ -307,7 +307,7 @@ public class UTNSeeder {
                 new MateriaDef("29", "Tecnologías para la Automatización", 3, "ANUAL", 4, false, List.of("10", "22"), List.of("9")),
                 new MateriaDef("30", "Administración de Sistemas de Información", 6, "ANUAL", 4, false, List.of("18", "23"), List.of("16")),
 
-                // Nivel 5
+                
                 new MateriaDef("31", "Inteligencia Artificial", 3, "ANUAL", 5, false, List.of("28"), List.of("17", "22")),
                 new MateriaDef("32", "Ciencia de Datos", 3, "ANUAL", 5, false, List.of("28"), List.of("17", "19")),
                 new MateriaDef("33", "Sistemas de Gestión", 4, "ANUAL", 5, false, List.of("18", "27"), List.of("23")),
@@ -315,7 +315,7 @@ public class UTNSeeder {
                 new MateriaDef("35", "Seguridad en los Sistemas de Información", 3, "ANUAL", 5, false, List.of("26", "30"), List.of("20", "21")),
                 new MateriaDef("36", "Proyecto Final", 6, "ANUAL", 5, false, List.of("25", "26", "30"), List.of("12", "20", "23")),
 
-                // ELECTIVAS ISI
+                
                 new MateriaDef("37", "Entornos Gráficos", 4, "1 y 2 C", 2, true, List.of("5"), List.of("6", "8")),
                 new MateriaDef("38", "Análisis y Diseño de Datos e Información", 3, "1 y 2 C", 2, true, List.of("8", "13"), List.of("6")),
                 new MateriaDef("39", "Sistemas de Información Geográfica", 3, "2 C", 2, true, List.of("6", "1"), List.of("2")),
@@ -338,10 +338,10 @@ public class UTNSeeder {
                 new MateriaDef("56", "Minería de Datos", 6, "CUATRIMESTRAL", 5, true, List.of("28"), List.of("17", "19")));
     }
 
-    // INGENIERÍA CIVIL (IC)
+    
     private List<MateriaDef> getDatasetCivil() {
         return List.of(
-                // NIVEL 1
+                
                 new MateriaDef("1", "Análisis Matemático I", 5, "ANUAL", 1, false, null, null),
                 new MateriaDef("2", "Álgebra y Geometría Analítica", 5, "ANUAL", 1, false, null, null),
                 new MateriaDef("3", "Ingeniería y Sociedad", 2, "ANUAL", 1, false, null, null),
@@ -351,7 +351,7 @@ public class UTNSeeder {
                 new MateriaDef("7", "Física I", 5, "ANUAL", 1, false, null, null),
                 new MateriaDef("8", "Fundamentos de Informática", 2, "ANUAL", 1, false, null, null),
 
-                // NIVEL 2
+                
                 new MateriaDef("9", "Análisis Matemático II", 5, "ANUAL", 2, false, List.of("1", "2"), null),
                 new MateriaDef("10", "Estabilidad", 5, "ANUAL", 2, false, List.of("1", "2", "5", "7", "8"), null),
                 new MateriaDef("11", "Ingeniería Civil II", 3, "ANUAL", 2, false, List.of("3", "4", "5", "8"), null),
@@ -362,7 +362,7 @@ public class UTNSeeder {
                 new MateriaDef("16", "Resistencia de Materiales", 4, "ANUAL", 2, false, List.of("10"), List.of("1", "2", "7", "8")),
                 new MateriaDef("17", "Tecnología del Hormigón", 2, "ANUAL", 2, false, List.of("12", "14", "15"), List.of("1", "2", "6", "7")),
 
-                // NIVEL 3
+                
                 new MateriaDef("18", "Tecnología de la Construcción", 6, "ANUAL", 3, false, List.of("10", "11", "12", "15"), List.of("1", "2", "4", "5", "6", "7", "8")),
                 new MateriaDef("19", "Geotopografía", 4, "ANUAL", 3, false, List.of("9", "11", "13", "14"), List.of("1", "2", "4", "5", "7")),
                 new MateriaDef("20", "Hidráulica General y Aplicada", 5, "ANUAL", 3, false, List.of("9", "10", "11", "13", "14"), List.of("1", "2", "5", "7", "8")),
@@ -372,7 +372,7 @@ public class UTNSeeder {
                 new MateriaDef("24", "Economía", 3, "ANUAL", 3, false, List.of("11", "14", "15"), List.of("1", "2", "3", "4", "8")),
                 new MateriaDef("25", "Inglés II", 2, "ANUAL", 3, false, List.of("15"), List.of("3", "4")),
 
-                // NIVEL 4
+                
                 new MateriaDef("26", "Geotecnia", 5, "ANUAL", 4, false, List.of("16", "17", "18", "19", "20"), List.of("9", "10", "11", "12", "13", "14")),
                 new MateriaDef("27", "Instalaciones Sanitarias y de Gas", 3, "ANUAL", 4, false, List.of("18", "19", "20", "24"), List.of("5", "6", "7", "8", "12")),
                 new MateriaDef("28", "Diseño Arq., Planeamiento y Urbanismo", 5, "ANUAL", 4, false, List.of("18", "19", "22", "23", "24", "25"), List.of("10", "11", "12", "15")),
@@ -382,7 +382,7 @@ public class UTNSeeder {
                 new MateriaDef("32", "Ingeniería Legal", 3, "ANUAL", 4, false, List.of("9", "11", "14", "15"), List.of("1", "2", "3", "4", "8")),
                 new MateriaDef("33", "Construcciones Metálicas y de Maderas", 4, "ANUAL", 4, false, List.of("21", "29"), List.of("16", "17", "18", "19")),
 
-                // NIVEL 5
+                
                 new MateriaDef("34", "Cimentaciones", 3, "ANUAL", 5, false, List.of("21", "26", "29", "30", "31"), List.of("16", "17", "18", "19", "20")),
                 new MateriaDef("35", "Ingeniería Sanitaria", 3, "ANUAL", 5, false, List.of("26", "27", "31"), List.of("17", "18", "19", "20", "25")),
                 new MateriaDef("36", "Organización y Conducción de Obras", 5, "ANUAL", 5, false, List.of("26", "27", "28", "30", "31"), List.of("17", "18", "19", "20", "22", "23", "24", "25")),
@@ -391,29 +391,29 @@ public class UTNSeeder {
                 new MateriaDef("39", "Vías de Comunicación II", 8, "1 C", 5, false, List.of("26", "30", "31", "32", "37"), List.of("16", "17", "18", "19", "20", "24")),
                 new MateriaDef("40", "Gestión Ambiental y Desarrollo Sust.", 6, "ANUAL", 5, false, List.of("26", "28", "31", "32"), List.of("16", "17", "18", "19", "25")),
                 
-                // NIVEL 6 (Proyecto final)
+                
                 new MateriaDef("51", "Proyecto Final", 8, "ANUAL", 5, false, List.of("26", "27", "28", "29", "30", "31", "32"), List.of("15", "16", "17", "18", "19", "20", "22", "23", "24", "25")),
 
-                // ELECTIVAS IC
-                new MateriaDef("52", "Formación de Emprendedores", 4, "1 y 2 C", 2, true, null, List.of("3")), // E1
-                new MateriaDef("53", "Geología Aplicada", 2, "ANUAL", 2, true, List.of("4", "6", "7"), List.of("4", "6", "7")), // E2
-                new MateriaDef("54", "Elasticidad y Plasticidad", 3, "ANUAL", 4, true, List.of("9", "16"), List.of("9", "16")), // E3 (Also had cursar_apr 1,2,10 but mapped simplified)
-                new MateriaDef("55", "Uso del Recurso Hídrico", 3, "ANUAL", 5, true, List.of("31"), List.of("31")), // E4
-                new MateriaDef("56", "Prefabricación", 2, "ANUAL", 5, true, List.of("17", "30"), List.of("17", "30")), // E5
-                new MateriaDef("57", "Herramientas para el Desarrollo Profesional", 3, "2 C", 5, true, null, null), // E6
-                new MateriaDef("58", "Proyecto y Gestión Urbana", 6, "1 C", 6, true, List.of("28"), List.of("28")), // E7
-                new MateriaDef("59", "Vialidad Especial", 5, "1 C", 6, true, List.of("37"), List.of("37")), // E8
-                new MateriaDef("60", "Obras Fluviales y Marítimas", 6, "1 C", 6, true, List.of("31"), List.of("26", "31")), // E9
-                new MateriaDef("61", "Tránsito y Transporte", 5, "1 C", 6, true, List.of("37"), List.of("37")), // E10
-                new MateriaDef("62", "Análisis Estructural III", 6, "1 C", 6, true, List.of("38"), List.of("38")), // E11
-                new MateriaDef("63", "Gestión y Administración Ambiental", 4, "1 C", 6, true, List.of("35"), List.of("35")), // E12
-                new MateriaDef("64", "Gen., Int. y Análisis de Info en Lab", 4, "2 C", 6, true, null, null)); // E13
+                
+                new MateriaDef("52", "Formación de Emprendedores", 4, "1 y 2 C", 2, true, null, List.of("3")), 
+                new MateriaDef("53", "Geología Aplicada", 2, "ANUAL", 2, true, List.of("4", "6", "7"), List.of("4", "6", "7")), 
+                new MateriaDef("54", "Elasticidad y Plasticidad", 3, "ANUAL", 4, true, List.of("9", "16"), List.of("9", "16")), 
+                new MateriaDef("55", "Uso del Recurso Hídrico", 3, "ANUAL", 5, true, List.of("31"), List.of("31")), 
+                new MateriaDef("56", "Prefabricación", 2, "ANUAL", 5, true, List.of("17", "30"), List.of("17", "30")), 
+                new MateriaDef("57", "Herramientas para el Desarrollo Profesional", 3, "2 C", 5, true, null, null), 
+                new MateriaDef("58", "Proyecto y Gestión Urbana", 6, "1 C", 6, true, List.of("28"), List.of("28")), 
+                new MateriaDef("59", "Vialidad Especial", 5, "1 C", 6, true, List.of("37"), List.of("37")), 
+                new MateriaDef("60", "Obras Fluviales y Marítimas", 6, "1 C", 6, true, List.of("31"), List.of("26", "31")), 
+                new MateriaDef("61", "Tránsito y Transporte", 5, "1 C", 6, true, List.of("37"), List.of("37")), 
+                new MateriaDef("62", "Análisis Estructural III", 6, "1 C", 6, true, List.of("38"), List.of("38")), 
+                new MateriaDef("63", "Gestión y Administración Ambiental", 4, "1 C", 6, true, List.of("35"), List.of("35")), 
+                new MateriaDef("64", "Gen., Int. y Análisis de Info en Lab", 4, "2 C", 6, true, null, null)); 
     }
 
-    // INGENIERÍA QUÍMICA (IQ)
+    
     private List<MateriaDef> getDatasetQuimica() {
         return List.of(
-                // Nivel 1
+                
                 new MateriaDef("1", "Introducción a la Ingeniería Química", 3, "ANUAL", 1, false, null, null),
                 new MateriaDef("2", "Ingeniería y Sociedad", 2, "ANUAL", 1, false, null, null),
                 new MateriaDef("3", "Álgebra y Geometría Analítica", 5, "ANUAL", 1, false, null, null),
@@ -423,7 +423,7 @@ public class UTNSeeder {
                 new MateriaDef("7", "Sistemas de Representación", 2, "ANUAL", 1, false, null, null),
                 new MateriaDef("8", "Fundamentos de Informática", 2, "2 C", 1, false, null, null),
 
-                // Nivel 2
+                
                 new MateriaDef("9", "Introducción a Equipos y Procesos", 3, "ANUAL", 2, false, List.of("1", "6"), List.of("3", "4")),
                 new MateriaDef("10", "Probabilidad y Estadística", 3, "ANUAL", 2, false, List.of("3", "4"), null),
                 new MateriaDef("11", "Química Inorgánica", 4, "1 C", 2, false, List.of("6"), null),
@@ -434,7 +434,7 @@ public class UTNSeeder {
                 new MateriaDef("16", "Inglés I", 2, "ANUAL", 2, false, null, null),
                 new MateriaDef("17", "Balances de Masa y Energía", 3, "ANUAL", 2, false, List.of("6", "7", "8", "9", "13"), List.of("1", "3", "4")),
 
-                // Nivel 3
+                
                 new MateriaDef("18", "Termodinámica", 4, "ANUAL", 3, false, List.of("11", "12", "13"), List.of("4", "6")),
                 new MateriaDef("19", "Matemática Superior Aplicada", 3, "ANUAL", 3, false, List.of("12"), List.of("3", "4")),
                 new MateriaDef("20", "Ciencia de los Materiales", 2, "ANUAL", 3, false, List.of("9", "11", "14"), List.of("1", "6")),
@@ -446,7 +446,7 @@ public class UTNSeeder {
                 new MateriaDef("26", "Inglés II", 2, "ANUAL", 3, false, List.of("16"), null),
                 new MateriaDef("27", "Diseño, simulación, opt. y seg. de procesos", 4, "ANUAL", 3, false, List.of("17", "19"), List.of("7", "8", "9", "12", "26")),
 
-                // Nivel 4
+                
                 new MateriaDef("28", "Operaciones Unitarias I", 5, "ANUAL", 4, false, List.of("17", "18", "22"), List.of("9", "12", "13")),
                 new MateriaDef("29", "Tecnología de la Energía Térmica", 5, "ANUAL", 4, false, List.of("17", "18", "21", "22"), List.of("9", "12", "13")),
                 new MateriaDef("30", "Economía", 3, "ANUAL", 4, false, List.of("9"), List.of("2", "3")),
@@ -456,7 +456,7 @@ public class UTNSeeder {
                 new MateriaDef("34", "Organización Industrial", 3, "ANUAL", 4, false, List.of("10"), List.of("2", "9", "15")),
                 new MateriaDef("35", "Control Automático de Procesos", 4, "ANUAL", 4, false, List.of("27", "31"), List.of("17", "19", "23")),
 
-                // Nivel 5
+                
                 new MateriaDef("36", "Mecánica Industrial", 3, "ANUAL", 5, false, List.of("9", "21"), List.of("5", "11", "20")),
                 new MateriaDef("37", "Ingeniería Ambiental", 3, "ANUAL", 5, false, List.of("25", "28", "31", "32"), List.of("15", "17", "23")),
                 new MateriaDef("38", "Procesos Biotecnológicos", 3, "ANUAL", 5, false, List.of("17", "21", "22", "24"), List.of("9", "11", "14")),
@@ -464,32 +464,32 @@ public class UTNSeeder {
                 new MateriaDef("40", "Máquinas e Instalaciones Eléctricas", 2, "ANUAL", 5, false, List.of("28"), List.of("9", "13")),
                 new MateriaDef("41", "Proyecto Final", 4, "ANUAL", 5, false, List.of("27", "28", "29", "31", "32", "34"), List.of("17", "21", "22", "25", "30")),
 
-                // ELECTIVAS IQ
-                new MateriaDef("42", "Introducción a las Tec. de Alimentos", 4, "ANUAL", 2, true, List.of("1", "6"), List.of("1", "6")), // E1
-                new MateriaDef("43", "Control de Calidad de los Alimentos", 4, "2 C", 3, true, List.of("10", "11", "14", "15"), List.of("6", "10", "11", "14", "15")), // E2
-                new MateriaDef("44", "Introducción a la Bromatología", 4, "2 C", 3, true, List.of("14", "15"), List.of("1", "6", "14", "15")), // E3
-                new MateriaDef("45", "Química de los Alimentos", 5, "ANUAL", 4, true, List.of("21"), List.of("6", "11", "14", "21")), // E4
-                new MateriaDef("46", "Calidad de los Alimentos", 4, "1 C", 4, true, null, List.of("10", "23")), // E5
-                new MateriaDef("47", "Procesos y Equipos (Alimentos)", 4, "ANUAL", 5, true, List.of("28", "29", "31"), List.of("21", "22", "28", "29", "31")), // E6
-                new MateriaDef("48", "Gestión Socioambiental Urbana", 4, "1 y 2 C", 2, true, List.of("1", "2"), List.of("1", "2")), // E7
-                new MateriaDef("49", "Gestión del Medioambiente", 4, "2 C", 3, true, List.of("11", "13", "14"), List.of("5", "6", "11", "13", "14")), // E8
-                new MateriaDef("50", "Ing. Amb. Aplicada a Medios Líquidos", 3, "ANUAL", 5, true, List.of("25", "28", "31", "32"), List.of("17", "23")), // E9
-                new MateriaDef("51", "Ing. de Control Contaminación Aire", 3, "ANUAL", 5, true, List.of("25", "28", "31", "32"), List.of("17", "23")), // E10
-                new MateriaDef("52", "Gestión de Tecnologías Sustentables", 4, "2 C", 5, true, List.of("28", "31", "32"), List.of("28", "31", "32")), // E11
-                new MateriaDef("53", "Formación de Emprendedores", 4, "1 y 2 C", 2, true, null, List.of("2")), // E12
-                new MateriaDef("54", "Electrónica Aplicada", 2, "ANUAL", 3, true, List.of("13"), List.of("5", "13")), // E13
-                new MateriaDef("55", "Liderazgo en Ingeniería", 4, "ANUAL", 3, true, null, List.of("2", "15")), // E14
-                new MateriaDef("56", "Informática Apl. a Ing. Procesos", 4, "ANUAL", 5, true, List.of("21", "27"), List.of("18", "21", "27")), // E15
-                new MateriaDef("57", "Procesos Industriales 1", 3, "ANUAL", 5, true, List.of("27", "28", "29", "31", "32"), List.of("17", "18", "22", "27", "28", "29", "31", "32")), // E16
-                new MateriaDef("58", "Procesos Industriales 2", 4, "2 C", 5, true, List.of("21", "27"), List.of("17", "18", "21", "27")), // E17
-                new MateriaDef("59", "Aplicación de Prog. Matemática", 4, "ANUAL", 5, true, List.of("18", "28", "29", "31"), List.of("18", "28", "29", "31"))); // E18
+                
+                new MateriaDef("42", "Introducción a las Tec. de Alimentos", 4, "ANUAL", 2, true, List.of("1", "6"), List.of("1", "6")), 
+                new MateriaDef("43", "Control de Calidad de los Alimentos", 4, "2 C", 3, true, List.of("10", "11", "14", "15"), List.of("6", "10", "11", "14", "15")), 
+                new MateriaDef("44", "Introducción a la Bromatología", 4, "2 C", 3, true, List.of("14", "15"), List.of("1", "6", "14", "15")), 
+                new MateriaDef("45", "Química de los Alimentos", 5, "ANUAL", 4, true, List.of("21"), List.of("6", "11", "14", "21")), 
+                new MateriaDef("46", "Calidad de los Alimentos", 4, "1 C", 4, true, null, List.of("10", "23")), 
+                new MateriaDef("47", "Procesos y Equipos (Alimentos)", 4, "ANUAL", 5, true, List.of("28", "29", "31"), List.of("21", "22", "28", "29", "31")), 
+                new MateriaDef("48", "Gestión Socioambiental Urbana", 4, "1 y 2 C", 2, true, List.of("1", "2"), List.of("1", "2")), 
+                new MateriaDef("49", "Gestión del Medioambiente", 4, "2 C", 3, true, List.of("11", "13", "14"), List.of("5", "6", "11", "13", "14")), 
+                new MateriaDef("50", "Ing. Amb. Aplicada a Medios Líquidos", 3, "ANUAL", 5, true, List.of("25", "28", "31", "32"), List.of("17", "23")), 
+                new MateriaDef("51", "Ing. de Control Contaminación Aire", 3, "ANUAL", 5, true, List.of("25", "28", "31", "32"), List.of("17", "23")), 
+                new MateriaDef("52", "Gestión de Tecnologías Sustentables", 4, "2 C", 5, true, List.of("28", "31", "32"), List.of("28", "31", "32")), 
+                new MateriaDef("53", "Formación de Emprendedores", 4, "1 y 2 C", 2, true, null, List.of("2")), 
+                new MateriaDef("54", "Electrónica Aplicada", 2, "ANUAL", 3, true, List.of("13"), List.of("5", "13")), 
+                new MateriaDef("55", "Liderazgo en Ingeniería", 4, "ANUAL", 3, true, null, List.of("2", "15")), 
+                new MateriaDef("56", "Informática Apl. a Ing. Procesos", 4, "ANUAL", 5, true, List.of("21", "27"), List.of("18", "21", "27")), 
+                new MateriaDef("57", "Procesos Industriales 1", 3, "ANUAL", 5, true, List.of("27", "28", "29", "31", "32"), List.of("17", "18", "22", "27", "28", "29", "31", "32")), 
+                new MateriaDef("58", "Procesos Industriales 2", 4, "2 C", 5, true, List.of("21", "27"), List.of("17", "18", "21", "27")), 
+                new MateriaDef("59", "Aplicación de Prog. Matemática", 4, "ANUAL", 5, true, List.of("18", "28", "29", "31"), List.of("18", "28", "29", "31"))); 
     }
 
-    // INGENIERÍA MECÁNICA (IM)
+    
 
     private List<MateriaDef> getDatasetMecanica() {
         return List.of(
-                // Nivel 1
+                
                 new MateriaDef("1", "Análisis Matemático I", 5, "ANUAL", 1, false, null, null),
                 new MateriaDef("2", "Química General", 5, "ANUAL", 1, false, null, null),
                 new MateriaDef("3", "Álgebra y Geometría Analítica", 5, "ANUAL", 1, false, null, null),
@@ -499,7 +499,7 @@ public class UTNSeeder {
                 new MateriaDef("7", "Sistemas de Representación", 3, "ANUAL", 1, false, null, null),
                 new MateriaDef("8", "Fundamentos de Informática", 2, "ANUAL", 1, false, null, null),
                 
-                // Nivel 2
+                
                 new MateriaDef("9", "Materiales No Metálicos", 3, "ANUAL", 2, false, List.of("2", "4"), null),
                 new MateriaDef("10", "Estabilidad I", 4, "ANUAL", 2, false, List.of("1", "3", "4"), null),
                 new MateriaDef("11", "Materiales Metálicos", 5, "ANUAL", 2, false, List.of("2", "4"), null),
@@ -509,7 +509,7 @@ public class UTNSeeder {
                 new MateriaDef("15", "Ingeniería Mecánica II", 2, "ANUAL", 2, false, List.of("4", "6"), null),
                 new MateriaDef("16", "Inglés I", 2, "ANUAL", 2, false, null, null),
 
-                // Nivel 3
+                
                 new MateriaDef("17", "Termodinámica", 5, "ANUAL", 3, false, List.of("12", "13"), List.of("1", "3", "4")),
                 new MateriaDef("18", "Mecánica Racional", 5, "ANUAL", 3, false, List.of("10", "12"), List.of("1", "3", "4")),
                 new MateriaDef("19", "Estabilidad II", 4, "ANUAL", 3, false, List.of("10", "12"), List.of("1", "3", "4")),
@@ -521,7 +521,7 @@ public class UTNSeeder {
                 new MateriaDef("25", "Inglés II", 2, "ANUAL", 3, false, List.of("16"), null),
                 new MateriaDef("26", "Economía", 3, "ANUAL", 3, false, List.of("15"), List.of("5")),
 
-                // Nivel 4
+                
                 new MateriaDef("27", "Elementos de Máquinas", 5, "ANUAL", 4, false, List.of("9", "11", "18", "19", "23"), List.of("2", "10", "12")),
                 new MateriaDef("28", "Tecnología del Calor", 3, "ANUAL", 4, false, List.of("17"), List.of("12", "13")),
                 new MateriaDef("29", "Metrología e Ingeniería de la Calidad", 4, "ANUAL", 4, false, List.of("20", "24"), List.of("3", "11", "13")),
@@ -531,7 +531,7 @@ public class UTNSeeder {
                 new MateriaDef("33", "Estabilidad III", 3, "ANUAL", 4, false, List.of("19"), List.of("1", "3", "4", "10")),
                 new MateriaDef("34", "Tecnología de Fabricación", 5, "ANUAL", 4, false, List.of("27", "29"), List.of("9", "10", "11", "21")),
 
-                // Nivel 5
+                
                 new MateriaDef("35", "Máquinas Alternativas y Turbomáquinas", 4, "ANUAL", 5, false, List.of("28"), List.of("13", "17")),
                 new MateriaDef("36", "Instalaciones Industriales", 5, "ANUAL", 5, false, List.of("20", "28", "30", "31", "32"), List.of("10", "14", "17")),
                 new MateriaDef("37", "Organización Industrial", 3, "ANUAL", 5, false, List.of("26"), List.of("15")),
@@ -539,23 +539,23 @@ public class UTNSeeder {
                 new MateriaDef("39", "Mantenimiento", 2, "ANUAL", 5, false, List.of("20", "26", "27"), List.of("11", "13", "18", "19")),
                 new MateriaDef("40", "Proyecto Final", 10, "ANUAL", 5, false, List.of("27", "29", "31", "32"), List.of("18", "19", "20", "21")),
 
-                // ELECTIVAS IM
-                new MateriaDef("41", "Metalografía y Tratamientos Térmicos", 4, "ANUAL", 5, true, List.of("11", "20"), List.of("11", "20")), // E1
-                new MateriaDef("42", "Máquinas de Elevación y Transporte", 3, "ANUAL", 5, true, List.of("27", "31"), List.of("21", "27", "31")), // E2
-                new MateriaDef("43", "Materiales de Ingeniería", 4, "ANUAL", 5, true, List.of("27", "34"), List.of("21", "23", "27", "34")), // E3
-                new MateriaDef("44", "Sistemas de Control en Instalaciones Térmicas", 3, "ANUAL", 5, true, List.of("17", "30"), List.of("13", "17", "30")), // E4
-                new MateriaDef("45", "Tecnología del Frío", 4, "ANUAL", 5, true, List.of("17", "30"), List.of("13")), // E5
-                new MateriaDef("46", "Transmisión de Calor", 3, "ANUAL", 5, true, List.of("17"), List.of("12", "13")), // E6
-                new MateriaDef("47", "Diseño de Instalaciones Térmicas", 2, "ANUAL", 5, true, List.of("17", "28", "30"), List.of("13", "17", "28", "30")), // E7
-                new MateriaDef("48", "Maquinaria Agrícola", 4, "ANUAL", 5, true, List.of("27", "30", "31", "32"), List.of("20", "21", "23", "20", "21", "23")), // E8 (duplicates removed automatically or I should remove them. List.of allows dupes? No, Set logic in connection removes them.)
-                new MateriaDef("49", "Formación de Emprendedores", 4, "1 y 2 C", 2, true, null, List.of("3"))); // E9
+                
+                new MateriaDef("41", "Metalografía y Tratamientos Térmicos", 4, "ANUAL", 5, true, List.of("11", "20"), List.of("11", "20")), 
+                new MateriaDef("42", "Máquinas de Elevación y Transporte", 3, "ANUAL", 5, true, List.of("27", "31"), List.of("21", "27", "31")), 
+                new MateriaDef("43", "Materiales de Ingeniería", 4, "ANUAL", 5, true, List.of("27", "34"), List.of("21", "23", "27", "34")), 
+                new MateriaDef("44", "Sistemas de Control en Instalaciones Térmicas", 3, "ANUAL", 5, true, List.of("17", "30"), List.of("13", "17", "30")), 
+                new MateriaDef("45", "Tecnología del Frío", 4, "ANUAL", 5, true, List.of("17", "30"), List.of("13")), 
+                new MateriaDef("46", "Transmisión de Calor", 3, "ANUAL", 5, true, List.of("17"), List.of("12", "13")), 
+                new MateriaDef("47", "Diseño de Instalaciones Térmicas", 2, "ANUAL", 5, true, List.of("17", "28", "30"), List.of("13", "17", "28", "30")), 
+                new MateriaDef("48", "Maquinaria Agrícola", 4, "ANUAL", 5, true, List.of("27", "30", "31", "32"), List.of("20", "21", "23", "20", "21", "23")), 
+                new MateriaDef("49", "Formación de Emprendedores", 4, "1 y 2 C", 2, true, null, List.of("3"))); 
     }
 
-    // INGENIERÍA EN ENERGÍA ELÉCTRICA (IEE)
+    
 
     private List<MateriaDef> getDatasetElectrica() {
         return List.of(
-                // Nivel 1
+                
                 new MateriaDef("1", "Análisis Matemático I", 5, "ANUAL", 1, false, null, null),
                 new MateriaDef("2", "Álgebra y Geometría Analítica", 5, "ANUAL", 1, false, null, null),
                 new MateriaDef("3", "Física I", 5, "ANUAL", 1, false, null, null),
@@ -565,7 +565,7 @@ public class UTNSeeder {
                 new MateriaDef("7", "Sistemas de Representación", 3, "ANUAL", 1, false, null, null),
                 new MateriaDef("8", "Fundamentos de Informática", 2, "ANUAL", 1, false, null, null),
                 
-                // Nivel 2
+                
                 new MateriaDef("9", "Análisis Matemático II", 5, "ANUAL", 2, false, List.of("1", "2"), null),
                 new MateriaDef("10", "Física II", 5, "ANUAL", 2, false, List.of("1", "3"), null),
                 new MateriaDef("11", "Integradora II", 2, "ANUAL", 2, false, List.of("3", "4", "5", "6", "7", "8"), List.of("1", "3", "4")),
@@ -575,7 +575,7 @@ public class UTNSeeder {
                 new MateriaDef("15", "Inglés I", 2, "ANUAL", 2, false, null, null),
                 new MateriaDef("16", "Probabilidad y Estadística", 3, "ANUAL", 2, false, List.of("1", "2"), null),
 
-                // Nivel 3
+                
                 new MateriaDef("17", "Matemática Aplicada", 3, "ANUAL", 3, false, List.of("9", "12"), List.of("9", "12")),
                 new MateriaDef("18", "Termodinámica Técnica", 3, "ANUAL", 3, false, List.of("9", "10", "12"), List.of("1", "3", "4")),
                 new MateriaDef("19", "Mecánica Técnica", 3, "ANUAL", 3, false, List.of("9", "10", "12"), List.of("1", "3", "4")),
@@ -585,7 +585,7 @@ public class UTNSeeder {
                 new MateriaDef("23", "Electrónica I", 5, "ANUAL", 3, false, List.of("10", "14"), List.of("1", "3", "4")),
                 new MateriaDef("24", "Inglés II", 2, "ANUAL", 3, false, List.of("15"), null),
 
-                // Nivel 4
+                
                 new MateriaDef("25", "Tecnología de los Materiales", 2, "ANUAL", 4, false, List.of("22", "23"), List.of("6", "10", "12")),
                 new MateriaDef("26", "Mediciones Eléctricas", 3, "ANUAL", 4, false, List.of("17", "21", "23"), List.of("9", "10", "14")),
                 new MateriaDef("27", "Máquinas Eléctricas II", 5, "ANUAL", 4, false, List.of("17", "20", "22"), List.of("9", "10", "14")),
@@ -594,7 +594,7 @@ public class UTNSeeder {
                 new MateriaDef("30", "Electrónica II", 4, "ANUAL", 4, false, List.of("17", "21", "23"), List.of("9", "10", "14")),
                 new MateriaDef("31", "Economía de la Energía Eléctrica", 3, "ANUAL", 4, false, List.of("11"), List.of("4", "5", "8")),
 
-                // Nivel 5
+                
                 new MateriaDef("32", "Centrales y Protecciones", 4, "ANUAL", 5, false, List.of("27", "28", "29"), List.of("9", "10", "14", "17", "20", "21", "22", "23")),
                 new MateriaDef("33", "Marco Legal e Ingeniería Legal", 2, "ANUAL", 5, false, List.of("13", "31"), List.of("4", "5", "8", "31")),
                 new MateriaDef("34", "Instalaciones Eléctricas", 4, "ANUAL", 5, false, List.of("26", "27", "28"), List.of("9", "10", "14", "17", "20", "21", "22")),
@@ -602,13 +602,13 @@ public class UTNSeeder {
                 new MateriaDef("36", "Organización y Gestión Industrial", 3, "ANUAL", 5, false, List.of("31"), List.of("4", "5", "8")),
                 new MateriaDef("37", "Proyecto Final", 5, "ANUAL", 5, false, List.of("26", "27", "28", "29", "30"), List.of("18", "19", "20", "26", "27", "28", "29", "30")),
                 
-                // ELECTIVAS IEE
-                new MateriaDef("38", "Sistemas de Potencia", 6, "1 C", 5, true, List.of("28"), List.of("28")), // E1
-                new MateriaDef("39", "Distribución de Energía Eléctrica", 6, "1 C", 5, true, List.of("28"), List.of("28")), // E2
-                new MateriaDef("40", "Máquinas Térmicas e Hidráulicas", 4, "1 C", 5, true, List.of("18", "19"), List.of("18", "19")), // E3
-                new MateriaDef("41", "Energías Alternativas", 3, "2 C", 5, true, List.of("28"), List.of("28")), // E4
-                new MateriaDef("42", "Técnica de la Alta Tensión", 3, "ANUAL", 5, true, List.of("20", "28"), List.of("20", "28")), // E5
-                new MateriaDef("43", "Accionamientos Eléctricos", 3, "2 C", 5, true, List.of("22", "30"), List.of("22", "30")), // E6
-                new MateriaDef("44", "Formación de Emprendedores", 4, "1 y 2 C", 2, true, null, List.of("4"))); // E7
+                
+                new MateriaDef("38", "Sistemas de Potencia", 6, "1 C", 5, true, List.of("28"), List.of("28")), 
+                new MateriaDef("39", "Distribución de Energía Eléctrica", 6, "1 C", 5, true, List.of("28"), List.of("28")), 
+                new MateriaDef("40", "Máquinas Térmicas e Hidráulicas", 4, "1 C", 5, true, List.of("18", "19"), List.of("18", "19")), 
+                new MateriaDef("41", "Energías Alternativas", 3, "2 C", 5, true, List.of("28"), List.of("28")), 
+                new MateriaDef("42", "Técnica de la Alta Tensión", 3, "ANUAL", 5, true, List.of("20", "28"), List.of("20", "28")), 
+                new MateriaDef("43", "Accionamientos Eléctricos", 3, "2 C", 5, true, List.of("22", "30"), List.of("22", "30")), 
+                new MateriaDef("44", "Formación de Emprendedores", 4, "1 y 2 C", 2, true, null, List.of("4"))); 
     }
 }

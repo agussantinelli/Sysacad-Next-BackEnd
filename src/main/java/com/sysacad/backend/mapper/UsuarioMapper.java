@@ -18,8 +18,8 @@ public interface UsuarioMapper {
     UsuarioResponse toDTO(Usuario usuario);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "password", ignore = true) // La contraseña se maneja aparte
-    @Mapping(target = "rol", ignore = true) // El rol suele asigna por lógica
+    @Mapping(target = "password", ignore = true) 
+    @Mapping(target = "rol", ignore = true) 
     @Mapping(target = "fotoPerfil", ignore = true)
     Usuario toEntity(UsuarioRequest request);
     
@@ -28,6 +28,6 @@ public interface UsuarioMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "password", ignore = true) 
     @Mapping(target = "rol", ignore = true)
-    @Mapping(target = "fotoPerfil", ignore = true) // Se actualiza con lógica específica si viene
+    @Mapping(target = "fotoPerfil", ignore = true) 
     void updateEntityFromRequest(UsuarioRequest request, @MappingTarget Usuario usuario);
 }

@@ -26,7 +26,7 @@ public class AdminInscripcionController {
         this.adminInscripcionService = adminInscripcionService;
     }
 
-    // --- CURSADO ---
+    
 
     @GetMapping("/cursado/materias")
     public ResponseEntity<List<MateriaResponse>> obtenerMateriasCursado(@RequestParam UUID idAlumno) {
@@ -40,7 +40,7 @@ public class AdminInscripcionController {
         return ResponseEntity.ok(adminInscripcionService.obtenerComisionesParaCursado(idAlumno, idMateria));
     }
 
-    // --- EXAMEN ---
+    
 
     @GetMapping("/examen/materias")
     public ResponseEntity<List<MateriaResponse>> obtenerMateriasExamen(@RequestParam UUID idAlumno) {
@@ -54,7 +54,7 @@ public class AdminInscripcionController {
         return ResponseEntity.ok(adminInscripcionService.obtenerMesasParaExamen(idAlumno, idMateria));
     }
 
-    // --- ACCIÓN ---
+    
 
     @PostMapping
     public ResponseEntity<Void> inscribir(@RequestBody AdminInscripcionRequest request) {

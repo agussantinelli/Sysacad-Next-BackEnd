@@ -28,7 +28,7 @@ public class AvisoSeeder {
             System.out.println(">> AvisoSeeder: Cargando avisos...");
             List<Usuario> todosLosUsuarios = usuarioRepository.findAll();
 
-            // Aviso 1: Inscripciones
+            
             crearAvisoConDestinatarios(
                 "Inicio de Inscripciones 2026",
                 "Se informa a la comunidad estudiantil que a partir del lunes 03 de Marzo comienzan las inscripciones a cursado anual y cuatrimestral. Recuerden verificar sus correlativas.",
@@ -37,7 +37,7 @@ public class AvisoSeeder {
                 todosLosUsuarios
             );
 
-            // Aviso 2: Asueto
+            
             crearAvisoConDestinatarios(
                 "Asueto Administrativo",
                 "El día viernes 24 de Marzo la facultad permanecerá cerrada por feriado nacional.",
@@ -46,7 +46,7 @@ public class AvisoSeeder {
                 todosLosUsuarios
             );
 
-            // Aviso 3: Mantenimiento (Oculto/Viejo)
+            
             crearAvisoConDestinatarios(
                 "Mantenimiento del Sistema",
                 "El sistema Sysacad estará fuera de línea este domingo por mantenimiento programado.",
@@ -69,12 +69,12 @@ public class AvisoSeeder {
 
         for (Usuario u : destinatarios) {
             AvisoPersona ap = new AvisoPersona();
-            // ID compuesto
+            
             ap.setId(new AvisoPersona.AvisoPersonaId(aviso.getId(), u.getId()));
             ap.setAviso(aviso);
             ap.setPersona(u);
             
-            // Si es ADMIN, ya nace LEIDO (porque el admin los crea)
+            
             if (u.getRol() == com.sysacad.backend.modelo.enums.RolUsuario.ADMIN) {
                 ap.setEstado(EstadoAvisoPersona.LEIDO);
             } else {

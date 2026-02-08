@@ -47,16 +47,16 @@ public class SecurityConfig {
         @Bean
         public CorsConfigurationSource corsConfigurationSource() {
                 CorsConfiguration configuration = new CorsConfiguration();
-                // Permitir exactamente el origen de tu Frontend
+                
                 configuration.setAllowedOrigins(List.of("http://localhost:4200"));
-                // Permitir todos los métodos HTTP
+                
                 configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-                // Permitir todos los headers (necesario para enviar el Token JWT)
+                
                 configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
                 configuration.setAllowCredentials(true);
 
                 UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-                // Aplicar el CORS a todas las rutas
+                
                 source.registerCorsConfiguration("/**", configuration);
                 return source;
         }

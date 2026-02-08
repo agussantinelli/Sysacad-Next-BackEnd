@@ -43,7 +43,7 @@ public class ComisionService {
 
     @Transactional
     public Comision asignarProfesor(UUID idComision, Usuario profesor) {
-        // Validar que el usuario a asignar sea PROFESOR
+        
 
         if (profesor.getRol() != RolUsuario.PROFESOR) {
             throw new BusinessLogicException("El usuario a asignar debe tener rol de PROFESOR");
@@ -52,7 +52,7 @@ public class ComisionService {
         Comision comision = comisionRepository.findById(idComision)
                 .orElseThrow(() -> new ResourceNotFoundException("Comisión no encontrada con ID: " + idComision));
 
-        // VALIDACIÓN DE SEGURIDAD (Jefe de Cátedra)
+        
         validarPermisoAsignacion(comision);
 
         comision.getProfesores().add(profesor);
@@ -72,21 +72,21 @@ public class ComisionService {
     private void validarPermisoAsignacion(Comision comision) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        // Si es ADMIN, pase libre.
+        
         boolean isAdmin = auth.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
         if (isAdmin) return;
 
-        // Si es PROFESOR, verificar si es JEFE de alguna materia de esta comisión
+        
         String legajoUsuario = auth.getName();
         Usuario solicitante = usuarioRepository.findByLegajo(legajoUsuario)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario autenticado no encontrado"));
 
-        // Buscamos todas las materias donde el solicitante es JEFE
+        
         List<AsignacionMateria> misJefaturas = asignacionMateriaRepository
                 .findByIdIdUsuarioAndCargo(solicitante.getId(), RolCargo.JEFE_CATEDRA);
 
-        // Verificamos intersección: ¿Alguna materia de la comisión está bajo su jefatura?
+        
         boolean esJefeDeEstaComision = comision.getMaterias().stream()
                 .anyMatch(materiaComision -> misJefaturas.stream()
                         .anyMatch(jefatura -> jefatura.getMateria().getId().equals(materiaComision.getId())));

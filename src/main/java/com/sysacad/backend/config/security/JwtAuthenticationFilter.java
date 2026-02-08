@@ -40,13 +40,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         try {
-            // Extraer token
+            
             jwt = authHeader.substring(7);
 
-            // Extraer usuario (Lanzará excepción si el token está mal formado, la capturamos abajo)
+            
             userLegajo = jwtService.extractUsername(jwt);
 
-            // Validar seguridad
+            
             if (userLegajo != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = this.userDetailsService.loadUserByUsername(userLegajo);
 

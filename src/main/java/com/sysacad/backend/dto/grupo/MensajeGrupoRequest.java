@@ -9,7 +9,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class MensajeGrupoRequest {
     private String contenido;
-    private UUID idUsuarioRemitente; // Opcional si se toma del token
-    private UUID idComision; // Para auto-creación
-    private UUID idMateria;  // Para auto-creación
+    private UUID idUsuarioRemitente; 
+    private UUID idComision; 
+    private UUID idMateria;  
 }

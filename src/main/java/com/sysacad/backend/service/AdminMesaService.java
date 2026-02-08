@@ -43,7 +43,7 @@ public class AdminMesaService {
 
     private final com.sysacad.backend.repository.AsignacionMateriaRepository asignacionMateriaRepository;
 
-    // Listar MESAS (Detalles) que es lo que usualmente se administra como "Mesas de Examen por Materia"
+    
     @Transactional(readOnly = true)
     public List<MesaAdminDTO> obtenerTodasConEstadisticas() {
         return detalleMesaRepository.findAll().stream()
@@ -71,7 +71,7 @@ public class AdminMesaService {
             nombre = "Turno " + (nombre == null ? "" : nombre.trim());
         }
 
-        // Validate overlap
+        
         if (mesaRepository.existsByFechaFinAfterAndFechaInicioBefore(request.getFechaInicio(), request.getFechaFin())) {
              throw new RuntimeException("El rango de fechas se superpone con un Turno de Examen existente.");
         }
@@ -93,12 +93,12 @@ public class AdminMesaService {
             nombre = "Turno " + (nombre == null ? "" : nombre.trim());
         }
 
-        // Validate overlap excluding self
+        
         if (mesaRepository.existsByFechaFinAfterAndFechaInicioBeforeAndIdNot(request.getFechaInicio(), request.getFechaFin(), id)) {
              throw new RuntimeException("El rango de fechas se superpone con otro Turno de Examen existente.");
         }
 
-        // Validate that new dates encompass all existing details
+        
         List<com.sysacad.backend.modelo.DetalleMesaExamen> detalles = detalleMesaRepository.findByMesaExamenId(id);
         for (com.sysacad.backend.modelo.DetalleMesaExamen detalle : detalles) {
             if (detalle.getDiaExamen().isBefore(request.getFechaInicio()) || detalle.getDiaExamen().isAfter(request.getFechaFin())) {
@@ -128,15 +128,15 @@ public class AdminMesaService {
         com.sysacad.backend.modelo.DetalleMesaExamen detalle = new com.sysacad.backend.modelo.DetalleMesaExamen();
         com.sysacad.backend.modelo.DetalleMesaExamen.DetalleId id = new com.sysacad.backend.modelo.DetalleMesaExamen.DetalleId(
                 mesa.getId(),
-                detalleMesaRepository.findMaxNroDetalle(mesa.getId()).orElse(0) + 1 // Auto-increment nro_detalle
+                detalleMesaRepository.findMaxNroDetalle(mesa.getId()).orElse(0) + 1 
         );
         
-        // Validate availability of president
+        
         if (detalleMesaRepository.existsByProfesorAndFechaAndHora(request.getIdPresidente(), request.getDiaExamen(), request.getHoraExamen())) {
              throw new RuntimeException("El profesor seleccionado ya tiene una mesa asignada en ese horario.");
         }
 
-        // Validate date within Turn range
+        
         if (request.getDiaExamen().isBefore(mesa.getFechaInicio()) || request.getDiaExamen().isAfter(mesa.getFechaFin())) {
             throw new RuntimeException("La fecha del examen (" + request.getDiaExamen() + ") debe estar dentro del rango del Turno (" + mesa.getFechaInicio() + " - " + mesa.getFechaFin() + ").");
         }
@@ -153,11 +153,11 @@ public class AdminMesaService {
 
     @Transactional(readOnly = true)
     public List<com.sysacad.backend.dto.admin.ProfesorDisponibleDTO> obtenerProfesoresDisponibles(UUID idMateria, java.time.LocalDate fecha, java.time.LocalTime hora) {
-        // 1. Get all qualified professors
+        
         List<com.sysacad.backend.modelo.AsignacionMateria> asignaciones = asignacionMateriaRepository.findByIdIdMateria(idMateria);
         List<com.sysacad.backend.modelo.Usuario> candidatos = asignaciones.stream().map(com.sysacad.backend.modelo.AsignacionMateria::getProfesor).collect(Collectors.toList());
 
-        // 2. Filter out busy professors
+        
         return candidatos.stream()
                 .filter(p -> !detalleMesaRepository.existsByProfesorAndFechaAndHora(p.getId(), fecha, hora))
                 .map(p -> new com.sysacad.backend.dto.admin.ProfesorDisponibleDTO(p.getId(), p.getNombre(), p.getApellido(), p.getLegajo()))
@@ -286,10 +286,10 @@ public class AdminMesaService {
             throw new RuntimeException("No se puede eliminar el turno porque tiene alumnos inscriptos en una o más materias.");
         }
 
-        // Si no hay inscriptos, eliminar todos los detalles primero
+        
         detalleMesaRepository.deleteAll(detalles);
 
-        // Finalmente eliminar el turno
+        
         mesaRepository.delete(mesa);
     }
 

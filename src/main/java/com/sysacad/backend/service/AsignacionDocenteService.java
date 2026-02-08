@@ -26,7 +26,7 @@ public class AsignacionDocenteService {
 
     @Transactional
     public AsignacionMateria asignarProfesorAMateria(AsignacionMateria asignacion) {
-        // Validar que sea PROFESOR
+        
         Usuario profe = usuarioRepository.findById(asignacion.getId().getIdUsuario())
                 .orElseThrow(() -> new RuntimeException("Profesor no encontrado"));
 

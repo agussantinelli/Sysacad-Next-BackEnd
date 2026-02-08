@@ -54,7 +54,7 @@ public class InscripcionSeeder {
 
     @Transactional
     public void seed() {
-        // Verificar si ya hay inscripciones cargadas
+        
         if (inscripcionCursadoRepository.count() > 0 || inscripcionExamenRepository.count() > 0) {
             System.out.println(">> InscripcionSeeder: OMITIDO - Las inscripciones ya están cargadas.");
             return;
@@ -67,11 +67,11 @@ public class InscripcionSeeder {
     }
 
     private void seedCursado() {
-        if (comisionRepository.count() == 0) return; // Should not happen if run after ComisionSeeder
+        if (comisionRepository.count() == 0) return; 
 
         System.out.println(">> InscripcionSeeder: Inscribiendo a Cursado...");
 
-        // Retrieve needed entities
+        
         Usuario alumnoAgustin = usuarioRepository.findByLegajo("55555").orElse(null);
         Usuario alumnoSofia = usuarioRepository.findByLegajo("58888").orElse(null);
         Usuario alumnoCarlos = usuarioRepository.findByLegajo("60002").orElse(null);
@@ -108,8 +108,8 @@ public class InscripcionSeeder {
         Materia emprendedores = getMateria("Formación de Emprendedores");
 
         if (c1k1 != null && alumnoAgustin != null) {
-            // --- AÑO 1: TODO APROBADO (PROMOCIONADO) ---
-            // Esto habilita cursar/rendir 2do año
+            
+            
             
             crearHistoriaAcademica(alumnoAgustin, c1k1, algoritmos, EstadoCursada.PROMOCIONADO, new BigDecimal("9"));
             crearHistoriaAcademica(alumnoAgustin, c1k1, sistemas, EstadoCursada.PROMOCIONADO, new BigDecimal("8"));
@@ -119,27 +119,27 @@ public class InscripcionSeeder {
             crearHistoriaAcademica(alumnoAgustin, c1k1, ingles1, EstadoCursada.PROMOCIONADO, new BigDecimal("10"));
             crearHistoriaAcademica(alumnoAgustin, c1k1, arquitectura, EstadoCursada.PROMOCIONADO, new BigDecimal("7"));
             
-            // Lógica también aprobada
+            
              Materia logica = getMateria("Lógica y Estructuras Discretas");
              crearHistoriaAcademica(alumnoAgustin, c1k1, logica, EstadoCursada.PROMOCIONADO, new BigDecimal("8"));
         }
         
         if (c2k1 != null && alumnoAgustin != null) {
-            // --- AÑO 2: ALGUNAS APROBADAS, OTRAS REGULARES ---
             
-            // Aprobadas (Promocionadas)
+            
+            
             crearHistoriaAcademica(alumnoAgustin, c2k1, analisis2, EstadoCursada.PROMOCIONADO, new BigDecimal("8"));
             Materia fisica2 = getMateria("Física II");
             crearHistoriaAcademica(alumnoAgustin, c2k1, fisica2, EstadoCursada.PROMOCIONADO, new BigDecimal("7"));
             
-            // Regulares (Listas para rendir examen final)
-            // Sintaxis requiere: Algoritmos y Lógica (Ya aprobadas) -> OK para rendir
+            
+            
             crearHistoriaAcademica(alumnoAgustin, c2k1, sintaxis, EstadoCursada.REGULAR, new BigDecimal("6"));
             
-            // Paradigmas requiere: Algoritmos y Lógica (Ya aprobadas) -> OK para rendir
+            
             crearHistoriaAcademica(alumnoAgustin, c2k1, paradigmas, EstadoCursada.REGULAR, new BigDecimal("6"));
             
-            // Sistemas Operativos requiere: Arquitectura (Ya aprobada) -> OK para rendir
+            
             crearHistoriaAcademica(alumnoAgustin, c2k1, sistemasOp, EstadoCursada.REGULAR, new BigDecimal("6"));
 
             Materia analisisSist = getMateria("Análisis de Sistemas de Información");
@@ -324,14 +324,14 @@ public class InscripcionSeeder {
 
             System.out.println(">> InscripcionSeeder: Desplegando Mesas de Examen...");
 
-            // Crear Mesas
+            
             MesaExamen mesaFeb = createMesa("Turno Febrero 2026", LocalDate.of(2026, 2, 1), LocalDate.of(2026, 2, 28));
             MesaExamen mesaJul = createMesa("Turno Julio 2026", LocalDate.of(2026, 7, 1), LocalDate.of(2026, 7, 31));
             MesaExamen mesaDic = createMesa("Turno Diciembre 2026", LocalDate.of(2026, 12, 1), LocalDate.of(2026, 12, 22));
             MesaExamen mesaMay = createMesa("Turno Mayo 2026", LocalDate.of(2026, 5, 20), LocalDate.of(2026, 5, 30));
             MesaExamen mesaSep = createMesa("Turno Septiembre 2026", LocalDate.of(2026, 9, 15), LocalDate.of(2026, 9, 25));
 
-            // Profes y Materias
+            
             Usuario profeNicolas = usuarioRepository.findByLegajo("51111").orElse(null);
             Usuario profeLaura = usuarioRepository.findByLegajo("52222").orElse(null);
             Usuario profeRoberto = usuarioRepository.findByLegajo("53333").orElse(null);
@@ -385,12 +385,12 @@ public class InscripcionSeeder {
             Materia mineria = getMateria("Minería de Datos");
             Materia emprendedores = getMateria("Formación de Emprendedores");
 
-            // FEBRERO
+            
             DetalleMesaExamen febAlgo = createDetalleMesa(mesaFeb, 1, algoritmos, profeNicolas, LocalDate.of(2026, 2, 10), LocalTime.of(9, 0), profeLaura, profeCristian);
             DetalleMesaExamen febSistemas = createDetalleMesa(mesaFeb, 2, sistemas, profeNicolas, LocalDate.of(2026, 2, 12), LocalTime.of(14, 0), profeSandra);
             DetalleMesaExamen febAnalisis = createDetalleMesa(mesaFeb, 3, analisis1, profeSandra, LocalDate.of(2026, 2, 15), LocalTime.of(9, 0), profeAna);
 
-            // Complete Generation (Feb)
+            
             createDetalleMesa(mesaFeb, 4, fisica1, profeRoberto, LocalDate.of(2026, 2, 14), LocalTime.of(16, 0));
             createDetalleMesa(mesaFeb, 5, ingles1, profeAna, LocalDate.of(2026, 2, 16), LocalTime.of(14, 0));
             DetalleMesaExamen febLogica = createDetalleMesa(mesaFeb, 6, logica, profeNicolas, LocalDate.of(2026, 2, 18), LocalTime.of(18, 0));
@@ -404,7 +404,7 @@ public class InscripcionSeeder {
             createDetalleMesa(mesaFeb, 15, sistemasOp, profeNicolas, LocalDate.of(2026, 2, 23), LocalTime.of(18, 0));
             createDetalleMesa(mesaFeb, 16, analisisSist, profeLaura, LocalDate.of(2026, 2, 25), LocalTime.of(18, 0));
             
-            // ... Nivel 3
+            
             createDetalleMesa(mesaFeb, 17, probEst, profeSandra, LocalDate.of(2026, 2, 10), LocalTime.of(14, 0));
             createDetalleMesa(mesaFeb, 18, economia, profeLaura, LocalDate.of(2026, 2, 12), LocalTime.of(19, 0));
             createDetalleMesa(mesaFeb, 19, basesDatos, profeNicolas, LocalDate.of(2026, 2, 14), LocalTime.of(18, 0));
@@ -413,7 +413,7 @@ public class InscripcionSeeder {
             createDetalleMesa(mesaFeb, 22, analisisNumerico, profeCristian, LocalDate.of(2026, 2, 20), LocalTime.of(14, 0));
             createDetalleMesa(mesaFeb, 23, disenio, profeLaura, LocalDate.of(2026, 2, 22), LocalTime.of(18, 0));
 
-             // Nivel 4
+             
             createDetalleMesa(mesaFeb, 24, legislacion, profeLaura, LocalDate.of(2026, 2, 11), LocalTime.of(18, 0));
             createDetalleMesa(mesaFeb, 25, ingCalidad, profeCristian, LocalDate.of(2026, 2, 13), LocalTime.of(18, 0));
             createDetalleMesa(mesaFeb, 26, redes, profeRoberto, LocalDate.of(2026, 2, 15), LocalTime.of(16, 0));
@@ -422,7 +422,7 @@ public class InscripcionSeeder {
             createDetalleMesa(mesaFeb, 29, tecAuto, profeRoberto, LocalDate.of(2026, 2, 21), LocalTime.of(16, 0));
             createDetalleMesa(mesaFeb, 30, adminSist, profeLaura, LocalDate.of(2026, 2, 23), LocalTime.of(18, 0));
 
-            // Nivel 5
+            
             createDetalleMesa(mesaFeb, 31, ia, profeNicolas, LocalDate.of(2026, 2, 10), LocalTime.of(18, 0));
             createDetalleMesa(mesaFeb, 32, dataScience, profeNicolas, LocalDate.of(2026, 2, 12), LocalTime.of(18, 0));
             createDetalleMesa(mesaFeb, 33, sistGestion, profeLaura, LocalDate.of(2026, 2, 14), LocalTime.of(19, 0));
@@ -435,7 +435,7 @@ public class InscripcionSeeder {
             createDetalleMesa(mesaFeb, 39, emprendedores, profeClaudia, LocalDate.of(2026, 2, 28), LocalTime.of(18, 0));
             createDetalleMesa(mesaFeb, 40, ingles2, profeAna, LocalDate.of(2026, 2, 24), LocalTime.of(14, 0));
 
-            // JULIO
+            
             DetalleMesaExamen julSintaxis = createDetalleMesa(mesaJul, 1, sintaxis, profeNicolas, LocalDate.of(2026, 7, 10), LocalTime.of(9, 0));
             DetalleMesaExamen julFisica = createDetalleMesa(mesaJul, 2, fisica1, profeRoberto, LocalDate.of(2026, 7, 15), LocalTime.of(16, 0));
             createDetalleMesa(mesaJul, 3, analisis1, profeSandra, LocalDate.of(2026, 7, 6), LocalTime.of(9, 0));
@@ -454,7 +454,7 @@ public class InscripcionSeeder {
             createDetalleMesa(mesaJul, 16, basesDatos, profeNicolas, LocalDate.of(2026, 7, 24), LocalTime.of(18, 0));
             createDetalleMesa(mesaJul, 17, emprendedores, profeClaudia, LocalDate.of(2026, 7, 27), LocalTime.of(18, 0));
 
-            // DICIEMBRE
+            
             createDetalleMesa(mesaDic, 1, algoritmos, profeNicolas, LocalDate.of(2026, 12, 10), LocalTime.of(9, 0));
              createDetalleMesa(mesaDic, 2, sistemas, profeNicolas, LocalDate.of(2026, 12, 12), LocalTime.of(9, 0));
             createDetalleMesa(mesaDic, 3, analisis1, profeSandra, LocalDate.of(2026, 12, 14), LocalTime.of(9, 0));
@@ -475,7 +475,7 @@ public class InscripcionSeeder {
             createDetalleMesa(mesaDic, 18, analisisSist, profeLaura, LocalDate.of(2026, 12, 15), LocalTime.of(18, 0));
             createDetalleMesa(mesaDic, 19, emprendedores, profeClaudia, LocalDate.of(2026, 12, 17), LocalTime.of(18, 0));
 
-            // MAYO
+            
             createDetalleMesa(mesaMay, 1, algoritmos, profeNicolas, LocalDate.of(2026, 5, 22), LocalTime.of(14, 0));
             createDetalleMesa(mesaMay, 2, analisis1, profeSandra, LocalDate.of(2026, 5, 24), LocalTime.of(14, 0));
             createDetalleMesa(mesaMay, 3, sintaxis, profeNicolas, LocalDate.of(2026, 5, 26), LocalTime.of(14, 0));
@@ -483,7 +483,7 @@ public class InscripcionSeeder {
             createDetalleMesa(mesaMay, 5, sistemas, profeNicolas, LocalDate.of(2026, 5, 28), LocalTime.of(14, 0));
             createDetalleMesa(mesaMay, 6, emprendedores, profeClaudia, LocalDate.of(2026, 5, 29), LocalTime.of(18, 0));
 
-            // SEPTIEMBRE
+            
             createDetalleMesa(mesaSep, 1, algoritmos, profeNicolas, LocalDate.of(2026, 9, 18), LocalTime.of(14, 0));
             createDetalleMesa(mesaSep, 2, analisis1, profeSandra, LocalDate.of(2026, 9, 20), LocalTime.of(14, 0));
             createDetalleMesa(mesaSep, 3, disenio, profeLaura, LocalDate.of(2026, 9, 22), LocalTime.of(14, 0));
@@ -491,13 +491,13 @@ public class InscripcionSeeder {
             createDetalleMesa(mesaSep, 5, sistemas, profeNicolas, LocalDate.of(2026, 9, 24), LocalTime.of(14, 0));
             createDetalleMesa(mesaSep, 6, emprendedores, profeClaudia, LocalDate.of(2026, 9, 25), LocalTime.of(18, 0));
 
-            // DICIEMBRE 2025 (Especial para Nicolas)
+            
             MesaExamen mesaDic2025 = createMesa("Turno Diciembre 2025", LocalDate.of(2025, 12, 1), LocalDate.of(2025, 12, 22));
             DetalleMesaExamen dic25Algo = createDetalleMesa(mesaDic2025, 1, algoritmos, profeNicolas, LocalDate.of(2025, 12, 10), LocalTime.of(9, 0), profeLaura);
             DetalleMesaExamen dic25Sistemas = createDetalleMesa(mesaDic2025, 2, sistemas, profeNicolas, LocalDate.of(2025, 12, 12), LocalTime.of(14, 0), profeSandra);
             
-            // Inscribir alumnos a Diciembre 2025 para que Nicolas tenga que corregir
-            // Usamos a Agustin y Sofia
+            
+            
             Usuario alumnoAgustin = usuarioRepository.findByLegajo("55555").orElse(null);
             Usuario alumnoSofia = usuarioRepository.findByLegajo("58888").orElse(null);
             Usuario alumnoCarlos = usuarioRepository.findByLegajo("60002").orElse(null);
@@ -515,16 +515,16 @@ public class InscripcionSeeder {
             Usuario alumnoEnzo = usuarioRepository.findByLegajo("60014").orElse(null);
 
             if (alumnoAgustin != null) {
-                // Agustin rinde Algoritmos en Dic 2025 -> PENDIENTE (Para corregir)
+                
                 inscribirExamen(alumnoAgustin, dic25Algo);
             }
             
             if (alumnoSofia != null) {
-                // Sofia rinde Sistemas en Dic 2025 -> PENDIENTE (Para corregir)
+                
                 inscribirExamen(alumnoSofia, dic25Sistemas);
             }
 
-            // Agregar 3 alumnos a mano a cada mesa de Diciembre 2025
+            
             if (alumnoJuan != null) inscribirExamen(alumnoJuan, dic25Algo);
             if (alumnoMiguel != null) inscribirExamen(alumnoMiguel, dic25Algo);
             if (alumnoLucia != null) inscribirExamen(alumnoLucia, dic25Algo);
@@ -533,7 +533,7 @@ public class InscripcionSeeder {
             if (alumnoMartin != null) inscribirExamen(alumnoMartin, dic25Sistemas);
             if (alumnoFlavia != null) inscribirExamen(alumnoFlavia, dic25Sistemas);
 
-            // Inscribir Alumnos a Examenes (General)
+            
 
             if (alumnoAgustin != null) {
                 inscribirExamen(alumnoAgustin, julSintaxis);
@@ -553,31 +553,31 @@ public class InscripcionSeeder {
                 inscribirExamen(alumnoCarlos, julFisica);
             }
 
-            // MATERIA: ALGORITMOS Y ESTRUCTURAS DE DATOS (Mesa Febrero 2026)
-            crearResultadoExamen(alumnoMiguel, febAlgo, EstadoExamen.APROBADO, new BigDecimal("8.00")); // Muy bueno
-            crearResultadoExamen(alumnoLucia, febAlgo, EstadoExamen.APROBADO, new BigDecimal("7.00"));  // Bueno
-            crearResultadoExamen(alumnoJuan, febAlgo, EstadoExamen.APROBADO, new BigDecimal("9.00"));   // Distinguido
-            crearResultadoExamen(alumnoPedro, febAlgo, EstadoExamen.APROBADO, new BigDecimal("6.00"));  // Justo
-            crearResultadoExamen(alumnoMartin, febAlgo, EstadoExamen.DESAPROBADO, new BigDecimal("2.00")); // Mal el práctico
-            crearResultadoExamen(alumnoDiego, febAlgo, EstadoExamen.DESAPROBADO, new BigDecimal("4.00")); // Faltó teoría
+            
+            crearResultadoExamen(alumnoMiguel, febAlgo, EstadoExamen.APROBADO, new BigDecimal("8.00")); 
+            crearResultadoExamen(alumnoLucia, febAlgo, EstadoExamen.APROBADO, new BigDecimal("7.00"));  
+            crearResultadoExamen(alumnoJuan, febAlgo, EstadoExamen.APROBADO, new BigDecimal("9.00"));   
+            crearResultadoExamen(alumnoPedro, febAlgo, EstadoExamen.APROBADO, new BigDecimal("6.00"));  
+            crearResultadoExamen(alumnoMartin, febAlgo, EstadoExamen.DESAPROBADO, new BigDecimal("2.00")); 
+            crearResultadoExamen(alumnoDiego, febAlgo, EstadoExamen.DESAPROBADO, new BigDecimal("4.00")); 
             crearResultadoExamen(alumnoFlavia, febAlgo, EstadoExamen.AUSENTE, null); 
             crearResultadoExamen(alumnoEnzo, febAlgo, EstadoExamen.AUSENTE, null);
             crearResultadoExamen(alumnoPedro, febSistemas, EstadoExamen.APROBADO, new BigDecimal("9.00"));
             crearResultadoExamen(alumnoEnzo, febSistemas, EstadoExamen.APROBADO, new BigDecimal("8.00"));
-            crearResultadoExamen(alumnoAlex, febSistemas, EstadoExamen.DESAPROBADO, new BigDecimal("4.00")); // Aplazo
+            crearResultadoExamen(alumnoAlex, febSistemas, EstadoExamen.DESAPROBADO, new BigDecimal("4.00")); 
             crearResultadoExamen(alumnoDiego, febSistemas, EstadoExamen.AUSENTE, null);
             crearResultadoExamen(alumnoMartin, febSistemas, EstadoExamen.APROBADO, new BigDecimal("7.00"));
 
-            // MATERIA: ANÁLISIS MATEMÁTICO I (Mesa Febrero 2026)
+            
             crearResultadoExamen(alumnoJuan, febAnalisis, EstadoExamen.APROBADO, new BigDecimal("7.00"));
             crearResultadoExamen(alumnoMiguel, febAnalisis, EstadoExamen.DESAPROBADO, new BigDecimal("2.00"));
             crearResultadoExamen(alumnoFlavia, febAnalisis, EstadoExamen.APROBADO, new BigDecimal("6.00"));
 
-            // MATERIA: SINTAXIS Y SEMÁNTICA (Mesa Julio 2026)
+            
             crearResultadoExamen(alumnoAgustin, julSintaxis, EstadoExamen.APROBADO, new BigDecimal("10.00")); 
             crearResultadoExamen(alumnoSofia, julSintaxis, EstadoExamen.APROBADO, new BigDecimal("9.00"));
 
-            // MATERIA: FÍSICA I (Mesa Julio 2026)
+            
             crearResultadoExamen(alumnoCarlos, julFisica, EstadoExamen.DESAPROBADO, new BigDecimal("5.00")); 
             crearResultadoExamen(alumnoPedro, julFisica, EstadoExamen.APROBADO, new BigDecimal("6.00"));
             crearResultadoExamen(alumnoMiguel, febAlgo, EstadoExamen.APROBADO, new BigDecimal("8.00"));
@@ -591,7 +591,7 @@ public class InscripcionSeeder {
             crearResultadoExamen(alumnoEnzo, febSistemas, EstadoExamen.APROBADO, new BigDecimal("8.00"));
             crearResultadoExamen(alumnoJuan, febAnalisis, EstadoExamen.APROBADO, new BigDecimal("7.00"));
 
-            // MATERIA: LÓGICA Y ESTRUCTURAS DISCRETAS (Mesa Febrero 2026)
+            
             crearResultadoExamen(alumnoMartin, febLogica, EstadoExamen.APROBADO, new BigDecimal("8.00"));
             crearResultadoExamen(alumnoFlavia, febLogica, EstadoExamen.APROBADO, new BigDecimal("7.00"));
             crearResultadoExamen(alumnoPedro, febLogica, EstadoExamen.DESAPROBADO, new BigDecimal("2.00"));
@@ -599,20 +599,20 @@ public class InscripcionSeeder {
             crearResultadoExamen(alumnoAlex, febLogica, EstadoExamen.AUSENTE, null);
             crearResultadoExamen(alumnoDiego, febLogica, EstadoExamen.APROBADO, new BigDecimal("6.00"));
 
-            // MATERIA: ARQUITECTURA DE COMPUTADORAS (Mesa Febrero 2026)
+            
             crearResultadoExamen(alumnoEnzo, febArquitectura, EstadoExamen.APROBADO, new BigDecimal("7.00"));
-            crearResultadoExamen(alumnoMiguel, febArquitectura, EstadoExamen.DESAPROBADO, new BigDecimal("5.00")); // Casi
+            crearResultadoExamen(alumnoMiguel, febArquitectura, EstadoExamen.DESAPROBADO, new BigDecimal("5.00")); 
             crearResultadoExamen(alumnoLucia, febArquitectura, EstadoExamen.APROBADO, new BigDecimal("9.00"));
 
-            // MATERIA: ALGORITMOS (Mesa Diciembre 2025 - "Turno Especial")
-            // Resultados del año anterior para historial
+            
+            
             crearResultadoExamen(alumnoAgustin, dic25Algo, EstadoExamen.APROBADO, new BigDecimal("8.00"));
             crearResultadoExamen(alumnoSofia, dic25Algo, EstadoExamen.APROBADO, new BigDecimal("9.00"));
             crearResultadoExamen(alumnoCarlos, dic25Algo, EstadoExamen.DESAPROBADO, new BigDecimal("2.00"));
             crearResultadoExamen(alumnoJuan, dic25Algo, EstadoExamen.AUSENTE, null);
             crearResultadoExamen(alumnoMiguel, dic25Algo, EstadoExamen.APROBADO, new BigDecimal("6.00"));
 
-            // MATERIA: SISTEMAS (Mesa Diciembre 2025 - "Turno Especial")
+            
             crearResultadoExamen(alumnoMaria, dic25Sistemas, EstadoExamen.APROBADO, new BigDecimal("7.00"));
             crearResultadoExamen(alumnoMartin, dic25Sistemas, EstadoExamen.DESAPROBADO, new BigDecimal("5.00"));
             crearResultadoExamen(alumnoFlavia, dic25Sistemas, EstadoExamen.APROBADO, new BigDecimal("8.00"));
@@ -623,7 +623,7 @@ public class InscripcionSeeder {
 
 
     private InscripcionCursado inscribirCursado(Usuario alumno, Comision comision, Materia materia) {
-        // Idempotency check
+        
         var existing = inscripcionCursadoRepository.findByUsuarioIdAndMateriaId(alumno.getId(), materia.getId());
         if (existing.isPresent()) {
             return existing.get();
@@ -644,7 +644,7 @@ public class InscripcionSeeder {
         insc.setEstado(EstadoCursada.CURSANDO);
         insc = inscripcionCursadoRepository.save(insc);
 
-        // Agregar automáticamente al grupo de la comisión-materia
+        
         grupoRepository.findByIdComisionAndIdMateria(comision.getId(), materia.getId())
                 .ifPresent(grupo -> {
                     grupoService.agregarMiembro(
@@ -658,7 +658,7 @@ public class InscripcionSeeder {
     }
 
     private void cargarNotaCursada(InscripcionCursado insc, String descripcion, String valor) {
-        // Buscar o crear la instancia de evaluación
+        
         InstanciaEvaluacion instancia = instanciaEvaluacionRepository.findByNombre(descripcion)
                 .orElseGet(() -> {
                     InstanciaEvaluacion nueva = new InstanciaEvaluacion();

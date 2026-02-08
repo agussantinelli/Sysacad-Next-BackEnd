@@ -9,7 +9,7 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 public class DetalleMesaRequest {
-    private UUID idMesaExamen; // The Turno
+    private UUID idMesaExamen; 
     private UUID idMateria;
     private UUID idPresidente;
     private LocalDate diaExamen;

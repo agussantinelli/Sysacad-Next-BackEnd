@@ -31,10 +31,10 @@ public class PlanDeEstudioController {
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<PlanDeEstudioResponse> crearPlan(@RequestBody PlanDeEstudioRequest request) {
-        // Mapeo inicial
+        
         PlanDeEstudio plan = planMapper.toEntity(request);
         
-        // ID compuesto
+        
         PlanDeEstudio.PlanId id = new PlanDeEstudio.PlanId(
                 request.getIdCarrera(), request.getNroPlan());
         plan.setId(id);

@@ -89,7 +89,7 @@ public class AdminMatriculacionService {
         FacultadRegional facultad = facultadRegionalRepository.findById(request.getIdFacultad())
                 .orElseThrow(() -> new ResourceNotFoundException("Facultad no encontrada"));
         
-        // Validate Plan and Carrera existence via PlanDeEstudio
+        
         PlanDeEstudio.PlanId planId = new PlanDeEstudio.PlanId(request.getIdCarrera(), request.getNroPlan());
         PlanDeEstudio plan = planDeEstudioRepository.findById(planId)
                 .orElseThrow(() -> new ResourceNotFoundException("Plan de estudio no encontrado"));
@@ -106,7 +106,7 @@ public class AdminMatriculacionService {
             throw new RuntimeException("El alumno ya se encuentra matriculado en esta carrera.");
         }
 
-        // RN: Un alumno solo puede tener UNA matriculación ACTIVA
+        
         List<Matriculacion> matriculacionesActivas = matriculacionRepository
                 .findByIdIdUsuarioAndEstado(request.getIdUsuario(), "ACTIVO");
         

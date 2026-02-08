@@ -15,7 +15,7 @@ public class MesaExamen {
     private UUID id;
 
     @Column(nullable = false, length = 100)
-    private String nombre; // Por ej. "Mesa Febrero 2026"
+    private String nombre; 
 
     @Column(name = "fecha_inicio", nullable = false)
     private LocalDate fechaInicio;

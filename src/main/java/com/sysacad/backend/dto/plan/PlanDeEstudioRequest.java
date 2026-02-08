@@ -10,8 +10,8 @@ import java.util.UUID;
 @NoArgsConstructor
 public class PlanDeEstudioRequest {
     private UUID idCarrera;
-    private Integer nroPlan; // PK, ej: 2023
-    private String nombrePlan; // Atributo, ej: "Plan 2023"
+    private Integer nroPlan; 
+    private String nombrePlan; 
     private LocalDate fechaInicio;
     private LocalDate fechaFin;
     private Boolean esVigente;

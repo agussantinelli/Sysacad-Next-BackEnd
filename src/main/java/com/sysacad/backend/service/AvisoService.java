@@ -39,7 +39,7 @@ public class AvisoService {
         }
         Aviso guardado = avisoRepository.save(aviso);
         
-        // Notificar a todos los estudiantes
+        
         List<com.sysacad.backend.modelo.Usuario> estudiantes = usuarioRepository.findByRol(com.sysacad.backend.modelo.enums.RolUsuario.ESTUDIANTE);
         for (com.sysacad.backend.modelo.Usuario estudiante : estudiantes) {
             String subject = "Nuevo Aviso en Sysacad: " + aviso.getTitulo();
@@ -48,7 +48,7 @@ public class AvisoService {
                           aviso.getTitulo() + "\n" +
                           aviso.getDescripcion() + "\n\n" +
                           "Saludos,\nSysacad Team";
-            // Enviar asíncronamente en un caso real, por ahora simple loop
+            
             emailService.sendEmail(estudiante.getMail(), subject, body);
         }
         
@@ -66,7 +66,7 @@ public class AvisoService {
 
     @Transactional(readOnly = true)
     public List<Aviso> obtenerUltimosAvisos() {
-        // Filtrar solo los activos (no ocultos)
+        
         return avisoRepository.findByEstado(com.sysacad.backend.modelo.enums.EstadoAviso.ACTIVO);
     }
 

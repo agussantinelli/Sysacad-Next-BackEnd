@@ -59,17 +59,17 @@ public class AdminInscripcionService {
         this.mesaExamenService = mesaExamenService;
     }
 
-    // 1. Materias para Cursada
+    
     @Transactional(readOnly = true)
     public List<MateriaResponse> obtenerMateriasParaCursado(UUID idAlumno) {
         Usuario alumno = usuarioRepository.findById(idAlumno)
                 .orElseThrow(() -> new ResourceNotFoundException("Alumno no encontrado"));
 
-        // Obtener historial completo de cursadas y exámenes una sola vez para evitar N+1
+        
         var cursadas = inscripcionCursadoRepository.findByUsuarioId(idAlumno);
-        // Mapa de MateriaID -> EstadoCursada de la cursada más relevante (activo o la ultima)
-        // Como puede haber recurrentes, preferimos cualquier estado ACTIVO (Cursando, Regular) o Aprobado.
-        // Si tiene varias, y una es Regular, es Regular.
+        
+        
+        
         
         java.util.Set<UUID> materiasConCursadaActivaOAprobada = new java.util.HashSet<>();
             cursadas.stream()
@@ -81,37 +81,37 @@ public class AdminInscripcionService {
 
         List<Matriculacion> matriculaciones = matriculacionRepository.findByUsuario_Id(idAlumno);
 
-        // Obtener todas las materias de esos planes
+        
         return matriculaciones.stream()
                 .flatMap(m -> m.getPlan().getPlanMaterias().stream().map(PlanMateria::getMateria))
                 .distinct()
                 .filter(m -> {
-                    // 1. Filtrar si ya cursa o aprobó
+                    
                     if (materiasConCursadaActivaOAprobada.contains(m.getId())) {
                         return false;
                     }
-                    // 2. Correlativas (Implementacion eficiente sería pre-calc, pero correlatividadService lo hace interno. 
-                    //    Optimizacion futura: CorrelatividadService.puedeCursarBatch)
-                    //    Por ahora lo mantenemos individual pero limpio.
+                    
+                    
+                    
                     return correlatividadService.puedeCursar(idAlumno, m.getId());
                 })
                 .map(MateriaResponse::new)
                 .collect(Collectors.toList());
     }
 
-    // 2. Comisiones para Cursada
+    
     @Transactional(readOnly = true)
     public List<ComisionDisponibleDTO> obtenerComisionesParaCursado(UUID idAlumno, UUID idMateria) {
         return inscripcionCursadoService.obtenerOpcionesInscripcion(idMateria, idAlumno);
     }
 
-    // 3. Materias para Examen
+    
     @Transactional(readOnly = true)
     public List<MateriaResponse> obtenerMateriasParaExamen(UUID idAlumno) {
          Usuario alumno = usuarioRepository.findById(idAlumno)
                 .orElseThrow(() -> new ResourceNotFoundException("Alumno no encontrado"));
 
-        // Pre-fetch para evitar N+1
+        
         var examenesAprobados = inscripcionExamenRepository.findByUsuarioIdAndEstado(idAlumno, com.sysacad.backend.modelo.enums.EstadoExamen.APROBADO)
                 .stream().map(e -> e.getDetalleMesaExamen().getMateria().getId()).collect(Collectors.toSet());
         var cursadasPromocionadas = inscripcionCursadoRepository.findByUsuarioIdAndEstado(idAlumno, com.sysacad.backend.modelo.enums.EstadoCursada.PROMOCIONADO)
@@ -123,30 +123,30 @@ public class AdminInscripcionService {
                 .flatMap(m -> m.getPlan().getPlanMaterias().stream().map(PlanMateria::getMateria))
                 .distinct()
                 .filter(m -> {
-                    // 1. Ya aprobadas
+                    
                     if (examenesAprobados.contains(m.getId()) || cursadasPromocionadas.contains(m.getId())) {
                         return false;
                     }
-                    // 2. Correlativas para rendir
+                    
                     return correlatividadService.puedeRendir(idAlumno, m.getId());
                 })
                 .map(MateriaResponse::new)
                 .collect(Collectors.toList());
     }
 
-    // 4. Mesas para Examen
+    
     public List<MesaExamenDisponibleDTO> obtenerMesasParaExamen(UUID idAlumno, UUID idMateria) {
         return mesaExamenService.obtenerMesasDisponibles(idMateria, idAlumno);
     }
 
-    // 5. Inscribir
+    
     @Transactional
     public void inscribir(AdminInscripcionRequest request) {
         if ("CURSADA".equalsIgnoreCase(request.getTipo())) {
              if (request.getIdMateria() == null) {
                  throw new BusinessLogicException("El ID de la materia es requerido para inscripción a cursada.");
              }
-             // Validación extra: Verificar si ya existe inscripción activa para evitar duplicados / errores no controlados
+             
              var existentes = inscripcionCursadoRepository.findByUsuarioIdAndMateriaId(request.getIdAlumno(), request.getIdMateria());
              if (existentes.isPresent()) {
                  var estado = existentes.get().getEstado();
@@ -169,8 +169,8 @@ public class AdminInscripcionService {
                  throw new BusinessLogicException("El número de detalle es requerido para inscripción a examen.");
              }
              
-             // Validar unicidad examen pendiente
-             // Se valida dentro de inscripcionExamenService.inscribirAlumno, reutilizamos esa lógica.
+             
+             
 
              InscripcionExamenRequest req = new InscripcionExamenRequest();
              req.setIdUsuario(request.getIdAlumno());

@@ -53,7 +53,7 @@ public class InscripcionExamenService {
         Usuario usuario = usuarioRepository.findById(request.getIdUsuario())
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con ID: " + request.getIdUsuario()));
 
-        // 1. Validar si la materia ya está APROBADA o PROMOCIONADA
+        
         boolean yaAprobada = inscripcionExamenRepository.existsByUsuarioIdAndDetalleMesaExamen_MateriaIdAndEstado(
                 usuario.getId(), detalle.getMateria().getId(), com.sysacad.backend.modelo.enums.EstadoExamen.APROBADO);
         boolean yaPromocionada = inscripcionCursadoRepository.existsByUsuarioIdAndMateriaIdAndEstado(
@@ -63,12 +63,12 @@ public class InscripcionExamenService {
             throw new BusinessLogicException("El alumno ya tiene aprobada esta materia.");
         }
 
-        // 2. Validar Correlativas para Rendir
+        
         if (!correlatividadService.puedeRendir(usuario.getId(), detalle.getMateria().getId())) {
             throw new BusinessLogicException("El alumno no cumple con los requisitos (Regularidad + Correlativas) para rendir esta materia.");
         }
 
-        // 3. Validar si ya está inscripto a ESTE examen
+        
         Optional<InscripcionExamen> existente = inscripcionExamenRepository
                 .findByUsuarioIdAndDetalleMesaExamenId(usuario.getId(), detalle.getId());
 
@@ -76,14 +76,14 @@ public class InscripcionExamenService {
             throw new BusinessLogicException("El alumno ya está inscripto a este examen");
         }
 
-        // 4. Validar Superposición de Horarios con otros exámenes PENDIENTES
+        
         List<InscripcionExamen> pendientes = inscripcionExamenRepository.findByUsuarioIdAndEstado(
                 usuario.getId(), com.sysacad.backend.modelo.enums.EstadoExamen.PENDIENTE);
         
         for (InscripcionExamen insc : pendientes) {
             DetalleMesaExamen otroDetalle = insc.getDetalleMesaExamen();
             if (otroDetalle.getDiaExamen().equals(detalle.getDiaExamen())) {
-                // Asumimos duración de 3 horas para el control
+                
                 java.time.LocalTime inicioNuevo = detalle.getHoraExamen();
                 java.time.LocalTime finNuevo = inicioNuevo.plusHours(3);
                 
@@ -124,7 +124,7 @@ public class InscripcionExamenService {
         InscripcionExamen insc = inscripcionExamenRepository.findById(idInscripcion)
                 .orElseThrow(() -> new ResourceNotFoundException("Inscripción no encontrada con ID: " + idInscripcion));
 
-        // Validación de Nota y Estado
+        
         if (request.getEstado() == com.sysacad.backend.modelo.enums.EstadoExamen.APROBADO) {
             if (request.getNota().compareTo(new java.math.BigDecimal("6.00")) < 0) {
                 throw new BusinessLogicException("Para aprobar el examen, la nota debe ser 6.00 o superior.");
@@ -136,12 +136,12 @@ public class InscripcionExamenService {
 
         insc = inscripcionExamenRepository.save(insc);
 
-        // Regla: Si desaprueba 4 veces, pierde la regularidad
+        
         if (request.getEstado() == com.sysacad.backend.modelo.enums.EstadoExamen.DESAPROBADO || 
             request.getEstado() == com.sysacad.backend.modelo.enums.EstadoExamen.AUSENTE) {
              
-             // Buscar la cursada asociada (Debería ser la última cursada regular)
-             // Asumimos que si rinde examen es porque tiene cursada (o es libre, pero si es libre no pierde regularidad)
+             
+             
              
              Usuario alumno = insc.getUsuario();
              com.sysacad.backend.modelo.Materia materia = insc.getDetalleMesaExamen().getMateria();
@@ -152,14 +152,14 @@ public class InscripcionExamenService {
              if (cursadaOpt.isPresent()) {
                  com.sysacad.backend.modelo.InscripcionCursado cursada = cursadaOpt.get();
                  if (cursada.getEstado() == com.sysacad.backend.modelo.enums.EstadoCursada.REGULAR) {
-                     // Contar aplazos/ausentes en exámenes previos
+                     
                      long conteoFallidos = inscripcionExamenRepository.countByUsuarioIdAndDetalleMesaExamen_MateriaIdAndEstadoIn(
                          alumno.getId(), 
                          materia.getId(), 
                          List.of(com.sysacad.backend.modelo.enums.EstadoExamen.DESAPROBADO, com.sysacad.backend.modelo.enums.EstadoExamen.AUSENTE)
                      );
                      
-                     // El conteo incluye el que acabamos de guardar? Sí, porque ya hicimos save() arriba.
+                     
                      if (conteoFallidos >= 4) {
                          cursada.setEstado(com.sysacad.backend.modelo.enums.EstadoCursada.LIBRE);
                          inscripcionCursadoRepository.save(cursada);

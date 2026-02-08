@@ -26,12 +26,12 @@ public class HorarioCursadoService {
     public HorarioCursado registrarHorario(HorarioCursado horario) {
         HorarioCursadoId id = horario.getId();
 
-        // Validación de coherencia temporal
+        
         if (!horario.getHoraHasta().isAfter(id.getHoraDesde())) {
             throw new RuntimeException("La hora de finalización debe ser posterior a la hora de inicio");
         }
 
-        // Validación de solapamiento (Regla de Negocio)
+        
         List<HorarioCursado> solapamientos = horarioCursadoRepository.encontrarSolapamientos(
                 id.getIdComision(),
                 id.getDia(),
@@ -58,7 +58,7 @@ public class HorarioCursadoService {
 
     @Transactional
     public void eliminarHorario(UUID idComision, UUID idMateria, DiaSemana dia, LocalTime horaDesde) {
-        // Reconstruimos el ID compuesto para buscar la entidad
+        
         HorarioCursadoId id = new HorarioCursadoId(idComision, idMateria, dia, horaDesde);
 
         if (!horarioCursadoRepository.existsById(id)) {

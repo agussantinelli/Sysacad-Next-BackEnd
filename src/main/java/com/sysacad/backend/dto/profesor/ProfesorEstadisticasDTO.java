@@ -10,14 +10,14 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProfesorEstadisticasDTO {
-    // Cursadas
+    
     private long cantidadTotalAlumnos;
     private long cantidadPromocionados;
     private long cantidadRegulares;
     private long cantidadLibres;
     private BigDecimal notaPromedio;
 
-    // Examenes
+    
     private long cantidadTotalInscriptosExamen;
     private long cantidadAprobadosExamen;
     private long cantidadDesaprobadosExamen;

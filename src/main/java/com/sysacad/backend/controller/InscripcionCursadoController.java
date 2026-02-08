@@ -101,7 +101,7 @@ public class InscripcionCursadoController {
             @PathVariable UUID idMateria,
             Authentication auth) {
         
-        // Security check: Students can only view their own grades
+        
         if (auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ESTUDIANTE"))) {
             Usuario usuario = usuarioRepository.findByLegajoOrMail(auth.getName(), auth.getName()).orElse(null);
             if (usuario != null && !usuario.getId().equals(idAlumno)) {

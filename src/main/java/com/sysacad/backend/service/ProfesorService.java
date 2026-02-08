@@ -93,7 +93,7 @@ public class ProfesorService {
 
     @Transactional(readOnly = true)
     public List<ComisionHorarioDTO> obtenerComisionesDeMateria(UUID idProfesor, UUID idMateria) {
-        // 1. Verificar el cargo del profesor en esta materia
+        
         List<AsignacionMateria> asignaciones = asignacionMateriaRepository.findByIdIdUsuario(idProfesor);
         AsignacionMateria asignacionMateria = asignaciones.stream()
                 .filter(a -> a.getMateria().getId().equals(idMateria))
@@ -102,17 +102,17 @@ public class ProfesorService {
 
         boolean esJefeCatedra = asignacionMateria.getCargo() == com.sysacad.backend.modelo.enums.RolCargo.JEFE_CATEDRA;
 
-        // 2. Obtener las comisiones según el rol
+        
         List<Comision> comisiones;
         if (esJefeCatedra) {
-            // Si es jefe de cátedra: traer TODAS las comisiones de esta materia
+            
             comisiones = comisionRepository.findByMateriasId(idMateria);
         } else {
-            // Si NO es jefe: traer solo las comisiones donde este profesor participa
+            
             comisiones = comisionRepository.findByMateriasIdAndProfesoresId(idMateria, idProfesor);
         }
 
-        // 3. Mapear a DTO
+        
         return comisiones.stream()
                 .map(comision -> mapToComisionHorarioDTO(comision, idMateria, esJefeCatedra))
                 .collect(Collectors.toList());
@@ -121,11 +121,11 @@ public class ProfesorService {
     private MateriaProfesorDTO mapToDTO(AsignacionMateria asignacion) {
         Materia materia = asignacion.getMateria();
 
-        // Query PlanMateria to get nivel and plan information
+        
         List<PlanMateria> planMaterias = planMateriaRepository.findByIdIdMateria(materia.getId());
 
-        // Use the first plan (in case a subject appears in multiple plans, we take the first one)
-        // In a real scenario, you might want to filter by vigente or current year
+        
+        
         Integer nivel = null;
         String planDescripcion = "N/A";
 
@@ -139,7 +139,7 @@ public class ProfesorService {
             }
         }
 
-        // Si NO es jefe de cátedra, buscar quién es el jefe
+        
         String nombreJefe = null;
         boolean esJefe = asignacion.getCargo() == com.sysacad.backend.modelo.enums.RolCargo.JEFE_CATEDRA;
 
@@ -164,7 +164,7 @@ public class ProfesorService {
     }
 
     private ComisionHorarioDTO mapToComisionHorarioDTO(Comision comision, UUID idMateria, boolean esJefeCatedra) {
-        // Fetch schedules for this commission-subject pair
+        
         List<HorarioCursado> horarios = horarioCursadoRepository.findByIdIdComisionAndIdIdMateria(
                 comision.getId(), idMateria);
 
@@ -175,7 +175,7 @@ public class ProfesorService {
                         h.getHoraHasta().toString()))
                 .collect(Collectors.toList());
 
-        // Mostrar todos los profesores que dan clase en esta comisión para esta materia
+        
         List<String> profesores = comision.getProfesores().stream()
                 .filter(profesor -> {
                     List<AsignacionMateria> asignaciones = asignacionMateriaRepository
@@ -186,7 +186,7 @@ public class ProfesorService {
                 .map(profesor -> profesor.getNombre() + " " + profesor.getApellido())
                 .collect(Collectors.toList());
 
-        // Contar alumnos activos o recién calificados
+        
         java.time.LocalDate fechaLimite = java.time.LocalDate.now().minusMonths(3);
         long cantidadAlumnos = inscripcionCursadoRepository.countInscriptosActivosOSemiesActivos(
                 comision.getId(), idMateria, fechaLimite);
@@ -205,28 +205,28 @@ public class ProfesorService {
 
     @Transactional(readOnly = true)
     public List<ComisionDetalladaDTO> obtenerTodasLasComisiones(UUID idProfesor) {
-        // 1. Obtener todas las comisiones donde el profesor da clases
+        
         List<Comision> comisiones = comisionRepository.findByProfesoresId(idProfesor);
 
-        // 2. Obtener todas las asignaciones del profesor para saber qué materias dicta
+        
         List<AsignacionMateria> misAsignaciones = asignacionMateriaRepository.findByIdIdUsuario(idProfesor);
 
-        // 3. Generar DTOs
-        // Una comisión puede tener varias materias, pero el profesor solo dicta algunas de ellas.
-        // Generamos un DTO por cada par (Comisión, Materia) válido.
+        
+        
+        
 
         List<ComisionDetalladaDTO> resultado = new java.util.ArrayList<>();
 
         for (Comision comision : comisiones) {
-            // Filtrar las materias de la comisión que el profesor dicta
+            
             List<Materia> materiasQueDicta = comision.getMaterias().stream()
                     .filter(materiaComision -> misAsignaciones.stream()
                             .anyMatch(asignacion -> asignacion.getMateria().getId().equals(materiaComision.getId())))
                     .collect(Collectors.toList());
 
-            // Si es jefe de cátedra en alguna de ellas, necesitamos saberlo para el mapeo
+            
             for (Materia materia : materiasQueDicta) {
-                // Determinar si es jefe de cátedra para ESTA materia
+                
                 boolean esJefe = misAsignaciones.stream()
                         .anyMatch(a -> a.getMateria().getId().equals(materia.getId()) &&
                                 a.getCargo() == com.sysacad.backend.modelo.enums.RolCargo.JEFE_CATEDRA);
@@ -239,8 +239,8 @@ public class ProfesorService {
     }
 
     private ComisionDetalladaDTO mapToComisionDetalladaDTO(Comision comision, Materia materia, boolean esJefeCatedra, UUID idProfesor) {
-        // Obtenemos el DTO base reutilizando lógica similar (pero adaptada)
-        // Fetch schedules for this commission-subject pair
+        
+        
         List<HorarioCursado> horarios = horarioCursadoRepository.findByIdIdComisionAndIdIdMateria(
                 comision.getId(), materia.getId());
 
@@ -261,7 +261,7 @@ public class ProfesorService {
                 .map(profesor -> profesor.getNombre() + " " + profesor.getApellido())
                 .collect(Collectors.toList());
 
-        // Contar alumnos activos o recién calificados
+        
         java.time.LocalDate fechaLimite = java.time.LocalDate.now().minusMonths(3);
         long cantidadAlumnos = inscripcionCursadoRepository.countInscriptosActivosOSemiesActivos(
                 comision.getId(), materia.getId(), fechaLimite);
@@ -282,14 +282,14 @@ public class ProfesorService {
 
     @Transactional(readOnly = true)
     public List<ProfesorMesaExamenDTO> obtenerMesasExamenProfesor(UUID idProfesor) {
-        // Obtenemos todos los detalles relevantes
+        
         Set<DetalleMesaExamen> detallesRelevantes = obtenerDetallesExamenRelevantes(idProfesor);
 
-        // Agrupar por MesaExamen
+        
         java.util.Map<MesaExamen, Long> mesasCount = detallesRelevantes.stream()
                 .collect(Collectors.groupingBy(DetalleMesaExamen::getMesaExamen, Collectors.counting()));
 
-        // Mapear a DTO
+        
         return mesasCount.entrySet().stream()
                 .map(entry -> {
                     MesaExamen mesa = entry.getKey();
@@ -307,12 +307,12 @@ public class ProfesorService {
 
     @Transactional(readOnly = true)
     public List<ProfesorDetalleExamenDTO> obtenerDetallesMesaProfesor(UUID idProfesor, UUID idMesa) {
-        // Filtrar detalles relevantes solo de esta mesa
+        
         List<DetalleMesaExamen> detallesDeMesa = detalleMesaExamenRepository.findByMesaExamenId(idMesa);
 
         List<AsignacionMateria> asignaciones = asignacionMateriaRepository.findByIdIdUsuario(idProfesor);
 
-        // Logica de filtrado manual para asegurar coherencia
+        
         return detallesDeMesa.stream()
                 .filter(detalle -> esProfesorRelevanteParaDetalle(detalle, idProfesor, asignaciones))
                 .map(detalle -> mapToProfesorDetalleExamenDTO(detalle))
@@ -322,13 +322,13 @@ public class ProfesorService {
     private Set<DetalleMesaExamen> obtenerDetallesExamenRelevantes(UUID idProfesor) {
         Set<DetalleMesaExamen> detalles = new HashSet<>();
 
-        // 1. Donde es Presidente
+        
         detalles.addAll(detalleMesaExamenRepository.findByPresidenteId(idProfesor));
 
-        // 2. Donde es Auxiliar
+        
         detalles.addAll(detalleMesaExamenRepository.findByAuxiliaresId(idProfesor));
 
-        // 3. Donde es Jefe de Cátedra de la materia
+        
         List<AsignacionMateria> asignacionesJefe = asignacionMateriaRepository.findByIdIdUsuario(idProfesor).stream()
                 .filter(a -> a.getCargo() == com.sysacad.backend.modelo.enums.RolCargo.JEFE_CATEDRA)
                 .collect(Collectors.toList());
@@ -341,41 +341,41 @@ public class ProfesorService {
     }
 
     private boolean esProfesorRelevanteParaDetalle(DetalleMesaExamen detalle, UUID idProfesor, List<AsignacionMateria> asignaciones) {
-        // Es Presidente?
+        
         if (detalle.getPresidente().getId().equals(idProfesor)) return true;
 
-        // Es Auxiliar?
+        
         boolean esAuxiliar = detalle.getAuxiliares() != null && detalle.getAuxiliares().stream()
                 .anyMatch(aux -> aux.getId().equals(idProfesor));
         if (esAuxiliar) return true;
 
-        // Es Jefe de Catedra de la materia?
+        
         return asignaciones.stream()
                 .anyMatch(a -> a.getMateria().getId().equals(detalle.getMateria().getId()) &&
                         a.getCargo() == com.sysacad.backend.modelo.enums.RolCargo.JEFE_CATEDRA);
     }
 
     private ProfesorDetalleExamenDTO mapToProfesorDetalleExamenDTO(DetalleMesaExamen detalle) {
-        // Obtener inscriptos
+        
         Long inscriptos = inscripcionExamenRepository.countByDetalleMesaExamenId(detalle.getId());
 
-        // Obtener anio materia
+        
         String anioMateria = "N/A";
         List<PlanMateria> pm = planMateriaRepository.findByIdIdMateria(detalle.getMateria().getId());
         if (!pm.isEmpty()) {
-            anioMateria = pm.get(0).getNivel().toString(); // Simplification
+            anioMateria = pm.get(0).getNivel().toString(); 
         }
 
-        // Construir tribunal
+        
         List<MiembroTribunalDTO> tribunal = new java.util.ArrayList<>();
 
-        // Presidente
+        
         tribunal.add(new MiembroTribunalDTO(
                 detalle.getPresidente().getNombre() + " " + detalle.getPresidente().getApellido(),
                 "PRESIDENTE"
         ));
 
-        // Auxiliares
+        
         if (detalle.getAuxiliares() != null) {
             detalle.getAuxiliares().forEach(aux -> {
                 tribunal.add(new MiembroTribunalDTO(
@@ -385,11 +385,11 @@ public class ProfesorService {
             });
         }
 
-        // Check if all are corrected
+        
         long pendientes = inscripcionExamenRepository.countByDetalleMesaExamenIdAndEstado(
                 detalle.getId(), com.sysacad.backend.modelo.enums.EstadoExamen.PENDIENTE);
-        boolean todosCorregidos = (pendientes == 0 && inscriptos > 0); // If 0 enrolled, also consider corrected? Or N/A. usually true or false.
-        // Let's say if 0 enrolled, todosCorregidos = true (trivially).
+        boolean todosCorregidos = (pendientes == 0 && inscriptos > 0); 
+        
 
         return new ProfesorDetalleExamenDTO(
                 detalle.getMesaExamen().getId(),
@@ -450,7 +450,7 @@ public class ProfesorService {
                 throw new RuntimeException("Acceso denegado: No tienes permiso para calificar este examen.");
             }
 
-            // Calcular estado basado en la nota
+            
             if (notaDTO.getNota() != null) {
                 inscripcion.setNota(notaDTO.getNota());
                 if (notaDTO.getNota().compareTo(new java.math.BigDecimal("6.00")) >= 0) {
@@ -464,28 +464,28 @@ public class ProfesorService {
             }
 
             if (inscripcion.getEstado() == EstadoExamen.APROBADO) {
-                // Tomo: Guardar si viene en DTO, sino generar random solo si no existe
+                
                 if (notaDTO.getTomo() != null && !notaDTO.getTomo().isBlank()) {
                     inscripcion.setTomo(notaDTO.getTomo().trim());
                 } else if (inscripcion.getTomo() == null) {
                    inscripcion.setTomo(String.valueOf(100 + (int)(Math.random() * 900)));
                 }
 
-                // Folio: Guardar si viene en DTO, sino generar random solo si no existe
+                
                 if (notaDTO.getFolio() != null && !notaDTO.getFolio().isBlank()) {
                     inscripcion.setFolio(notaDTO.getFolio().trim());
                 } else if (inscripcion.getFolio() == null) {
                     inscripcion.setFolio(String.valueOf(10 + (int)(Math.random() * 900)));
                 }
             } else {
-                // Resetear si no está aprobado
+                
                 inscripcion.setTomo(null);
                 inscripcion.setFolio(null);
             }
             
             inscripcionExamenRepository.save(inscripcion);
 
-            // Notificación por Email
+            
             try {
                 java.util.Map<String, Object> vars = new java.util.HashMap<>();
                 vars.put("nombreAlumno", inscripcion.getUsuario().getNombre());
@@ -506,7 +506,7 @@ public class ProfesorService {
 
     @Transactional(readOnly = true)
     public List<AlumnoCursadaDTO> obtenerInscriptosCursada(UUID idProfesor, UUID idComision, UUID idMateria) {
-        // Verificar si el profesor tiene acceso a esta comisión y materia
+        
         verificarAccesoComisionMateria(idProfesor, idComision, idMateria);
 
         java.time.LocalDate fechaLimite = java.time.LocalDate.now().minusMonths(3);
@@ -542,14 +542,14 @@ public class ProfesorService {
             var inscripcion = inscripcionCursadoRepository.findById(notaDTO.getIdInscripcion())
                     .orElseThrow(() -> new RuntimeException("Inscripción no encontrada: " + notaDTO.getIdInscripcion()));
 
-            // Validar coherencia
+            
             if (!inscripcion.getComision().getId().equals(idComision) || 
                 !inscripcion.getMateria().getId().equals(idMateria)) {
-                continue; // O lanzar error
+                continue; 
             }
 
             if (Boolean.TRUE.equals(dto.getEsNotaFinal())) {
-                // Lógica de Nota Final: Actualizar estado de cursada e inscripción
+                
                 if (notaDTO.getEstado() != null) {
                     try {
                         com.sysacad.backend.modelo.enums.EstadoCursada nuevoEstado = 
@@ -561,14 +561,14 @@ public class ProfesorService {
 
                         inscripcion.setEstado(nuevoEstado);
                         
-                        // Setear fechas según estado
+                        
                         if (nuevoEstado == com.sysacad.backend.modelo.enums.EstadoCursada.REGULAR) {
                              inscripcion.setFechaRegularidad(java.time.LocalDate.now());
                         } else if (nuevoEstado == com.sysacad.backend.modelo.enums.EstadoCursada.PROMOCIONADO) {
                              inscripcion.setFechaPromocion(java.time.LocalDate.now());
                         }
                     } catch (IllegalArgumentException e) {
-                        // Log error or ignore invalid status
+                        
                     }
                 }
                 
@@ -577,11 +577,11 @@ public class ProfesorService {
                 }
                 
                 inscripcionCursadoRepository.save(inscripcion);
-                // No creamos calificación parcial si es nota final
+                
                 continue;
             }
 
-            // Buscar o crear InstanciaEvaluacion
+            
             String descripcionConcepto = dto.getConcepto().trim();
             com.sysacad.backend.modelo.InstanciaEvaluacion instancia = instanciaEvaluacionRepository.findByNombre(descripcionConcepto)
                     .orElseGet(() -> {
@@ -590,7 +590,7 @@ public class ProfesorService {
                          return instanciaEvaluacionRepository.save(nueva);
                     });
 
-            // Buscar si ya existe la calificacion para este concepto (usando ID de instancia)
+            
             CalificacionCursada calificacion = calificacionCursadaRepository.findByInscripcionCursadoIdAndInstanciaEvaluacionId(
                     inscripcion.getId(), instancia.getId())
                     .orElse(null);
@@ -606,7 +606,7 @@ public class ProfesorService {
             
             calificacionCursadaRepository.save(calificacion);
 
-            // Notificación por Email
+            
             try {
                 java.util.Map<String, Object> vars = new java.util.HashMap<>();
                 vars.put("nombreAlumno", inscripcion.getUsuario().getNombre());
@@ -678,7 +678,7 @@ public class ProfesorService {
     }
 
     private void verificarAccesoComisionMateria(UUID idProfesor, UUID idComision, UUID idMateria) {
-        // Simple verificación: si el profesor está en esa comisión
+        
         Comision comision = comisionRepository.findById(idComision)
                 .orElseThrow(() -> new RuntimeException("Comisión no encontrada"));
 
@@ -686,8 +686,8 @@ public class ProfesorService {
                 .anyMatch(p -> p.getId().equals(idProfesor));
         
         if (!esProfeDeComision) {
-            // Verificar si es jefe de catedra global de la materia, quiza quiera ver/editar
-            // Por simplicidad, requerimos que esté asignado a la comisión O sea jefe de cátedra
+            
+            
             List<AsignacionMateria> asignaciones = asignacionMateriaRepository.findByIdIdUsuario(idProfesor);
             boolean esJefe = asignaciones.stream()
                     .anyMatch(a -> a.getMateria().getId().equals(idMateria) && 

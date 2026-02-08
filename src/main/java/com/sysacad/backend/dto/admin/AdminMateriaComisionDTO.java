@@ -15,6 +15,6 @@ public class AdminMateriaComisionDTO {
     private String nombreMateria;
     private Short nivel;
     private long cantidadInscriptos;
-    private List<AlumnoResumenDTO> alumnos; // Students enrolled in this subject in this commission
-    private List<ProfesorResumenDTO> profesores; // Professors assigned to this subject (inferred)
+    private List<AlumnoResumenDTO> alumnos; 
+    private List<ProfesorResumenDTO> profesores; 
 }

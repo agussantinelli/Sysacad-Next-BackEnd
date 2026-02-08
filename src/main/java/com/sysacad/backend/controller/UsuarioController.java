@@ -71,14 +71,14 @@ public class UsuarioController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("isAuthenticated()") // La validación fina se hace en el servicio
+    @PreAuthorize("isAuthenticated()") 
     public ResponseEntity<UsuarioResponse> actualizarUsuario(@PathVariable UUID id,
             @RequestBody UsuarioRequest request) {
         try {
             Usuario actualizado = usuarioService.actualizarUsuario(id, request);
             return ResponseEntity.ok(convertirADTO(actualizado));
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().build(); // O Forbidden según el error
+            return ResponseEntity.badRequest().build(); 
         }
     }
 
@@ -156,7 +156,7 @@ public class UsuarioController {
                                                 @RequestBody com.sysacad.backend.dto.usuario.CambioPasswordRequest request,
                                                 org.springframework.security.core.Authentication authentication) {
         
-        // Validar que el usuario sea el mismo o sea admin
+        
         String legajoAutenticado = authentication.getName();
         boolean isAdmin = authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
         
@@ -177,10 +177,10 @@ public class UsuarioController {
             String fotoPath = dto.getFotoPerfil();
 
             if (!fotoPath.startsWith("http")) {
-                // Normalizo Path
+                
                 String pathNormalizado = fotoPath.replace("\\", "/");
 
-                // Asegurar que no empiece con slash si vamos a unirlo
+                
                 if (pathNormalizado.startsWith("/")) {
                     pathNormalizado = pathNormalizado.substring(1);
                 }

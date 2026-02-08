@@ -36,7 +36,7 @@ public class GrupoController {
     private final com.sysacad.backend.mapper.GrupoMapper grupoMapper;
     private final com.sysacad.backend.mapper.MensajeGrupoMapper mensajeGrupoMapper;
 
-    // Helper para obtener ID del usuario autenticado
+    
     private UUID getAuthenticatedUserId() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String legajo = auth.getName();

@@ -25,13 +25,13 @@ public class OpenPdfGenerator implements IPdfGenerator {
 
             document.open();
 
-            // A. ENCABEZADO
+            
             agregarEncabezado(document);
 
-            // B. CUERPO
+            
             agregarCuerpo(document, datos);
 
-            // C. PIE DE PAGINA
+            
             agregarPieDePagina(document, datos);
 
             document.close();
@@ -49,13 +49,13 @@ public class OpenPdfGenerator implements IPdfGenerator {
 
             document.open();
 
-            // A. ENCABEZADO
+            
             agregarEncabezado(document);
 
-            // B. CUERPO
+            
             agregarCuerpoProfesor(document, datos);
 
-            // C. PIE DE PAGINA
+            
             agregarPieDePaginaProfesor(document, datos);
 
             document.close();
@@ -68,11 +68,11 @@ public class OpenPdfGenerator implements IPdfGenerator {
     private void agregarEncabezado(Document document) throws DocumentException, IOException {
         PdfPTable headerTable = new PdfPTable(2);
         headerTable.setWidthPercentage(100);
-        headerTable.setWidths(new float[]{1, 1}); // 50% - 50%
+        headerTable.setWidths(new float[]{1, 1}); 
 
-        // Logo Izquierdo (Ministerio)
-        Image logoMin = cargarImagen("static/img/logo_ministerio.png"); // Intencional: static folder
-        // Si el usuario puso en src/main/resources/img, Spring carga con "img/..."
+        
+        Image logoMin = cargarImagen("static/img/logo_ministerio.png"); 
+        
         if (logoMin == null) logoMin = cargarImagen("img/logo_ministerio.png");
         
         PdfPCell cellLeft = new PdfPCell();
@@ -85,7 +85,7 @@ public class OpenPdfGenerator implements IPdfGenerator {
         cellLeft.addElement(new Paragraph("República Argentina", FontFactory.getFont(FontFactory.HELVETICA, 10, Font.BOLD)));
         cellLeft.addElement(new Paragraph("Ministerio de Capital Humano", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 9)));
 
-        // Logo Derecho (UTN)
+        
          Image logoUtn = cargarImagen("static/img/logo_utn.png");
          if (logoUtn == null) logoUtn = cargarImagen("img/logo_utn.png");
 
@@ -94,8 +94,8 @@ public class OpenPdfGenerator implements IPdfGenerator {
         cellRight.setHorizontalAlignment(Element.ALIGN_RIGHT);
         if (logoUtn != null) {
              logoUtn.scaleToFit(150, 60);
-             // Alineación de imagen en celda requiere trucos o wrapping, simple addElement lo pone abajo
-             // Usamos tabla anidada o setAlignment en image
+             
+             
              logoUtn.setAlignment(Image.RIGHT);
             cellRight.addElement(logoUtn);
         }
@@ -111,7 +111,7 @@ public class OpenPdfGenerator implements IPdfGenerator {
         headerTable.addCell(cellRight);
         
         document.add(headerTable);
-        document.add(new Paragraph("\n\n")); // Espacio
+        document.add(new Paragraph("\n\n")); 
     }
 
     private void agregarCuerpo(Document document, AlumnoCertificadoDTO datos) throws DocumentException {
@@ -128,7 +128,7 @@ public class OpenPdfGenerator implements IPdfGenerator {
 
         Paragraph p = new Paragraph(texto, fontCuerpo);
         p.setAlignment(Element.ALIGN_JUSTIFIED);
-        p.setLeading(20f); // Interlineado
+        p.setLeading(20f); 
         p.setFirstLineIndent(30f);
         
         document.add(p);
@@ -161,7 +161,7 @@ public class OpenPdfGenerator implements IPdfGenerator {
     private void agregarCuerpoProfesor(Document document, com.sysacad.backend.dto.examen.ProfesorCertificadoDTO datos) throws DocumentException {
         Font fontCuerpo = FontFactory.getFont(FontFactory.TIMES, 12);
         
-        // El rol ya viene formateado dsl Service (ej: "Docente", "Administrador")
+        
         String texto = String.format(
             "Por la presente se hace constar que %s - DNI: %s - LEGAJO N° %s, se desempeña como %s en la Facultad Regional Rosario de la Universidad Tecnológica Nacional.",
             datos.nombreCompleto(),
@@ -204,14 +204,14 @@ public class OpenPdfGenerator implements IPdfGenerator {
     
     private Image cargarImagen(String path) {
         try {
-            // Intenta cargar desde classpath
+            
             ClassPathResource res = new ClassPathResource(path);
             if (res.exists()) {
                 return Image.getInstance(res.getURL());
             }
             return null;
         } catch (Exception e) {
-             // Log error silently or return null
+             
              return null;
         }
     }

@@ -41,7 +41,7 @@ public class AdminComisionController {
     public ResponseEntity<List<SalonResponse>> obtenerSalonesDisponibles(
             @RequestParam String turno,
             @RequestParam Integer anio) {
-        return ResponseEntity.ok(adminComisionService.obtenerSalonesDisponibles(turno, anio)); // Changed comisionService to adminComisionService
+        return ResponseEntity.ok(adminComisionService.obtenerSalonesDisponibles(turno, anio)); 
     }
 
     @PostMapping("/{id}/materias")
@@ -52,7 +52,7 @@ public class AdminComisionController {
 
     @PostMapping("/profesores-disponibles")
     public ResponseEntity<List<ProfesorDisponibleDTO>> obtenerProfesoresDisponibles(@RequestBody AsignarMateriaComisionRequest request) {
-        // Reuse the request DTO to pass idMateria and horarios
+        
         return ResponseEntity.ok(adminComisionService.obtenerProfesoresDisponibles(request.getIdMateria(), request.getHorarios()));
     }
     

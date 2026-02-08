@@ -160,7 +160,7 @@ CREATE TABLE asignaciones_materia (
     CONSTRAINT fk_am_mat FOREIGN KEY (id_materia) REFERENCES materias(id)
 );
 
--- 8. Vida Académica del Alumno
+
 CREATE TABLE matriculaciones (
     id_usuario UUID NOT NULL,
     id_facultad UUID NOT NULL,
@@ -288,7 +288,7 @@ CREATE TABLE grupos (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     nombre VARCHAR(100) NOT NULL,
     descripcion TEXT,
-    tipo VARCHAR(50), -- Opcional: 'CATEDRA', 'ESTUDIO', etc.
+    tipo VARCHAR(50), 
     estado VARCHAR(20) NOT NULL DEFAULT 'ACTIVO',
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     id_comision UUID,
@@ -299,7 +299,7 @@ CREATE TABLE grupos (
 CREATE TABLE miembros_grupo (
     id_grupo UUID NOT NULL,
     id_usuario UUID NOT NULL,
-    rol_interno VARCHAR(20) NOT NULL DEFAULT 'MIEMBRO', -- 'ADMIN', 'MIEMBRO'
+    rol_interno VARCHAR(20) NOT NULL DEFAULT 'MIEMBRO', 
     fecha_union TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     ultimo_acceso TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id_grupo, id_usuario),
@@ -310,7 +310,7 @@ CREATE TABLE miembros_grupo (
 CREATE TABLE mensajes_grupo (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     id_grupo UUID NOT NULL,
-    id_usuario UUID NOT NULL, -- El remitente
+    id_usuario UUID NOT NULL, 
     contenido TEXT NOT NULL,
     editado BOOLEAN NOT NULL DEFAULT FALSE,
     fecha_envio TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

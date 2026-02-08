@@ -13,8 +13,8 @@ import java.util.UUID;
 @AllArgsConstructor
 public class AdminInscripcionRequest {
     private UUID idAlumno;
-    private String tipo; // "CURSADA" o "EXAMEN"
-    private UUID idReferencia; // ID of Comision or MesaExamen
-    private UUID idMateria; // Required for Cursada (to pick which subject in the commission) and validation
-    private Integer nroDetalle; // Required for Examen (composite key part)
+    private String tipo; 
+    private UUID idReferencia; 
+    private UUID idMateria; 
+    private Integer nroDetalle; 
 }

@@ -27,7 +27,7 @@ public class UsuarioSeeder {
 
     @Transactional
     public void seed() {
-            // Verificar si ya hay usuarios cargados
+            
             if (usuarioRepository.count() > 0) {
                 System.out.println(">> UsuarioSeeder: OMITIDO - Los usuarios ya están cargados.");
                 return;
@@ -35,15 +35,15 @@ public class UsuarioSeeder {
 
             System.out.println(">> UsuarioSeeder: Iniciando carga de usuarios...");
             
-            // Limpiar imágenes anteriores
-            // fileStorageService.deleteAllPerfiles(); // Comentado para evitar borrar fotos en cada reinicio si cambiamos estrategia
+            
+            
 
-            // ADMIN
+            
             createUsuarioIfNotExists("1", "Homero", "Simpson", "11111111",
                     "admin@sysacad.com", RolUsuario.ADMIN, Genero.M, "Rector",
                     LocalDate.of(1980, 5, 12), "uploads/perfiles/seeded-1.jpg");
 
-            // PROFESORES
+            
             createUsuarioIfNotExists("51111", "Dario", "Cvitanich", "22222222", "dario@sysacad.com", RolUsuario.PROFESOR, Genero.M, "Doctor en Ciencias de la Computación", LocalDate.of(1990, 6, 23), "uploads/perfiles/seeded-51111.jpg");
             createUsuarioIfNotExists("52222", "Laura", "Gomez", "22222223", "laura@sysacad.com", RolUsuario.PROFESOR, Genero.F, "Ingeniera en Sistemas", LocalDate.of(1985, 3, 15), null);
             createUsuarioIfNotExists("53333", "Roberto", "Diaz", "22222224", "roberto@sysacad.com", RolUsuario.PROFESOR, Genero.M, "Licenciado en Física", LocalDate.of(1978, 9, 10), null);
@@ -55,7 +55,7 @@ public class UsuarioSeeder {
             createUsuarioIfNotExists("55556", "Jorge", "Garcia", "22222230", "jorge@sysacad.com", RolUsuario.PROFESOR, Genero.M, "Abogado", LocalDate.of(1970, 10, 10), null);
             createUsuarioIfNotExists("55557", "Valeria", "Martinez", "22222231", "valeria@sysacad.com", RolUsuario.PROFESOR, Genero.F, "Contadora", LocalDate.of(1983, 12, 12), null);
 
-            // ESTUDIANTES
+            
             createUsuarioIfNotExists("55555", "Agustin", "Santinelli", "33333333", "agustinsantinelli@gmail.com", RolUsuario.ESTUDIANTE, Genero.M, null, LocalDate.of(2004, 11, 17), "uploads/perfiles/seeded-55555.jpg");
             createUsuarioIfNotExists("56666", "Maria", "Rodriguez", "33333334", "maria@sysacad.com", RolUsuario.ESTUDIANTE, Genero.F, null, LocalDate.of(2003, 5, 20), "uploads/perfiles/seeded-56666.jpg");
             createUsuarioIfNotExists("57777", "Juan", "Perez", "33333335", "juan@sysacad.com", RolUsuario.ESTUDIANTE, Genero.M, null, LocalDate.of(2004, 1, 10), null);
@@ -72,7 +72,7 @@ public class UsuarioSeeder {
             createUsuarioIfNotExists("60014", "Enzo", "Fernandez", "33333354", "enzo@sysacad.com", RolUsuario.ESTUDIANTE, Genero.M, null, LocalDate.of(2001, 1, 17), null);
 
             System.out.println(">> Usuarios creados/verificados con éxito.");
-        // } (Eliminado el bloque if count == 0 para permitir verificaciones individuales)
+        
     }
 
     private Usuario createUsuarioIfNotExists(String legajo, String nombre, String apellido, String dni, String mail, RolUsuario rol, Genero genero, String titulo, LocalDate fechaNacimiento, String rutaFoto) {

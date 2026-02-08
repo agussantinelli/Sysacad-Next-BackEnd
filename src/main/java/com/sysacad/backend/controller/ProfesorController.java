@@ -48,10 +48,10 @@ public class ProfesorController {
     @PreAuthorize("hasRole('PROFESOR')")
     public ResponseEntity<List<MateriaProfesorDTO>> getMisMaterias(Authentication authentication) {
         String username = authentication.getName();
-        Usuario profesor = usuarioRepository.findByLegajo(username) // Asumimos username es legajo o email, verificar Auth config.
-                // En AuthController se usa legajo para login. Si authentication.getName() devuelve legajo, esto es correcto.
-                // Si devuelve user details object, habría que verlo. 
-                // Standard UserDetails implementation returns username.
+        Usuario profesor = usuarioRepository.findByLegajo(username) 
+                
+                
+                
                 .orElseThrow(() -> new RuntimeException("Profesor no encontrado: " + username));
                 
         List<MateriaProfesorDTO> materias = profesorService.obtenerMateriasAsignadas(profesor.getId());

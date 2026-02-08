@@ -54,7 +54,7 @@ public class AdminFacultadService {
 
     @Transactional
     public void eliminarFacultad(UUID id) {
-        // Validar si tiene inscripciones (matriculaciones)
+        
         if (matriculacionRepository.existsByFacultad_Id(id)) {
             throw new RuntimeException("No se puede eliminar la facultad porque tiene inscripciones activas.");
         }

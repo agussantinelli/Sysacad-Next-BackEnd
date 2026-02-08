@@ -14,14 +14,14 @@ import java.util.UUID;
 @NoArgsConstructor
 public class AdminInscripcionDTO {
     private UUID id;
-    private String tipo; // "CURSADA" o "EXAMEN"
+    private String tipo; 
     private UUID idAlumno;
     private String nombre;
     private String apellido;
     private String fotoPerfil;
     private String legajoAlumno;
     private String nombreMateria;
-    private String comision; // Nombre comisión (solo para Cursada)
+    private String comision; 
     private LocalDateTime fechaInscripcion;
     private String estado;
 }

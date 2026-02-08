@@ -24,7 +24,7 @@ public abstract class ComisionMapper {
         }
         ComisionResponse dto = new ComisionResponse(comision);
         
-        // Populate Materias Detalles (Profesores per Materia)
+        
         if (comision.getMaterias() != null && comision.getProfesores() != null) {
             java.util.List<ComisionResponse.MateriaDetalleDTO> detalles = new java.util.ArrayList<>();
             
@@ -32,7 +32,7 @@ public abstract class ComisionMapper {
                 java.util.List<ComisionResponse.ProfesorResumenDTO> profesDocentes = new java.util.ArrayList<>();
                 
                 for (com.sysacad.backend.modelo.Usuario p : comision.getProfesores()) {
-                    // Check if professor is assigned to this materia
+                    
                     com.sysacad.backend.modelo.AsignacionMateria.AsignacionMateriaId id = 
                         new com.sysacad.backend.modelo.AsignacionMateria.AsignacionMateriaId(p.getId(), m.getId());
                     

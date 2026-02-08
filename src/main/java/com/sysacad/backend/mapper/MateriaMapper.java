@@ -19,7 +19,7 @@ public interface MateriaMapper {
     MateriaResponse toDTO(Materia materia);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "correlativas", ignore = true) // Se manejan por separado
+    @Mapping(target = "correlativas", ignore = true) 
     Materia toEntity(MateriaRequest request);
 
     List<MateriaResponse> toDTOs(List<Materia> materias);

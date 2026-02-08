@@ -6,5 +6,5 @@ import java.math.BigDecimal;
 @Data
 public class CargaNotaExamenRequest {
     private BigDecimal nota;
-    private com.sysacad.backend.modelo.enums.EstadoExamen estado; // APROBADO, DESAPROBADO, AUSENTE
+    private com.sysacad.backend.modelo.enums.EstadoExamen estado; 
 }

@@ -123,11 +123,11 @@ public class MesaExamenService {
     @Transactional(readOnly = true)
     public List<com.sysacad.backend.dto.mesa_examen.MesaExamenDisponibleDTO> obtenerMesasDisponibles(UUID idMateria, UUID idAlumno) {
         try {
-            // 1. Validar que la materia exista
+            
             Materia materia = materiaRepository.findById(idMateria)
                     .orElseThrow(() -> new RuntimeException("Materia no encontrada"));
             
-            // 2. Obtener estado académico del alumno en esa materia
+            
         boolean aproboFinal = inscripcionExamenRepository.existsByUsuarioIdAndDetalleMesaExamen_MateriaIdAndEstado(
                 idAlumno, idMateria, com.sysacad.backend.modelo.enums.EstadoExamen.APROBADO
         );
@@ -136,10 +136,10 @@ public class MesaExamenService {
                     idAlumno, idMateria, com.sysacad.backend.modelo.enums.EstadoCursada.PROMOCIONADO
             );
 
-            // 3. Obtener todas las mesas donde se rinde esta materia (con FETCH de MesaExamen y Presidente)
+            
             List<DetalleMesaExamen> detalles = detalleMesaExamenRepository.findByMateriaIdWithDetails(idMateria);
 
-            // 4. Mapear a DTO con lógica de habilitación
+            
             return detalles.stream().map(detalle -> {
                 com.sysacad.backend.dto.mesa_examen.MesaExamenDisponibleDTO dto = new com.sysacad.backend.dto.mesa_examen.MesaExamenDisponibleDTO();
                 
@@ -150,7 +150,7 @@ public class MesaExamenService {
                 dto.setHora(detalle.getHoraExamen());
                 dto.setPresidente(detalle.getPresidente() != null ? detalle.getPresidente().getNombre() + " " + detalle.getPresidente().getApellido() : "A definir");
                 
-                // Lógica de habilitación
+                
                 boolean inscripcionExistente = inscripcionExamenRepository.findByUsuarioIdAndDetalleMesaExamenId(idAlumno, detalle.getId()).isPresent();
                  
                  if (aproboFinal || promociono) {

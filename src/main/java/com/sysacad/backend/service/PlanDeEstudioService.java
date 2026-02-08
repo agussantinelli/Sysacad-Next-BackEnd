@@ -30,7 +30,7 @@ public class PlanDeEstudioService {
 
     @Transactional
     public PlanDeEstudio crearPlanDeEstudio(PlanDeEstudio plan) {
-        // Validación: Verificar que la carrera padre exista antes de crear el plan
+        
         if (!carreraRepository.existsById(plan.getId().getIdCarrera())) {
              throw new RuntimeException("No se puede crear el plan: La carrera especificada no existe.");
         }
@@ -50,7 +50,7 @@ public class PlanDeEstudioService {
 
     @Transactional
     public void agregarMateriaAPlan(PlanMateria planMateria) {
-        // Validación: Verificar que el plan de estudios exista
+        
         PlanDeEstudio.PlanId planId = new PlanDeEstudio.PlanId(
                 planMateria.getId().getIdCarrera(),
                 planMateria.getId().getNroPlan());

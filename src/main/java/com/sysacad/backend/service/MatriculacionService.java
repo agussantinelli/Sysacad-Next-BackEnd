@@ -54,7 +54,7 @@ public class MatriculacionService {
         Materia materia = materiaRepository.findById(idMateria)
                 .orElseThrow(() -> new ResourceNotFoundException("Materia no encontrada"));
 
-        // Obtener historial de Cursadas
+        
         var todasCursadas = inscripcionCursadoRepository.findByUsuarioId(alumno.getId());
         List<com.sysacad.backend.dto.historial.DetalleCursadaDTO> cursadasDTO = todasCursadas.stream()
                 .filter(ic -> ic.getMateria().getId().equals(idMateria))
@@ -69,7 +69,7 @@ public class MatriculacionService {
                 ))
                 .collect(java.util.stream.Collectors.toList());
 
-        // Obtener historial de Exámenes
+        
         var todosExamenes = inscripcionExamenRepository.findByUsuarioId(alumno.getId());
         List<com.sysacad.backend.dto.historial.DetalleFinalDTO> finalesDTO = todosExamenes.stream()
                 .filter(ie -> ie.getDetalleMesaExamen().getMateria().getId().equals(idMateria))
@@ -110,7 +110,7 @@ public class MatriculacionService {
         matricula.setEstado("ACTIVO");
         Matriculacion guardada = matriculacionRepository.save(matricula);
         
-        // Procesar equivalencias automáticas
+        
         try {
             equivalenciaService.procesarEquivalencias(alumno, guardada);
         } catch (Exception e) {
@@ -127,22 +127,22 @@ public class MatriculacionService {
 
     @Transactional(readOnly = true)
     public List<CarreraMateriasDTO> obtenerMateriasPorCarreraDelAlumno(String legajo) {
-        // Obtener usuario real
+        
         Usuario alumno = usuarioRepository.findByLegajo(legajo)
                 .orElseThrow(() -> new ResourceNotFoundException("Alumno no encontrado con legajo: " + legajo));
 
-        // Obtener inscripciones (Matriculacion - Matriculación en carreras)
+        
         List<Matriculacion> matriculaciones = matriculacionRepository.findByIdIdUsuario(alumno.getId());
         List<CarreraMateriasDTO> resultado = new ArrayList<>();
 
-        // Pre-cargar el historial académico completo (NUEVO SISTEMA)
+        
         var cursadas = inscripcionCursadoRepository.findByUsuarioId(alumno.getId());
         var examenes = inscripcionExamenRepository.findByUsuarioId(alumno.getId());
 
-        // Construir mapa de ESTADO por Materia ID
+        
         Map<UUID, EstadoMateria> mapaEstadoMaterias = construirMapaEstadoMaterias(cursadas, examenes);
 
-        // Iterar sobre cada carrera
+        
         for (Matriculacion matricula : matriculaciones) {
             PlanDeEstudio plan = matricula.getPlan();
 
@@ -159,7 +159,7 @@ public class MatriculacionService {
 
                 String nombrePlan = plan.getNombre();
 
-                // Obtener las materias del plan
+                
                 List<PlanMateria> planMaterias = plan.getPlanMaterias();
 
                 List<EstudianteMateriaDTO> materiasDTO = new ArrayList<>();
@@ -167,13 +167,13 @@ public class MatriculacionService {
                 for (PlanMateria pm : planMaterias) {
                     Materia materia = pm.getMateria();
 
-                    // Obtener estado actual
+                    
                     EstadoMateria estadoActual = mapaEstadoMaterias.getOrDefault(materia.getId(),
                             new EstadoMateria("PENDIENTE", "-", false));
 
-                    // Verificar correlativas para saber si se puede inscribir
+                    
                     boolean sePuedeInscribir = false;
-                    // Solo si está PENDIENTE o LIBRE verificamos si puede cursar
+                    
                     if (estadoActual.estado.equals("PENDIENTE") || estadoActual.estado.equals("LIBRE")) {
                         sePuedeInscribir = verificarCorrelativas(materia, mapaEstadoMaterias, plan);
                     }
@@ -198,7 +198,7 @@ public class MatriculacionService {
                     materiasDTO.add(dto);
                 }
 
-                // Ordenar por nivel y luego nombre
+                
                 materiasDTO.sort(Comparator.comparing(EstudianteMateriaDTO::getNivel)
                         .thenComparing(EstudianteMateriaDTO::getNombre));
 
@@ -209,7 +209,7 @@ public class MatriculacionService {
         return resultado;
     }
 
-    // Helpers de Lógica de Negocio 
+    
 
     private Map<UUID, EstadoMateria> construirMapaEstadoMaterias(
             List<com.sysacad.backend.modelo.InscripcionCursado> cursadas,
@@ -217,10 +217,10 @@ public class MatriculacionService {
 
         Map<UUID, EstadoMateria> mapa = new HashMap<>();
 
-        // Procesar Cursadas
+        
         for (com.sysacad.backend.modelo.InscripcionCursado cur : cursadas) {
             String estadoStr = cur.getEstado().toString();
-            // CURSANDO, REGULAR, PROMOCIONADO, LIBRE, APROBADO
+            
             String notaStr = cur.getNotaFinal() != null ? cur.getNotaFinal().toString() : "-";
 
             String estadoFinal = estadoStr;
@@ -228,26 +228,26 @@ public class MatriculacionService {
                 estadoFinal = "APROBADA";
             }
 
-            mapa.put(cur.getMateria().getId(), new EstadoMateria(estadoFinal, notaStr, false)); // Default false
+            mapa.put(cur.getMateria().getId(), new EstadoMateria(estadoFinal, notaStr, false)); 
         }
 
-        // Procesar Exámenes (Sobreescribe si aprobó final, O indica pendiente)
+        
         for (com.sysacad.backend.modelo.InscripcionExamen ex : examenes) {
             UUID materiaId = ex.getDetalleMesaExamen().getMateria().getId();
             
             EstadoMateria estadoActual = mapa.getOrDefault(materiaId, new EstadoMateria("PENDIENTE", "-", false));
             
             if (ex.getEstado() == com.sysacad.backend.modelo.enums.EstadoExamen.APROBADO) {
-                // Aprobó final -> APROBADA
+                
                 estadoActual.estado = "APROBADA";
                 estadoActual.nota = ex.getNota() != null ? ex.getNota().toString() : "-";
-                // Una vez aprobada, no deberia tener pendiente (en teoria), pero si tuviera otra inscripcion futura, quizas. 
-                // Pero priorizamos APROBADA.
+                
+                
                 estadoActual.tieneInscripcionPendiente = false;
                 mapa.put(materiaId, estadoActual);
             } else if (ex.getEstado() == com.sysacad.backend.modelo.enums.EstadoExamen.PENDIENTE) {
-                // Hay una inscripcion PENDIENTE.
-                // Si ya estaba APROBADA, mantenemos APROBADA. Si no, marcamos el flag.
+                
+                
                 if (!estadoActual.estado.equals("APROBADA")) {
                     estadoActual.tieneInscripcionPendiente = true;
                      mapa.put(materiaId, estadoActual);
@@ -271,16 +271,16 @@ public class MatriculacionService {
             Materia matCorr = correlatividad.getCorrelativa();
             EstadoMateria estadoCorr = historial.get(matCorr.getId());
 
-            // Check if status exists
+            
             if(estadoCorr == null) return false;
 
-            boolean aprobado = estadoCorr.estado.equals("APROBADA") || estadoCorr.estado.equals("PROMOCIONADO"); // APROBADA covers PROMOCIONADO usually but checking both
+            boolean aprobado = estadoCorr.estado.equals("APROBADA") || estadoCorr.estado.equals("PROMOCIONADO"); 
             boolean regular = estadoCorr.estado.equals("REGULAR") || aprobado;
 
             if(correlatividad.getTipo() == com.sysacad.backend.modelo.enums.TipoCorrelatividad.REGULAR) {
                 if(!regular) return false;
             } else {
-                // PROMOCIONADA
+                
                 if(!aprobado) return false;
             }
         }
@@ -298,7 +298,7 @@ public class MatriculacionService {
             this.tieneInscripcionPendiente = tieneInscripcionPendiente;
         }
 
-        // Constructor compatibilidad
+        
         public EstadoMateria(String estado, String nota) {
             this(estado, nota, false);
         }

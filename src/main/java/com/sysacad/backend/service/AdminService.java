@@ -36,7 +36,7 @@ public class AdminService {
     public List<AdminInscripcionDTO> obtenerTodasInscripciones() {
         List<AdminInscripcionDTO> resultado = new ArrayList<>();
 
-        // Cursadas
+        
         List<InscripcionCursado> cursadas = inscripcionCursadoRepository.findAll();
         resultado.addAll(cursadas.stream().map(i -> new AdminInscripcionDTO(
                 i.getId(),
@@ -52,7 +52,7 @@ public class AdminService {
                 i.getEstado().toString()
         )).collect(Collectors.toList()));
 
-        // Examenes
+        
         List<InscripcionExamen> examenes = inscripcionExamenRepository.findAll();
         resultado.addAll(examenes.stream().map(i -> new AdminInscripcionDTO(
                 i.getId(),
@@ -68,7 +68,7 @@ public class AdminService {
                 i.getEstado().toString()
         )).collect(Collectors.toList()));
 
-        // Ordenar por fecha descendente
+        
         resultado.sort(Comparator.comparing(AdminInscripcionDTO::getFechaInscripcion).reversed());
 
         return resultado;
@@ -78,7 +78,7 @@ public class AdminService {
     public AdminEstadisticasDTO obtenerEstadisticas(Integer anio, UUID facultadId, UUID carreraId) {
         AdminEstadisticasDTO dto = new AdminEstadisticasDTO();
 
-        // Cursadas
+        
         dto.setCantidadTotalAlumnos(inscripcionCursadoRepository.countAlumnosAdmin(anio, facultadId, carreraId, null));
         dto.setCantidadPromocionados(inscripcionCursadoRepository.countAlumnosAdmin(anio, facultadId, carreraId, EstadoCursada.PROMOCIONADO));
         dto.setCantidadRegulares(inscripcionCursadoRepository.countAlumnosAdmin(anio, facultadId, carreraId, EstadoCursada.REGULAR));
@@ -87,7 +87,7 @@ public class AdminService {
         Double promedio = inscripcionCursadoRepository.calculateAverageGradeAdmin(anio, facultadId, carreraId);
         dto.setNotaPromedio(promedio != null ? BigDecimal.valueOf(promedio) : BigDecimal.ZERO);
 
-        // Examenes
+        
         dto.setCantidadTotalInscriptosExamen(inscripcionExamenRepository.countExamenesAdmin(anio, facultadId, carreraId, null));
         dto.setCantidadAprobadosExamen(inscripcionExamenRepository.countExamenesAdmin(anio, facultadId, carreraId, EstadoExamen.APROBADO));
         dto.setCantidadDesaprobadosExamen(inscripcionExamenRepository.countExamenesAdmin(anio, facultadId, carreraId, EstadoExamen.DESAPROBADO));

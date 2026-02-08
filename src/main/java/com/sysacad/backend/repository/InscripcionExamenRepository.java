@@ -33,14 +33,14 @@ public interface InscripcionExamenRepository extends JpaRepository<InscripcionEx
 
     long countByDetalleMesaExamenIdAndEstado(DetalleMesaExamen.DetalleId detalleId, com.sysacad.backend.modelo.enums.EstadoExamen estado);
 
-    // Estadísticas
+    
     @org.springframework.data.jpa.repository.Query("SELECT COUNT(i) FROM InscripcionExamen i JOIN i.detalleMesaExamen d LEFT JOIN d.auxiliares a WHERE (d.presidente.id = :profesorId OR a.id = :profesorId) AND (:anio IS NULL OR YEAR(d.diaExamen) = :anio)")
     long countExamenesByProfesor(@org.springframework.data.repository.query.Param("profesorId") UUID profesorId, @org.springframework.data.repository.query.Param("anio") Integer anio);
 
     @org.springframework.data.jpa.repository.Query("SELECT COUNT(i) FROM InscripcionExamen i JOIN i.detalleMesaExamen d LEFT JOIN d.auxiliares a WHERE (d.presidente.id = :profesorId OR a.id = :profesorId) AND i.estado = :estado AND (:anio IS NULL OR YEAR(d.diaExamen) = :anio)")
     long countExamenesByProfesorAndEstado(@org.springframework.data.repository.query.Param("profesorId") UUID profesorId, @org.springframework.data.repository.query.Param("anio") Integer anio, @org.springframework.data.repository.query.Param("estado") com.sysacad.backend.modelo.enums.EstadoExamen estado);
 
-    // Estadísticas Admin
+    
     @org.springframework.data.jpa.repository.Query("SELECT COUNT(i) FROM InscripcionExamen i JOIN i.detalleMesaExamen d " +
             "WHERE (:anio IS NULL OR YEAR(d.diaExamen) = :anio) " +
             "AND (:facultadId IS NULL OR EXISTS (SELECT 1 FROM PlanMateria pm JOIN pm.plan p JOIN p.carrera car JOIN car.facultades f WHERE pm.materia.id = d.materia.id AND f.id = :facultadId)) " +
@@ -51,7 +51,7 @@ public interface InscripcionExamenRepository extends JpaRepository<InscripcionEx
                             @org.springframework.data.repository.query.Param("carreraId") UUID carreraId,
                             @org.springframework.data.repository.query.Param("estado") com.sysacad.backend.modelo.enums.EstadoExamen estado);
 
-    // Estadísticas por Materia
+    
     @org.springframework.data.jpa.repository.Query("SELECT COUNT(i) FROM InscripcionExamen i JOIN i.detalleMesaExamen d LEFT JOIN d.auxiliares a WHERE (d.presidente.id = :profesorId OR a.id = :profesorId) AND d.materia.id = :materiaId AND (:anio IS NULL OR YEAR(d.diaExamen) = :anio)")
     long countExamenesByProfesorAndMateria(@org.springframework.data.repository.query.Param("profesorId") UUID profesorId, @org.springframework.data.repository.query.Param("materiaId") UUID materiaId, @org.springframework.data.repository.query.Param("anio") Integer anio);
 

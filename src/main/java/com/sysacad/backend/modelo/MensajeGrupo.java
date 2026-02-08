@@ -20,7 +20,7 @@ public class MensajeGrupo {
 
     @ManyToOne
     @JoinColumn(name = "id_usuario", nullable = false)
-    private Usuario usuario; // Remitente del Mensaje
+    private Usuario usuario; 
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String contenido;

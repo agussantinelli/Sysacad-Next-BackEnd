@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class AdminEstadisticasDTO extends ProfesorEstadisticasDTO {
-    // Hereda todos los campos de estadisticas de profesor
-    // Se utilizará para devolver las estadísticas generales filtradas
+    
+    
 }

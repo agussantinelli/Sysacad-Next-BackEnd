@@ -33,7 +33,7 @@ public class AvisoController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<AvisoResponse> publicarAviso(@RequestBody AvisoRequest request) {
         Aviso aviso = avisoMapper.toEntity(request);
-        // Si el request trae estado (ACTIVO u OCULTO), el mapper lo pasa. El servicio ahora lo respetará.
+        
         Aviso nuevo = avisoService.publicarAviso(aviso);
         return new ResponseEntity<>(avisoMapper.toDTO(nuevo), HttpStatus.CREATED);
     }
@@ -50,10 +50,10 @@ public class AvisoController {
     public ResponseEntity<List<AvisoResponse>> obtenerUltimosAvisos(org.springframework.security.core.Authentication authentication) {
         if (authentication != null && authentication.isAuthenticated()) {
             String username = authentication.getName();
-            // Podríamos optimizar no buscando el usuario 2 veces si el servicio aceptara nombre, pero el ID es más seguro
-            // Sin embargo, para no romper encapsulamiento de "quien es el usuario actual", lo buscamos acá
-            // O mejor aún, el servicio ya tiene método para buscar usuario, pero el controller ya lo hacía en marcarComoLeido
-            // Reutilizamos lógica de búsqueda
+            
+            
+            
+            
             return usuarioRepository.findByLegajoOrMail(username, username)
                     .map(usuario -> ResponseEntity.ok(avisoService.obtenerUltimosAvisosParaUsuario(usuario.getId())))
                     .orElse(ResponseEntity.ok(avisoMapper.toDTOs(avisoService.obtenerUltimosAvisos())));

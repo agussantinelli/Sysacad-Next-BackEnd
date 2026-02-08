@@ -9,8 +9,8 @@ import java.util.UUID;
 @NoArgsConstructor
 public class MesaRequest {
     private UUID idMateria;
-    private String turno; // Ej: "Febrero", "Julio"
+    private String turno; 
     private LocalDateTime fechaInicio;
-    private LocalDateTime fechaFin; // Para inscripciones
+    private LocalDateTime fechaFin; 
     private LocalDateTime fechaExamen;
 }

@@ -123,7 +123,7 @@ public class MateriaService {
 
         if (isAdmin) return;
 
-        String legajoUsuario = auth.getName(); // Asumiendo que el principal es el legajo
+        String legajoUsuario = auth.getName(); 
         Usuario profesor = usuarioRepository.findByLegajo(legajoUsuario)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario autenticado no encontrado en base de datos"));
 

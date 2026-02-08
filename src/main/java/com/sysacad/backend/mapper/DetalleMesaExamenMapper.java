@@ -22,7 +22,7 @@ public interface DetalleMesaExamenMapper {
     @Mapping(expression = "java(detalle.getPresidente() != null ? detalle.getPresidente().getNombre() + \" \" + detalle.getPresidente().getApellido() : null)", target = "nombrePresidente")
     DetalleMesaExamenResponse toDTO(DetalleMesaExamen detalle);
 
-    @Mapping(target = "id", ignore = true) // Se construye compuesto
+    @Mapping(target = "id", ignore = true) 
     @Mapping(target = "mesaExamen", ignore = true)
     @Mapping(target = "materia", ignore = true)
     @Mapping(target = "presidente", ignore = true)

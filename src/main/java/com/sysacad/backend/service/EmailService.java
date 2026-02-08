@@ -58,7 +58,7 @@ public class EmailService implements IEmailService {
             helper.setSubject(subject);
             helper.setText(htmlContent, true);
 
-            // Adjuntar logo como recurso incrustado
+            
             helper.addInline("logoUtn", new ClassPathResource("img/logo_utn.png"));
 
             emailSender.send(mimeMessage);

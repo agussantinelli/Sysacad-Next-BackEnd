@@ -22,16 +22,16 @@ public class FileStorageService {
         }
 
         try {
-            // Asegurar que el directorio existe
+            
             Path directorioPath = Paths.get(DIRECTORIO_PERFILES);
             if (!Files.exists(directorioPath)) {
                 Files.createDirectories(directorioPath);
             }
 
-            // Limpieza: Borrar foto anterior si existe para no llenar el disco
+            
             borrarArchivo(rutaFotoAnterior);
 
-            // Generar NOMBRE ÚNICO: {Identificador}-{Hash}.ext
+            
             String nombreOriginal = archivo.getOriginalFilename();
             String extension = ".jpg";
             if (nombreOriginal != null && nombreOriginal.lastIndexOf(".") > 0) {
@@ -42,7 +42,7 @@ public class FileStorageService {
             String nombreArchivo = identificador + "-" + hash + extension;
             Path rutaDestino = directorioPath.resolve(nombreArchivo);
 
-            // Guardar archivo (Reemplaza si existe casualmente el mismo nombre)
+            
             Files.copy(archivo.getInputStream(), rutaDestino, StandardCopyOption.REPLACE_EXISTING);
 
             return rutaDestino.toString();
@@ -57,7 +57,7 @@ public class FileStorageService {
 
         try {
             Path path = Paths.get(ruta);
-            // PROTECCIÓN: No borrar imágenes que provienen del seeder (prefijo "seeded/" en path relativo o nombre "seeded-")
+            
             if (ruta.contains("seeded-") || ruta.contains("seeded/")) {
                 System.out.println(">> FileStorageService: OMITIDO borrado de imagen protegida: " + ruta);
                 return;

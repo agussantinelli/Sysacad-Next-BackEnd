@@ -39,11 +39,11 @@ public class EquivalenciaService {
         UUID idCarreraDestino = nuevaMatricula.getPlan().getCarrera().getId();
         Integer nroPlanDestino = nuevaMatricula.getPlan().getId().getNroPlan();
 
-        // Obtener todas las materias APROBADAS por el alumno en CUALQUIER plan
-        // AGREGAR LA LOGICA DE PROMOCIONES EN CURSADA -> FUNDAMENTAL
+        
+        
         List<InscripcionExamen> finalesAprobados = inscripcionExamenRepository.findByUsuarioId(alumno.getId());
                 
-        // Buscar reglas de equivalencia para este Plan de Destino
+        
         List<Equivalencia> reglasDestino = equivalenciaRepository.findByIdCarreraDestinoAndNroPlanDestino(
                 idCarreraDestino, nroPlanDestino);
 
@@ -51,7 +51,7 @@ public class EquivalenciaService {
             if (examen.getEstado() != EstadoExamen.APROBADO) continue;
 
             UUID idMateriaAprobada;
-            // Verificar si es un examen regular (con detalle) o una equivalencia previa (con materia directa)
+            
             if (examen.getDetalleMesaExamen() != null) {
                 idMateriaAprobada = examen.getDetalleMesaExamen().getMateria().getId();
             } else if (examen.getMateria() != null) {
@@ -62,9 +62,9 @@ public class EquivalenciaService {
 
             for (Equivalencia regla : reglasDestino) {
                 if (regla.getIdMateriaOrigen().equals(idMateriaAprobada)) {
-                    // Match encontrado: Materia Aprobada == Materia Origen de la Regla
                     
-                    // Verificar si ya tiene la materia destino aprobada
+                    
+                    
                     boolean yaAprobada = tieneMateriaAprobada(alumno.getId(), regla.getIdMateriaDestino());
                     
                     if (!yaAprobada) {
@@ -76,7 +76,7 @@ public class EquivalenciaService {
     }
 
     private boolean tieneMateriaAprobada(UUID idAlumno, UUID idMateria) {
-        // Buscar en examenes aprobados o equivalencias
+        
          List<InscripcionExamen> examenes = inscripcionExamenRepository.findByUsuarioId(idAlumno);
          return examenes.stream().anyMatch(e -> {
              UUID matId = null;
@@ -95,7 +95,7 @@ public class EquivalenciaService {
         equiv.setEstado(EstadoExamen.EQUIVALENCIA);
         equiv.setNota(null); 
         
-        // Asignación directa de materia (gracias a la modificación en InscripcionExamen)
+        
         Materia materiaDestino = materiaRepository.findById(regla.getIdMateriaDestino())
             .orElseThrow(() -> new RuntimeException("Materia destino de equivalencia no encontrada"));
             

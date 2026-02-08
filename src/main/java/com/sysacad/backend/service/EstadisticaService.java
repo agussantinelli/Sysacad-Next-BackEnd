@@ -50,7 +50,7 @@ public class EstadisticaService {
     public Map<String, Long> obtenerResumenGeneral() {
         Map<String, Long> estadisticas = new HashMap<>();
 
-        // Conteos básicos
+        
         estadisticas.put("total_alumnos", (long) usuarioRepository.findByRol(RolUsuario.ESTUDIANTE).size());
         estadisticas.put("total_profesores", (long) usuarioRepository.findByRol(RolUsuario.PROFESOR).size());
         estadisticas.put("total_carreras", carreraRepository.count());

@@ -54,36 +54,36 @@ public class InscripcionCursadoService {
 
     public InscripcionCursadoResponse inscribir(InscripcionCursadoRequest request) {
 
-        // Validar Usuario
+        
         Usuario alumno = usuarioRepository.findById(request.getIdUsuario())
                 .orElseThrow(() -> new ResourceNotFoundException("Alumno no encontrado con ID: " + request.getIdUsuario()));
 
-        // Validar Materia
+        
         Materia materia = materiaRepository.findById(request.getIdMateria())
                 .orElseThrow(() -> new ResourceNotFoundException("Materia no encontrada con ID: " + request.getIdMateria()));
 
-        // Validar Comision
+        
         Comision comision = comisionRepository.findById(request.getIdComision())
                 .orElseThrow(() -> new ResourceNotFoundException("Comisión no encontrada con ID: " + request.getIdComision()));
 
-        // Validar que la Comisión dicte esa materia
+        
         boolean dictaMateria = comision.getMaterias().stream()
                 .anyMatch(m -> m.getId().equals(materia.getId()));
         if (!dictaMateria) {
             throw new BusinessLogicException("La comisión seleccionada no dicta la materia indicada.");
         }
 
-        // Validar si ya está inscripto
+        
         if (inscripcionCursadoRepository.findByUsuarioIdAndMateriaId(alumno.getId(), materia.getId()).isPresent()) {
             throw new BusinessLogicException("El alumno ya está inscripto a cursar esta materia.");
         }
 
-        // Validar Correlativas
+        
         if (!correlatividadService.puedeCursar(alumno.getId(), materia.getId())) {
             throw new BusinessLogicException("El alumno no cumple con las correlativas necesarias para cursar esta materia.");
         }
 
-        // Validar Superposición Horaria
+        
         List<InscripcionCursado> cursadasActivas = inscripcionCursadoRepository.findByUsuarioIdAndEstado(alumno.getId(), com.sysacad.backend.modelo.enums.EstadoCursada.CURSANDO);
         
         List<HorarioCursado> horariosNuevaComision = horarioCursadoRepository.findByIdIdComisionAndIdIdMateria(comision.getId(), materia.getId());
@@ -96,17 +96,17 @@ public class InscripcionCursadoService {
             }
         }
 
-        // Finalmente Crea la Inscripción
+        
         InscripcionCursado insc = new InscripcionCursado();
         insc.setUsuario(alumno);
         insc.setMateria(materia);
         insc.setComision(comision);
         insc.setFechaInscripcion(LocalDateTime.now());
-        insc.setEstado(com.sysacad.backend.modelo.enums.EstadoCursada.CURSANDO); // Estado inicial
+        insc.setEstado(com.sysacad.backend.modelo.enums.EstadoCursada.CURSANDO); 
 
         insc = inscripcionCursadoRepository.save(insc);
 
-        // Agregar automáticamente al grupo de la comisión-materia
+        
         grupoRepository.findByIdComisionAndIdMateria(comision.getId(), materia.getId())
                 .ifPresent(grupo -> {
                     grupoService.agregarMiembro(
@@ -130,7 +130,7 @@ public class InscripcionCursadoService {
         InscripcionCursado insc = inscripcionCursadoRepository.findById(idInscripcion)
                 .orElseThrow(() -> new ResourceNotFoundException("Inscripción no encontrada con ID: " + idInscripcion));
 
-        // Buscar o crear InstanciaEvaluacion
+        
         String nombreInstancia = request.getDescripcion().trim();
         InstanciaEvaluacion instancia = instanciaEvaluacionRepository.findByNombre(nombreInstancia)
                 .orElseGet(() -> {
@@ -155,9 +155,9 @@ public class InscripcionCursadoService {
         InscripcionCursado insc = inscripcionCursadoRepository.findById(idInscripcion)
                 .orElseThrow(() -> new ResourceNotFoundException("Inscripción no encontrada con ID: " + idInscripcion));
 
-        // Validaciones Reglas de Negocio
+        
         if (estado == com.sysacad.backend.modelo.enums.EstadoCursada.REGULAR) {
-            // Entre 4 (inclusive) y 6 (exclusive)
+            
             if (notaFinal.compareTo(new java.math.BigDecimal("4.00")) < 0 || notaFinal.compareTo(new java.math.BigDecimal("6.00")) >= 0) {
                  throw new BusinessLogicException("Para regularizar, la nota debe estar entre 4.00 (inclusize) y 6.00 (exclusive)");
             }
@@ -194,7 +194,7 @@ public class InscripcionCursadoService {
     private com.sysacad.backend.repository.AsignacionMateriaRepository asignacionMateriaRepository;
 
     public List<com.sysacad.backend.dto.inscripcion_cursado.ComisionDisponibleDTO> obtenerOpcionesInscripcion(UUID idMateria, UUID idUsuario) {
-        // 1. Validaciones básicas
+        
         Materia materia = materiaRepository.findById(idMateria)
                 .orElseThrow(() -> new ResourceNotFoundException("Materia no encontrada"));
         
@@ -209,29 +209,29 @@ public class InscripcionCursadoService {
              throw new BusinessLogicException("El alumno ya está inscripto en esta materia.");
         }
 
-        // 2. Buscar comisiones que dicten la materia
+        
         List<Comision> comisiones = comisionRepository.findByMateriasId(idMateria);
         
         List<com.sysacad.backend.dto.inscripcion_cursado.ComisionDisponibleDTO> opciones = new java.util.ArrayList<>();
 
-        // 3. Obtener cursadas activas el alumno para validar superposición
+        
         List<InscripcionCursado> cursadasActivas = inscripcionCursadoRepository.findByUsuarioIdAndEstado(idUsuario, com.sysacad.backend.modelo.enums.EstadoCursada.CURSANDO);
 
-        // 4. Para cada comisión, construir el DTO y validar reglas
+        
         for (Comision c : comisiones) {
             com.sysacad.backend.dto.inscripcion_cursado.ComisionDisponibleDTO dto = new com.sysacad.backend.dto.inscripcion_cursado.ComisionDisponibleDTO();
             dto.setIdComision(c.getId());
             dto.setNombreComision(c.getNombre());
             dto.setTurno(c.getTurno());
             
-            // Aula
+            
             if (c.getSalon() != null) {
                 dto.setUbicacion(c.getSalon().getNombre() + " (" + c.getSalon().getFacultad().getCiudad() + ")");
             } else {
                 dto.setUbicacion("Sin asignar");
             }
 
-            // Horarios ESPECIFICOS de la materia en esta comisión
+            
             List<HorarioCursado> horariosMateria = horarioCursadoRepository.findByIdIdComisionAndIdIdMateria(c.getId(), idMateria);
             
             List<String> horariosTexto = horariosMateria.stream()
@@ -239,7 +239,7 @@ public class InscripcionCursadoService {
                     .collect(java.util.stream.Collectors.toList());
             dto.setHorarios(horariosTexto);
 
-            // Profesores ESPECIFICOS de la materia en esta comisión
+            
             List<String> profesoresNombres = new java.util.ArrayList<>();
             if (c.getProfesores() != null) {
                 for (Usuario p : c.getProfesores()) {
@@ -255,7 +255,7 @@ public class InscripcionCursadoService {
 
 
 
-            // VALIDACIÓN DE SUPERPOSICIÓN
+            
             boolean superposicion = false;
             String motivo = "Disponible para inscripción";
 
@@ -290,7 +290,7 @@ public class InscripcionCursadoService {
         for (HorarioCursado hNuevo : horariosNuevo) {
             for (HorarioCursado hActivo : horariosActivo) {
                 if (hNuevo.getId().getDia().equals(hActivo.getId().getDia())) {
-                    // (StartA < EndB) and (EndA > StartB)
+                    
                     if (hNuevo.getId().getHoraDesde().isBefore(hActivo.getHoraHasta()) &&
                         hNuevo.getHoraHasta().isAfter(hActivo.getId().getHoraDesde())) {
                         return true;
