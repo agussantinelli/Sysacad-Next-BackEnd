@@ -253,6 +253,7 @@ CREATE TABLE inscripciones_cursado (
     estado VARCHAR(50) NOT NULL,
     nota_final DECIMAL(4, 2),
     fecha_promocion DATE,
+    fecha_regularidad DATE,
     tomo VARCHAR(20),
     folio VARCHAR(20),
     CONSTRAINT fk_ic_usuario FOREIGN KEY (id_usuario) REFERENCES usuarios(id),
