@@ -58,22 +58,20 @@
 
 <h2>🎯 Objetivo</h2>
 
-<p>Proveer una API RESTful robusta, segura y escalable que actúe como el cerebro de <strong>Sysacad Next</strong>, gestionando la lógica de negocio compleja (correlatividades, actas, inscripciones, auditoría) y asegurando la integridad de los datos académicos.</p>
+<p>Proveer una API RESTful robusta, segura y escalable que actúe como el cerebro de <strong>Sysacad Next</strong>. El sistema está diseñado para resolver la lógica de negocio compleja de una institución académica, garantizando la <strong>concurrencia y consistencia de datos en tiempo real</strong> mediante validaciones estrictas de correlatividades, superposición de horarios y cupos operativos.</p>
 
-> **Nota:** Este proyecto ha sido desarrollado mediante **ingeniería inversa**, analizando el sitio y flujos originales del sistema de la **FRRO (Facultad Regional Rosario) de la UTN** para replicar y mejorar la lógica de negocio. Para más detalles sobre las reglas deducidas, consulta las [Consideraciones del Negocio](docs/business_rules.md).
+> **Nota:** Este proyecto ha sido desarrollado mediante **ingeniería inversa**, analizando el flujos originales de la **FRRO (Facultad Regional Rosario) de la UTN** para replicar y mejorar su lógica de negocio. Para más detalles sobre las reglas deducidas, consulta las [Consideraciones del Negocio](docs/business_rules.md).
 
 <h2>🧠 Arquitectura y Diseño</h2>
 
 <p>Este backend está construido siguiendo principios de <strong>Clean Architecture</strong> y <strong>SOLID</strong>, priorizando la desacoplación y la testabilidad.</p>
 <ul>
-    <li><strong>Seguridad Stateless:</strong> Autenticación vía JWT (JSON Web Tokens) con Spring Security (v6+).</li>
-    <li><strong>Validación Robusta:</strong> Reglas de negocio forzadas en la capa de servicio (Domain Driven Design).</li>
-    <li><strong>Optimización (N+1):</strong> Uso estratégico de <code>JOIN FETCH</code> en JPQL y DTOs projections.</li>
+    <li><strong>Seguridad Stateless & Boot ID:</strong> Autenticación vía JWT con Spring Security (v6+). El sistema utiliza un <strong>Boot ID</strong> único generado en cada reinicio del servidor que invalida automáticamente todos los tokens previos, garantizando que no existan sesiones "huérfanas" tras una actualización de seguridad.</li>
+    <li><strong>Lógica de Notificaciones (Thymeleaf):</strong> Servicio de email integrado que automatiza la comunicación institucional (bienvenida, carga de notas, recuperación de cuenta) mediante plantillas HTML enriquecidas.</li>
     <li><strong>Validación Robusta:</strong> Reglas de negocio forzadas en la capa de servicio (Domain Driven Design).</li>
     <li><strong>Optimización (N+1):</strong> Uso estratégico de <code>JOIN FETCH</code> en JPQL y DTOs projections.</li>
     <li><strong>Manejo de Errores Global:</strong> <code>@ControllerAdvice</code> para respuestas JSON estandarizadas en excepciones.</li>
-    <li><strong>Email HTML Service:</strong> Integración con Thymeleaf para el envío de correos institucionales con diseño premium y CIDs.</li>
-    <li><strong>Session Invalidation (Boot ID):</strong> Mecanismo de seguridad que invalida todos los tokens JWT activos al reiniciar el servidor.</li>
+    <li><strong>Email HTML Service:</strong> Integración con Thymeleaf para el envío de correos con diseño premium y CIDs.</li>
 </ul>
 
 <hr>
@@ -127,9 +125,15 @@
             <td>Trazabilidad total: Matriculación, cursada/examen, historia académica y **Auditoría de emisión de certificados**.</td>
         </tr>
         <tr>
-            <td><strong>📧 Notificaciones y Seguridad</strong></td>
-            <td>-</td>
-            <td><strong>Emails Automáticos:</strong> Bienvenida, Notas parciales/finales, y Recuperación de Contraseña con tokens de 24h.</td>
+            <td><strong>📧 Notificaciones</strong></td>
+            <td><code>Service Layer</code></td>
+            <td><strong>Flujo Automatizado (Thymeleaf):</strong>
+                <ul>
+                    <li><strong>Bienvenida:</strong> Credenciales enviadas al alumno al ser dado de alta.</li>
+                    <li><strong>Calificaciones:</strong> Notificación instantánea tras la carga de notas de cursada o final.</li>
+                    <li><strong>Password Reset:</strong> Tokens de seguridad con expiración de 24hs.</li>
+                </ul>
+            </td>
         </tr>
     </tbody>
 </table>
