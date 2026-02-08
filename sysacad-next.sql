@@ -58,14 +58,6 @@ CREATE TABLE salones (
     CONSTRAINT fk_salon_facultad FOREIGN KEY (id_facultad) REFERENCES facultades_regionales(id)
 );
 
-CREATE TABLE sanciones (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    id_usuario UUID NOT NULL,
-    motivo TEXT NOT NULL,
-    fecha_inicio DATE NOT NULL,
-    fecha_fin DATE NULL,
-    CONSTRAINT fk_sancion_usuario FOREIGN KEY (id_usuario) REFERENCES usuarios(id)
-);
 
 CREATE TABLE avisos (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
