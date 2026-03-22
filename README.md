@@ -289,6 +289,24 @@
 
 <hr>
 
+<h2>📧 Sistema de Notificaciones Automáticas</h2>
+
+<p>Sysacad Next utiliza <strong>Thymeleaf</strong> como motor de plantillas para generar comunicaciones institucionales de alta calidad. El sistema dispara correos automáticos en los siguientes escenarios:</p>
+
+<ul>
+    <li><strong>🎉 Bienvenida al Sistema:</strong> Envío de credenciales de acceso (legajo y contraseña temporal) cuando se registra un nuevo usuario.</li>
+    <li><strong>🔑 Recuperación de Credenciales:</strong> Envío de tokens de seguridad con expiración para el restablecimiento de contraseñas.</li>
+    <li><strong>📝 Carga de Notas (Cursada):</strong> Notificación instantánea al alumno cuando un docente carga una nota de parcial o cursada.</li>
+    <li><strong>🎓 Calificación de Examen Final:</strong> Aviso automático tras la carga de la nota en un Acta de Examen.</li>
+    <li><strong>💬 Actividad en Grupos:</strong> Notificaciones sobre nuevos miembros o actividad destacada en los grupos de las comisiones.</li>
+</ul>
+
+<blockquote>
+    <strong>📌 Automatización:</strong> Todas las notificaciones se disparan en tiempo real tras eventos clave (alta de alumno, carga de nota, cierre de acta) a través de un <code>EmailService</code> asíncrono.
+</blockquote>
+
+<hr>
+
 <h2>📦 Estructura del Proyecto</h2>
 
 <pre><code>Sysacad-Next-BackEnd/
