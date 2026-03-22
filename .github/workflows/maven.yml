@@ -11,21 +11,6 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    services:
-      postgres:
-        image: postgres:latest
-        env:
-          POSTGRES_DB: sysacad_db
-          POSTGRES_PASSWORD: password
-          POSTGRES_USER: user
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
     steps:
     - uses: actions/checkout@v4
     
@@ -37,8 +22,4 @@ jobs:
         cache: maven
         
     - name: Run tests with Maven
-      env:
-        SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/sysacad_db
-        SPRING_DATASOURCE_USERNAME: user
-        SPRING_DATASOURCE_PASSWORD: password
       run: chmod +x mvnw && ./mvnw test
