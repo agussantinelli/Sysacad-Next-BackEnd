@@ -57,3 +57,4 @@ public void deberiaValidarCorrelatividades() {
 1.  **Aislamiento**: Cada test debe ser independiente. Usa `@BeforeEach` para resetear estados si es necesario.
 2.  **Validación de Excepciones**: Siempre prueba el "camino triste" (ej. `assertThrows` cuando una correlativa no está aprobada).
 3.  **Clean State**: Los tests de integración que escriban en la DB deben ser `@Transactional`.
+4.  **Maximizar Cobertura**: Por cada archivo testeable, se debe implementar la mayor cantidad de tests posibles, agotando todos los escenarios de lógica de negocio del componente.

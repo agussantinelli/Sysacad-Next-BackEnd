@@ -12,7 +12,7 @@ Para mantener la confiabilidad total y prevenir regresiones en el sistema acadé
 1.  **Regla del Uno**: Cada archivo `.java` en `service/` o `controller/` DEBE tener un archivo coincidente `Test.java` en `src/test/`.
 2.  **Ubicación**: Los archivos de prueba deben estar en `src/test/java/com/sysacad/backend/` replicando exactamente la estructura de paquetes del código fuente.
 3.  **Nombramiento**: Si la clase es `MateriaService.java`, el archivo de prueba DEBE ser `MateriaServiceTest.java`.
-4.  **Contenido**: El test debe cubrir al menos el camino feliz (success path) y los casos de borde conocidos (ej. validación de cupos, errores de correlatividad).
+4.  **Cobertura Máxima**: El test DEBE cubrir la mayor cantidad de casos posibles. No basta con el camino feliz; se deben incluir todos los flujos alternativos, validaciones de errores, casos de borde y combinaciones de estados (ej. cupos agotados, correlativas no cumplidas, superposiciones horarias).
 5.  **Creación/Modificación Simultánea**: 
     - Si se crea un Service o Controller, su Test DEBE crearse en el mismo paso.
     - Si se modifica la lógica, el Test DEBE actualizarse simultáneamente para reflejar los cambios. Jamás dejes tests desactualizados.
