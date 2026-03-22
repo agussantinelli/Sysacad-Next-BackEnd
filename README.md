@@ -95,8 +95,6 @@
 
 <hr>
 
-<hr>
-
 <h2>🗂️ Modelo de Dominio</h2>
 
 <p>La estructura de base de datos refleja la complejidad de una institución académica real:</p>
