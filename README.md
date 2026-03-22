@@ -70,92 +70,6 @@
 
 > **Nota:** Este proyecto ha sido desarrollado mediante **ingeniería inversa**, analizando el flujos originales de la **FRRO (Facultad Regional Rosario) de la UTN** para replicar y mejorar su lógica de negocio. Para más detalles sobre las reglas deducidas, consulta las [Consideraciones del Negocio](docs/business_rules.md).
 
-<h2>🧠 Arquitectura y Diseño</h2>
-
-<p>Este backend está construido bajo un enfoque de <strong>Separation of Concerns (SoC)</strong> y <strong>Clean Architecture</strong>, estructurado en capas bien definidas que facilitan la escalabilidad y el mantenimiento:</p>
-
-<ul>
-    <li><strong>Capa de Controladores (REST API):</strong> Entry points del sistema que manejan la comunicación HTTP y delegan la lógica a los servicios.</li>
-    <li><strong>Capa de Servicios (Lógica de Negocio):</strong> Actúa como el <em>Domain Guardian</em>, donde se procesan las reglas académicas complejas (correlatividades, agendas, validaciones).</li>
-    <li><strong>Capa de Datos (Persistencia):</strong> Implementada con <strong>Spring Data JPA</strong>, utilizando el patrón Repository para desacoplar el motor de base de datos de la lógica.</li>
-</ul>
-
-<h3>🛠️ Patrones y Decisiones Técnicas</h3>
-
-<ul>
-    <li><strong>Seguridad Stateless & Boot ID:</strong> Implementa un <strong>Boot ID</strong> (UUID generado al arranque) inyectado en los claims del JWT. Esto permite la invalidación masiva de tokens al reiniciar el servidor sin necesidad de base de datos de revocación.</li>
-    <li><strong>DTO-First & MapStruct:</strong> Uso exclusivo de DTOs para el intercambio de datos entre capas. <strong>MapStruct</strong> genera los mappers en tiempo de compilación, asegurando un rendimiento óptimo y tipado fuerte.</li>
-    <li><strong>Proyecciones de Datos:</strong> Uso estratégico de proyecciones e interfaces de JPA (<code>JOIN FETCH</code>) para mitigar el problema de N+1 consultas y reducir el <em>overhead</em> de red.</li>
-    <li><strong>Manejo de Errores Global:</strong> Centralizado mediante <code>@ControllerAdvice</code>, devolviendo respuestas estandarizadas y trazables para cualquier excepción del dominio.</li>
-    <li><strong>Transactional Integrity:</strong> Uso riguroso de <code>@Transactional</code> para asegurar la atomicidad en operaciones multi-entidad (ej. inscripción + actualización de cupo).</li>
-    <li><strong>Notificaciones con Thymeleaf:</strong> Motor de plantillas desacoplado para generar correos institucionales dinámicos con soporte para CIDs (imágenes embebidas).</li>
-    <li><strong>Auditoría de Certificados:</strong> Sistema de trazabilidad que registra cada emisión de certificados, asegurando un control sobre la generación de documentos oficiales.</li>
-    <li><strong>Validación Fail-Fast:</strong> Las reglas de negocio se validan preventivamente en la capa de servicio antes de cualquier persistencia, reduciendo estados inconsistentes en la DB.</li>
-</ul>
-
-<hr>
-
-<h2>🗂️ Modelo de Dominio</h2>
-
-<p>La estructura de base de datos refleja la complejidad de una institución académica real:</p>
-
-<table>
-    <thead>
-        <tr>
-            <th>Área</th>
-            <th>Entidades (Tablas)</th>
-            <th>Responsabilidad</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td><strong>🏢 Infraestructura</strong></td>
-            <td><code>facultades_regionales</code>, <code>salones</code></td>
-            <td>Sedes y aulas físicas. Raíz de la jerarquía (todo depende de una facultad).</td>
-        </tr>
-        <tr>
-            <td><strong>👤 Actores y Comunicación</strong></td>
-            <td><code>usuarios</code>, <code>avisos</code>, <code>avisos_personas</code>, <code>grupos</code>, <code>miembros_grupo</code>, <code>mensajes_grupo</code></td>
-            <td>Gestión de perfiles, roles, notificaciones con <strong>estado de lectura (visto)</strong> y <strong>chat grupal (mensajería)</strong>.</td>
-        </tr>
-        <tr>
-            <td><strong>📜 Jerarquía Académica</strong></td>
-            <td><code>carreras</code>, <code>planes_de_estudios</code></td>
-            <td>Definición estructural. Cadena de dependencia estricta: <strong>Facultad → Carrera → Plan</strong>.</td>
-        </tr>
-        <tr>
-            <td><strong>📚 Curricular</strong></td>
-            <td><code>materias</code>, <code>plan_materias</code>, <code>correlativas</code>, <code>equivalencias</code></td>
-            <td>Asignaturas con tipología (Básica/Específica/Compartida), gestión de Modalidad, <strong>Validación Estricta de Correlatividades (Regular/Promocionada, específicas por Plan) y visualización recursiva</strong>.</td>
-        </tr>
-        <tr>
-            <td><strong>📅 Gestión de Cursada</strong></td>
-            <td><code>comisiones</code>, <code>materias_comisiones</code>, <code>profesores_comisiones</code>, <code>asignaciones_materia</code>, <code>horarios_cursado</code>, <code>instancias_evaluacion</code></td>
-            <td>Oferta operativa anual/cuatrimestral. Soporta relación N:M, asignación de roles docentes y <strong>agenda semanal de cursado</strong>. Normalización de conceptos de evaluación.</td>
-        </tr>
-        <tr>
-            <td><strong>🗓️ Exámenes Finales</strong></td>
-            <td><code>mesas_examen</code>, <code>detalle_mesa_examen</code>, <code>inscripciones_examen</code></td>
-            <td>Gestión de turnos de examen (periodos), cronograma de fechas por materia e inscripciones de alumnos a mesas.</td>
-        </tr>
-        <tr>
-            <td><strong>📝 Ciclo del Alumno</strong></td>
-            <td><code>matriculaciones</code>, <code>inscripciones</code>, <code>calificaciones</code>, <code>solicitudes_certificado</code></td>
-            <td>Trazabilidad total: Matriculación, cursada/examen, historia académica y **Auditoría de emisión de certificados**.</td>
-        </tr>
-        <tr>
-            <td><strong>📧 Notificaciones</strong></td>
-            <td><code>Service Layer</code></td>
-            <td><strong>Flujo Automatizado (Thymeleaf):</strong>
-                <ul>
-                    <li><strong>Bienvenida:</strong> Credenciales enviadas al alumno al ser dado de alta.</li>
-                    <li><strong>Calificaciones:</strong> Notificación instantánea tras la carga de notas de cursada o final.</li>
-                    <li><strong>Password Reset:</strong> Tokens de seguridad con expiración de 24hs.</li>
-                </ul>
-            </td>
-        </tr>
-    </tbody>
-</table>
 <hr>
 
 <h2>🛠️ Stack Tecnológico</h2>
@@ -253,6 +167,95 @@
             <td>H2 Database</td>
             <td>Latest</td>
             <td>Base de datos en memoria para el entorno de test.</td>
+        </tr>
+    </tbody>
+</table>
+
+<hr>
+
+<h2>🧠 Arquitectura y Diseño</h2>
+
+<p>Este backend está construido bajo un enfoque de <strong>Separation of Concerns (SoC)</strong> y <strong>Clean Architecture</strong>, estructurado en capas bien definidas que facilitan la escalabilidad y el mantenimiento:</p>
+
+<ul>
+    <li><strong>Capa de Controladores (REST API):</strong> Entry points del sistema que manejan la comunicación HTTP y delegan la lógica a los servicios.</li>
+    <li><strong>Capa de Servicios (Lógica de Negocio):</strong> Actúa como el <em>Domain Guardian</em>, donde se procesan las reglas académicas complejas (correlatividades, agendas, validaciones).</li>
+    <li><strong>Capa de Datos (Persistencia):</strong> Implementada con <strong>Spring Data JPA</strong>, utilizando el patrón Repository para desacoplar el motor de base de datos de la lógica.</li>
+</ul>
+
+<h3>🛠️ Patrones y Decisiones Técnicas</h3>
+
+<ul>
+    <li><strong>Seguridad Stateless & Boot ID:</strong> Implementa un <strong>Boot ID</strong> (UUID generado al arranque) inyectado en los claims del JWT. Esto permite la invalidación masiva de tokens al reiniciar el servidor sin necesidad de base de datos de revocación.</li>
+    <li><strong>DTO-First & MapStruct:</strong> Uso exclusivo de DTOs para el intercambio de datos entre capas. <strong>MapStruct</strong> genera los mappers en tiempo de compilación, asegurando un rendimiento óptimo y tipado fuerte.</li>
+    <li><strong>Proyecciones de Datos:</strong> Uso estratégico de proyecciones e interfaces de JPA (<code>JOIN FETCH</code>) para mitigar el problema de N+1 consultas y reducir el <em>overhead</em> de red.</li>
+    <li><strong>Manejo de Errores Global:</strong> Centralizado mediante <code>@ControllerAdvice</code>, devolviendo respuestas estandarizadas y trazables para cualquier excepción del dominio.</li>
+    <li><strong>Transactional Integrity:</strong> Uso riguroso de <code>@Transactional</code> para asegurar la atomicidad en operaciones multi-entidad (ej. inscripción + actualización de cupo).</li>
+    <li><strong>Notificaciones con Thymeleaf:</strong> Motor de plantillas desacoplado para generar correos institucionales dinámicos con soporte para CIDs (imágenes embebidas).</li>
+    <li><strong>Auditoría de Certificados:</strong> Sistema de trazabilidad que registra cada emisión de certificados, asegurando un control sobre la generación de documentos oficiales.</li>
+    <li><strong>Validación Fail-Fast:</strong> Las reglas de negocio se validan preventivamente en la capa de servicio antes de cualquier persistencia, reduciendo estados inconsistentes en la DB.</li>
+</ul>
+
+<hr>
+
+<h2>🗂️ Modelo de Dominio</h2>
+
+<p>La estructura de base de datos refleja la complejidad de una institución académica real:</p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Área</th>
+            <th>Entidades (Tablas)</th>
+            <th>Responsabilidad</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>🏢 Infraestructura</strong></td>
+            <td><code>facultades_regionales</code>, <code>salones</code></td>
+            <td>Sedes y aulas físicas. Raíz de la jerarquía (todo depende de una facultad).</td>
+        </tr>
+        <tr>
+            <td><strong>👤 Actores y Comunicación</strong></td>
+            <td><code>usuarios</code>, <code>avisos</code>, <code>avisos_personas</code>, <code>grupos</code>, <code>miembros_grupo</code>, <code>mensajes_grupo</code></td>
+            <td>Gestión de perfiles, roles, notificaciones con <strong>estado de lectura (visto)</strong> y <strong>chat grupal (mensajería)</strong>.</td>
+        </tr>
+        <tr>
+            <td><strong>📜 Jerarquía Académica</strong></td>
+            <td><code>carreras</code>, <code>planes_de_estudios</code></td>
+            <td>Definición estructural. Cadena de dependencia estricta: <strong>Facultad → Carrera → Plan</strong>.</td>
+        </tr>
+        <tr>
+            <td><strong>📚 Curricular</strong></td>
+            <td><code>materias</code>, <code>plan_materias</code>, <code>correlativas</code>, <code>equivalencias</code></td>
+            <td>Asignaturas con tipología (Básica/Específica/Compartida), gestión de Modalidad, <strong>Validación Estricta de Correlatividades (Regular/Promocionada, específicas por Plan) y visualización recursiva</strong>.</td>
+        </tr>
+        <tr>
+            <td><strong>📅 Gestión de Cursada</strong></td>
+            <td><code>comisiones</code>, <code>materias_comisiones</code>, <code>profesores_comisiones</code>, <code>asignaciones_materia</code>, <code>horarios_cursado</code>, <code>instancias_evaluacion</code></td>
+            <td>Oferta operativa anual/cuatrimestral. Soporta relación N:M, asignación de roles docentes y <strong>agenda semanal de cursado</strong>. Normalización de conceptos de evaluación.</td>
+        </tr>
+        <tr>
+            <td><strong>🗓️ Exámenes Finales</strong></td>
+            <td><code>mesas_examen</code>, <code>detalle_mesa_examen</code>, <code>inscripciones_examen</code></td>
+            <td>Gestión de turnos de examen (periodos), cronograma de fechas por materia e inscripciones de alumnos a mesas.</td>
+        </tr>
+        <tr>
+            <td><strong>📝 Ciclo del Alumno</strong></td>
+            <td><code>matriculaciones</code>, <code>inscripciones</code>, <code>calificaciones</code>, <code>solicitudes_certificado</code></td>
+            <td>Trazabilidad total: Matriculación, cursada/examen, historia académica y **Auditoría de emisión de certificados**.</td>
+        </tr>
+        <tr>
+            <td><strong>📧 Notificaciones</strong></td>
+            <td><code>Service Layer</code></td>
+            <td><strong>Flujo Automatizado (Thymeleaf):</strong>
+                <ul>
+                    <li><strong>Bienvenida:</strong> Credenciales enviadas al alumno al ser dado de alta.</li>
+                    <li><strong>Calificaciones:</strong> Notificación instantánea tras la carga de notas de cursada o final.</li>
+                    <li><strong>Password Reset:</strong> Tokens de seguridad con expiración de 24hs.</li>
+                </ul>
+            </td>
         </tr>
     </tbody>
 </table>
