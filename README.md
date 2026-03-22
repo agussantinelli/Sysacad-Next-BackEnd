@@ -24,10 +24,13 @@
     <img src="https://img.shields.io/badge/Hibernate-ORM-59666C?style=for-the-badge&logo=hibernate&logoColor=white" alt="Hibernate Badge"/>
     <img src="https://img.shields.io/badge/Apache%20Maven-3.8+-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white" alt="Maven Badge"/>
     <img src="https://img.shields.io/badge/Project%20Lombok-Enables-BC0230?style=for-the-badge&logo=lombok&logoColor=white" alt="Lombok Badge"/>
-    <img src="https://img.shields.io/badge/JUnit-5-25A162?style=for-the-badge&logo=junit5&logoColor=white" alt="JUnit Badge"/>
     <img src="https://img.shields.io/badge/MapStruct-Mapping-000000?style=for-the-badge&logo=mapstruct&logoColor=white" alt="MapStruct Badge"/>
     <img src="https://img.shields.io/badge/Thymeleaf-3.x-005F0F?style=for-the-badge&logo=thymeleaf&logoColor=white" alt="Thymeleaf Badge"/>
     <img src="https://img.shields.io/badge/OpenPDF-PDF_Engine-B52E31?style=for-the-badge&logo=adobeacrobatreader&logoColor=white" alt="OpenPDF Badge"/>
+    <img src="https://img.shields.io/badge/JUnit-5-25A162?style=for-the-badge&logo=junit5&logoColor=white" alt="JUnit Badge"/>
+    <img src="https://img.shields.io/badge/Mockito-Simulación-000000?style=for-the-badge&logo=mockito&logoColor=white" alt="Mockito Badge"/>
+    <img src="https://img.shields.io/badge/AssertJ-Fluent_Assertions-25A162?style=for-the-badge&logo=assertj&logoColor=white" alt="AssertJ Badge"/>
+    <img src="https://img.shields.io/badge/H2%20Database-Memory%20DB-005F0F?style=for-the-badge&logo=sqlite&logoColor=white" alt="H2 Badge"/>
     <img src="https://img.shields.io/badge/GitHub%20Actions-CI%2FCD-2088FF?style=for-the-badge&logo=github&logoColor=white" alt="GitHub Actions Badge"/>
 
 </div>
@@ -224,10 +227,34 @@
             <td>Generación de documentos PDF (Certificados).</td>
         </tr>
         <tr>
-            <td><strong>Email Templating</strong></td>
+            <td><strong>📧 Notificaciones</strong></td>
             <td>Thymeleaf</td>
             <td>3.x (Spring Starter)</td>
             <td>Generación de correos HTML premium con branding UTN.</td>
+        </tr>
+        <tr>
+            <td><strong>🧪 Testing Unitario</strong></td>
+            <td>JUnit 5</td>
+            <td>Latest</td>
+            <td>Framework base para la ejecución de pruebas.</td>
+        </tr>
+        <tr>
+            <td><strong>🛡️ Mocking</strong></td>
+            <td>Mockito</td>
+            <td>Latest</td>
+            <td>Creación de objetos simulados para aislamiento total.</td>
+        </tr>
+        <tr>
+            <td><strong>🔍 Aserciones</strong></td>
+            <td>AssertJ</td>
+            <td>Latest</td>
+            <td>Motor de validaciones fluido y descriptivo.</td>
+        </tr>
+        <tr>
+            <td><strong>💾 Test Database</strong></td>
+            <td>H2 Database</td>
+            <td>Latest</td>
+            <td>Base de datos en memoria para el entorno de test.</td>
         </tr>
     </tbody>
 </table>
