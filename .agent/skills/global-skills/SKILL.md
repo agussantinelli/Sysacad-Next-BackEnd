@@ -16,6 +16,7 @@ This skill serves as a central index for all architectural and development guide
 - **[spring-boot-module](file:///c:/Users/Agus/IdeaProjects/Sysacad-Next-BackEnd/.agent/skills/spring-boot-module/SKILL.md)**: Blueprint para la creación de nuevos módulos (Entidad, DTO, Mapper, Service, Controller).
 - **[test](file:///c:/Users/Agus/IdeaProjects/Sysacad-Next-BackEnd/.agent/skills/test/SKILL.md)**: JUnit 5 and Mockito testing guidelines.
 - **[test-enforcement](file:///c:/Users/Agus/IdeaProjects/Sysacad-Next-BackEnd/.agent/skills/test-enforcement/SKILL.md)**: Mandatory rule requiring one test per business logic file.
+- **[integration-testing](file:///c:/Users/Agus/IdeaProjects/Sysacad-Next-BackEnd/.agent/skills/integration-testing/SKILL.md)**: Guías para pruebas de interacción de módulos y flujos completos con Spring Boot Test.
 - **[backend-testing](file:///c:/Users/Agus/IdeaProjects/Sysacad-Next-BackEnd/.agent/skills/backend-testing/SKILL.md)**: Specific integration testing patterns for the backend.
 - **[no-browser](file:///c:/Users/Agus/IdeaProjects/Sysacad-Next-BackEnd/.agent/skills/no-browser/SKILL.md)**: Prohibición total del uso del subagente del navegador.
 - **[readme-auto-sync](file:///c:/Users/Agus/IdeaProjects/Sysacad-Next-BackEnd/.agent/skills/readme-auto-sync/SKILL.md)**: Automated README syncing for project structure.
