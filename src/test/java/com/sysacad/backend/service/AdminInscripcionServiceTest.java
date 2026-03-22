@@ -70,7 +70,7 @@ public class AdminInscripcionServiceTest {
         PlanDeEstudio plan = new PlanDeEstudio();
         PlanMateria pm = new PlanMateria();
         pm.setMateria(materia);
-        plan.setPlanMaterias(Collections.singleton(pm));
+        plan.setPlanMaterias(List.of(pm));
         matriculacion.setPlan(plan);
         when(matriculacionRepository.findByUsuario_Id(alumnoId)).thenReturn(List.of(matriculacion));
 

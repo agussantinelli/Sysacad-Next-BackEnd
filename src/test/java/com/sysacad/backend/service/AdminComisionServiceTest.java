@@ -57,8 +57,8 @@ public class AdminComisionServiceTest {
         comision.setId(comisionId);
         comision.setNombre("1K1");
         comision.setCarrera(carrera);
-        comision.setMaterias(new HashSet<>());
-        comision.setProfesores(new HashSet<>());
+        comision.setMaterias(new ArrayList<>());
+        comision.setProfesores(new ArrayList<>());
     }
 
     @Test
@@ -98,13 +98,13 @@ public class AdminComisionServiceTest {
         Materia materia = new Materia();
         materia.setId(UUID.randomUUID());
         materia.setNombre("Sintaxis");
-        materia.setHorasCursado(4);
+        materia.setHorasCursado((short) 4);
 
         AsignarMateriaComisionRequest request = new AsignarMateriaComisionRequest();
         request.setIdMateria(materia.getId());
         
         AsignarMateriaComisionRequest.HorarioRequestDTO hDTO = new AsignarMateriaComisionRequest.HorarioRequestDTO();
-        hDTO.setDia(com.sysacad.backend.dto.enums.DiaSemanaDTO.LUNES);
+        hDTO.setDia(com.sysacad.backend.modelo.enums.DiaSemana.LUNES);
         hDTO.setHoraDesde(LocalTime.of(8, 0));
         hDTO.setHoraHasta(LocalTime.of(10, 0)); // Solo 2 horas, faltan 2
         request.setHorarios(List.of(hDTO));
@@ -125,14 +125,14 @@ public class AdminComisionServiceTest {
         Materia materia = new Materia();
         materia.setId(UUID.randomUUID());
         materia.setNombre("Sintaxis");
-        materia.setHorasCursado(2);
+        materia.setHorasCursado((short) 2);
 
         AsignarMateriaComisionRequest request = new AsignarMateriaComisionRequest();
         request.setIdMateria(materia.getId());
         request.setIdsProfesores(new ArrayList<>());
         
         AsignarMateriaComisionRequest.HorarioRequestDTO hDTO = new AsignarMateriaComisionRequest.HorarioRequestDTO();
-        hDTO.setDia(com.sysacad.backend.dto.enums.DiaSemanaDTO.LUNES);
+        hDTO.setDia(com.sysacad.backend.modelo.enums.DiaSemana.LUNES);
         hDTO.setHoraDesde(LocalTime.of(8, 0));
         hDTO.setHoraHasta(LocalTime.of(10, 0));
         request.setHorarios(List.of(hDTO));
