@@ -1,19 +1,19 @@
 ---
 name: skill-generator
-description: A tool for creating new skills following the MarketFlex standard.
+description: A tool for creating new skills following the Sysacad Next standard.
 ---
 
-# Skill Generator
+# 🛠️ Skill Generator
 
-Use this skill whenever you need to create a new skill for the MarketFlex ecosystem.
+Utiliza esta skill cada vez que necesites crear una nueva directriz o "skill" para el ecosistema de **Sysacad Next**.
 
-## Instructions
+## Instrucciones
 
-1. **Structure**: Every skill must live in `.agent/skills/<skill-name>/`.
-2. **SKILL.md**: The main file must be `SKILL.md` with YAML frontmatter containing `name` and `description`.
-3. **Sections**: 
-   - `# <Skill Name>` header.
-   - `## Context`: Why this skill exists.
-   - `## Guidelines`: Step-by-step instructions or rules.
-   - `## Examples`: Small code snippets or commands.
-4. **Naming**: Use kebab-case for directory names.
+1.  **Estructura**: Cada skill debe vivir en una subcarpeta de `.agent/skills/<skill-name>/`.
+2.  **SKILL.md**: El archivo principal debe ser `SKILL.md` con frontmatter YAML que contenga `name` (id de la skill) y `description`.
+3.  **Secciones**: 
+    - `# <Nombre de la Skill>` (Header principal).
+    - `## Contexto`: Por qué existe esta skill.
+    - `## Guías`: Reglas o instrucciones paso a paso.
+    - `## Ejemplos`: Snippets de código o capturas de pantalla/comandos.
+4.  **Nombramiento**: Usa `kebab-case` para el nombre del directorio.
