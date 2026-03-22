@@ -57,6 +57,7 @@ public class AdminComisionServiceTest {
         comision.setId(comisionId);
         comision.setNombre("1K1");
         comision.setCarrera(carrera);
+        comision.setNivel(1);
         comision.setMaterias(new ArrayList<>());
         comision.setProfesores(new ArrayList<>());
     }

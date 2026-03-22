@@ -13,7 +13,7 @@ import java.util.UUID;
 @Service
 public class FileStorageService {
 
-    private static final String DIRECTORIO_PERFILES = "uploads/perfiles/";
+    private static String DIRECTORIO_PERFILES = "uploads/perfiles/";
 
 
     public String guardarFotoPerfil(MultipartFile archivo, String identificador, String rutaFotoAnterior) {
