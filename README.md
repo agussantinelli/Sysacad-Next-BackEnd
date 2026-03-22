@@ -307,6 +307,54 @@
 
 <hr>
 
+<h2>📄 Generación de Certificados y Reportes PDF</h2>
+
+<p>El sistema cuenta con un motor de generación de documentos oficiales basado en <strong>OpenPDF</strong> (Fork de iText), diseñado para emitir certificados con validez institucional:</p>
+
+<h3>🛠️ Arquitectura de Generación</h3>
+<ul>
+    <li><strong>Desacoplamiento:</strong> Se utiliza el patrón <code>IPdfGenerator</code> para separar la lógica de negocio (datos) de la implementación visual (diseño del PDF).</li>
+    <li><strong>Diseño Institucional:</strong> Los documentos incluyen encabezados oficiales del Ministerio de Capital Humano, logos de la Universidad Tecnológica Nacional y formatos de texto legales.</li>
+    <li><strong>Rendimiento:</strong> La generación se realiza en memoria mediante <code>ByteArrayOutputStream</code>, devolviendo el documento directamente como un flujo de bytes al cliente.</li>
+</ul>
+
+<h3>📜 Documentos Soportados</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Documento</th>
+            <th>Población</th>
+            <th>Validaciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Certificado de Alumno Regular</strong></td>
+            <td>Estudiantes</td>
+            <td>Verifica matriculación activa en una carrera y facultad.</td>
+        </tr>
+        <tr>
+            <td><strong>Certificado de Prestación de Servicios</strong></td>
+            <td>Docentes</td>
+            <td>Valida el cargo y legajo del personal académico.</td>
+        </tr>
+        <tr>
+            <td><strong>Calendario Académico</strong></td>
+            <td>General</td>
+            <td>Documento estático con fechas clave del ciclo lectivo.</td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>🛡️ Auditoría y Trazabilidad</h3>
+<p>Cada vez que se genera un certificado, el sistema realiza lo siguiente:</p>
+<ol>
+    <li>Registra la <b>Solicitud de Certificado</b> en la base de datos (Usuario, Fecha, Tipo).</li>
+    <li>Permite al Administrador consultar un <b>Historial de Descargas</b> para auditar la emisión de documentación oficial.</li>
+</ol>
+
+<hr>
+
 <h2>📦 Estructura del Proyecto</h2>
 
 <pre><code>Sysacad-Next-BackEnd/
