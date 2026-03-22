@@ -107,6 +107,8 @@ public class InscripcionExamenServiceTest {
         InscripcionCursado cursada = new InscripcionCursado();
         cursada.setEstado(EstadoCursada.REGULAR);
         when(inscripcionCursadoRepository.findByUsuarioIdAndMateriaId(any(), any())).thenReturn(Optional.of(cursada));
+        when(inscripcionExamenRepository.findById(any())).thenReturn(Optional.of(insc));
+        when(inscripcionExamenRepository.save(any())).thenReturn(insc);
         when(inscripcionExamenRepository.countByUsuarioIdAndDetalleMesaExamen_MateriaIdAndEstadoIn(any(), any(), any())).thenReturn(4L);
 
         CargaNotaExamenRequest request = new CargaNotaExamenRequest();
