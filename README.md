@@ -542,16 +542,36 @@
 6.  **Puerto**: El servidor iniciará en el puerto **8080** (`http://localhost:8080`).
 7.  **CORS**: Configurado para aceptar peticiones desde `http://localhost:4200` (Frontend Angular).
 
-<h3>🌱 Base de Datos y Seeding Automático</h3>
+<hr>
 
-El sistema cuenta con un `DbSeeder` (`src/main/java/com/sysacad/backend/config/seeder/DbSeeder.java`) que pobla la base de datos automáticamente **de forma idempotente** (evita duplicados) al inicio si detecta tablas vacías.
-*   **Carga Estructural:** Crea la UTN Facultad Regional Rosario, carreras (ISI, IM, IQ, IEE, IC) y la estructura de materias real.
-*   **Simulación de Cursada y Exámenes:** 
-    *   Genera comisiones para 2025 con horarios reales y validación de superposición.
-    *   Asigna docentes a materias específicas para validar permisos.
-    *   Inscribe alumnos y carga notas historicas.
-    *   **Genera Mesas de Examen** con fechas reales para los turnos de **Febrero, Julio y Diciembre**, incluyendo inscripciones y actas.
-*   **Usuarios:** Crea una población diversa de usuarios (Admin, Profesores, Estudiantes) para pruebas.
+<h2>🌱 Base de Datos y Seeding Automático</h2>
+
+<p>El sistema cuenta con un motor de <strong>Seeding Automatizado de Alta Fidelidad</strong>, diseñado para reconstruir el ecosistema académico completo de la <strong>UTN Facultad Regional Rosario</strong> en segundos. Este proceso es crítico para garantizar que tanto las pruebas de integración como el entorno de desarrollo operen sobre datos consistentes y reglamentarios.</p>
+
+<h4>🏗️ Arquitectura Modular y Orquestación</h4>
+<p>La carga se realiza mediante un <code>CommandLineRunner</code> orquestado por <code>DbSeeder</code>, el cual ejecuta una secuencia lógica de 6 módulos especializados para respetar la integridad referencial y las dependencias de negocio:</p>
+
+<ol>
+    <li><strong><code>UTNSeeder</code> (Carga Maestra):</strong> Es el corazón del seeding. Impacta los <strong>Planes de Estudio Reales (2023)</strong> obtenidos de las currículas oficiales de la UTN.
+        <ul>
+            <li><strong>Carreras Incluidas:</strong> Sistemas de Información (ISI), Civil (IC), Química (IQ), Mecánica (IM) y Energía Eléctrica (IEE).</li>
+            <li><strong>Fidelidad Total:</strong> Se cargan cientos de materias con sus códigos oficiales, niveles, horas cátedra y <strong>grafos de correlatividades complejos</strong> (regulares y promocionadas).</li>
+        </ul>
+    </li>
+    <li><strong><code>UsuarioSeeder</code>:</strong> Crea la población inicial (Admins, Profesores y Estudiantes) con contraseñas encriptadas mediante <code>BCrypt</code> y perfiles biométricos simulados.</li>
+    <li><strong><code>MatriculacionSeeder</code>:</strong> Vincula a los estudiantes con sus respectivas carreras y facultades, activando sus legajos en los planes vigentes.</li>
+    <li><strong><code>ComisionSeeder</code>:</strong> Despliega la infraestructura de cursada. Genera comisiones reales para el ciclo 2025, asignando salones físicos (Lab. 305, Aula Magna, etc.), horarios sin superposiciones y docentes responsables de cátedra.</li>
+    <li><strong><code>InscripcionSeeder</code>:</strong> Simula la actividad académica histórica y actual. Genera inscripciones a materias, actas de examen cerradas para turnos pasados (Febrero, Julio, Diciembre) y estados de regularidad.</li>
+    <li><strong><code>AvisoSeeder</code>:</strong> Pobla el sistema de notificaciones globales y específicas por curso para validar el flujo de comunicación.</li>
+</ol>
+
+<h4>⚙️ Mecanismo de Idempotencia</h4>
+<p>Para evitar la duplicidad de datos en reinicios sucesivos, el sistema implementa una guardia de seguridad:</p>
+<pre><code>if (materiaRepository.count() > 0 && carreraRepository.count() > 0) {
+    // Se omite la carga si ya existen datos base
+}</code></pre>
+
+<hr>
 
 <h3>🔐 Usuarios de Prueba Generados</h3>
 
