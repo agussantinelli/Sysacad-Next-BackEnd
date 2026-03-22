@@ -355,6 +355,19 @@
 
 <hr>
 
+<h2>🧩 Estrategia de Mapeo y DTO-First</h2>
+
+<p>Para mantener una arquitectura limpia y desacoplada, el proyecto sigue una estrategia <strong>DTO-First</strong>, asegurando que las entidades de persistencia (JPA) nunca se expongan directamente a la capa de presentación (REST):</p>
+
+<ul>
+    <li><strong>🚀 MapStruct:</strong> Se utiliza como motor de mapeo de alto rendimiento. Las interfaces en <code>src/main/java/com/sysacad/backend/mapper/</code> generan automáticamente el código de transferencia de datos en tiempo de compilación.</li>
+    <li><strong>🛡️ Contratos de API:</strong> Cada controlador recibe y devuelve objetos representacionales (DTOs), lo que permite evolucionar el modelo de datos de la base de datos sin romper los contratos con el frontend.</li>
+    <li><strong>🔗 Resolución de Dependencias:</strong> Los mappers están integrados con el contexto de Spring (<code>componentModel = "spring"</code>), lo que permite inyectar servicios adicionales para resolver relaciones complejas durante el mapeo (ej: convertir un <code>UUID</code> de carrera en un <code>CarreraDTO</code> completo).</li>
+    <li><strong>🧹 Inmutabilidad y Validación:</strong> Los DTOs de entrada (Requests) utilizan anotaciones de <code>javax.validation</code> para asegurar la integridad de los datos antes de llegar a la lógica de negocio.</li>
+</ul>
+
+<hr>
+
 <h2>📦 Estructura del Proyecto</h2>
 
 <pre><code>Sysacad-Next-BackEnd/
