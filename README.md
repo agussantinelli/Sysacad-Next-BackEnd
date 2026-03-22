@@ -323,6 +323,26 @@
 └── .vscode/                                        # Configuración VS Code
 </code></pre>
 
+<hr>
+
+<h2>🧠 Skills Especializadas</h2>
+
+<p>Este proyecto utiliza un sistema de <strong>Skills</strong> (guías técnicas avanzadas) para asegurar que cualquier desarrollo (humano o por IA) siga estrictamente los estándares arquitectónicos del backend:</p>
+
+<ul>
+    <li><strong>🌍 global-context:</strong> Directriz maestra; asegura el cumplimiento de la arquitectura y la integridad de los estándares.</li>
+    <li><strong>🏛️ clean-structure:</strong> Organización estricta de paquetes Java y arquitectura en capas (Controller, Service, Repository, Modelo).</li>
+    <li><strong>🏗️ spring-boot-module:</strong> Blueprint obligatorio para la creación de nuevos módulos con sus 7 componentes base.</li>
+    <li><strong>✨ code-quality:</strong> Clean Code, principios SOLID y cumplimiento de la política de "No Comentarios".</li>
+    <li><strong>🏷️ naming-conventions:</strong> Estándar de nombres para clases (Pascal), métodos (camel), DB (snake) y REST (kebab).</li>
+    <li><strong>🧪 test:</strong> Guías fundamentales para testing unitario e integración con JUnit 5 y Mockito.</li>
+    <li><strong>🛡️ test-enforcement:</strong> Regla "One-to-One" que exige un archivo de test por cada archivo de lógica de negocio o controlador.</li>
+    <li><strong>⚙️ backend-testing:</strong> Patrones avanzados para pruebas de integración y simulación de peticiones con MockMvc.</li>
+    <li><strong>🚫 no-browser:</strong> Prohibición total del uso del subagente del navegador para tareas de verificación.</li>
+    <li><strong>📝 readme-auto-sync:</strong> Sincronización proactiva de la estructura de archivos y estadísticas de cobertura en el README.</li>
+    <li><strong>🛠️ skill-generator:</strong> Herramienta estandarizada para la creación de nuevas guías técnicas.</li>
+    <li><strong>📚 global-skills:</strong> Catálogo central que indexa y describe todas las guías activas del proyecto.</li>
+</ul>
 
 <hr>
 
