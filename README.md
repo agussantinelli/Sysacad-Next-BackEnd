@@ -445,6 +445,16 @@
 │   │       ├── application.properties              # Configuración de Spring Boot
 │   │       └── application-secret.properties       # Credenciales sensibles (No versionado)
 │   └── test/                                       # Tests unitarios y de integración
+│       ├── java/com/sysacad/backend/
+│       │   ├── service/                            # Unit Tests de lógica de negocio (31+ archivos)
+│       │   │   ├── AdminCarreraServiceTest.java    # ADN Académico (Carreras y Planes)
+│       │   │   ├── AdminComisionServiceTest.java   # Logística de Cursada (Comisiones y Horarios)
+│       │   │   ├── AdminFacultadServiceTest.java   # Gestión de Sedes y Regionales
+│       │   │   ├── ...ServiceTest.java             # Pruebas de dominio core
+│       │   │   └── pdf/                            # Pruebas de generación de reportes PDF
+│       │   └── BackendApplicationTests.java        # Prueba de carga de contexto con H2
+│       └── resources/
+│           └── application-test.properties         # Configuración del entorno de pruebas
 ├── target/                                         # Salida de compilación (ignorar)
 ├── uploads/                                        # Archivos subidos (Avatares, documentos)
 ├── .gitignore                                      # Archivos ignorados por Git
