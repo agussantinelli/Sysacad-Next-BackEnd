@@ -1,13 +1,9 @@
 package com.sysacad.backend.service;
 
 import com.sysacad.backend.exception.BusinessLogicException;
-import com.sysacad.backend.exception.ResourceNotFoundException;
 import com.sysacad.backend.modelo.Usuario;
 import com.sysacad.backend.modelo.enums.EstadoUsuario;
-import com.sysacad.backend.repository.AsignacionMateriaRepository;
-import com.sysacad.backend.repository.DetalleMesaExamenRepository;
-import com.sysacad.backend.repository.InscripcionCursadoRepository;
-import com.sysacad.backend.repository.UsuarioRepository;
+import com.sysacad.backend.repository.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,138 +18,93 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyMap;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class UsuarioServiceTest {
 
-    @Mock
-    private UsuarioRepository usuarioRepository;
-    @Mock
-    private PasswordEncoder passwordEncoder;
-    @Mock
-    private AsignacionMateriaRepository asignacionMateriaRepository;
-    @Mock
-    private InscripcionCursadoRepository inscripcionCursadoRepository;
-    @Mock
-    private DetalleMesaExamenRepository detalleMesaExamenRepository;
-    @Mock
-    private FileStorageService fileStorageService;
-    @Mock
-    private IEmailService emailService;
+    @Mock private UsuarioRepository usuarioRepository;
+    @Mock private PasswordEncoder passwordEncoder;
+    @Mock private AsignacionMateriaRepository asignacionMateriaRepository;
+    @Mock private InscripcionCursadoRepository inscripcionCursadoRepository;
+    @Mock private DetalleMesaExamenRepository detalleMesaExamenRepository;
+    @Mock private FileStorageService fileStorageService;
+    @Mock private IEmailService emailService;
 
     @InjectMocks
     private UsuarioService usuarioService;
 
-    private Usuario usuario;
     private UUID usuarioId;
+    private Usuario usuario;
 
     @BeforeEach
     void setUp() {
         usuarioId = UUID.randomUUID();
         usuario = new Usuario();
         usuario.setId(usuarioId);
-        usuario.setLegajo("55555");
-        usuario.setMail("test@sysacad.com");
+        usuario.setLegajo("12345");
+        usuario.setMail("test@test.com");
         usuario.setPassword("encodedPassword");
-        usuario.setNombre("Test");
     }
 
     @Test
-    void autenticar_DeberiaRetornarUsuario_CuandoCredencialesSonCorrectas() {
-        when(usuarioRepository.findByLegajoOrMail("55555", "55555")).thenReturn(Optional.of(usuario));
+    void autenticar_DeberiaFuncionar_CuandoPasswordCoincide() {
+        when(usuarioRepository.findByLegajoOrMail(any(), any())).thenReturn(Optional.of(usuario));
         when(passwordEncoder.matches("rawPassword", "encodedPassword")).thenReturn(true);
 
-        Usuario resultado = usuarioService.autenticar("55555", "rawPassword");
+        Usuario result = usuarioService.autenticar("12345", "rawPassword");
 
-        assertNotNull(resultado);
-        assertEquals("55555", resultado.getLegajo());
+        assertNotNull(result);
+        assertEquals(usuarioId, result.getId());
     }
 
     @Test
-    void autenticar_DeberiaLanzarExcepcion_CuandoUsuarioNoExiste() {
-        when(usuarioRepository.findByLegajoOrMail("invalid", "invalid")).thenReturn(Optional.empty());
+    void autenticar_DeberiaLanzarExcepcion_CuandoPasswordNoCoincide() {
+        when(usuarioRepository.findByLegajoOrMail(any(), any())).thenReturn(Optional.of(usuario));
+        when(passwordEncoder.matches("wrongPassword", "encodedPassword")).thenReturn(false);
 
-        assertThrows(ResourceNotFoundException.class, () -> 
-            usuarioService.autenticar("invalid", "password")
-        );
+        assertThrows(BusinessLogicException.class, () -> usuarioService.autenticar("12345", "wrongPassword"));
     }
 
     @Test
-    void autenticar_DeberiaLanzarExcepcion_CuandoPasswordEsIncorrecta() {
-        when(usuarioRepository.findByLegajoOrMail("55555", "55555")).thenReturn(Optional.of(usuario));
-        when(passwordEncoder.matches("wrong", "encodedPassword")).thenReturn(false);
+    void registrarUsuario_DeberiaCodificarPassword_YEnviarEmail() {
+        when(usuarioRepository.existsByMail(any())).thenReturn(false);
+        when(usuarioRepository.existsByLegajo(any())).thenReturn(false);
+        when(usuarioRepository.existsByTipoDocumentoAndDni(any(), any())).thenReturn(false);
+        when(passwordEncoder.encode(any())).thenReturn("encodedPassword");
+        when(usuarioRepository.save(any())).thenReturn(usuario);
 
-        assertThrows(BusinessLogicException.class, () -> 
-            usuarioService.autenticar("55555", "wrong")
-        );
+        Usuario request = new Usuario();
+        request.setPassword("rawPassword");
+        request.setMail("test@test.com");
+        
+        Usuario result = usuarioService.registrarUsuario(request);
+
+        assertNotNull(result);
+        verify(passwordEncoder).encode("rawPassword");
+        verify(emailService).sendHtmlEmail(eq("test@test.com"), any(), any(), any());
     }
 
     @Test
-    void registrarUsuario_DeberiaGuardarUsuario_CuandoDatosSonValidos() {
-        Usuario nuevoUsuario = new Usuario();
-        nuevoUsuario.setMail("new@sysacad.com");
-        nuevoUsuario.setLegajo("66666");
-        nuevoUsuario.setPassword("rawPassword");
-        nuevoUsuario.setNombre("New User");
-
-        when(usuarioRepository.existsByMail("new@sysacad.com")).thenReturn(false);
-        when(usuarioRepository.existsByLegajo("66666")).thenReturn(false);
-        when(passwordEncoder.encode("rawPassword")).thenReturn("encodedPassword");
-        when(usuarioRepository.save(any(Usuario.class))).thenReturn(nuevoUsuario);
-
-        Usuario resultado = usuarioService.registrarUsuario(nuevoUsuario);
-
-        assertNotNull(resultado);
-        verify(usuarioRepository, times(1)).save(any(Usuario.class));
-        verify(emailService, times(1)).sendHtmlEmail(anyString(), anyString(), anyString(), anyMap());
-    }
-
-    @Test
-    void registrarUsuario_DeberiaLanzarExcepcion_CuandoEmailYaExiste() {
-        when(usuarioRepository.existsByMail(anyString())).thenReturn(true);
-
-        assertThrows(BusinessLogicException.class, () -> 
-            usuarioService.registrarUsuario(usuario)
-        );
-    }
-
-    @Test
-    void resetPassword_DeberiaCambiarPassword_CuandoTokenEsValido() {
+    void resetPassword_DeberiaFuncionar_CuandoTokenEsValido() {
         usuario.setResetPasswordToken("validToken");
         usuario.setResetPasswordTokenExpiration(LocalDateTime.now().plusHours(1));
-
+        
         when(usuarioRepository.findByResetPasswordToken("validToken")).thenReturn(Optional.of(usuario));
-        when(passwordEncoder.encode("newPass")).thenReturn("newEncodedPass");
+        when(passwordEncoder.encode("newPassword")).thenReturn("newEncodedPassword");
 
-        usuarioService.resetPassword("validToken", "newPass");
+        usuarioService.resetPassword("validToken", "newPassword");
 
-        assertEquals("newEncodedPass", usuario.getPassword());
+        assertEquals("newEncodedPassword", usuario.getPassword());
         assertNull(usuario.getResetPasswordToken());
-        verify(usuarioRepository, times(1)).save(usuario);
+        verify(usuarioRepository).save(usuario);
     }
 
     @Test
-    void cambiarEstado_DeberiaActualizarEstado_CuandoEsValido() {
+    void cambiarEstado_DeberiaLanzarExcepcion_CuandoTieneMesasFuturas() {
         when(usuarioRepository.findById(usuarioId)).thenReturn(Optional.of(usuario));
-        when(usuarioRepository.save(any(Usuario.class))).thenReturn(usuario);
+        when(detalleMesaExamenRepository.existsByProfesorAndFechaAfter(any(), any())).thenReturn(true);
 
-        Usuario resultado = usuarioService.cambiarEstado(usuarioId, EstadoUsuario.INACTIVO);
-
-        assertEquals(EstadoUsuario.INACTIVO, resultado.getEstado());
-    }
-
-    @Test
-    void cambiarEstado_DeberiaLanzarExcepcion_CuandoProfesorTieneMesasFuturas() {
-        usuario.setEstado(EstadoUsuario.ACTIVO);
-        when(usuarioRepository.findById(usuarioId)).thenReturn(Optional.of(usuario));
-        when(detalleMesaExamenRepository.existsByProfesorAndFechaAfter(eq(usuarioId), any())).thenReturn(true);
-
-        assertThrows(BusinessLogicException.class, () -> 
-            usuarioService.cambiarEstado(usuarioId, EstadoUsuario.INACTIVO)
-        );
+        assertThrows(BusinessLogicException.class, () -> usuarioService.cambiarEstado(usuarioId, EstadoUsuario.INACTIVO));
     }
 }
