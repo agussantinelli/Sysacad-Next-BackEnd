@@ -2,9 +2,11 @@ package com.sysacad.backend.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -21,6 +23,16 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BusinessLogicException.class)
     public ResponseEntity<Object> handleBusinessLogicException(BusinessLogicException ex, WebRequest request) {
         return buildErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST, request);
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<Object> handleNoResourceFoundException(NoResourceFoundException ex, WebRequest request) {
+        return buildErrorResponse(ex.getMessage(), HttpStatus.NOT_FOUND, request);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Object> handleAccessDeniedException(AccessDeniedException ex, WebRequest request) {
+        return buildErrorResponse("Acceso denegado: No tienes permisos suficientes.", HttpStatus.FORBIDDEN, request);
     }
 
     @ExceptionHandler(RuntimeException.class)
