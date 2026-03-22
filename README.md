@@ -583,7 +583,57 @@ El sistema cuenta con un `DbSeeder` (`src/main/java/com/sysacad/backend/config/s
 | **ESTUDIANTE** | `60013` | Diego Maradona | `diego@sysacad.com` | `123456` |
 | **ESTUDIANTE** | `60014` | Enzo Fernandez | `enzo@sysacad.com` | `123456` |
 
----
+<hr>
+
+<h2>🚨 Manejo de Errores y Excepciones</h2>
+
+<p>El backend utiliza un manejo de errores centralizado mediante <code>@ControllerAdvice</code>, garantizando que todas las fallas del sistema devuelvan una respuesta estandarizada y fácil de consumir:</p>
+
+<h3>📊 Estructura de Respuesta de Error</h3>
+<p>Cada vez que ocurre una excepción, la API devuelve un objeto JSON con la siguiente estructura:</p>
+
+<pre><code>{
+  "timestamp": "2025-05-20T14:30:00",
+  "status": 400,
+  "error": "Bad Request",
+  "message": "Mensaje descriptivo del error",
+  "path": "/api/v1/recurso"
+}</code></pre>
+
+<h3>🛡️ Tipos de Excepciones Gestionadas</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Excepción</th>
+            <th>Código HTTP</th>
+            <th>Descripción</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><code>ResourceNotFoundException</code></td>
+            <td><strong>404</strong></td>
+            <td>Se lanza cuando un ID (Alumno, Materia, etc.) no existe en la base de datos.</td>
+        </tr>
+        <tr>
+            <td><code>BusinessLogicException</code></td>
+            <td><strong>400</strong></td>
+            <td>Se dispara ante violaciones de reglas de negocio (cupos llenos, correlatividades no cumplidas).</td>
+        </tr>
+        <tr>
+            <td><code>RuntimeException</code></td>
+            <td><strong>500</strong></td>
+            <td>Errores internos del servidor o fallos inesperados en la lógica.</td>
+        </tr>
+        <tr>
+            <td><code>AccessDeniedException</code></td>
+            <td><strong>403</strong></td>
+            <td>Intento de acceso a un recurso sin los permisos de rol necesarios.</td>
+        </tr>
+    </tbody>
+</table>
+
+<hr>
 
 <h2 align="center">📚 Documentación de API</h2>
 
