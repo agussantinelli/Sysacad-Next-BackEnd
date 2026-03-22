@@ -262,6 +262,33 @@
 
 <hr>
 
+<h2>🔐 Flujo de Autenticación y Seguridad (Deep Dive)</h2>
+
+<p>Sysacad Next implementa un modelo de seguridad <strong>Stateless</strong> basado en estándares modernos, diseñado para ser ligero pero extremadamente seguro:</p>
+
+<h3>🛡️ Arquitectura JWT & Boot ID</h3>
+<p>A diferencia de los sistemas tradicionales que requieren una tabla de "sesiones activas" o Redis para invalidar tokens, este backend utiliza un mecanismo de <strong>Boot ID</strong>:</p>
+
+<ul>
+    <li><strong>Identificador de Sesión Global (Boot ID):</strong> En cada arranque del servidor, se genera un <code>UUID</code> único en memoria.</li>
+    <li><strong>Token Payload:</strong> Al hacer login, el JWT emitido contiene el <code>legajo</code>, <code>rol</code> y el <code>Boot ID</code> actual en sus claims.</li>
+    <li><strong>Validación Preventiva:</strong> En cada petición, un filtro de seguridad (<code>JwtAuthenticationFilter</code>) verifica no solo la firma del token, sino que el <code>Boot ID</code> del token coincida con el del servidor activo.</li>
+</ul>
+
+<blockquote>
+    <strong>💡 Beneficio de Seguridad:</strong> Si el servidor se reinicia o se detecta una brecha, todos los tokens emitidos anteriormente quedan invalidados de forma instantánea y automática (<em>Instant Revocation</em>) sin necesidad de consultas a la base de datos, optimizando el rendimiento.
+</blockquote>
+
+<h3>🔑 Proceso de Acceso</h3>
+<ol>
+    <li><strong>Login:</strong> El usuario envía credenciales (Legajo/Password). El sistema valida contra la DB usando <code>BCrypt</code>.</li>
+    <li><strong>Emisión:</strong> Se genera un JWT firmado con una clave secreta de 512 bits (HS512).</li>
+    <li><strong>Consumo:</strong> El cliente adjunta el token en el header <code>Authorization: Bearer <token></code>.</li>
+    <li><strong>Autorización:</strong> Se utiliza <code>@PreAuthorize</code> en los controladores para restringir el acceso según el rol (ADMIN, PROFESOR, ESTUDIANTE).</li>
+</ol>
+
+<hr>
+
 <h2>📦 Estructura del Proyecto</h2>
 
 <pre><code>Sysacad-Next-BackEnd/
