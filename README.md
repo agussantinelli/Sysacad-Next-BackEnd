@@ -337,6 +337,7 @@
     <li><strong>🏷️ naming-conventions:</strong> Estándar de nombres para clases (Pascal), métodos (camel), DB (snake) y REST (kebab).</li>
     <li><strong>🧪 test:</strong> Guías fundamentales para testing unitario e integración con JUnit 5 y Mockito.</li>
     <li><strong>🛡️ test-enforcement:</strong> Regla "One-to-One" que exige un archivo de test por cada archivo de lógica de negocio o controlador.</li>
+    <li><strong>🔗 integration-testing:</strong> Guías para pruebas de interacción de módulos y flujos completos con Spring Boot Test.</li>
     <li><strong>⚙️ backend-testing:</strong> Patrones avanzados para pruebas de integración y simulación de peticiones con MockMvc.</li>
     <li><strong>🚫 no-browser:</strong> Prohibición total del uso del subagente del navegador para tareas de verificación.</li>
     <li><strong>📝 readme-auto-sync:</strong> Sincronización proactiva de la estructura de archivos y estadísticas de cobertura en el README.</li>
