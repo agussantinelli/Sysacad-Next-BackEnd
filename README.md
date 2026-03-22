@@ -555,7 +555,7 @@
 6.  **Puerto**: El servidor iniciará en el puerto **8080** (`http://localhost:8080`).
 7.  **CORS**: Configurado para aceptar peticiones desde `http://localhost:4200` (Frontend Angular).
 
-<hr>
+</hr>
 
 <h2>🌱 Base de Datos y Seeding Automático</h2>
 
