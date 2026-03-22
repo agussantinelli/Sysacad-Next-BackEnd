@@ -3,6 +3,7 @@ package com.sysacad.backend.service;
 import com.sysacad.backend.dto.comision.CargaNotasCursadaDTO;
 import com.sysacad.backend.dto.comision.NotaCursadaItemDTO;
 import com.sysacad.backend.dto.materia.MateriaProfesorDTO;
+import com.sysacad.backend.dto.comision.ComisionHorarioDTO;
 import com.sysacad.backend.modelo.*;
 import com.sysacad.backend.modelo.enums.*;
 import com.sysacad.backend.repository.*;
@@ -64,7 +65,7 @@ public class ProfesorServiceTest {
     void obtenerMateriasAsignadas_DeberiaMapearCorrectamente() {
         AsignacionMateria asignacion = new AsignacionMateria();
         asignacion.setMateria(materia);
-        asignacion.setCargo(RolCargo.JTP);
+        asignacion.setCargo(RolCargo.DOCENTE);
         asignacion.setProfesor(profesor);
 
         when(asignacionMateriaRepository.findByIdIdUsuario(profesorId)).thenReturn(List.of(asignacion));
@@ -73,15 +74,15 @@ public class ProfesorServiceTest {
         List<MateriaProfesorDTO> resultado = profesorService.obtenerMateriasAsignadas(profesorId);
 
         assertFalse(resultado.isEmpty());
-        assertEquals("Materia Test", resultado.get(0).getNombreMateria());
-        assertEquals(RolCargo.JTP, resultado.get(0).getCargo());
+        assertEquals("Materia Test", resultado.get(0).nombre());
+        assertEquals(RolCargo.DOCENTE, resultado.get(0).cargo());
     }
 
     @Test
     void obtenerComisionesDeMateria_DeberiaFiltrarPorMateria() {
         AsignacionMateria asignacion = new AsignacionMateria();
         asignacion.setMateria(materia);
-        asignacion.setCargo(RolCargo.PROFESOR_TITULAR);
+        asignacion.setCargo(RolCargo.DOCENTE);
         
         when(asignacionMateriaRepository.findByIdIdUsuario(profesorId)).thenReturn(List.of(asignacion));
         
@@ -89,14 +90,16 @@ public class ProfesorServiceTest {
         comision.setId(UUID.randomUUID());
         comision.setNombre("1K1");
         comision.setSalon(new Salon());
+        comision.setAnio(2025);
+        comision.setTurno("MAÑANA");
         comision.setProfesores(List.of(profesor));
         
         when(comisionRepository.findByMateriasIdAndProfesoresId(materiaId, profesorId)).thenReturn(List.of(comision));
 
-        var resultado = profesorService.obtenerComisionesDeMateria(profesorId, materiaId);
+        List<ComisionHorarioDTO> resultado = profesorService.obtenerComisionesDeMateria(profesorId, materiaId);
 
         assertFalse(resultado.isEmpty());
-        assertEquals("1K1", resultado.get(0).getNombreComision());
+        assertEquals("1K1", resultado.get(0).nombre());
     }
 
     @Test

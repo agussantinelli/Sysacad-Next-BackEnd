@@ -2,10 +2,7 @@ package com.sysacad.backend.service;
 
 import com.sysacad.backend.modelo.*;
 import com.sysacad.backend.modelo.enums.RolUsuario;
-import com.sysacad.backend.repository.InscripcionCursadoRepository;
-import com.sysacad.backend.repository.InscripcionExamenRepository;
-import com.sysacad.backend.repository.MatriculacionRepository;
-import com.sysacad.backend.repository.UsuarioRepository;
+import com.sysacad.backend.repository.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,6 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -27,39 +25,62 @@ public class MatriculacionServiceTest {
 
     @Mock private MatriculacionRepository matriculacionRepository;
     @Mock private UsuarioRepository usuarioRepository;
-    @Mock private InscripcionCursadoRepository inscripcionCursadoRepository;
-    @Mock private InscripcionExamenRepository inscripcionExamenRepository;
+    @Mock private com.sysacad.backend.repository.InscripcionCursadoRepository inscripcionCursadoRepository;
+    @Mock private com.sysacad.backend.repository.InscripcionExamenRepository inscripcionExamenRepository;
     @Mock private EquivalenciaService equivalenciaService;
     @Mock private com.sysacad.backend.repository.MateriaRepository materiaRepository;
 
     @InjectMocks
     private MatriculacionService matriculacionService;
 
-    private UUID usuarioId;
+    private UUID alumnoId;
+    private UUID facultadId;
+    private UUID carreraId;
+    private PlanDeEstudio.PlanId planId;
     private Usuario alumno;
+    private FacultadRegional facultad;
+    private Carrera carrera;
+    private PlanDeEstudio plan;
 
     @BeforeEach
     void setUp() {
-        usuarioId = UUID.randomUUID();
+        alumnoId = UUID.randomUUID();
+        facultadId = UUID.randomUUID();
+        carreraId = UUID.randomUUID();
+        planId = new PlanDeEstudio.PlanId(carreraId, 2025);
+
         alumno = new Usuario();
-        alumno.setId(usuarioId);
+        alumno.setId(alumnoId);
         alumno.setRol(RolUsuario.ESTUDIANTE);
+
+        facultad = new FacultadRegional();
+        facultad.setId(facultadId);
+        facultad.setCiudad("Rosario");
+        facultad.setProvincia("Santa Fe");
+
+        carrera = new Carrera();
+        carrera.setId(carreraId);
+        carrera.setNombre("Ingenieria en Sistemas");
+
+        plan = new PlanDeEstudio();
+        plan.setId(planId);
+        plan.setNombre("Plan 2025");
+        plan.setCarrera(carrera);
     }
 
     @Test
     void matricularAlumno_DeberiaGuardarCorrectamente() {
-        Matriculacion m = new Matriculacion();
-        Matriculacion.MatriculacionId id = new Matriculacion.MatriculacionId(usuarioId, UUID.randomUUID(), UUID.randomUUID());
-        m.setId(id);
+        Matriculacion matriculacion = new Matriculacion();
+        matriculacion.setId(new Matriculacion.MatriculacionId(alumnoId, facultadId, carreraId, 2025));
+        
+        when(usuarioRepository.findById(alumnoId)).thenReturn(Optional.of(alumno));
+        when(matriculacionRepository.save(any())).thenReturn(matriculacion);
 
-        when(usuarioRepository.findById(usuarioId)).thenReturn(Optional.of(alumno));
-        when(matriculacionRepository.save(any())).thenReturn(m);
-
-        Matriculacion resultado = matriculacionService.matricularAlumno(m);
+        Matriculacion resultado = matriculacionService.matricularAlumno(matriculacion);
 
         assertNotNull(resultado);
-        verify(matriculacionRepository).save(m);
-        verify(equivalenciaService).procesarEquivalencias(any(), any());
+        assertEquals("ACTIVO", resultado.getEstado());
+        verify(matriculacionRepository).save(matriculacion);
     }
 
     @Test
@@ -71,12 +92,22 @@ public class MatriculacionServiceTest {
 
         when(usuarioRepository.findByLegajo("123")).thenReturn(Optional.of(alumno));
         when(materiaRepository.findById(materiaId)).thenReturn(Optional.of(materia));
-        when(inscripcionCursadoRepository.findByUsuarioId(usuarioId)).thenReturn(new ArrayList<>());
-        when(inscripcionExamenRepository.findByUsuarioId(usuarioId)).thenReturn(new ArrayList<>());
+        when(inscripcionCursadoRepository.findByUsuarioId(alumnoId)).thenReturn(new ArrayList<>());
+        when(inscripcionExamenRepository.findByUsuarioId(alumnoId)).thenReturn(new ArrayList<>());
 
         var history = matriculacionService.obtenerHistorialMateria("123", materiaId);
 
         assertNotNull(history);
-        assertEquals("Test", history.getMateriaNombre());
+        assertEquals("Test", history.getNombreMateria());
+    }
+
+    @Test
+    void obtenerCarrerasPorAlumno_DeberiaLlamarAlRepositorio() {
+        when(matriculacionRepository.findByIdIdUsuario(alumnoId)).thenReturn(new ArrayList<>());
+
+        List<Matriculacion> resultado = matriculacionService.obtenerCarrerasPorAlumno(alumnoId);
+
+        assertNotNull(resultado);
+        verify(matriculacionRepository).findByIdIdUsuario(alumnoId);
     }
 }
