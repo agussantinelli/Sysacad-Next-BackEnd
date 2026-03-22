@@ -349,6 +349,37 @@
 
 <hr>
 
+<h2>🧪 Estrategia de Testing</h2>
+
+<p>La calidad del sistema se garantiza mediante una suite de pruebas automatizadas que cubren el 100% de la lógica de negocio en la capa de servicios. Se sigue un enfoque de testing piramidal enfocado en la velocidad y confiabilidad:</p>
+
+<h3>⚡ Pruebas Unitarias (JUnit 5 + Mockito)</h3>
+<p>Validación de lógica de negocio aislada mediante el uso de Mocks para dependencias de red y persistencia. Los tests están integrados en el pipeline de <strong>GitHub Actions</strong>.</p>
+<ul>
+    <li><strong>Comando de ejecución:</strong> <code>./mvnw test</code></li>
+    <li><strong>Estado Actual:</strong> <code>109</code> tests unitarios pasando exitosamente.</li>
+    <li><strong>Estructura:</strong> <code>32</code> archivos de test (uno por cada servicio del backend).</li>
+    <li><strong>Aislamiento:</strong> Uso extensivo de <strong>Mockito</strong> para el stubbing de repositorios y componentes externos.</li>
+</ul>
+
+<h3>🧩 Patrón AAA (Arrange, Act, Assert)</h3>
+<p>Para maximizar la legibilidad y el valor documental de los tests, se aplica rigurosamente el patrón <strong>AAA</strong>:</p>
+<ul>
+    <li><strong>Arrange (Preparar):</strong> Configuración de precondiciones, creación de objetos de prueba y configuración de comportamientos en Mocks (<code>when/thenReturn</code>).</li>
+    <li><strong>Act (Actuar):</strong> Invocación del método específico del servicio que se desea validar.</li>
+    <li><strong>Assert (Verificar):</strong> Validación de resultados mediante aserciones (AssertJ/JUnit) y comprobación de interacción con dependencias mediante <code>verify()</code>.</li>
+</ul>
+
+<h3>🛡️ Entorno de Test Seguro (H2 Database)</h3>
+<p>La aplicación cuenta con un perfil de configuración específico (<code>test</code>) que utiliza una base de datos <strong>H2 en memoria</strong>. Esto permite:</p>
+<ul>
+    <li>Ejecutar la suite completa sin necesidad de una instancia de PostgreSQL local.</li>
+    <li>Garantizar que los tests sean idempotentes y no dejen residuos en el sistema.</li>
+    <li>Carga del <code>ApplicationContext</code> ultra-rápida para validación de componentes Spring.</li>
+</ul>
+
+<hr>
+
 <h2>💻 Setup Local</h2>
 
 <p>Requisitos: JDK 21+, Maven 3.8+ y PostgreSQL.</p>
