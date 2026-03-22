@@ -28,6 +28,8 @@
     <img src="https://img.shields.io/badge/MapStruct-Mapping-000000?style=for-the-badge&logo=mapstruct&logoColor=white" alt="MapStruct Badge"/>
     <img src="https://img.shields.io/badge/Thymeleaf-3.x-005F0F?style=for-the-badge&logo=thymeleaf&logoColor=white" alt="Thymeleaf Badge"/>
     <img src="https://img.shields.io/badge/OpenPDF-PDF_Engine-B52E31?style=for-the-badge&logo=adobeacrobatreader&logoColor=white" alt="OpenPDF Badge"/>
+    <img src="https://img.shields.io/badge/GitHub%20Actions-CI%2FCD-2088FF?style=for-the-badge&logo=github&logoColor=white" alt="GitHub Actions Badge"/>
+
 </div>
 
 <div align="center">
