@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -66,5 +68,95 @@ class AdminComisionControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    @DisplayName("Admin debe poder obtener salones disponibles")
+    void obtenerSalonesDisponibles_Success() throws Exception {
+        when(adminComisionService.obtenerSalonesDisponibles(anyString(), anyInt())).thenReturn(List.of());
+
+        mockMvc.perform(get("/api/admin/comisiones/salones-disponibles")
+                        .param("turno", "MAÑANA")
+                        .param("anio", "2024"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    @DisplayName("Admin debe poder asignar materia a comisión")
+    void asignarMateria_Success() throws Exception {
+        com.sysacad.backend.dto.admin.AsignarMateriaComisionRequest request = new com.sysacad.backend.dto.admin.AsignarMateriaComisionRequest();
+        mockMvc.perform(post("/api/admin/comisiones/{id}/materias", UUID.randomUUID())
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    @DisplayName("Admin debe poder obtener profesores disponibles para comisión")
+    void obtenerProfesoresDisponibles_Success() throws Exception {
+        com.sysacad.backend.dto.admin.AsignarMateriaComisionRequest request = new com.sysacad.backend.dto.admin.AsignarMateriaComisionRequest();
+        request.setIdMateria(UUID.randomUUID());
+        request.setHorarios(List.of());
+
+        mockMvc.perform(post("/api/admin/comisiones/profesores-disponibles")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    @DisplayName("Admin debe poder obtener materias disponibles para comisión")
+    void obtenerMateriasDisponibles_Success() throws Exception {
+        UUID id = UUID.randomUUID();
+        when(adminComisionService.obtenerMateriasDisponibles(id)).thenReturn(List.of());
+
+        mockMvc.perform(get("/api/admin/comisiones/{id}/materias-disponibles", id))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = "ESTUDIANTE")
+    @DisplayName("Estudiante no puede crear comisiones (Forbidden)")
+    void crearComision_Forbidden_AsStudent() throws Exception {
+        mockMvc.perform(post("/api/admin/comisiones")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{}"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(roles = "PROFESOR")
+    @DisplayName("Profesor no puede asignar materias (Forbidden)")
+    void asignarMateria_Forbidden_AsProfesor() throws Exception {
+        mockMvc.perform(post("/api/admin/comisiones/{id}/materias", UUID.randomUUID())
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{}"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("Anónimo no puede ver comisiones (Unauthorized)")
+    void obtenerTodas_Unauthorized() throws Exception {
+        mockMvc.perform(get("/api/admin/comisiones"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    @DisplayName("crearComision falla con datos inválidos")
+    void crearComision_Invalid() throws Exception {
+        mockMvc.perform(post("/api/admin/comisiones")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{}"))
+                .andExpect(status().isBadRequest());
     }
 }
