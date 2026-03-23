@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -65,6 +66,69 @@ class AdminCarreraControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    @DisplayName("Admin debe obtener todas las carreras simples")
+    void obtenerTodasSimples_Success() throws Exception {
+        when(carreraService.obtenerTodas()).thenReturn(List.of());
+        mockMvc.perform(get("/api/admin/carreras/simples"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    @DisplayName("Admin debe asociar carrera a facultad")
+    void asociarCarreraFacultad_Success() throws Exception {
+        mockMvc.perform(post("/api/admin/carreras/{carreraId}/facultades/{facultadId}", UUID.randomUUID(), UUID.randomUUID())
+                        .with(csrf()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    @DisplayName("Admin debe obtener planes detallados")
+    void obtenerPlanesDetallados_Success() throws Exception {
+        when(carreraService.obtenerPlanesDetallados(any())).thenReturn(List.of());
+        mockMvc.perform(get("/api/admin/carreras/{carreraId}/planes/detallados", UUID.randomUUID()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    @DisplayName("Admin debe obtener detalle de plan por año")
+    void obtenerDetallePlan_Success() throws Exception {
+        when(carreraService.obtenerDetallePlan(any(), anyInt())).thenReturn(new com.sysacad.backend.dto.admin.PlanDetalleDTO());
+        mockMvc.perform(get("/api/admin/carreras/{carreraId}/plan/2024", UUID.randomUUID()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = "PROFESOR")
+    @DisplayName("Profesor no puede registrar carrera (Forbidden)")
+    void registrarCarrera_Forbidden_AsProfesor() throws Exception {
+        mockMvc.perform(post("/api/admin/carreras")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{}"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("Anónimo no puede ver carreras (Unauthorized)")
+    void obtenerCarreras_Unauthorized() throws Exception {
+        mockMvc.perform(get("/api/admin/carreras"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    @DisplayName("Admin obtiene planes detallados (Vacio)")
+    void obtenerPlanesDetallados_Empty() throws Exception {
+        when(carreraService.obtenerPlanesDetallados(any())).thenReturn(List.of());
+        mockMvc.perform(get("/api/admin/carreras/" + UUID.randomUUID() + "/planes/detallados"))
+                .andExpect(status().isOk());
     }
 
     @Test
