@@ -48,12 +48,12 @@ class UsuarioRepositoryTest {
     @Test
     @DisplayName("Debe listar usuarios por rol")
     void findByRol_Success() {
-        entityManager.persist(createUsuario("ALU001", RolUsuario.ALUMNO));
-        entityManager.persist(createUsuario("ALU002", RolUsuario.ALUMNO));
+        entityManager.persist(createUsuario("ALU001", RolUsuario.ESTUDIANTE));
+        entityManager.persist(createUsuario("ALU002", RolUsuario.ESTUDIANTE));
         entityManager.persist(createUsuario("PROF001", RolUsuario.PROFESOR));
         entityManager.flush();
 
-        List<Usuario> alumnos = usuarioRepository.findByRol(RolUsuario.ALUMNO);
+        List<Usuario> alumnos = usuarioRepository.findByRol(RolUsuario.ESTUDIANTE);
         assertEquals(2, alumnos.size());
 
         List<Usuario> profesores = usuarioRepository.findByRol(RolUsuario.PROFESOR);
@@ -71,7 +71,7 @@ class UsuarioRepositoryTest {
     }
 
     private Usuario createUsuario(String legajo, String mail) {
-        return createUsuario(legajo, mail, RolUsuario.ALUMNO);
+        return createUsuario(legajo, mail, RolUsuario.ESTUDIANTE);
     }
 
     private Usuario createUsuario(String legajo, RolUsuario rol) {
@@ -88,7 +88,7 @@ class UsuarioRepositoryTest {
         usuario.setApellido("Apellido");
         usuario.setMail(mail);
         usuario.setFechaNacimiento(LocalDate.of(1990, 1, 1));
-        usuario.setGenero(Genero.MASCULINO);
+        usuario.setGenero(Genero.M);
         usuario.setFechaIngreso(LocalDate.now());
         usuario.setRol(rol);
         usuario.setEstado(EstadoUsuario.ACTIVO);

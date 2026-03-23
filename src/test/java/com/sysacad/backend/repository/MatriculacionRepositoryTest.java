@@ -28,9 +28,27 @@ class MatriculacionRepositoryTest {
 
     private Usuario alumno;
     private Carrera carrera;
+    private FacultadRegional facultad;
+    private PlanDeEstudio plan;
 
     @BeforeEach
     void setUp() {
+        facultad = new FacultadRegional();
+        facultad.setCiudad("Cba");
+        facultad.setProvincia("Cba");
+        entityManager.persist(facultad);
+
+        carrera = new Carrera();
+        carrera.setNombre("Sistemas");
+        carrera.setAlias("ISI");
+        entityManager.persist(carrera);
+
+        plan = new PlanDeEstudio();
+        plan.setId(new PlanDeEstudio.PlanId(carrera.getId(), 2023));
+        plan.setCarrera(carrera);
+        plan.setNombre("Plan 2023");
+        entityManager.persist(plan);
+
         alumno = new Usuario();
         alumno.setLegajo("ALU777");
         alumno.setPassword("p");
@@ -40,25 +58,22 @@ class MatriculacionRepositoryTest {
         alumno.setApellido("B");
         alumno.setMail("a@b.com");
         alumno.setFechaNacimiento(LocalDate.of(2000, 1, 1));
-        alumno.setGenero(Genero.MASCULINO);
+        alumno.setGenero(Genero.M);
         alumno.setFechaIngreso(LocalDate.now());
-        alumno.setRol(RolUsuario.ALUMNO);
+        alumno.setRol(RolUsuario.ESTUDIANTE);
         alumno.setEstado(EstadoUsuario.ACTIVO);
         entityManager.persist(alumno);
-
-        carrera = new Carrera();
-        carrera.setNombre("Sistemas");
-        entityManager.persist(carrera);
     }
 
     @Test
     @DisplayName("Debe listar matriculaciones por ID de usuario")
     void findByIdIdUsuario_Success() {
         Matriculacion m = new Matriculacion();
-        m.setId(new Matriculacion.MatriculacionId(alumno.getId(), carrera.getId()));
+        m.setId(new Matriculacion.MatriculacionId(alumno.getId(), facultad.getId(), carrera.getId(), 2023));
         m.setUsuario(alumno);
-        m.setCarrera(carrera);
-        m.setFechaMatriculacion(LocalDate.now());
+        m.setPlan(plan);
+        m.setFacultad(facultad);
+        m.setFechaInscripcion(LocalDate.now());
         m.setEstado("ACTIVO");
         entityManager.persist(m);
         entityManager.flush();
@@ -71,10 +86,11 @@ class MatriculacionRepositoryTest {
     @DisplayName("Debe contar matriculaciones por ID de carrera")
     void countByIdIdCarrera_Success() {
         Matriculacion m = new Matriculacion();
-        m.setId(new Matriculacion.MatriculacionId(alumno.getId(), carrera.getId()));
+        m.setId(new Matriculacion.MatriculacionId(alumno.getId(), facultad.getId(), carrera.getId(), 2023));
         m.setUsuario(alumno);
-        m.setCarrera(carrera);
-        m.setFechaMatriculacion(LocalDate.now());
+        m.setPlan(plan);
+        m.setFacultad(facultad);
+        m.setFechaInscripcion(LocalDate.now());
         m.setEstado("ACTIVO");
         entityManager.persist(m);
         entityManager.flush();

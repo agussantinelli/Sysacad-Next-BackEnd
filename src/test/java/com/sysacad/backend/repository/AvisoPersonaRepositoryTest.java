@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -42,9 +43,9 @@ class AvisoPersonaRepositoryTest {
         persona.setApellido("Persona");
         persona.setMail("test@persona.com");
         persona.setFechaNacimiento(java.time.LocalDate.of(2000, 1, 1));
-        persona.setGenero(Genero.OTRO);
+        persona.setGenero(Genero.M);
         persona.setFechaIngreso(java.time.LocalDate.now());
-        persona.setRol(RolUsuario.ALUMNO);
+        persona.setRol(RolUsuario.ESTUDIANTE);
         persona.setEstado(EstadoUsuario.ACTIVO);
         entityManager.persist(persona);
 
@@ -52,7 +53,7 @@ class AvisoPersonaRepositoryTest {
         ap.setId(new AvisoPersona.AvisoPersonaId(aviso.getId(), persona.getId()));
         ap.setAviso(aviso);
         ap.setPersona(persona);
-        ap.setEstado(EstadoAvisoPersona.NO_LEIDO);
+        ap.setEstado(EstadoAvisoPersona.ENVIADO);
         entityManager.persist(ap);
         entityManager.flush();
 

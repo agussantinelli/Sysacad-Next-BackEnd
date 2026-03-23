@@ -24,7 +24,6 @@ class FacultadRegionalRepositoryTest {
     @DisplayName("Debe verificar existencia por ciudad y provincia")
     void existsByCiudadAndProvincia_Success() {
         FacultadRegional f = new FacultadRegional();
-        f.setNombre("FRC");
         f.setCiudad("Córdoba");
         f.setProvincia("Córdoba");
         entityManager.persist(f);

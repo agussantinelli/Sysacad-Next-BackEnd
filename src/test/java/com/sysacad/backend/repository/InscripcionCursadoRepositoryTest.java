@@ -45,7 +45,7 @@ class InscripcionCursadoRepositoryTest {
         materia.setNombre("Matemática I");
         entityManager.persist(materia);
 
-        alumno = createUsuario("ALU001", RolUsuario.ALUMNO);
+        alumno = createUsuario("ALU001", RolUsuario.ESTUDIANTE);
         profesor = createUsuario("PROF001", RolUsuario.PROFESOR);
         entityManager.persist(alumno);
         entityManager.persist(profesor);
@@ -71,7 +71,7 @@ class InscripcionCursadoRepositoryTest {
         usuario.setApellido("Apellido");
         usuario.setMail(legajo + "@test.com");
         usuario.setFechaNacimiento(LocalDate.of(1990, 1, 1));
-        usuario.setGenero(Genero.MASCULINO);
+        usuario.setGenero(Genero.M);
         usuario.setFechaIngreso(LocalDate.now());
         usuario.setRol(rol);
         usuario.setEstado(EstadoUsuario.ACTIVO);

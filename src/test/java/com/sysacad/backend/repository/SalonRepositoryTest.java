@@ -29,7 +29,6 @@ class SalonRepositoryTest {
     @BeforeEach
     void setUp() {
         facultad = new FacultadRegional();
-        facultad.setNombre("FRC");
         facultad.setCiudad("Cba");
         facultad.setProvincia("Cba");
         entityManager.persist(facultad);
@@ -40,7 +39,7 @@ class SalonRepositoryTest {
     void findByFacultadId_Success() {
         Salon s = new Salon();
         s.setNombre("Aula 101");
-        s.setCapacidad(50);
+        s.setPiso("1");
         s.setFacultad(facultad);
         entityManager.persist(s);
         entityManager.flush();

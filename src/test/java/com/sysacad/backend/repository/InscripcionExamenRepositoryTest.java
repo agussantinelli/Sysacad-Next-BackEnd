@@ -36,7 +36,7 @@ class InscripcionExamenRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        alumno = createUsuario("ALU001", RolUsuario.ALUMNO);
+        alumno = createUsuario("ALU001", RolUsuario.ESTUDIANTE);
         presidente = createUsuario("PROF001", RolUsuario.PROFESOR);
         entityManager.persist(alumno);
         entityManager.persist(presidente);
@@ -71,7 +71,7 @@ class InscripcionExamenRepositoryTest {
         usuario.setApellido("Apellido");
         usuario.setMail(legajo + "@test.com");
         usuario.setFechaNacimiento(LocalDate.of(1990, 1, 1));
-        usuario.setGenero(Genero.MASCULINO);
+        usuario.setGenero(Genero.M);
         usuario.setFechaIngreso(LocalDate.now());
         usuario.setRol(rol);
         usuario.setEstado(EstadoUsuario.ACTIVO);
@@ -81,7 +81,7 @@ class InscripcionExamenRepositoryTest {
     @Test
     @DisplayName("Debe encontrar inscripciones por ID de usuario")
     void findByUsuarioId_Success() {
-        InscripcionExamen inscripcion = createInscripcion(alumno, detalleMesaExamen, EstadoExamen.INSCRIPTO);
+        InscripcionExamen inscripcion = createInscripcion(alumno, detalleMesaExamen, EstadoExamen.PENDIENTE);
         entityManager.persist(inscripcion);
         entityManager.flush();
 
@@ -94,7 +94,7 @@ class InscripcionExamenRepositoryTest {
     @Test
     @DisplayName("Debe contar inscripciones por detalle de mesa")
     void countByDetalleMesaExamenId_Success() {
-        InscripcionExamen inscripcion = createInscripcion(alumno, detalleMesaExamen, EstadoExamen.INSCRIPTO);
+        InscripcionExamen inscripcion = createInscripcion(alumno, detalleMesaExamen, EstadoExamen.PENDIENTE);
         entityManager.persist(inscripcion);
         entityManager.flush();
 
@@ -106,7 +106,7 @@ class InscripcionExamenRepositoryTest {
     @Test
     @DisplayName("Debe contar exámenes por profesor y año")
     void countExamenesByProfesor_Success() {
-        InscripcionExamen inscripcion = createInscripcion(alumno, detalleMesaExamen, EstadoExamen.INSCRIPTO);
+        InscripcionExamen inscripcion = createInscripcion(alumno, detalleMesaExamen, EstadoExamen.PENDIENTE);
         entityManager.persist(inscripcion);
         entityManager.flush();
 

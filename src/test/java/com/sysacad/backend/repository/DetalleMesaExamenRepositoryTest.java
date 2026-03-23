@@ -65,7 +65,7 @@ class DetalleMesaExamenRepositoryTest {
         u.setLegajo(legajo); u.setPassword("p"); u.setTipoDocumento(TipoDocumento.DNI);
         u.setDni(UUID.randomUUID().toString().substring(0, 8)); u.setNombre("N"); u.setApellido("A");
         u.setMail(legajo + "@t.com"); u.setFechaNacimiento(LocalDate.now());
-        u.setGenero(Genero.MASCULINO); u.setFechaIngreso(LocalDate.now());
+        u.setGenero(Genero.M); u.setFechaIngreso(LocalDate.now());
         u.setRol(RolUsuario.PROFESOR); u.setEstado(EstadoUsuario.ACTIVO);
         return u;
     }

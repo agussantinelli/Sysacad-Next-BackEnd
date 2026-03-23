@@ -49,18 +49,22 @@ class MateriaRepositoryTest {
     void findByTipoMateria_Success() {
         Materia m1 = new Materia();
         m1.setNombre("Materia 1");
-        m1.setTipoMateria(TipoMateria.CUATRIMESTRAL);
+        m1.setTipoMateria(TipoMateria.BASICA);
+        m1.setHorasCursado((short) 64);
+        m1.setDuracion(com.sysacad.backend.modelo.enums.DuracionMateria.CUATRIMESTRAL);
         entityManager.persist(m1);
         
         Materia m2 = new Materia();
         m2.setNombre("Materia 2");
-        m2.setTipoMateria(TipoMateria.ANUAL);
+        m2.setTipoMateria(TipoMateria.ESPECIFICA);
+        m2.setHorasCursado((short) 128);
+        m2.setDuracion(com.sysacad.backend.modelo.enums.DuracionMateria.ANUAL);
         entityManager.persist(m2);
         
         entityManager.flush();
 
-        List<Materia> result = materiaRepository.findByTipoMateria(TipoMateria.CUATRIMESTRAL);
+        List<Materia> result = materiaRepository.findByTipoMateria(TipoMateria.BASICA);
         assertEquals(1, result.size());
-        assertEquals(TipoMateria.CUATRIMESTRAL, result.get(0).getTipoMateria());
+        assertEquals(TipoMateria.BASICA, result.get(0).getTipoMateria());
     }
 }

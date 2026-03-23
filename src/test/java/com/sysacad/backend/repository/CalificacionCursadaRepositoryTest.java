@@ -67,8 +67,8 @@ class CalificacionCursadaRepositoryTest {
         u.setLegajo(legajo); u.setPassword("p"); u.setTipoDocumento(TipoDocumento.DNI);
         u.setDni(UUID.randomUUID().toString().substring(0, 8)); u.setNombre("N"); u.setApellido("A");
         u.setMail(legajo + "@t.com"); u.setFechaNacimiento(java.time.LocalDate.now());
-        u.setGenero(Genero.MASCULINO); u.setFechaIngreso(java.time.LocalDate.now());
-        u.setRol(RolUsuario.ALUMNO); u.setEstado(EstadoUsuario.ACTIVO);
+        u.setGenero(Genero.M); u.setFechaIngreso(java.time.LocalDate.now());
+        u.setRol(RolUsuario.ESTUDIANTE); u.setEstado(EstadoUsuario.ACTIVO);
         return u;
     }
 }

@@ -40,9 +40,9 @@ class MiembroGrupoRepositoryTest {
         usuario.setApellido("User");
         usuario.setMail("test@test.com");
         usuario.setFechaNacimiento(LocalDate.of(2000, 1, 1));
-        usuario.setGenero(Genero.OTRO);
+        usuario.setGenero(Genero.M);
         usuario.setFechaIngreso(LocalDate.now());
-        usuario.setRol(RolUsuario.ALUMNO);
+        usuario.setRol(RolUsuario.ESTUDIANTE);
         usuario.setEstado(EstadoUsuario.ACTIVO);
         entityManager.persist(usuario);
 
@@ -60,7 +60,7 @@ class MiembroGrupoRepositoryTest {
         miembro.setId(new MiembroGrupo.MiembroGrupoId(grupo.getId(), usuario.getId()));
         miembro.setGrupo(grupo);
         miembro.setUsuario(usuario);
-        miembro.setFechaUnion(LocalDate.now());
+        miembro.setFechaUnion(java.time.LocalDateTime.now());
         entityManager.persist(miembro);
         entityManager.flush();
 

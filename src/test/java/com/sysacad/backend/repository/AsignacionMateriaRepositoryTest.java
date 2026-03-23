@@ -42,7 +42,7 @@ class AsignacionMateriaRepositoryTest {
         docente.setApellido("Docente");
         docente.setMail("doc@test.com");
         docente.setFechaNacimiento(java.time.LocalDate.of(1980, 1, 1));
-        docente.setGenero(com.sysacad.backend.modelo.enums.Genero.OTRO);
+        docente.setGenero(com.sysacad.backend.modelo.enums.Genero.M);
         docente.setFechaIngreso(java.time.LocalDate.now());
         entityManager.persist(docente);
 
@@ -56,13 +56,13 @@ class AsignacionMateriaRepositoryTest {
     void findByIdIdUsuarioAndCargo_Success() {
         AsignacionMateria asignacion = new AsignacionMateria();
         asignacion.setId(new AsignacionMateria.AsignacionMateriaId(docente.getId(), materia.getId()));
-        asignacion.setCargo(RolCargo.TITULAR);
-        asignacion.setUsuario(docente);
+        asignacion.setCargo(RolCargo.JEFE_CATEDRA);
+        asignacion.setProfesor(docente);
         asignacion.setMateria(materia);
         entityManager.persist(asignacion);
         entityManager.flush();
 
-        List<AsignacionMateria> result = asignacionMateriaRepository.findByIdIdUsuarioAndCargo(docente.getId(), RolCargo.TITULAR);
+        List<AsignacionMateria> result = asignacionMateriaRepository.findByIdIdUsuarioAndCargo(docente.getId(), RolCargo.JEFE_CATEDRA);
         assertEquals(1, result.size());
     }
 }

@@ -49,7 +49,7 @@ class ComisionRepositoryTest {
         profesor.setApellido("Perez");
         profesor.setMail("juan@test.com");
         profesor.setFechaNacimiento(LocalDate.of(1980, 1, 1));
-        profesor.setGenero(Genero.MASCULINO);
+        profesor.setGenero(Genero.M);
         profesor.setFechaIngreso(LocalDate.now());
         profesor.setRol(RolUsuario.PROFESOR);
         profesor.setEstado(EstadoUsuario.ACTIVO);

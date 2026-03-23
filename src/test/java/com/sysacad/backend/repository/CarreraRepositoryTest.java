@@ -28,7 +28,6 @@ class CarreraRepositoryTest {
     @DisplayName("Debe encontrar carreras por ID de facultad")
     void findByFacultades_Id_Success() {
         FacultadRegional facultad = new FacultadRegional();
-        facultad.setNombre("FRC");
         facultad.setCiudad("Córdoba");
         facultad.setProvincia("Córdoba");
         entityManager.persist(facultad);
@@ -36,7 +35,7 @@ class CarreraRepositoryTest {
         Carrera carrera = new Carrera();
         carrera.setNombre("Sistemas");
         carrera.setAlias("ISI");
-        carrera.setFacultades(List.of(facultad));
+        carrera.setFacultades(java.util.Set.of(facultad));
         entityManager.persist(carrera);
         entityManager.flush();
 
