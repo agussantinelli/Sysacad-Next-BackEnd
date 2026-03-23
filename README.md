@@ -502,8 +502,8 @@
 <p>Validación de lógica de negocio aislada mediante el uso de Mocks para dependencias de red y persistencia. Los tests están integrados en el pipeline de <strong>GitHub Actions</strong>.</p>
 <ul>
     <li><strong>Comando de ejecución:</strong> <code>./mvnw test</code></li>
-    <li><strong>Estado Actual:</strong> <code>384</code> tests unitarios pasando exitosamente.</li>
-    <li><strong>Estructura:</strong> <code>106</code> archivos de test (Excluyendo integración).</li>
+    <li><strong>Estado Actual:</strong> <code>365</code> tests unitarios pasando exitosamente.</li>
+    <li><strong>Estructura:</strong> <code>105</code> archivos de test (Excluyendo integración).</li>
     <li><strong>Aislamiento:</strong> Uso extensivo de <strong>Mockito</strong> para el stubbing de repositorios y componentes externos.</li>
 </ul>
 
@@ -511,7 +511,7 @@
 <p>Validación del flujo completo entre capas (Controller → Service → Repository) en un entorno controlado con base de datos H2 en memoria. Estas pruebas aseguran que la seguridad (JWT/Roles) y la persistencia funcionen correctamente en conjunto.</p>
 <ul>
     <li><strong>Comando específico:</strong> <code>./mvnw test -Dtest=*IntegrationTest</code></li>
-    <li><strong>Estado Actual:</strong> 13 archivos de integración (23 specs individuales) pasando exitosamente.</li>
+    <li><strong>Estado Actual:</strong> 13 archivos de integración (16 specs individuales) pasando exitosamente.</li>
     <li><strong>Misión:</strong> Garantizar que la interacción entre los endpoints REST, las reglas de negocio y el motor de persistencia sea consistente con los requisitos del sistema.</li>
     <li><strong>Enfoque:</strong> Escenarios complejos de inscripción, matriculación, autenticación y generación de reportes.</li>
 </ul>
