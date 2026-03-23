@@ -30,14 +30,14 @@ class AdminComisionIntegrationTest extends IntegrationTestBase {
     @Test
     @DisplayName("Admin puede crear una comisión")
     void crearComision_Success() throws Exception {
-        comisionRepository.deleteAll();
+        String testName = "1K1_" + UUID.randomUUID().toString().substring(0, 4);
         Carrera carrera = new Carrera();
-        carrera.setNombre("Sistemas");
-        carrera.setAlias("SIS");
+        carrera.setNombre("Sistemas_" + testName);
+        carrera.setAlias("SIS_" + UUID.randomUUID().toString().substring(0, 3));
         carrera = carreraRepository.save(carrera);
 
         ComisionRequest request = new ComisionRequest();
-        request.setNombre("1K1");
+        request.setNombre(testName);
         request.setAnio(2024);
         request.setTurno("MAÑANA");
         request.setNivel(1);
@@ -50,6 +50,6 @@ class AdminComisionIntegrationTest extends IntegrationTestBase {
                 .andExpect(status().isCreated());
 
         assertTrue(comisionRepository.findAll().stream()
-                .anyMatch(c -> c.getNombre().equals("1K1")));
+                .anyMatch(c -> c.getNombre().equals(testName)));
     }
 }

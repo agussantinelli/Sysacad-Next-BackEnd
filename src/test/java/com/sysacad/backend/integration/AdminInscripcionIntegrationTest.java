@@ -45,20 +45,18 @@ class AdminInscripcionIntegrationTest extends IntegrationTestBase {
     @Test
     @DisplayName("Admin puede inscribir a un alumno en una comisión")
     void inscribirAlumno_Success() throws Exception {
-        inscripcionCursadoRepository.deleteAll();
-        comisionRepository.deleteAll();
-        carreraRepository.deleteAll();
-        usuarioRepository.deleteAll();
-        facultadRegionalRepository.deleteAll();
+        String uniqueSuffix = UUID.randomUUID().toString().substring(0, 4);
+        String legajo = "ALU_" + uniqueSuffix;
+        String dni = "3333" + uniqueSuffix;
 
         // Setup: Alumno y Comisión real
         Usuario alumno = new Usuario();
-        alumno.setLegajo("ALU001");
+        alumno.setLegajo(legajo);
         alumno.setRol(RolUsuario.ESTUDIANTE);
         alumno.setNombre("Agus");
         alumno.setApellido("Santi");
-        alumno.setMail("alu001@test.com");
-        alumno.setDni("12345678");
+        alumno.setMail("alu_" + uniqueSuffix + "@test.com");
+        alumno.setDni(dni);
         alumno.setTipoDocumento(com.sysacad.backend.modelo.enums.TipoDocumento.DNI);
         alumno.setGenero(com.sysacad.backend.modelo.enums.Genero.M);
         alumno.setEstado(com.sysacad.backend.modelo.enums.EstadoUsuario.ACTIVO);
@@ -68,18 +66,26 @@ class AdminInscripcionIntegrationTest extends IntegrationTestBase {
         alumno = usuarioRepository.save(alumno);
 
         FacultadRegional facultad = new FacultadRegional();
-        facultad.setCiudad("Tucumán");
+        facultad.setCiudad("Tucumán_" + uniqueSuffix);
         facultad.setProvincia("Tucumán");
         facultad = facultadRegionalRepository.save(facultad);
 
         Carrera carrera = new Carrera();
-        carrera.setNombre("Ingeniería en Sistemas");
-        carrera.setAlias("ISI");
+        carrera.setNombre("Sistemas_" + uniqueSuffix);
+        carrera.setAlias("SIS_" + uniqueSuffix);
         carrera.setFacultades(java.util.Set.of(facultad));
         carrera = carreraRepository.save(carrera);
 
+        com.sysacad.backend.modelo.Materia materia = new com.sysacad.backend.modelo.Materia();
+        materia.setNombre("Materia_" + uniqueSuffix);
+        materia.setTipoMateria(com.sysacad.backend.modelo.enums.TipoMateria.BASICA);
+        materia.setDuracion(com.sysacad.backend.modelo.enums.DuracionMateria.CUATRIMESTRAL);
+        materia.setHorasCursado((short) 64);
+        // If MateriaRepository was injected, I'd save it here. But I'll use Comision to save it if it cascades or just use the injected repo.
+        // Wait, I see I don't have MateriaRepository in this test. I'll add it.
+        
         Comision comision = new Comision();
-        comision.setNombre("1K1");
+        comision.setNombre("1K1_" + uniqueSuffix);
         comision.setAnio(2024);
         comision.setTurno("MAÑANA");
         comision.setNivel(1);
@@ -99,6 +105,6 @@ class AdminInscripcionIntegrationTest extends IntegrationTestBase {
                 .andExpect(status().isOk());
 
         assertTrue(inscripcionCursadoRepository.findAll().stream()
-                .anyMatch(i -> i.getUsuario().getLegajo().equals("ALU001")));
+                .anyMatch(i -> i.getUsuario().getLegajo().equals(legajo)));
     }
 }

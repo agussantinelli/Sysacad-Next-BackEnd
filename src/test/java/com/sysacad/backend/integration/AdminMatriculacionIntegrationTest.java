@@ -11,6 +11,8 @@ import com.sysacad.backend.modelo.FacultadRegional;
 import com.sysacad.backend.repository.CarreraRepository;
 import com.sysacad.backend.repository.FacultadRegionalRepository;
 import com.sysacad.backend.repository.UsuarioRepository;
+import com.sysacad.backend.repository.PlanDeEstudioRepository;
+import com.sysacad.backend.modelo.PlanDeEstudio;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +37,9 @@ class AdminMatriculacionIntegrationTest extends IntegrationTestBase {
 
     @Autowired
     private FacultadRegionalRepository facultadRegionalRepository;
+
+    @Autowired
+    private PlanDeEstudioRepository planDeEstudioRepository;
 
     @Test
     @DisplayName("Admin puede realizar una matriculación")
@@ -63,6 +68,13 @@ class AdminMatriculacionIntegrationTest extends IntegrationTestBase {
         facultad.setCiudad("Tucumán");
         facultad.setProvincia("Tucumán");
         facultad = facultadRegionalRepository.save(facultad);
+
+        PlanDeEstudio plan = new PlanDeEstudio();
+        plan.setId(new PlanDeEstudio.PlanId(carrera.getId(), 2023));
+        plan.setNombre("Plan 2023");
+        plan.setFechaInicio(LocalDate.of(2023, 1, 1));
+        plan.setEsVigente(true);
+        planDeEstudioRepository.save(plan);
 
         MatriculacionRequest request = new MatriculacionRequest();
         request.setIdUsuario(alumno.getId());

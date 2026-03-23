@@ -7,6 +7,7 @@ import com.sysacad.backend.repository.FacultadRegionalRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import java.util.UUID;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 
@@ -27,16 +28,19 @@ class AdminCarreraIntegrationTest extends IntegrationTestBase {
     @Test
     @DisplayName("Admin puede crear una carrera correctamente")
     void crearCarrera_Success() throws Exception {
-        carreraRepository.deleteAll();
+        String uniqueSuffix = UUID.randomUUID().toString().substring(0, 4);
+        String testName = "Ingeniería en Sistemas " + uniqueSuffix;
+        String testAlias = "ISI_" + uniqueSuffix;
+
         // Setup: Facultad real
         FacultadRegional facultad = new FacultadRegional();
-        facultad.setCiudad("Tucumán");
+        facultad.setCiudad("Tucumán_" + uniqueSuffix);
         facultad.setProvincia("Tucumán");
         facultad = facultadRegionalRepository.save(facultad);
 
         CarreraRequest request = new CarreraRequest();
-        request.setNombre("Ingeniería en Sistemas");
-        request.setAlias("ISI");
+        request.setNombre(testName);
+        request.setAlias(testAlias);
         request.setIdFacultad(facultad.getId());
 
         mockMvc.perform(post("/api/admin/carreras")
@@ -47,6 +51,6 @@ class AdminCarreraIntegrationTest extends IntegrationTestBase {
 
         // Verificar persistencia real
         assertTrue(carreraRepository.findAll().stream()
-                .anyMatch(c -> c.getNombre().equals("Ingeniería en Sistemas")));
+                .anyMatch(c -> c.getNombre().equals(testName)));
     }
 }

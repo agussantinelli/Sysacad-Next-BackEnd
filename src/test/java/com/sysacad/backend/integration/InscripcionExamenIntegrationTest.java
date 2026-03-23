@@ -131,6 +131,7 @@ class InscripcionExamenIntegrationTest extends IntegrationTestBase {
         comision.setAnio(LocalDate.now().getYear());
         comision.setNivel(1);
         comision.setCarrera(carrera);
+        comision.setTurno("MAÑANA");
         comision = comisionRepository.save(comision);
 
         InscripcionCursado inscripcion = new InscripcionCursado();

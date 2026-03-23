@@ -7,6 +7,7 @@ import com.sysacad.backend.repository.UsuarioRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import java.util.UUID;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -25,16 +26,19 @@ class AuthIntegrationTest extends IntegrationTestBase {
     @Test
     @DisplayName("Login exitoso con credenciales válidas")
     void login_Success() throws Exception {
-        usuarioRepository.deleteAll();
+        String uniqueSuffix = UUID.randomUUID().toString().substring(0, 4);
+        String legajo = "ADMIN_" + uniqueSuffix;
+        String dni = "1111" + uniqueSuffix;
+
         // Preparar usuario en DB con todos los campos requeridos
         Usuario usuario = new Usuario();
-        usuario.setLegajo("ADMIN123");
+        usuario.setLegajo(legajo);
         usuario.setPassword(passwordEncoder.encode("password"));
         usuario.setRol(RolUsuario.ADMIN);
-        usuario.setMail("admin@test.com");
+        usuario.setMail("admin_" + uniqueSuffix + "@test.com");
         usuario.setNombre("Admin");
         usuario.setApellido("Test");
-        usuario.setDni("11111111");
+        usuario.setDni(dni);
         usuario.setTipoDocumento(com.sysacad.backend.modelo.enums.TipoDocumento.DNI);
         usuario.setGenero(com.sysacad.backend.modelo.enums.Genero.M);
         usuario.setEstado(com.sysacad.backend.modelo.enums.EstadoUsuario.ACTIVO);
@@ -43,7 +47,7 @@ class AuthIntegrationTest extends IntegrationTestBase {
         usuarioRepository.save(usuario);
 
         LoginRequest request = new LoginRequest();
-        request.setIdentificador("ADMIN123");
+        request.setIdentificador(legajo);
         request.setPassword("password");
 
         mockMvc.perform(post("/api/auth/login")
@@ -57,14 +61,18 @@ class AuthIntegrationTest extends IntegrationTestBase {
     @Test
     @DisplayName("Login fallido con contraseña incorrecta")
     void login_InvalidPassword() throws Exception {
+        String uniqueSuffix = UUID.randomUUID().toString().substring(0, 4);
+        String legajo = "USER_" + uniqueSuffix;
+        String dni = "2222" + uniqueSuffix;
+
         Usuario usuario = new Usuario();
-        usuario.setLegajo("USER456");
+        usuario.setLegajo(legajo);
         usuario.setPassword(passwordEncoder.encode("password"));
         usuario.setRol(RolUsuario.ESTUDIANTE);
-        usuario.setMail("user@test.com");
+        usuario.setMail("user_" + uniqueSuffix + "@test.com");
         usuario.setNombre("User");
         usuario.setApellido("Test");
-        usuario.setDni("22222222");
+        usuario.setDni(dni);
         usuario.setTipoDocumento(com.sysacad.backend.modelo.enums.TipoDocumento.DNI);
         usuario.setGenero(com.sysacad.backend.modelo.enums.Genero.M);
         usuario.setEstado(com.sysacad.backend.modelo.enums.EstadoUsuario.ACTIVO);
@@ -73,7 +81,7 @@ class AuthIntegrationTest extends IntegrationTestBase {
         usuarioRepository.save(usuario);
 
         LoginRequest request = new LoginRequest();
-        request.setIdentificador("USER456");
+        request.setIdentificador(legajo);
         request.setPassword("wrongpassword");
 
         mockMvc.perform(post("/api/auth/login")

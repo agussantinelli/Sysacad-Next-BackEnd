@@ -4,6 +4,7 @@ import com.sysacad.backend.dto.facultad.FacultadRequest;
 import com.sysacad.backend.modelo.FacultadRegional;
 import com.sysacad.backend.repository.FacultadRegionalRepository;
 import org.junit.jupiter.api.DisplayName;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -23,8 +24,9 @@ class AdminFacultadIntegrationTest extends IntegrationTestBase {
     @Test
     @DisplayName("Admin puede crear una facultad correctamente")
     void crearFacultad_Success() throws Exception {
+        String uniqueSuffix = UUID.randomUUID().toString().substring(0, 4);
         FacultadRequest request = new FacultadRequest();
-        request.setCiudad("Tucumán");
+        request.setCiudad("Tucumán_" + uniqueSuffix);
         request.setProvincia("Tucumán");
 
         mockMvc.perform(post("/api/admin/facultades")
@@ -34,7 +36,7 @@ class AdminFacultadIntegrationTest extends IntegrationTestBase {
                 .andExpect(status().isCreated());
 
         assertTrue(facultadRegionalRepository.findAll().stream()
-                .anyMatch(f -> f.getCiudad().equals("Tucumán")));
+                .anyMatch(f -> f.getCiudad().equals("Tucumán_" + uniqueSuffix)));
     }
 
     @Test

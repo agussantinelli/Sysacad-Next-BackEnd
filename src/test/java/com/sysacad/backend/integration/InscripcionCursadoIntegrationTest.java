@@ -13,6 +13,7 @@ import com.sysacad.backend.repository.UsuarioRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import java.util.UUID;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 
@@ -38,17 +39,16 @@ class InscripcionCursadoIntegrationTest extends IntegrationTestBase {
     @Test
     @DisplayName("Estudiante puede inscribirse a una comisión")
     void inscribirComision_Success() throws Exception {
-        comisionRepository.deleteAll();
-        carreraRepository.deleteAll();
-        usuarioRepository.deleteAll();
-        facultadRegionalRepository.deleteAll();
+        String uniqueSuffix = UUID.randomUUID().toString().substring(0, 4);
+        String legajo = "ALU_" + uniqueSuffix;
+        String dni = "4444" + uniqueSuffix;
 
         Usuario alumno = new Usuario();
-        alumno.setLegajo("ALU001");
+        alumno.setLegajo(legajo);
         alumno.setNombre("Agus");
         alumno.setApellido("Santi");
-        alumno.setMail("alu001@test.com");
-        alumno.setDni("12345678");
+        alumno.setMail("alu_" + uniqueSuffix + "@test.com");
+        alumno.setDni(dni);
         alumno.setTipoDocumento(com.sysacad.backend.modelo.enums.TipoDocumento.DNI);
         alumno.setGenero(com.sysacad.backend.modelo.enums.Genero.M);
         alumno.setEstado(com.sysacad.backend.modelo.enums.EstadoUsuario.ACTIVO);
@@ -59,18 +59,18 @@ class InscripcionCursadoIntegrationTest extends IntegrationTestBase {
         alumno = usuarioRepository.save(alumno);
 
         FacultadRegional facultad = new FacultadRegional();
-        facultad.setCiudad("Tucumán");
+        facultad.setCiudad("Tucumán_" + uniqueSuffix);
         facultad.setProvincia("Tucumán");
         facultad = facultadRegionalRepository.save(facultad);
 
         Carrera carrera = new Carrera();
-        carrera.setNombre("Ingeniería en Sistemas");
-        carrera.setAlias("ISI");
+        carrera.setNombre("Sistemas_" + uniqueSuffix);
+        carrera.setAlias("ISI_" + uniqueSuffix);
         carrera.setFacultades(java.util.Set.of(facultad));
         carrera = carreraRepository.save(carrera);
 
         Comision comision = new Comision();
-        comision.setNombre("2K1");
+        comision.setNombre("2K1_" + uniqueSuffix);
         comision.setAnio(2024);
         comision.setTurno("NOCHE");
         comision.setNivel(2);
