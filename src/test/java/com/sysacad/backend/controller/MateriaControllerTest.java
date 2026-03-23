@@ -23,6 +23,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -99,5 +100,110 @@ class MateriaControllerTest {
         mockMvc.perform(delete("/api/materias/{id}", id)
                 .with(csrf()))
                 .andExpect(status().isNoContent());
+    }
+
+    @Test
+    @WithMockUser(roles = "ESTUDIANTE")
+    @DisplayName("Estudiante no puede eliminar materia (Forbidden)")
+    void eliminarMateria_Forbidden_AsStudent() throws Exception {
+        mockMvc.perform(delete("/api/materias/{id}", UUID.randomUUID())
+                        .with(csrf()))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(roles = "PROFESOR")
+    @DisplayName("Profesor puede actualizar materia")
+    void actualizarMateria_Profesor_Success() throws Exception {
+        UUID id = UUID.randomUUID();
+        MateriaRequest request = new MateriaRequest();
+        when(materiaMapper.toEntity(any())).thenReturn(new Materia());
+        when(materiaService.actualizarMateria(any(), any())).thenReturn(new Materia());
+        when(materiaMapper.toDTO(any())).thenReturn(new MateriaResponse());
+
+        mockMvc.perform(put("/api/materias/{id}", id)
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser
+    @DisplayName("Usuario debe obtener una materia por ID")
+    void buscarPorId_Success() throws Exception {
+        UUID id = UUID.randomUUID();
+        when(materiaService.buscarPorId(id)).thenReturn(Optional.of(new Materia()));
+        when(materiaMapper.toDTO(any())).thenReturn(new MateriaResponse());
+
+        mockMvc.perform(get("/api/materias/{id}", id))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = "ESTUDIANTE", username = "ALU001")
+    @DisplayName("Estudiante debe ver mesas de examen de una materia")
+    void getMesasPorMateria_Success() throws Exception {
+        UUID id = UUID.randomUUID();
+        com.sysacad.backend.modelo.Usuario usuario = new com.sysacad.backend.modelo.Usuario();
+        usuario.setId(UUID.randomUUID());
+        when(usuarioRepository.findByLegajo(anyString())).thenReturn(Optional.of(usuario));
+        when(mesaExamenService.obtenerMesasDisponibles(any(), any())).thenReturn(List.of());
+
+        mockMvc.perform(get("/api/materias/{id}/mesas", id))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser
+    @DisplayName("Usuario debe ver correlativas de una materia")
+    void getCorrelativas_Success() throws Exception {
+        UUID id = UUID.randomUUID();
+        when(materiaService.obtenerArbolCorrelativas(any(), any(), any())).thenReturn(List.of());
+
+        mockMvc.perform(get("/api/materias/{id}/correlativas", id)
+                        .param("carreraId", UUID.randomUUID().toString())
+                        .param("nroPlan", "1"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("Anónimo no puede listar materias (Unauthorized)")
+    void listarTodas_Unauthorized() throws Exception {
+        mockMvc.perform(get("/api/materias"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser
+    @DisplayName("buscarPorId devuelve error si no existe materia")
+    void buscarPorId_NotFound() throws Exception {
+        when(materiaService.buscarPorId(any())).thenReturn(Optional.empty());
+
+        mockMvc.perform(get("/api/materias/{id}", UUID.randomUUID()))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    @DisplayName("Admin debe ver materias filtradas por tipo")
+    void listarTodas_WithTipo_Success() throws Exception {
+        when(materiaService.buscarPorTipo(any())).thenReturn(List.of(new Materia()));
+        when(materiaMapper.toDTO(any())).thenReturn(new MateriaResponse());
+
+        mockMvc.perform(get("/api/materias")
+                        .param("tipo", "ANUAL"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = "ESTUDIANTE")
+    @DisplayName("Estudiante no puede crear materias (Forbidden)")
+    void crearMateria_Forbidden_AsStudent() throws Exception {
+        mockMvc.perform(post("/api/materias")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{}"))
+                .andExpect(status().isForbidden());
     }
 }
