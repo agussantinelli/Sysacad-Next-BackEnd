@@ -36,4 +36,47 @@ class ReporteControllerTest {
         mockMvc.perform(get("/api/reportes/certificados"))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    @WithMockUser(roles = "ESTUDIANTE")
+    @DisplayName("Estudiante no puede ver historial de reportes")
+    void obtenerHistorialCertificados_Forbidden_AsStudent() throws Exception {
+        mockMvc.perform(get("/api/reportes/certificados"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(roles = "PROFESOR")
+    @DisplayName("Profesor no puede ver historial de reportes")
+    void obtenerHistorialCertificados_Forbidden_AsProfesor() throws Exception {
+        mockMvc.perform(get("/api/reportes/certificados"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("Anónimo no puede ver historial de reportes")
+    void obtenerHistorialCertificados_Unauthorized_AsAnonymous() throws Exception {
+        mockMvc.perform(get("/api/reportes/certificados"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    @DisplayName("Admin obtiene lista vacía de historial")
+    void obtenerHistorialCertificados_EmptyList() throws Exception {
+        when(certificadoService.obtenerHistorialDescargas()).thenReturn(java.util.Collections.emptyList());
+
+        mockMvc.perform(get("/api/reportes/certificados"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    @DisplayName("Fallo interno en servicio de reportes")
+    void obtenerHistorialCertificados_InternalError() throws Exception {
+        when(certificadoService.obtenerHistorialDescargas()).thenThrow(new RuntimeException("DB fail"));
+
+        mockMvc.perform(get("/api/reportes/certificados"))
+                .andExpect(status().isInternalServerError());
+    }
 }
