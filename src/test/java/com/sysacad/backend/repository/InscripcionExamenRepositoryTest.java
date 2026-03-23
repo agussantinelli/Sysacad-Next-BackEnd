@@ -42,7 +42,10 @@ class InscripcionExamenRepositoryTest {
         entityManager.persist(presidente);
 
         materia = new Materia();
-        materia.setNombre("Sistemas Operativos");
+        materia.setNombre("Algoritmos");
+        materia.setTipoMateria(TipoMateria.BASICA);
+        materia.setDuracion(DuracionMateria.CUATRIMESTRAL);
+        materia.setHorasCursado((short) 64);
         entityManager.persist(materia);
 
         mesaExamen = new MesaExamen();

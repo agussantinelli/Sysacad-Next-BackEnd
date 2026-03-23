@@ -1,6 +1,7 @@
 package com.sysacad.backend.repository;
 
 import com.sysacad.backend.modelo.*;
+import com.sysacad.backend.modelo.enums.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,11 +31,15 @@ class PlanMateriaRepositoryTest {
     @BeforeEach
     void setUp() {
         carrera = new Carrera();
-        carrera.setNombre("Carrera Test");
+        carrera.setNombre("Sistemas");
+        carrera.setAlias("ISI");
         entityManager.persist(carrera);
 
         materia = new Materia();
-        materia.setNombre("Materia Test");
+        materia.setNombre("Algoritmos");
+        materia.setTipoMateria(TipoMateria.BASICA);
+        materia.setDuracion(DuracionMateria.CUATRIMESTRAL);
+        materia.setHorasCursado((short) 64);
         entityManager.persist(materia);
     }
 

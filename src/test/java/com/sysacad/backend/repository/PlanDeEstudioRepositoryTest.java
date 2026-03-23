@@ -32,6 +32,7 @@ class PlanDeEstudioRepositoryTest {
     void setUp() {
         carrera = new Carrera();
         carrera.setNombre("Industrial");
+        carrera.setAlias("IND");
         entityManager.persist(carrera);
     }
 
@@ -43,6 +44,7 @@ class PlanDeEstudioRepositoryTest {
         p.setNombre("Plan 2023");
         p.setEsVigente(true);
         p.setCarrera(carrera);
+        p.setFechaInicio(java.time.LocalDate.now());
         entityManager.persist(p);
         entityManager.flush();
 

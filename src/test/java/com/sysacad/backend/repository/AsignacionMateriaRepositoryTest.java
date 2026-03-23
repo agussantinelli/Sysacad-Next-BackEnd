@@ -1,6 +1,7 @@
 package com.sysacad.backend.repository;
 
 import com.sysacad.backend.modelo.*;
+import com.sysacad.backend.modelo.enums.*;
 import com.sysacad.backend.modelo.enums.RolCargo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -47,7 +48,10 @@ class AsignacionMateriaRepositoryTest {
         entityManager.persist(docente);
 
         materia = new Materia();
-        materia.setNombre("Sistemas Operativos");
+        materia.setNombre("Algoritmos");
+        materia.setHorasCursado((short) 64);
+        materia.setDuracion(DuracionMateria.CUATRIMESTRAL);
+        materia.setTipoMateria(TipoMateria.BASICA);
         entityManager.persist(materia);
     }
 

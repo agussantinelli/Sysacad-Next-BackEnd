@@ -1,6 +1,7 @@
 package com.sysacad.backend.repository;
 
 import com.sysacad.backend.modelo.*;
+import com.sysacad.backend.modelo.enums.*;
 import com.sysacad.backend.modelo.enums.DiaSemana;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -34,10 +35,14 @@ class HorarioCursadoRepositoryTest {
     void setUp() {
         carrera = new Carrera();
         carrera.setNombre("Ingeniería en Sistemas");
+        carrera.setAlias("ISI");
         entityManager.persist(carrera);
 
         materia = new Materia();
         materia.setNombre("Algoritmos");
+        materia.setTipoMateria(TipoMateria.BASICA);
+        materia.setDuracion(DuracionMateria.CUATRIMESTRAL);
+        materia.setHorasCursado((short) 64);
         entityManager.persist(materia);
 
         comision = new Comision();

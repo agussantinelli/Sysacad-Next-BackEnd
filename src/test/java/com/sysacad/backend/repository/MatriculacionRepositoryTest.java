@@ -47,6 +47,7 @@ class MatriculacionRepositoryTest {
         plan.setId(new PlanDeEstudio.PlanId(carrera.getId(), 2023));
         plan.setCarrera(carrera);
         plan.setNombre("Plan 2023");
+        plan.setFechaInicio(LocalDate.now());
         entityManager.persist(plan);
 
         alumno = new Usuario();

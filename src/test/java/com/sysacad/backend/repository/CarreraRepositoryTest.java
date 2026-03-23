@@ -48,12 +48,12 @@ class CarreraRepositoryTest {
     @DisplayName("Debe verificar existencia por alias")
     void existsByAlias_Success() {
         Carrera c = new Carrera();
-        c.setNombre("Mecánica");
-        c.setAlias("IEM");
+        c.setNombre("Carrera X");
+        c.setAlias("CX");
         entityManager.persist(c);
         entityManager.flush();
 
-        assertTrue(carreraRepository.existsByAlias("IEM"));
+        assertTrue(carreraRepository.existsByAlias("CX"));
         assertFalse(carreraRepository.existsByAlias("LAR"));
     }
 }

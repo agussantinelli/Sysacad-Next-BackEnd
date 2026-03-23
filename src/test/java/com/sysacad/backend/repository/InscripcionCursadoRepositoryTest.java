@@ -39,10 +39,14 @@ class InscripcionCursadoRepositoryTest {
     void setUp() {
         carrera = new Carrera();
         carrera.setNombre("Ingeniería en Sistemas");
+        carrera.setAlias("ISI");
         entityManager.persist(carrera);
 
         materia = new Materia();
-        materia.setNombre("Matemática I");
+        materia.setNombre("Algoritmos");
+        materia.setTipoMateria(TipoMateria.BASICA);
+        materia.setDuracion(DuracionMateria.CUATRIMESTRAL);
+        materia.setHorasCursado((short) 64);
         entityManager.persist(materia);
 
         alumno = createUsuario("ALU001", RolUsuario.ESTUDIANTE);

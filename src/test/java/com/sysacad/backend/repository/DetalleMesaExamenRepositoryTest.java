@@ -29,6 +29,7 @@ class DetalleMesaExamenRepositoryTest {
 
     private MesaExamen mesa;
     private Materia materia;
+    private Carrera carrera;
     private Usuario presidente;
 
     @BeforeEach
@@ -37,8 +38,15 @@ class DetalleMesaExamenRepositoryTest {
         mesa.setNombre("Mesa"); mesa.setFechaInicio(LocalDate.now()); mesa.setFechaFin(LocalDate.now().plusDays(10));
         entityManager.persist(mesa);
 
+        carrera = new Carrera();
+        carrera.setNombre("Ingeniería en Sistemas");
+        carrera.setAlias("ISI");
+        entityManager.persist(carrera);
+
         materia = new Materia();
         materia.setNombre("Materia");
+        materia.setHorasCursado((short) 64);
+        materia.setDuracion(DuracionMateria.CUATRIMESTRAL);
         entityManager.persist(materia);
 
         presidente = createMinimalUsuario("PRES001");

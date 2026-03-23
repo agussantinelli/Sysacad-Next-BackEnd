@@ -32,11 +32,15 @@ class GrupoRepositoryTest {
     @BeforeEach
     void setUp() {
         Carrera carrera = new Carrera();
-        carrera.setNombre("Sistemas");
+        carrera.setNombre("Ingeniería en Sistemas");
+        carrera.setAlias("ISI");
         entityManager.persist(carrera);
 
         materia = new Materia();
-        materia.setNombre("Sistemas Operativos");
+        materia.setNombre("Algoritmos");
+        materia.setTipoMateria(TipoMateria.BASICA);
+        materia.setDuracion(DuracionMateria.CUATRIMESTRAL);
+        materia.setHorasCursado((short) 64);
         entityManager.persist(materia);
 
         comision = new Comision();

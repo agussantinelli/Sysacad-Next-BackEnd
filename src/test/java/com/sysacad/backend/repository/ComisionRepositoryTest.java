@@ -33,11 +33,15 @@ class ComisionRepositoryTest {
     @BeforeEach
     void setUp() {
         carrera = new Carrera();
-        carrera.setNombre("Ingeniería en Sistemas");
+        carrera.setNombre("Sistemas");
+        carrera.setAlias("ISI");
         entityManager.persist(carrera);
 
         materia = new Materia();
-        materia.setNombre("Física I");
+        materia.setNombre("Algoritmos");
+        materia.setTipoMateria(TipoMateria.BASICA);
+        materia.setDuracion(DuracionMateria.CUATRIMESTRAL);
+        materia.setHorasCursado((short) 64);
         entityManager.persist(materia);
 
         profesor = new Usuario();

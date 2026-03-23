@@ -38,8 +38,12 @@ class MensajeGrupoRepositoryTest {
     @Test
     @DisplayName("Debe contar mensajes nuevos después de una fecha")
     void countByGrupoIdAndFechaEnvioAfter_Success() {
+        Usuario u = createMinimalUsuario("USER777");
+        entityManager.persist(u);
+
         MensajeGrupo m = new MensajeGrupo();
         m.setGrupo(grupo);
+        m.setUsuario(u);
         m.setContenido("Hola");
         m.setFechaEnvio(LocalDateTime.now().plusMinutes(5));
         entityManager.persist(m);
@@ -47,5 +51,15 @@ class MensajeGrupoRepositoryTest {
 
         long count = mensajeGrupoRepository.countByGrupoIdAndFechaEnvioAfter(grupo.getId(), LocalDateTime.now());
         assertEquals(1, count);
+    }
+
+    private Usuario createMinimalUsuario(String legajo) {
+        Usuario u = new Usuario();
+        u.setLegajo(legajo); u.setPassword("p"); u.setTipoDocumento(com.sysacad.backend.modelo.enums.TipoDocumento.DNI);
+        u.setDni(UUID.randomUUID().toString().substring(0, 8)); u.setNombre("N"); u.setApellido("A");
+        u.setMail(legajo + "@t.com"); u.setFechaNacimiento(java.time.LocalDate.now());
+        u.setGenero(com.sysacad.backend.modelo.enums.Genero.M); u.setFechaIngreso(java.time.LocalDate.now());
+        u.setRol(com.sysacad.backend.modelo.enums.RolUsuario.ESTUDIANTE); u.setEstado(com.sysacad.backend.modelo.enums.EstadoUsuario.ACTIVO);
+        return u;
     }
 }

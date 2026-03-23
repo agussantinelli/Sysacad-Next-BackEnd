@@ -32,8 +32,16 @@ class CalificacionCursadaRepositoryTest {
         Usuario alu = createMinimalUsuario("ALU777");
         entityManager.persist(alu);
         
-        Materia mat = new Materia(); mat.setNombre("Mat"); entityManager.persist(mat);
-        Carrera carr = new Carrera(); carr.setNombre("Carr"); entityManager.persist(carr);
+        Materia mat = new Materia();
+        mat.setNombre("Algoritmos");
+        mat.setTipoMateria(TipoMateria.BASICA);
+        mat.setDuracion(DuracionMateria.CUATRIMESTRAL);
+        mat.setHorasCursado((short) 64);
+        entityManager.persist(mat);
+        Carrera carr = new Carrera();
+        carr.setNombre("Sistemas");
+        carr.setAlias("ISI");
+        entityManager.persist(carr);
         
         Comision com = new Comision();
         com.setNombre("1K1"); com.setAnio(2024); com.setTurno("T"); com.setNivel(1); com.setCarrera(carr);

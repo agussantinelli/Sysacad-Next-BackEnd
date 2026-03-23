@@ -1,7 +1,7 @@
 package com.sysacad.backend.repository;
 
 import com.sysacad.backend.modelo.*;
-import com.sysacad.backend.modelo.enums.TipoMateria;
+import com.sysacad.backend.modelo.enums.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,10 +31,16 @@ class MateriaRepositoryTest {
     void findByNombreContainingIgnoreCase_Success() {
         Materia m1 = new Materia();
         m1.setNombre("Análisis Matemático");
+        m1.setTipoMateria(TipoMateria.BASICA);
+        m1.setDuracion(com.sysacad.backend.modelo.enums.DuracionMateria.CUATRIMESTRAL);
+        m1.setHorasCursado((short) 64);
         entityManager.persist(m1);
         
         Materia m2 = new Materia();
         m2.setNombre("Álgebra");
+        m2.setTipoMateria(TipoMateria.BASICA);
+        m2.setDuracion(com.sysacad.backend.modelo.enums.DuracionMateria.CUATRIMESTRAL);
+        m2.setHorasCursado((short) 64);
         entityManager.persist(m2);
         
         entityManager.flush();
