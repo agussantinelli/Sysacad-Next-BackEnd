@@ -10,6 +10,8 @@ import com.sysacad.backend.modelo.Carrera;
 import com.sysacad.backend.repository.FacultadRegionalRepository;
 import com.sysacad.backend.repository.CarreraRepository;
 import com.sysacad.backend.repository.UsuarioRepository;
+import com.sysacad.backend.modelo.Materia;
+import com.sysacad.backend.repository.MateriaRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +23,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WithMockUser(username = "ALU001", roles = "ESTUDIANTE")
+@WithMockUser(username = "ALU_CURSADO", roles = "ESTUDIANTE")
 class InscripcionCursadoIntegrationTest extends IntegrationTestBase {
 
     @Autowired
@@ -36,11 +38,14 @@ class InscripcionCursadoIntegrationTest extends IntegrationTestBase {
     @Autowired
     private CarreraRepository carreraRepository;
 
+    @Autowired
+    private MateriaRepository materiaRepository;
+
     @Test
     @DisplayName("Estudiante puede inscribirse a una comisión")
     void inscribirComision_Success() throws Exception {
         String uniqueSuffix = UUID.randomUUID().toString().substring(0, 4);
-        String legajo = "ALU_" + uniqueSuffix;
+        String legajo = "ALU_CURSADO";
         String dni = "4444" + uniqueSuffix;
 
         Usuario alumno = new Usuario();
@@ -69,16 +74,25 @@ class InscripcionCursadoIntegrationTest extends IntegrationTestBase {
         carrera.setFacultades(java.util.Set.of(facultad));
         carrera = carreraRepository.save(carrera);
 
+        Materia materia = new Materia();
+        materia.setNombre("Materia_" + uniqueSuffix);
+        materia.setTipoMateria(com.sysacad.backend.modelo.enums.TipoMateria.BASICA);
+        materia.setDuracion(com.sysacad.backend.modelo.enums.DuracionMateria.CUATRIMESTRAL);
+        materia.setHorasCursado((short) 64);
+        materia = materiaRepository.save(materia);
+
         Comision comision = new Comision();
         comision.setNombre("2K1_" + uniqueSuffix);
         comision.setAnio(2024);
         comision.setTurno("NOCHE");
         comision.setNivel(2);
         comision.setCarrera(carrera);
+        comision.setMaterias(java.util.List.of(materia));
         comision = comisionRepository.save(comision);
 
         InscripcionCursadoRequest request = new InscripcionCursadoRequest();
         request.setIdComision(comision.getId());
+        request.setIdMateria(materia.getId());
 
         mockMvc.perform(post("/api/inscripciones-cursado")
                         .with(csrf())
