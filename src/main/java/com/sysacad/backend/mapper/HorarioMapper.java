@@ -15,6 +15,8 @@ public interface HorarioMapper {
 
     HorarioMapper INSTANCE = Mappers.getMapper(HorarioMapper.class);
 
+    @Mapping(source = "id.dia", target = "dia")
+    @Mapping(source = "id.horaDesde", target = "horaDesde")
     HorarioResponse toDTO(HorarioCursado horario);
 
     @Mapping(target = "id", ignore = true)
