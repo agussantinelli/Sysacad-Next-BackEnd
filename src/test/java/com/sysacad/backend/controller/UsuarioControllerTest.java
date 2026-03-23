@@ -29,6 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(UsuarioController.class)
 @ActiveProfiles("test")
+@org.springframework.context.annotation.Import(com.sysacad.backend.config.TestSecurityConfig.class)
 class UsuarioControllerTest {
 
     @Autowired
@@ -46,11 +47,7 @@ class UsuarioControllerTest {
     @MockBean
     private UsuarioMapper usuarioMapper;
 
-    @MockBean
-    private com.sysacad.backend.config.security.JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    @MockBean
-    private org.springframework.security.authentication.AuthenticationProvider authenticationProvider;
 
     @Test
     @WithMockUser(roles = "ADMIN")

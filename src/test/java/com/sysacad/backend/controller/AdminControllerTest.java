@@ -6,6 +6,7 @@ import com.sysacad.backend.dto.admin.AdminInscripcionDTO;
 import com.sysacad.backend.dto.usuario.UsuarioResponse;
 import com.sysacad.backend.mapper.UsuarioMapper;
 import com.sysacad.backend.modelo.Usuario;
+import com.sysacad.backend.repository.UsuarioRepository;
 import com.sysacad.backend.service.AdminService;
 import com.sysacad.backend.service.UsuarioService;
 import org.junit.jupiter.api.DisplayName;
@@ -31,6 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(AdminController.class)
 @ActiveProfiles("test")
+@org.springframework.context.annotation.Import(com.sysacad.backend.config.TestSecurityConfig.class)
 class AdminControllerTest {
 
     @Autowired
@@ -46,10 +48,7 @@ class AdminControllerTest {
     private UsuarioMapper usuarioMapper;
 
     @MockBean
-    private com.sysacad.backend.config.security.JwtAuthenticationFilter jwtAuthenticationFilter;
-
-    @MockBean
-    private org.springframework.security.authentication.AuthenticationProvider authenticationProvider;
+    private UsuarioRepository usuarioRepository;
 
     @Test
     @WithMockUser(roles = "ADMIN")

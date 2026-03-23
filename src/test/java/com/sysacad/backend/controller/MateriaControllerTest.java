@@ -46,12 +46,6 @@ class MateriaControllerTest {
     private MateriaMapper materiaMapper;
 
     @MockBean
-    private com.sysacad.backend.config.security.JwtAuthenticationFilter jwtAuthenticationFilter;
-
-    @MockBean
-    private org.springframework.security.authentication.AuthenticationProvider authenticationProvider;
-
-    @MockBean
     private UsuarioRepository usuarioRepository;
 
     @MockBean

@@ -34,6 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(AuthController.class)
 @ActiveProfiles("test")
+@org.springframework.context.annotation.Import(com.sysacad.backend.config.TestSecurityConfig.class)
 class AuthControllerTest {
 
     @Autowired
@@ -54,11 +55,7 @@ class AuthControllerTest {
     @MockBean
     private UsuarioMapper usuarioMapper;
 
-    @MockBean
-    private com.sysacad.backend.config.security.JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    @MockBean
-    private org.springframework.security.authentication.AuthenticationProvider authenticationProvider;
 
     @Test
     @DisplayName("Debe loguear exitosamente y retornar token")

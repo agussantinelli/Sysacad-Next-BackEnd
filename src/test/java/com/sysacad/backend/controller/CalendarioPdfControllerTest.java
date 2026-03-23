@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -22,6 +23,7 @@ class CalendarioPdfControllerTest {
     private MockMvc mockMvc;
 
     @Test
+    @WithMockUser
     @DisplayName("Debe permitir descargar el calendario académico")
     void downloadCalendario_Success() throws Exception {
         mockMvc.perform(get("/api/calendario"))
