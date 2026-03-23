@@ -47,6 +47,7 @@ class DetalleMesaExamenRepositoryTest {
         materia.setNombre("Materia");
         materia.setHorasCursado((short) 64);
         materia.setDuracion(DuracionMateria.CUATRIMESTRAL);
+        materia.setTipoMateria(TipoMateria.BASICA);
         entityManager.persist(materia);
 
         presidente = createMinimalUsuario("PRES001");

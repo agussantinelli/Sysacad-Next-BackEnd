@@ -60,6 +60,7 @@ class CalificacionCursadaRepositoryTest {
         cal.setInscripcionCursado(ins);
         cal.setInstanciaEvaluacion(inst);
         cal.setNota(new BigDecimal("7.00"));
+        cal.setFecha(java.time.LocalDate.now());
         entityManager.persist(cal);
         entityManager.flush();
 

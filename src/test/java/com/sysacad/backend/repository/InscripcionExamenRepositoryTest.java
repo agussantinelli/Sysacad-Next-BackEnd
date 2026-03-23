@@ -135,6 +135,7 @@ class InscripcionExamenRepositoryTest {
         InscripcionExamen inscripcion = new InscripcionExamen();
         inscripcion.setUsuario(u);
         inscripcion.setDetalleMesaExamen(d);
+        inscripcion.setMateria(d.getMateria());
         inscripcion.setEstado(estado);
         inscripcion.setFechaInscripcion(LocalDateTime.now());
         return inscripcion;

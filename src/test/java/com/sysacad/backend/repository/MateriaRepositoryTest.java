@@ -30,7 +30,7 @@ class MateriaRepositoryTest {
     @DisplayName("Debe encontrar materias por nombre ignorando mayúsculas")
     void findByNombreContainingIgnoreCase_Success() {
         Materia m1 = new Materia();
-        m1.setNombre("Análisis Matemático");
+        m1.setNombre("Analisis Matematico");
         m1.setTipoMateria(TipoMateria.BASICA);
         m1.setDuracion(com.sysacad.backend.modelo.enums.DuracionMateria.CUATRIMESTRAL);
         m1.setHorasCursado((short) 64);

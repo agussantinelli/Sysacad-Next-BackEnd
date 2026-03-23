@@ -50,6 +50,7 @@ class PlanMateriaRepositoryTest {
         pm.setId(new PlanMateria.PlanMateriaId(carrera.getId(), 2023, materia.getId()));
         pm.setNivel((short) 1);
         pm.setMateria(materia);
+        pm.setCodigoMateria("K1234");
         entityManager.persist(pm);
         entityManager.flush();
 
