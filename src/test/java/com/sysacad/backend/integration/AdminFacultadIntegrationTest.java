@@ -1,8 +1,8 @@
 package com.sysacad.backend.integration;
 
 import com.sysacad.backend.dto.facultad.FacultadRequest;
-import com.sysacad.backend.modelo.Facultad;
-import com.sysacad.backend.repository.FacultadRepository;
+import com.sysacad.backend.modelo.FacultadRegional;
+import com.sysacad.backend.repository.FacultadRegionalRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,14 +18,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class AdminFacultadIntegrationTest extends IntegrationTestBase {
 
     @Autowired
-    private FacultadRepository facultadRepository;
+    private FacultadRegionalRepository facultadRegionalRepository;
 
     @Test
     @DisplayName("Admin puede crear una facultad correctamente")
     void crearFacultad_Success() throws Exception {
         FacultadRequest request = new FacultadRequest();
-        request.setNombre("Facultad de Prueba");
-        request.setSede("Sede Norte");
+        request.setCiudad("Tucumán");
+        request.setProvincia("Tucumán");
 
         mockMvc.perform(post("/api/admin/facultades")
                         .with(csrf())
@@ -33,15 +33,15 @@ class AdminFacultadIntegrationTest extends IntegrationTestBase {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated());
 
-        assertTrue(facultadRepository.findAll().stream()
-                .anyMatch(f -> f.getNombre().equals("Facultad de Prueba")));
+        assertTrue(facultadRegionalRepository.findAll().stream()
+                .anyMatch(f -> f.getCiudad().equals("Tucumán")));
     }
 
     @Test
     @DisplayName("Crear facultad falla si faltan datos")
     void crearFacultad_BadRequest() throws Exception {
         FacultadRequest request = new FacultadRequest();
-        request.setNombre(""); // Inválido
+        request.setCiudad(""); // Inválido
 
         mockMvc.perform(post("/api/admin/facultades")
                         .with(csrf())

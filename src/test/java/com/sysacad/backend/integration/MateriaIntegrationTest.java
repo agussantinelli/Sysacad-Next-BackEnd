@@ -22,7 +22,9 @@ class MateriaIntegrationTest extends IntegrationTestBase {
     void listarMaterias_Success() throws Exception {
         Materia materia = new Materia();
         materia.setNombre("Álgebra");
-        materia.setCodigo("ALG1");
+        materia.setTipoMateria(com.sysacad.backend.modelo.enums.TipoMateria.BASICA);
+        materia.setDuracion(com.sysacad.backend.modelo.enums.DuracionMateria.CUATRIMESTRAL);
+        materia.setHorasCursado((short) 64);
         materiaRepository.save(materia);
 
         mockMvc.perform(get("/api/materias"))

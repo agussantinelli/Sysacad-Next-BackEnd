@@ -15,7 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 
-import java.util.List;
+import java.time.LocalDate;
+import java.util.UUID;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -43,19 +44,20 @@ class AdminMatriculacionIntegrationTest extends IntegrationTestBase {
         alumno.setTipoDocumento(TipoDocumento.DNI);
         alumno.setGenero(Genero.M);
         alumno.setEstado(EstadoUsuario.ACTIVO);
-        alumno.setFechaNacimiento(java.time.LocalDate.of(2000, 1, 1));
-        alumno.setFechaIngreso(java.time.LocalDate.now());
+        alumno.setFechaNacimiento(LocalDate.of(2000, 1, 1));
+        alumno.setFechaIngreso(LocalDate.now());
         alumno.setPassword("123456");
         alumno = usuarioRepository.save(alumno);
 
         Carrera carrera = new Carrera();
         carrera.setNombre("Sistemas Test");
+        carrera.setAlias("ISI");
         carrera = carreraRepository.save(carrera);
 
         MatriculacionRequest request = new MatriculacionRequest();
         request.setIdUsuario(alumno.getId());
         request.setIdCarrera(carrera.getId());
-        request.setIdFacultad(UUID.randomUUID()); // Assuming this for now or creating a real one
+        request.setIdFacultad(UUID.randomUUID()); 
         request.setNroPlan(2023);
 
         mockMvc.perform(post("/api/admin/matriculacion")

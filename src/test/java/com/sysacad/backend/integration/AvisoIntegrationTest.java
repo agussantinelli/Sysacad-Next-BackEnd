@@ -24,8 +24,9 @@ class AvisoIntegrationTest extends IntegrationTestBase {
     void listarAvisos_Success() throws Exception {
         Aviso aviso = new Aviso();
         aviso.setTitulo("Mantenimiento");
-        aviso.setContenido("El sistema estará fuera de línea");
-        aviso.setFechaPublicacion(LocalDateTime.now());
+        aviso.setDescripcion("El sistema estará fuera de línea");
+        aviso.setFechaEmision(LocalDateTime.now());
+        aviso.setEstado(com.sysacad.backend.modelo.enums.EstadoAviso.ACTIVO);
         avisoRepository.save(aviso);
 
         mockMvc.perform(get("/api/avisos"))

@@ -1,6 +1,6 @@
 package com.sysacad.backend.integration;
 
-import com.sysacad.backend.dto.inscripcion_cursado.InscripcionCursadoRequest;
+import com.sysacad.backend.dto.admin.AdminInscripcionRequest;
 import com.sysacad.backend.modelo.Comision;
 import com.sysacad.backend.modelo.Usuario;
 import com.sysacad.backend.modelo.enums.RolUsuario;
@@ -39,7 +39,16 @@ class AdminInscripcionIntegrationTest extends IntegrationTestBase {
         Usuario alumno = new Usuario();
         alumno.setLegajo("ALU001");
         alumno.setRol(RolUsuario.ESTUDIANTE);
-        alumno.setEmail("alu001@test.com");
+        alumno.setNombre("Agus");
+        alumno.setApellido("Santi");
+        alumno.setMail("alu001@test.com");
+        alumno.setDni("12345678");
+        alumno.setTipoDocumento(com.sysacad.backend.modelo.enums.TipoDocumento.DNI);
+        alumno.setGenero(com.sysacad.backend.modelo.enums.Genero.M);
+        alumno.setEstado(com.sysacad.backend.modelo.enums.EstadoUsuario.ACTIVO);
+        alumno.setFechaNacimiento(java.time.LocalDate.of(2000, 1, 1));
+        alumno.setFechaIngreso(java.time.LocalDate.now());
+        alumno.setPassword("password");
         alumno = usuarioRepository.save(alumno);
 
         Comision comision = new Comision();
@@ -48,9 +57,11 @@ class AdminInscripcionIntegrationTest extends IntegrationTestBase {
         comision.setTurno("MAÑANA");
         comision = comisionRepository.save(comision);
 
-        InscripcionCursadoRequest request = new InscripcionCursadoRequest();
-        request.setIdUsuario(alumno.getId());
-        request.setIdComision(comision.getId());
+        AdminInscripcionRequest request = new AdminInscripcionRequest();
+        request.setIdAlumno(alumno.getId());
+        request.setTipo("CURSADA");
+        request.setIdReferencia(comision.getId());
+        request.setIdMateria(UUID.randomUUID()); 
 
         mockMvc.perform(post("/api/admin/inscripcion")
                         .with(csrf())

@@ -30,6 +30,16 @@ class InscripcionCursadoIntegrationTest extends IntegrationTestBase {
     void inscribirComision_Success() throws Exception {
         Usuario alumno = new Usuario();
         alumno.setLegajo("ALU001");
+        alumno.setNombre("Agus");
+        alumno.setApellido("Santi");
+        alumno.setMail("alu001@test.com");
+        alumno.setDni("12345678");
+        alumno.setTipoDocumento(com.sysacad.backend.modelo.enums.TipoDocumento.DNI);
+        alumno.setGenero(com.sysacad.backend.modelo.enums.Genero.M);
+        alumno.setEstado(com.sysacad.backend.modelo.enums.EstadoUsuario.ACTIVO);
+        alumno.setFechaNacimiento(java.time.LocalDate.of(2000, 1, 1));
+        alumno.setFechaIngreso(java.time.LocalDate.now());
+        alumno.setPassword("password");
         alumno.setRol(RolUsuario.ESTUDIANTE);
         alumno = usuarioRepository.save(alumno);
 

@@ -24,6 +24,15 @@ class UsuarioIntegrationTest extends IntegrationTestBase {
         Usuario usuario = new Usuario();
         usuario.setLegajo("ALU001");
         usuario.setNombre("Agus");
+        usuario.setApellido("Santi");
+        usuario.setMail("alu001@test.com");
+        usuario.setDni("12345678");
+        usuario.setTipoDocumento(com.sysacad.backend.modelo.enums.TipoDocumento.DNI);
+        usuario.setGenero(com.sysacad.backend.modelo.enums.Genero.M);
+        usuario.setEstado(com.sysacad.backend.modelo.enums.EstadoUsuario.ACTIVO);
+        usuario.setFechaNacimiento(java.time.LocalDate.of(2000, 1, 1));
+        usuario.setFechaIngreso(java.time.LocalDate.now());
+        usuario.setPassword("password");
         usuario.setRol(RolUsuario.ESTUDIANTE);
         usuarioRepository.save(usuario);
 
