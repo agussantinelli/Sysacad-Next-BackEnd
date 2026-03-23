@@ -46,7 +46,7 @@ class AuthControllerTest {
     @MockBean
     private UsuarioService usuarioService;
 
-    @MockBean
+    @Autowired
     private JwtService jwtService;
 
     @MockBean

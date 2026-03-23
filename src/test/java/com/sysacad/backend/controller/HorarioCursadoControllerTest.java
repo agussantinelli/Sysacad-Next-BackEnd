@@ -81,7 +81,7 @@ class HorarioCursadoControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = "ESTUDIANTE")
     @DisplayName("Debe obtener horarios por comisión")
     void obtenerPorComision_Success() throws Exception {
         UUID idComision = UUID.randomUUID();

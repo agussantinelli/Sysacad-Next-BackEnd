@@ -68,7 +68,7 @@ class SalonControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = "ESTUDIANTE")
     @DisplayName("Usuario debe obtener salones por facultad")
     void listarPorFacultad_Success() throws Exception {
         UUID idFacultad = UUID.randomUUID();
