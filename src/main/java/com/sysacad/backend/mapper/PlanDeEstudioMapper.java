@@ -15,6 +15,9 @@ public interface PlanDeEstudioMapper {
 
     PlanDeEstudioMapper INSTANCE = Mappers.getMapper(PlanDeEstudioMapper.class);
 
+    @Mapping(source = "id.nroPlan", target = "nroPlan")
+    @Mapping(source = "nombre", target = "nombrePlan")
+    @Mapping(source = "carrera.id", target = "idCarrera")
     @Mapping(source = "carrera.nombre", target = "nombreCarrera")
     PlanDeEstudioResponse toDTO(PlanDeEstudio plan);
 
