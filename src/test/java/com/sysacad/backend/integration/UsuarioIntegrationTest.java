@@ -19,21 +19,21 @@ class UsuarioIntegrationTest extends IntegrationTestBase {
     private UsuarioRepository usuarioRepository;
 
     @Test
-    @DisplayName("Usuario puede obtener su perfil")
+    @DisplayName("Debe obtener el perfil del usuario autenticado")
     void obtenerPerfil_Success() throws Exception {
         Usuario usuario = new Usuario();
-        usuario.setLegajo("ALU001");
+        usuario.setLegajo("AGUS001");
         usuario.setNombre("Agus");
-        usuario.setApellido("Santi");
-        usuario.setMail("alu001@test.com");
-        usuario.setDni("12345678");
+        usuario.setMail("agus@test.com");
+        usuario.setDni("98765432");
         usuario.setTipoDocumento(com.sysacad.backend.modelo.enums.TipoDocumento.DNI);
-        usuario.setGenero(com.sysacad.backend.modelo.enums.Genero.M);
-        usuario.setEstado(com.sysacad.backend.modelo.enums.EstadoUsuario.ACTIVO);
+        usuario.setRol(RolUsuario.ESTUDIANTE);
+        usuario.setApellido("Santi"); // Added missing field from original
+        usuario.setGenero(com.sysacad.backend.modelo.enums.Genero.M); // Added missing field from original
+        usuario.setEstado(com.sysacad.backend.modelo.enums.EstadoUsuario.ACTIVO); // Added missing field from original
         usuario.setFechaNacimiento(java.time.LocalDate.of(2000, 1, 1));
         usuario.setFechaIngreso(java.time.LocalDate.now());
         usuario.setPassword("password");
-        usuario.setRol(RolUsuario.ESTUDIANTE);
         usuarioRepository.save(usuario);
 
         mockMvc.perform(get("/api/usuarios/" + usuario.getId()))

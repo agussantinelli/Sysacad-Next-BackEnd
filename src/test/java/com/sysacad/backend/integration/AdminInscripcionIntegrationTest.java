@@ -75,7 +75,7 @@ class AdminInscripcionIntegrationTest extends IntegrationTestBase {
         Carrera carrera = new Carrera();
         carrera.setNombre("Ingeniería en Sistemas");
         carrera.setAlias("ISI");
-        carrera.setFacultad(facultad);
+        carrera.setFacultades(java.util.Set.of(facultad));
         carrera = carreraRepository.save(carrera);
 
         Comision comision = new Comision();

@@ -11,11 +11,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import java.util.Collections;
-
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
@@ -25,16 +24,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class GlobalExceptionHandlerTest {
-
-    @BeforeAll
-    static void init() {
-        SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_GLOBAL);
-    }
-
-    @AfterAll
-    static void cleanup() {
-        SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_THREADLOCAL);
-    }
 
     private MockMvc mockMvc;
 
@@ -71,18 +60,18 @@ class GlobalExceptionHandlerTest {
     @Test
     @DisplayName("Debe manejar AccessDeniedException con status 403 cuando el usuario está autenticado")
     void handleAccessDeniedException_ShouldReturn403() throws Exception {
-        SecurityContextHolder.getContext().setAuthentication(
-                new UsernamePasswordAuthenticationToken("user", "pass", 
-                        java.util.List.of(new org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_USER")))
-        );
-        try {
+        try (MockedStatic<SecurityContextHolder> utilities = Mockito.mockStatic(SecurityContextHolder.class)) {
+            SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+            Authentication authentication = Mockito.mock(Authentication.class);
+            
+            utilities.when(SecurityContextHolder::getContext).thenReturn(securityContext);
+            Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+            
             mockMvc.perform(get("/test/access-denied"))
                     .andExpect(status().isForbidden())
                     .andExpect(jsonPath("$.status", is(403)))
                     .andExpect(jsonPath("$.error", is("Forbidden")))
                     .andExpect(jsonPath("$.message", containsString("No tienes permisos suficientes")));
-        } finally {
-            SecurityContextHolder.clearContext();
         }
     }
 

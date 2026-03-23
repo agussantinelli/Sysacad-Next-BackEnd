@@ -1,9 +1,17 @@
 package com.sysacad.backend.integration;
+import com.sysacad.backend.modelo.Comision;
+import com.sysacad.backend.modelo.InscripcionCursado;
 import com.sysacad.backend.modelo.DetalleMesaExamen;
 import com.sysacad.backend.modelo.Materia;
 import com.sysacad.backend.modelo.MesaExamen;
 import com.sysacad.backend.modelo.Usuario;
 import com.sysacad.backend.modelo.enums.RolUsuario;
+import com.sysacad.backend.modelo.Carrera;
+import com.sysacad.backend.modelo.FacultadRegional;
+import com.sysacad.backend.repository.CarreraRepository;
+import com.sysacad.backend.repository.FacultadRegionalRepository;
+import com.sysacad.backend.repository.ComisionRepository;
+import com.sysacad.backend.repository.InscripcionCursadoRepository;
 import com.sysacad.backend.repository.DetalleMesaExamenRepository;
 import com.sysacad.backend.repository.MateriaRepository;
 import com.sysacad.backend.repository.MesaExamenRepository;
@@ -35,6 +43,18 @@ class InscripcionExamenIntegrationTest extends IntegrationTestBase {
 
     @Autowired
     private MateriaRepository materiaRepository;
+
+    @Autowired
+    private ComisionRepository comisionRepository;
+
+    @Autowired
+    private InscripcionCursadoRepository inscripcionCursadoRepository;
+
+    @Autowired
+    private CarreraRepository carreraRepository;
+
+    @Autowired
+    private FacultadRegionalRepository facultadRegionalRepository;
 
     @Test
     @DisplayName("Estudiante puede inscribirse a un examen final")
@@ -92,6 +112,34 @@ class InscripcionExamenIntegrationTest extends IntegrationTestBase {
         detalle.setPresidente(profesor);
         
         detalle = detalleMesaExamenRepository.save(detalle);
+
+        // Setup: Inscripción previa aprobada para cumplir requisitos (Regularidad + Correlativas)
+        FacultadRegional facultad = new FacultadRegional();
+        facultad.setCiudad("Tucumán");
+        facultad.setProvincia("Tucumán");
+        facultad = facultadRegionalRepository.save(facultad);
+
+        Carrera carrera = new Carrera();
+        carrera.setNombre("Sistemas");
+        carrera.setAlias("SIS_EXAM");
+        carrera.setFacultades(java.util.Set.of(facultad));
+        carrera = carreraRepository.save(carrera);
+
+        Comision comision = new Comision();
+        comision.setNombre("C1");
+        comision.setMaterias(java.util.List.of(materia));
+        comision.setAnio(LocalDate.now().getYear());
+        comision.setNivel(1);
+        comision.setCarrera(carrera);
+        comision = comisionRepository.save(comision);
+
+        InscripcionCursado inscripcion = new InscripcionCursado();
+        inscripcion.setUsuario(alumno);
+        inscripcion.setMateria(materia);
+        inscripcion.setComision(comision);
+        inscripcion.setEstado(com.sysacad.backend.modelo.enums.EstadoCursada.REGULAR);
+        inscripcion.setFechaInscripcion(java.time.LocalDateTime.now());
+        inscripcionCursadoRepository.save(inscripcion);
 
         com.sysacad.backend.dto.inscripcion_examen.InscripcionExamenRequest request = new com.sysacad.backend.dto.inscripcion_examen.InscripcionExamenRequest();
         request.setIdUsuario(alumno.getId());

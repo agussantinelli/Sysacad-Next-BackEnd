@@ -30,9 +30,9 @@ public class AdminFacultadController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> crearFacultad(@RequestBody @jakarta.validation.Valid FacultadRequest request) {
+    public ResponseEntity<Void> crearFacultad(@jakarta.validation.Valid @RequestBody FacultadRequest request) {
         facultadService.crearFacultad(request);
-        return ResponseEntity.status(201).build();
+        return ResponseEntity.status(org.springframework.http.HttpStatus.CREATED).build();
     }
 
     @DeleteMapping("/{id}")
