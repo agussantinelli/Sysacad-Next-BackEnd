@@ -27,6 +27,8 @@
     <img src="https://img.shields.io/badge/MapStruct-Mapping-000000?style=for-the-badge&logo=mapstruct&logoColor=white" alt="MapStruct Badge"/>
     <img src="https://img.shields.io/badge/Thymeleaf-3.x-005F0F?style=for-the-badge&logo=thymeleaf&logoColor=white" alt="Thymeleaf Badge"/>
     <img src="https://img.shields.io/badge/OpenPDF-PDF_Engine-B52E31?style=for-the-badge&logo=adobeacrobatreader&logoColor=white" alt="OpenPDF Badge"/>
+    <img src="https://img.shields.io/badge/Spring%20Boot%20Test-Framework-6DB33F?style=for-the-badge&logo=springboot&logoColor=white" alt="Spring Boot Test Badge"/>
+    <img src="https://img.shields.io/badge/MockMvc-API_Testing-25A162?style=for-the-badge&logo=spring&logoColor=white" alt="MockMvc Badge"/>
     <img src="https://img.shields.io/badge/JUnit-5-25A162?style=for-the-badge&logo=junit5&logoColor=white" alt="JUnit Badge"/>
     <img src="https://img.shields.io/badge/Mockito-Simulación-000000?style=for-the-badge&logo=mockito&logoColor=white" alt="Mockito Badge"/>
     <img src="https://img.shields.io/badge/AssertJ-Fluent_Assertions-25A162?style=for-the-badge&logo=assertj&logoColor=white" alt="AssertJ Badge"/>
@@ -149,6 +151,12 @@
             <td>JUnit 5</td>
             <td>Latest</td>
             <td>Framework base para la ejecución de pruebas.</td>
+        </tr>
+        <tr>
+            <td><strong>🧩 Integración</strong></td>
+            <td>Spring Boot Test + MockMvc</td>
+            <td>Latest</td>
+            <td>Pruebas de flujo completo y simulación de API.</td>
         </tr>
         <tr>
             <td><strong>🛡️ Mocking</strong></td>
