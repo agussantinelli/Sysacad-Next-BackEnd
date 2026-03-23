@@ -446,10 +446,11 @@
 │   │       └── application-secret.properties       # Credenciales sensibles (No versionado)
 │   └── test/                                       # Tests unitarios y de integración
 │       ├── java/com/sysacad/backend/
-│       │   ├── service/                            # Unit Tests de lógica de negocio (32 archivos)
+│       │   ├── service/                            # Unit Tests de lógica de negocio (31 archivos)
 │       │   ├── mapper/                             # Unit Tests de mappers (16 archivos)
 │       │   ├── config/                             # Tests de Infraestructura y Seguridad (5 archivos)
 │       │   ├── exception/                          # Unit Tests de manejo de excepciones (1 archivo)
+│       │   ├── repository/                         # Unit Tests de repositorios (25 archivos)
 │       │   └── BackendApplicationTests.java        # Prueba de carga de contexto con H2
 │       └── resources/
 │           └── application-test.properties         # Configuración del entorno de pruebas
