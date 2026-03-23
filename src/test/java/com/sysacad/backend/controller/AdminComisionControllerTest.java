@@ -124,10 +124,11 @@ class AdminComisionControllerTest {
     @WithMockUser(roles = "ESTUDIANTE")
     @DisplayName("Estudiante no puede crear comisiones (Forbidden)")
     void crearComision_Forbidden_AsStudent() throws Exception {
+        String validJson = "{\"nombre\":\"Comision A\",\"turno\":\"MAÑANA\",\"anio\":2024,\"nivel\":1,\"idCarrera\":\"" + UUID.randomUUID() + "\"}";
         mockMvc.perform(post("/api/admin/comisiones")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{}"))
+                        .content(validJson))
                 .andExpect(status().isForbidden());
     }
 
@@ -139,6 +140,16 @@ class AdminComisionControllerTest {
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{}"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(roles = "PROFESOR")
+    @DisplayName("Profesor no puede obtener salones disponibles (Forbidden)")
+    void obtenerSalonesDisponibles_Forbidden_AsProfesor() throws Exception {
+        mockMvc.perform(get("/api/admin/comisiones/salones-disponibles")
+                        .param("turno", "MAÑANA")
+                        .param("anio", "2024"))
                 .andExpect(status().isForbidden());
     }
 

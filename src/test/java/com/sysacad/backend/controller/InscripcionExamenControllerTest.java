@@ -165,4 +165,12 @@ class InscripcionExamenControllerTest {
         mockMvc.perform(get("/api/inscripciones-examen/mis-inscripciones"))
                 .andExpect(status().isInternalServerError());
     }
+
+    @Test
+    @WithMockUser(roles = "PROFESOR")
+    @DisplayName("Profesor no puede ver mis-inscripciones (Forbidden)")
+    void getMisInscripciones_Forbidden_AsProfesor() throws Exception {
+        mockMvc.perform(get("/api/inscripciones-examen/mis-inscripciones"))
+                .andExpect(status().isForbidden());
+    }
 }

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 import com.sysacad.backend.modelo.Usuario;
 import com.sysacad.backend.repository.UsuarioRepository;
 
@@ -26,6 +27,7 @@ public class InscripcionExamenController {
     private UsuarioRepository usuarioRepository;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ESTUDIANTE', 'ADMIN')")
     public ResponseEntity<InscripcionExamenResponse> inscribir(@RequestBody InscripcionExamenRequest request,
             Authentication authentication) {
 
@@ -40,6 +42,7 @@ public class InscripcionExamenController {
     }
 
     @GetMapping("/mis-inscripciones")
+    @PreAuthorize("hasRole('ESTUDIANTE')")
     public ResponseEntity<List<InscripcionExamenResponse>> getMisInscripciones(Authentication authentication) {
         if (authentication == null)
             return ResponseEntity.status(401).build();
@@ -52,12 +55,14 @@ public class InscripcionExamenController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ESTUDIANTE', 'ADMIN')")
     public ResponseEntity<Void> darDeBaja(@PathVariable UUID id) {
         inscripcionExamenService.darDeBaja(id);
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/{id}/calificar")
+    @PreAuthorize("hasAnyRole('PROFESOR', 'ADMIN')")
     public ResponseEntity<InscripcionExamenResponse> calificar(@PathVariable UUID id,
             @RequestBody CargaNotaExamenRequest request) {
         return ResponseEntity.ok(inscripcionExamenService.calificarExamen(id, request));
