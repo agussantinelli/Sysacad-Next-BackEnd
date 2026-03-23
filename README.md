@@ -446,11 +446,12 @@
 │   │       └── application-secret.properties       # Credenciales sensibles (No versionado)
 │   └── test/                                       # Tests unitarios y de integración
 │       ├── java/com/sysacad/backend/
-│       │   ├── service/                            # Unit Tests de lógica de negocio (31 archivos)
+│       │   ├── controller/                         # Unit Tests de controladores (28 archivos)
+│       │   ├── service/                            # Unit Tests de lógica de negocio (32 archivos)
 │       │   ├── mapper/                             # Unit Tests de mappers (16 archivos)
 │       │   ├── config/                             # Tests de Infraestructura y Seguridad (5 archivos)
 │       │   ├── exception/                          # Unit Tests de manejo de excepciones (1 archivo)
-│       │   ├── repository/                         # Unit Tests de repositorios (25 archivos)
+│       │   ├── repository/                         # Unit Tests de repositorios (24 archivos)
 │       │   └── BackendApplicationTests.java        # Prueba de carga de contexto con H2
 │       └── resources/
 │           └── application-test.properties         # Configuración del entorno de pruebas
@@ -500,8 +501,8 @@
 <p>Validación de lógica de negocio aislada mediante el uso de Mocks para dependencias de red y persistencia. Los tests están integrados en el pipeline de <strong>GitHub Actions</strong>.</p>
 <ul>
     <li><strong>Comando de ejecución:</strong> <code>./mvnw test</code></li>
-    <li><strong>Estado Actual:</strong> <code>146</code> tests unitarios pasando exitosamente.</li>
-    <li><strong>Estructura:</strong> <code>54</code> archivos de test (32 servicios + 16 mappers + 5 infraestructura/seguridad + 1 excepciones).</li>
+    <li><strong>Estado Actual:</strong> <code>249</code> tests unitarios pasando exitosamente.</li>
+    <li><strong>Estructura:</strong> <code>107</code> archivos de test (28 controladores + 32 servicios + 16 mappers + 24 repositorios + 5 infraestructura/seguridad + 1 excepciones + Root).</li>
     <li><strong>Aislamiento:</strong> Uso extensivo de <strong>Mockito</strong> para el stubbing de repositorios y componentes externos.</li>
 </ul>
 
