@@ -45,6 +45,12 @@ class AdminControllerTest {
     @MockBean
     private UsuarioMapper usuarioMapper;
 
+    @MockBean
+    private com.sysacad.backend.config.security.JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    @MockBean
+    private org.springframework.security.authentication.AuthenticationProvider authenticationProvider;
+
     @Test
     @WithMockUser(roles = "ADMIN")
     @DisplayName("Admin debe poder obtener un usuario por ID")

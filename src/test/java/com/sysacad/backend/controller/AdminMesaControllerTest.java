@@ -26,6 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(AdminMesaController.class)
 @ActiveProfiles("test")
+@org.springframework.context.annotation.Import(com.sysacad.backend.config.TestSecurityConfig.class)
 class AdminMesaControllerTest {
 
     @Autowired

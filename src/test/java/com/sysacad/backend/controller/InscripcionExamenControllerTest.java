@@ -30,6 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(InscripcionExamenController.class)
 @ActiveProfiles("test")
+@org.springframework.context.annotation.Import(com.sysacad.backend.config.TestSecurityConfig.class)
 class InscripcionExamenControllerTest {
 
     @Autowired
@@ -49,6 +50,7 @@ class InscripcionExamenControllerTest {
     @DisplayName("Debe inscribir a examen exitosamente")
     void inscribir_Success() throws Exception {
         InscripcionExamenRequest request = new InscripcionExamenRequest();
+        request.setIdDetalleMesa(UUID.randomUUID());
         
         Usuario usuario = new Usuario();
         usuario.setId(UUID.randomUUID());

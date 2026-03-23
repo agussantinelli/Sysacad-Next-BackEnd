@@ -46,6 +46,12 @@ class UsuarioControllerTest {
     @MockBean
     private UsuarioMapper usuarioMapper;
 
+    @MockBean
+    private com.sysacad.backend.config.security.JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    @MockBean
+    private org.springframework.security.authentication.AuthenticationProvider authenticationProvider;
+
     @Test
     @WithMockUser(roles = "ADMIN")
     @DisplayName("Admin debe poder crear un usuario")
@@ -59,6 +65,7 @@ class UsuarioControllerTest {
         Usuario stubUsuario = new Usuario();
         stubUsuario.setId(UUID.randomUUID());
         stubUsuario.setLegajo("NEW001");
+        stubUsuario.setRol(RolUsuario.ESTUDIANTE);
 
         UsuarioResponse responseDto = new UsuarioResponse();
         responseDto.setId(stubUsuario.getId());
@@ -97,6 +104,7 @@ class UsuarioControllerTest {
         Usuario usuario = new Usuario();
         usuario.setId(id);
         usuario.setLegajo("USR123");
+        usuario.setRol(RolUsuario.ESTUDIANTE);
 
         UsuarioResponse responseDto = new UsuarioResponse();
         responseDto.setId(id);

@@ -15,6 +15,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
+import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -26,6 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(AdminComisionController.class)
 @ActiveProfiles("test")
+@org.springframework.context.annotation.Import(com.sysacad.backend.config.TestSecurityConfig.class)
 class AdminComisionControllerTest {
 
     @Autowired
@@ -56,6 +58,8 @@ class AdminComisionControllerTest {
         request.setNombre("1K1");
         request.setAnio(2024);
         request.setTurno("MAÑANA");
+        request.setNivel(1);
+        request.setIdCarrera(UUID.randomUUID());
 
         mockMvc.perform(post("/api/admin/comisiones")
                 .with(csrf())

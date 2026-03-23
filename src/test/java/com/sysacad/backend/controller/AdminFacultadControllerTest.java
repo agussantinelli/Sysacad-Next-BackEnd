@@ -25,6 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(AdminFacultadController.class)
 @ActiveProfiles("test")
+@org.springframework.context.annotation.Import(com.sysacad.backend.config.TestSecurityConfig.class)
 class AdminFacultadControllerTest {
 
     @Autowired
@@ -50,7 +51,8 @@ class AdminFacultadControllerTest {
     @DisplayName("Admin debe poder crear una facultad")
     void crearFacultad_Success() throws Exception {
         FacultadRequest request = new FacultadRequest();
-        request.setNombre("UTN FRC");
+        request.setCiudad("Córdoba");
+        request.setProvincia("Córdoba");
 
         mockMvc.perform(post("/api/admin/facultades")
                 .with(csrf())

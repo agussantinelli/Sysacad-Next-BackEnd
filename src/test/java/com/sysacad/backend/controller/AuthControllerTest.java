@@ -54,6 +54,12 @@ class AuthControllerTest {
     @MockBean
     private UsuarioMapper usuarioMapper;
 
+    @MockBean
+    private com.sysacad.backend.config.security.JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    @MockBean
+    private org.springframework.security.authentication.AuthenticationProvider authenticationProvider;
+
     @Test
     @DisplayName("Debe loguear exitosamente y retornar token")
     void login_Success() throws Exception {
@@ -71,7 +77,7 @@ class AuthControllerTest {
 
         when(usuarioService.autenticar(anyString(), anyString())).thenReturn(usuario);
         when(jwtService.generateToken(any())).thenReturn("mock-jwt-token");
-        when(usuarioMapper.toDTO(any())).thenReturn(usuarioResponse);
+        when(usuarioMapper.toDTO(usuario)).thenReturn(usuarioResponse);
 
         mockMvc.perform(post("/api/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
