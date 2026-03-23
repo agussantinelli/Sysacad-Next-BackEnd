@@ -46,7 +46,7 @@ class InscripcionExamenControllerTest {
     private UsuarioRepository usuarioRepository;
 
     @Test
-    @WithMockUser(username = "ALU001")
+    @WithMockUser(username = "ALU001", roles = "ESTUDIANTE")
     @DisplayName("Debe inscribir a examen exitosamente")
     void inscribir_Success() throws Exception {
         InscripcionExamenRequest request = new InscripcionExamenRequest();
@@ -67,7 +67,7 @@ class InscripcionExamenControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "ALU001")
+    @WithMockUser(username = "ALU001", roles = "ESTUDIANTE")
     @DisplayName("Debe listar inscripciones a examen del usuario")
     void getMisInscripciones_Success() throws Exception {
         Usuario usuario = new Usuario();
@@ -83,7 +83,7 @@ class InscripcionExamenControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = "ESTUDIANTE")
     @DisplayName("Debe dar de baja una inscripción")
     void darDeBaja_Success() throws Exception {
         UUID id = UUID.randomUUID();
@@ -94,7 +94,7 @@ class InscripcionExamenControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = "PROFESOR")
     @DisplayName("Debe calificar un examen")
     void calificar_Success() throws Exception {
         com.sysacad.backend.dto.inscripcion_examen.CargaNotaExamenRequest request = new com.sysacad.backend.dto.inscripcion_examen.CargaNotaExamenRequest();
@@ -115,7 +115,7 @@ class InscripcionExamenControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "ALU001")
+    @WithMockUser(username = "ALU001", roles = "ESTUDIANTE")
     @DisplayName("Falla al inscribir si el usuario no existe")
     void inscribir_UserNotFound() throws Exception {
         when(usuarioRepository.findByLegajo(anyString())).thenReturn(java.util.Optional.empty());
@@ -157,7 +157,7 @@ class InscripcionExamenControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "ALU001")
+    @WithMockUser(username = "ALU001", roles = "ESTUDIANTE")
     @DisplayName("getMisInscripciones falla si usuario no existe")
     void getMisInscripciones_UserNotFound() throws Exception {
         when(usuarioRepository.findByLegajo(anyString())).thenReturn(java.util.Optional.empty());
