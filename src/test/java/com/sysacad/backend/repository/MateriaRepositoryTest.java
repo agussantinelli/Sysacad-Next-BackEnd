@@ -47,7 +47,7 @@ class MateriaRepositoryTest {
 
         List<Materia> result = materiaRepository.findByNombreContainingIgnoreCase("analisis");
         assertEquals(1, result.size());
-        assertTrue(result.get(0).getNombre().contains("Análisis"));
+        assertTrue(result.get(0).getNombre().contains("Analisis"));
     }
 
     @Test

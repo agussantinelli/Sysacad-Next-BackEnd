@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -41,6 +42,14 @@ class PlanMateriaRepositoryTest {
         materia.setDuracion(DuracionMateria.CUATRIMESTRAL);
         materia.setHorasCursado((short) 64);
         entityManager.persist(materia);
+
+        PlanDeEstudio plan = new PlanDeEstudio();
+        plan.setId(new PlanDeEstudio.PlanId(carrera.getId(), 2023));
+        plan.setNombre("Plan 2023");
+        plan.setCarrera(carrera);
+        plan.setFechaInicio(LocalDate.now());
+        plan.setEsVigente(true);
+        entityManager.persist(plan);
     }
 
     @Test
