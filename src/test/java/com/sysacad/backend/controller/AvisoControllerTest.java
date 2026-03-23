@@ -21,12 +21,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(AvisoController.class)
@@ -80,5 +78,68 @@ class AvisoControllerTest {
 
         mockMvc.perform(get("/api/avisos"))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    @DisplayName("Admin debe poder cambiar estado de aviso")
+    void cambiarEstado_Success() throws Exception {
+        when(avisoService.cambiarEstadoAviso(any(), any())).thenReturn(new com.sysacad.backend.modelo.Aviso());
+        when(avisoMapper.toDTO(any())).thenReturn(new AvisoResponse());
+
+        mockMvc.perform(put("/api/avisos/{id}/estado", UUID.randomUUID())
+                        .param("nuevoEstado", "ACTIVO")
+                        .with(csrf()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = "ESTUDIANTE")
+    @DisplayName("Estudiante no puede cambiar estado de aviso")
+    void cambiarEstado_Forbidden_AsStudent() throws Exception {
+        mockMvc.perform(put("/api/avisos/{id}/estado", UUID.randomUUID())
+                        .param("nuevoEstado", "ACTIVO")
+                        .with(csrf()))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(username = "USR001")
+    @DisplayName("Usuario puede marcar aviso como leído")
+    void marcarComoLeido_Success() throws Exception {
+        Usuario usuario = new Usuario();
+        usuario.setId(UUID.randomUUID());
+        usuario.setLegajo("USR001");
+
+        when(usuarioRepository.findByLegajoOrMail(anyString(), anyString())).thenReturn(Optional.of(usuario));
+
+        mockMvc.perform(post("/api/avisos/{id}/leido", UUID.randomUUID())
+                        .with(csrf()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(username = "USR001")
+    @DisplayName("Debe obtener cantidad de avisos sin leer")
+    void contarNoLeidos_Success() throws Exception {
+        Usuario usuario = new Usuario();
+        usuario.setId(UUID.randomUUID());
+        usuario.setLegajo("USR001");
+
+        when(usuarioRepository.findByLegajoOrMail(anyString(), anyString())).thenReturn(Optional.of(usuario));
+        when(avisoService.contarAvisosNoLeidos(usuario.getId())).thenReturn(10L);
+
+        mockMvc.perform(get("/api/avisos/sin-leer/cantidad"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(username = "INVALID")
+    @DisplayName("contarNoLeidos falla si usuario no existe")
+    void contarNoLeidos_NotFound_User() throws Exception {
+        when(usuarioRepository.findByLegajoOrMail(anyString(), anyString())).thenReturn(Optional.empty());
+
+        mockMvc.perform(get("/api/avisos/sin-leer/cantidad"))
+                .andExpect(status().isInternalServerError());
     }
 }
