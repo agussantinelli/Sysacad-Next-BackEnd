@@ -38,14 +38,14 @@ public class ComisionController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESOR')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESOR', 'ESTUDIANTE')")
     public ResponseEntity<List<ComisionResponse>> listarPorAnio(@RequestParam Integer anio) {
         List<Comision> comisiones = comisionService.listarPorAnio(anio);
         return ResponseEntity.ok(comisionMapper.toDTOs(comisiones));
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESOR')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESOR', 'ESTUDIANTE')")
     public ResponseEntity<ComisionResponse> buscarPorId(@PathVariable UUID id) {
         return comisionService.buscarPorId(id)
                 .map(c -> ResponseEntity.ok(comisionMapper.toDTO(c)))
