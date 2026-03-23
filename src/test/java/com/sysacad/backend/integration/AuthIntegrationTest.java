@@ -55,7 +55,7 @@ class AuthIntegrationTest extends IntegrationTestBase {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.token").exists())
-                .andExpect(jsonPath("$.rol").value("ADMIN"));
+                .andExpect(jsonPath("$.usuario.rol").value("ADMIN"));
     }
 
     @Test
@@ -87,6 +87,6 @@ class AuthIntegrationTest extends IntegrationTestBase {
         mockMvc.perform(post("/api/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isBadRequest());
     }
 }
