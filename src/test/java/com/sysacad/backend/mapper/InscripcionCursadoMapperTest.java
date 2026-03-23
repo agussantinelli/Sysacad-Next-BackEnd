@@ -4,9 +4,11 @@ import com.sysacad.backend.dto.inscripcion_cursado.InscripcionCursadoResponse;
 import com.sysacad.backend.modelo.InscripcionCursado;
 import com.sysacad.backend.modelo.Usuario;
 import com.sysacad.backend.modelo.Comision;
+import com.sysacad.backend.modelo.Materia;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,11 +20,11 @@ class InscripcionCursadoMapperTest {
     @DisplayName("Debe mapear InscripcionCursado a DTO")
     void toDTO_Success() {
         InscripcionCursado inscripcion = new InscripcionCursado();
+        inscripcion.setId(UUID.randomUUID());
         
-        Usuario alumno = new Usuario();
-        alumno.setNombre("Alex");
-        alumno.setLegajo("LEG789");
-        inscripcion.setUsuario(alumno);
+        Materia materia = new Materia();
+        materia.setNombre("Materia X");
+        inscripcion.setMateria(materia);
         
         Comision comision = new Comision();
         comision.setNombre("Comision X");
@@ -31,7 +33,7 @@ class InscripcionCursadoMapperTest {
         InscripcionCursadoResponse dto = mapper.toDTO(inscripcion);
 
         assertNotNull(dto);
-        assertEquals("Alex", dto.getNombreAlumno());
+        assertEquals("Materia X", dto.getNombreMateria());
         assertEquals("Comision X", dto.getNombreComision());
     }
 }

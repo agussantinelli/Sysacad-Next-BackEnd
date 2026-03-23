@@ -7,6 +7,7 @@ import com.sysacad.backend.modelo.Usuario;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,12 +20,18 @@ class DetalleMesaExamenMapperTest {
     void toDTO_WithJavaExpression() {
         // Arrange
         DetalleMesaExamen detalle = new DetalleMesaExamen();
+        DetalleMesaExamen.DetalleId id = new DetalleMesaExamen.DetalleId();
+        id.setIdMesaExamen(UUID.randomUUID());
+        id.setNroDetalle(1);
+        detalle.setId(id);
         
         Materia materia = new Materia();
+        materia.setId(UUID.randomUUID());
         materia.setNombre("Algoritmos");
         detalle.setMateria(materia);
         
         Usuario presidente = new Usuario();
+        presidente.setId(UUID.randomUUID());
         presidente.setNombre("Juan");
         presidente.setApellido("Perez");
         detalle.setPresidente(presidente);

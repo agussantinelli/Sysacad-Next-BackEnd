@@ -1,10 +1,12 @@
 package com.sysacad.backend.mapper;
 
-import com.sysacad.backend.dto.calificacion.CalificacionCursadaResponse;
+import com.sysacad.backend.dto.calificacion_cursada.CalificacionCursadaResponse;
 import com.sysacad.backend.modelo.CalificacionCursada;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
+import java.math.BigDecimal;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -15,9 +17,10 @@ class CalificacionCursadaMapperTest {
     @Test
     @DisplayName("Debe mapear CalificacionCursada a DTO")
     void toDTO_Success() {
+        UUID id = UUID.randomUUID();
         CalificacionCursada calificacion = new CalificacionCursada();
-        calificacion.setId(10L);
-        calificacion.setNota(8);
+        calificacion.setId(id);
+        calificacion.setNota(new BigDecimal("8.00"));
 
         CalificacionCursadaResponse dto = mapper.toDTO(calificacion);
 

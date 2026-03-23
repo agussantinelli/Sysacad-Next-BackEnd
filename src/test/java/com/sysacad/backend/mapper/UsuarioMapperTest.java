@@ -5,6 +5,7 @@ import com.sysacad.backend.modelo.Usuario;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -15,16 +16,17 @@ class UsuarioMapperTest {
     @Test
     @DisplayName("Debe mapear Usuario a DTO")
     void toDTO_Success() {
+        UUID id = UUID.randomUUID();
         Usuario usuario = new Usuario();
-        usuario.setId(99L);
+        usuario.setId(id);
         usuario.setNombre("Carlos");
         usuario.setApellido("Vazquez");
-        usuario.setEmail("carlos@test.com");
+        usuario.setMail("carlos@test.com");
 
         UsuarioResponse dto = mapper.toDTO(usuario);
 
         assertNotNull(dto);
-        assertEquals(99L, dto.getId());
+        assertEquals(id, dto.getId());
         assertEquals("Carlos", dto.getNombre());
         assertEquals("Vazquez", dto.getApellido());
     }

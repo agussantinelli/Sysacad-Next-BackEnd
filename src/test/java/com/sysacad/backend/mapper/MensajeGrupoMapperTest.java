@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,17 +22,18 @@ class MensajeGrupoMapperTest {
     void toDTO_Success() {
         // Arrange
         MensajeGrupo mensaje = new MensajeGrupo();
+        mensaje.setId(UUID.randomUUID());
         mensaje.setContenido("Hola");
         mensaje.setFechaEnvio(LocalDateTime.now());
         
         Usuario remitente = new Usuario();
-        remitente.setId(1L);
+        remitente.setId(UUID.randomUUID());
         remitente.setNombre("Admin");
         remitente.setApellido("User");
         mensaje.setUsuario(remitente);
         
         Grupo grupo = new Grupo();
-        grupo.setId(10L);
+        grupo.setId(UUID.randomUUID());
         mensaje.setGrupo(grupo);
 
         // Act
@@ -41,6 +43,6 @@ class MensajeGrupoMapperTest {
         assertNotNull(dto);
         assertEquals("Hola", dto.getContenido());
         assertEquals("Admin", dto.getNombreRemitente());
-        assertEquals(10L, dto.getIdGrupo());
+        assertEquals(grupo.getId(), dto.getIdGrupo());
     }
 }

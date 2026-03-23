@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
 import java.util.Set;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,9 +21,11 @@ class FacultadMapperTest {
     void toDTO_Success() {
         // Arrange
         FacultadRegional facultad = new FacultadRegional();
+        facultad.setId(UUID.randomUUID());
         facultad.setCiudad("Rosario");
         
         Carrera carrera = new Carrera();
+        carrera.setId(UUID.randomUUID());
         carrera.setNombre("ISI");
         facultad.setCarreras(Set.of(carrera));
 

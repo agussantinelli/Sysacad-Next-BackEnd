@@ -6,6 +6,7 @@ import com.sysacad.backend.modelo.Aviso;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -16,16 +17,18 @@ class AvisoMapperTest {
     @Test
     @DisplayName("Debe mapear Aviso a AvisoResponse correctamente")
     void toDTO_Success() {
+        UUID id = UUID.randomUUID();
         Aviso aviso = new Aviso();
-        aviso.setId(1L);
+        aviso.setId(id);
         aviso.setTitulo("Test");
-        aviso.setMensaje("Mensaje");
+        aviso.setDescripcion("Mensaje");
 
         AvisoResponse dto = mapper.toDTO(aviso);
 
         assertNotNull(dto);
         assertEquals(aviso.getId(), dto.getId());
         assertEquals(aviso.getTitulo(), dto.getTitulo());
+        assertEquals(aviso.getDescripcion(), dto.getDescripcion());
     }
 
     @Test
@@ -33,12 +36,12 @@ class AvisoMapperTest {
     void toEntity_Success() {
         AvisoRequest request = new AvisoRequest();
         request.setTitulo("New Title");
-        request.setMensaje("New Message");
+        request.setDescripcion("New Message");
 
         Aviso aviso = mapper.toEntity(request);
 
         assertNotNull(aviso);
         assertEquals(request.getTitulo(), aviso.getTitulo());
-        assertEquals(request.getMensaje(), aviso.getMensaje());
+        assertEquals(request.getDescripcion(), aviso.getDescripcion());
     }
 }

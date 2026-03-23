@@ -10,6 +10,7 @@ import org.mapstruct.factory.Mappers;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,12 +23,15 @@ class CarreraMapperTest {
     void toDTO_WithFacultades() {
         // Arrange
         Carrera carrera = new Carrera();
+        carrera.setId(UUID.randomUUID());
         carrera.setNombre("Ingeniería");
         
         FacultadRegional frro = new FacultadRegional();
+        frro.setId(UUID.randomUUID());
         frro.setCiudad("Rosario");
         
         FacultadRegional frsf = new FacultadRegional();
+        frsf.setId(UUID.randomUUID());
         frsf.setCiudad("Santa Fe");
         
         carrera.setFacultades(new HashSet<>(Set.of(frro, frsf)));

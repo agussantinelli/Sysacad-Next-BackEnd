@@ -8,8 +8,8 @@ import com.sysacad.backend.modelo.Usuario;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
-
 import java.time.LocalDate;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,14 +22,21 @@ class InscripcionExamenMapperTest {
     void toDTO_Success() {
         // Arrange
         InscripcionExamen inscripcion = new InscripcionExamen();
+        inscripcion.setId(UUID.randomUUID());
         
         Usuario alumno = new Usuario();
+        alumno.setId(UUID.randomUUID());
         alumno.setNombre("Maria");
         alumno.setLegajo("LEG001");
         inscripcion.setUsuario(alumno);
         
         DetalleMesaExamen detalle = new DetalleMesaExamen();
+        DetalleMesaExamen.DetalleId detId = new DetalleMesaExamen.DetalleId();
+        detId.setIdMesaExamen(UUID.randomUUID());
+        detId.setNroDetalle(1);
+        detalle.setId(detId);
         Materia materia = new Materia();
+        materia.setId(UUID.randomUUID());
         materia.setNombre("Fisica");
         detalle.setMateria(materia);
         detalle.setDiaExamen(LocalDate.of(2024, 12, 1));

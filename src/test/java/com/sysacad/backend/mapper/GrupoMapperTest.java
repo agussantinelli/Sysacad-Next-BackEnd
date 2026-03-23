@@ -6,6 +6,7 @@ import com.sysacad.backend.modelo.Materia;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,17 +18,14 @@ class GrupoMapperTest {
     @DisplayName("Debe mapear Grupo a DTO")
     void toDTO_Success() {
         Grupo grupo = new Grupo();
-        grupo.setId(1L);
+        grupo.setId(UUID.randomUUID());
         grupo.setNombre("Grupo 1");
-        
-        Materia materia = new Materia();
-        materia.setNombre("Materia X");
-        grupo.setMateria(materia);
+        grupo.setDescripcion("Una descripcion");
 
         GrupoResponse dto = mapper.toDTO(grupo);
 
         assertNotNull(dto);
         assertEquals("Grupo 1", dto.getNombre());
-        assertEquals("Materia X", dto.getNombreMateria());
+        assertEquals("Una descripcion", dto.getDescripcion());
     }
 }

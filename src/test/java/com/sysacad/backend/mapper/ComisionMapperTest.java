@@ -13,7 +13,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -23,7 +25,7 @@ import static org.mockito.Mockito.when;
 class ComisionMapperTest {
 
     @InjectMocks
-    private ComisionMapperImpl mapper; // MapStruct genera la implementación
+    private ComisionMapperImpl mapper; 
 
     @Mock
     private AsignacionMateriaRepository asignacionMateriaRepository;
@@ -36,17 +38,17 @@ class ComisionMapperTest {
         comision.setNombre("Comision A");
         
         Materia materia = new Materia();
-        materia.setId(1L);
+        materia.setId(UUID.randomUUID());
         materia.setNombre("Materia 1");
         
         Usuario profesor = new Usuario();
-        profesor.setId(2L);
+        profesor.setId(UUID.randomUUID());
         profesor.setNombre("Prof");
         profesor.setApellido("Esor");
         profesor.setLegajo("LEG123");
         
-        comision.setMaterias(Set.of(materia));
-        comision.setProfesores(Set.of(profesor));
+        comision.setMaterias(List.of(materia));
+        comision.setProfesores(List.of(profesor));
 
         // Mock repository existsById
         when(asignacionMateriaRepository.existsById(any(AsignacionMateria.AsignacionMateriaId.class))).thenReturn(true);
@@ -59,8 +61,8 @@ class ComisionMapperTest {
         assertEquals("Comision A", dto.getNombre());
         assertNotNull(dto.getMateriasDetalle());
         assertEquals(1, dto.getMateriasDetalle().size());
-        assertEquals("Materia 1", dto.getMateriasDetalle().get(0).getNombre());
-        assertEquals(1, dto.getMateriasDetalle().get(0).getProfesoresDocentes().size());
-        assertEquals("LEG123", dto.getMateriasDetalle().get(0).getProfesoresDocentes().get(0).getLegajo());
+        assertEquals("Materia 1", dto.getMateriasDetalle().get(0).getNombreMateria());
+        assertEquals(1, dto.getMateriasDetalle().get(0).getProfesores().size());
+        assertEquals("LEG123", dto.getMateriasDetalle().get(0).getProfesores().get(0).getLegajo());
     }
 }
