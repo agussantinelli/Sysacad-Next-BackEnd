@@ -1,0 +1,66 @@
+package com.sysacad.backend.repository;
+
+import com.sysacad.backend.modelo.*;
+import com.sysacad.backend.modelo.enums.TipoMateria;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.test.context.ActiveProfiles;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@DataJpaTest
+@ActiveProfiles("test")
+class MateriaRepositoryTest {
+
+    @Autowired
+    private TestEntityManager entityManager;
+
+    @Autowired
+    private MateriaRepository materiaRepository;
+
+    @Test
+    @DisplayName("Debe encontrar materias por nombre ignorando mayúsculas")
+    void findByNombreContainingIgnoreCase_Success() {
+        Materia m1 = new Materia();
+        m1.setNombre("Análisis Matemático");
+        entityManager.persist(m1);
+        
+        Materia m2 = new Materia();
+        m2.setNombre("Álgebra");
+        entityManager.persist(m2);
+        
+        entityManager.flush();
+
+        List<Materia> result = materiaRepository.findByNombreContainingIgnoreCase("analisis");
+        assertEquals(1, result.size());
+        assertTrue(result.get(0).getNombre().contains("Análisis"));
+    }
+
+    @Test
+    @DisplayName("Debe encontrar materias por tipo")
+    void findByTipoMateria_Success() {
+        Materia m1 = new Materia();
+        m1.setNombre("Materia 1");
+        m1.setTipoMateria(TipoMateria.CUATRIMESTRAL);
+        entityManager.persist(m1);
+        
+        Materia m2 = new Materia();
+        m2.setNombre("Materia 2");
+        m2.setTipoMateria(TipoMateria.ANUAL);
+        entityManager.persist(m2);
+        
+        entityManager.flush();
+
+        List<Materia> result = materiaRepository.findByTipoMateria(TipoMateria.CUATRIMESTRAL);
+        assertEquals(1, result.size());
+        assertEquals(TipoMateria.CUATRIMESTRAL, result.get(0).getTipoMateria());
+    }
+}
