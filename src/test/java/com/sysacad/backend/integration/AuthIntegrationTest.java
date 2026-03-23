@@ -42,7 +42,7 @@ class AuthIntegrationTest extends IntegrationTestBase {
         usuarioRepository.save(usuario);
 
         LoginRequest request = new LoginRequest();
-        request.setLegajo("ADMIN123");
+        request.setIdentificador("ADMIN123");
         request.setPassword("password");
 
         mockMvc.perform(post("/api/auth/login")
@@ -72,7 +72,7 @@ class AuthIntegrationTest extends IntegrationTestBase {
         usuarioRepository.save(usuario);
 
         LoginRequest request = new LoginRequest();
-        request.setLegajo("USER456");
+        request.setIdentificador("USER456");
         request.setPassword("wrongpassword");
 
         mockMvc.perform(post("/api/auth/login")
