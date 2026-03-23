@@ -71,4 +71,78 @@ class AdminMesaControllerTest {
                 .with(csrf()))
                 .andExpect(status().isNoContent());
     }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    @DisplayName("Admin debe poder agregar detalle a mesa")
+    void agregarDetalleMesa_Success() throws Exception {
+        com.sysacad.backend.dto.admin.DetalleMesaRequest request = new com.sysacad.backend.dto.admin.DetalleMesaRequest();
+        mockMvc.perform(post("/api/admin/mesas/detalles")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    @DisplayName("Admin debe poder obtener profesores disponibles")
+    void obtenerProfesoresDisponibles_Success() throws Exception {
+        mockMvc.perform(get("/api/admin/mesas/profesores-disponibles")
+                        .param("idMateria", UUID.randomUUID().toString())
+                        .param("fecha", "2024-05-20")
+                        .param("hora", "09:00"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    @DisplayName("Admin debe poder obtener un turno por ID")
+    void obtenerTurno_Success() throws Exception {
+        UUID id = UUID.randomUUID();
+        when(mesaService.obtenerTurnoPorId(id)).thenReturn(new com.sysacad.backend.dto.mesa_examen.MesaExamenResponse());
+
+        mockMvc.perform(get("/api/admin/mesas/turnos/{id}", id))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    @DisplayName("Admin debe poder editar un turno")
+    void editarTurno_Success() throws Exception {
+        UUID id = UUID.randomUUID();
+        MesaExamenRequest request = new MesaExamenRequest();
+        mockMvc.perform(put("/api/admin/mesas/turnos/{id}", id)
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = "ESTUDIANTE")
+    @DisplayName("Estudiante no puede crear turnos (Forbidden)")
+    void crearTurno_Forbidden_AsStudent() throws Exception {
+        mockMvc.perform(post("/api/admin/mesas/turnos")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{}"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("Anónimo no puede ver mesas de examen (Unauthorized)")
+    void obtenerMesas_Unauthorized_AsAnonymous() throws Exception {
+        mockMvc.perform(get("/api/admin/mesas"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    @DisplayName("Eliminar detalle de mesa exitosamente")
+    void eliminarDetalleMesa_Success() throws Exception {
+        mockMvc.perform(delete("/api/admin/mesas/{idMesa}/detalle/{nroDetalle}", UUID.randomUUID(), 1)
+                        .with(csrf()))
+                .andExpect(status().isNoContent());
+    }
 }
