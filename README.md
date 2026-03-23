@@ -501,8 +501,8 @@
 <p>Validación de lógica de negocio aislada mediante el uso de Mocks para dependencias de red y persistencia. Los tests están integrados en el pipeline de <strong>GitHub Actions</strong>.</p>
 <ul>
     <li><strong>Comando de ejecución:</strong> <code>./mvnw test</code></li>
-    <li><strong>Estado Actual:</strong> <code>130+</code> tests unitarios pasando exitosamente.</li>
-    <li><strong>Estructura:</strong> <code>48</code> archivos de test (32 servicios + 16 mappers).</li>
+    <li><strong>Estado Actual:</strong> <code>145+</code> tests unitarios pasando exitosamente.</li>
+    <li><strong>Estructura:</strong> <code>53</code> archivos de test (32 servicios + 16 mappers + 5 infraestructura/seguridad).</li>
     <li><strong>Aislamiento:</strong> Uso extensivo de <strong>Mockito</strong> para el stubbing de repositorios y componentes externos.</li>
 </ul>
 
