@@ -171,7 +171,9 @@ public class UsuarioController {
     }
 
     private UsuarioResponse convertirADTO(Usuario usuario) {
+        if (usuario == null) return null;
         UsuarioResponse dto = usuarioMapper.toDTO(usuario);
+        if (dto == null) return null;
 
         if (dto.getFotoPerfil() != null && !dto.getFotoPerfil().isEmpty()) {
             String fotoPath = dto.getFotoPerfil();

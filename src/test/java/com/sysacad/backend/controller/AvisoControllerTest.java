@@ -31,6 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(AvisoController.class)
 @ActiveProfiles("test")
+@org.springframework.context.annotation.Import(com.sysacad.backend.config.TestSecurityConfig.class)
 class AvisoControllerTest {
 
     @Autowired
