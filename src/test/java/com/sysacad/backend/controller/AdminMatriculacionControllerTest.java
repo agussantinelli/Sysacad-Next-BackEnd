@@ -61,4 +61,84 @@ class AdminMatriculacionControllerTest {
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    @DisplayName("Admin debe poder obtener facultades")
+    void obtenerFacultades_Success() throws Exception {
+        when(matriculacionService.obtenerTodasFacultades()).thenReturn(List.of());
+
+        mockMvc.perform(get("/api/admin/matriculacion/facultades"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    @DisplayName("Admin debe poder obtener carreras por facultad")
+    void obtenerCarreras_Success() throws Exception {
+        UUID facultadId = UUID.randomUUID();
+        when(matriculacionService.obtenerCarrerasPorFacultad(any())).thenReturn(List.of());
+
+        mockMvc.perform(get("/api/admin/matriculacion/carreras")
+                        .param("facultadId", facultadId.toString()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    @DisplayName("Admin debe poder obtener planes por carrera")
+    void obtenerPlanes_Success() throws Exception {
+        UUID carreraId = UUID.randomUUID();
+        when(matriculacionService.obtenerPlanesPorCarrera(any())).thenReturn(List.of());
+
+        mockMvc.perform(get("/api/admin/matriculacion/planes")
+                        .param("carreraId", carreraId.toString()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = "ESTUDIANTE")
+    @DisplayName("Estudiante no puede crear matriculación (Forbidden)")
+    void crearMatriculacion_Forbidden_AsStudent() throws Exception {
+        mockMvc.perform(post("/api/admin/matriculacion")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{}"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(roles = "PROFESOR")
+    @DisplayName("Profesor no puede buscar usuarios de admin (Forbidden)")
+    void buscarUsuarios_Forbidden_AsProfesor() throws Exception {
+        mockMvc.perform(get("/api/admin/matriculacion/usuarios/buscar")
+                        .param("legajo", "777"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("Anónimo no puede crear matriculaciones (Unauthorized)")
+    void crearMatriculacion_Unauthorized_AsAnonymous() throws Exception {
+        mockMvc.perform(post("/api/admin/matriculacion")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{}"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    @DisplayName("obtenerCarreras devuelve error si no se pasa facultadId")
+    void obtenerCarreras_BadRequest() throws Exception {
+        mockMvc.perform(get("/api/admin/matriculacion/carreras"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    @DisplayName("obtenerPlanes devuelve error si no se pasa carreraId")
+    void obtenerPlanes_BadRequest() throws Exception {
+        mockMvc.perform(get("/api/admin/matriculacion/planes"))
+                .andExpect(status().isBadRequest());
+    }
 }
