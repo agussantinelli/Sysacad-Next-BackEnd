@@ -52,4 +52,52 @@ class CertificadoControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_PDF))
                 .andExpect(header().exists("Content-Disposition"));
     }
+
+    @Test
+    @WithMockUser(roles = "PROFESOR")
+    @DisplayName("Profesor no puede descargar certificados de alumnos")
+    void descargarCertificadoRegular_Forbidden_AsProfesor() throws Exception {
+        mockMvc.perform(get("/api/alumnos/certificado-regular"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    @DisplayName("Admin no puede descargar certificados (solo alumnos)")
+    void descargarCertificadoRegular_Forbidden_AsAdmin() throws Exception {
+        mockMvc.perform(get("/api/alumnos/certificado-regular"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("Anónimo no puede descargar certificados")
+    void descargarCertificadoRegular_Unauthorized_AsAnonymous() throws Exception {
+        mockMvc.perform(get("/api/alumnos/certificado-regular"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser(roles = "ESTUDIANTE", username = "NOT_FOUND")
+    @DisplayName("Falla si el estudiante no existe en el repositorio")
+    void descargarCertificadoRegular_NotFound_User() throws Exception {
+        when(usuarioRepository.findByLegajoOrMail(anyString(), anyString())).thenReturn(Optional.empty());
+
+        mockMvc.perform(get("/api/alumnos/certificado-regular"))
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    @WithMockUser(roles = "ESTUDIANTE", username = "ALU001")
+    @DisplayName("Fallo interno en la generación del PDF")
+    void descargarCertificadoRegular_InternalError() throws Exception {
+        Usuario alumno = new Usuario();
+        alumno.setId(UUID.randomUUID());
+        alumno.setLegajo("ALU001");
+
+        when(usuarioRepository.findByLegajoOrMail(anyString(), anyString())).thenReturn(Optional.of(alumno));
+        when(certificadoService.generarCertificadoRegular(any())).thenThrow(new RuntimeException("PDF fail"));
+
+        mockMvc.perform(get("/api/alumnos/certificado-regular"))
+                .andExpect(status().isInternalServerError());
+    }
 }
