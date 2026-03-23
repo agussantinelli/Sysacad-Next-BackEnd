@@ -4,6 +4,10 @@ import com.sysacad.backend.dto.admin.AdminInscripcionRequest;
 import com.sysacad.backend.modelo.Comision;
 import com.sysacad.backend.modelo.Usuario;
 import com.sysacad.backend.modelo.enums.RolUsuario;
+import com.sysacad.backend.modelo.FacultadRegional;
+import com.sysacad.backend.modelo.Carrera;
+import com.sysacad.backend.repository.FacultadRegionalRepository;
+import com.sysacad.backend.repository.CarreraRepository;
 import com.sysacad.backend.repository.ComisionRepository;
 import com.sysacad.backend.repository.InscripcionCursadoRepository;
 import com.sysacad.backend.repository.UsuarioRepository;
@@ -32,9 +36,21 @@ class AdminInscripcionIntegrationTest extends IntegrationTestBase {
     @Autowired
     private ComisionRepository comisionRepository;
 
+    @Autowired
+    private FacultadRegionalRepository facultadRegionalRepository;
+
+    @Autowired
+    private CarreraRepository carreraRepository;
+
     @Test
     @DisplayName("Admin puede inscribir a un alumno en una comisión")
     void inscribirAlumno_Success() throws Exception {
+        inscripcionCursadoRepository.deleteAll();
+        comisionRepository.deleteAll();
+        carreraRepository.deleteAll();
+        usuarioRepository.deleteAll();
+        facultadRegionalRepository.deleteAll();
+
         // Setup: Alumno y Comisión real
         Usuario alumno = new Usuario();
         alumno.setLegajo("ALU001");
@@ -51,10 +67,23 @@ class AdminInscripcionIntegrationTest extends IntegrationTestBase {
         alumno.setPassword("password");
         alumno = usuarioRepository.save(alumno);
 
+        FacultadRegional facultad = new FacultadRegional();
+        facultad.setCiudad("Tucumán");
+        facultad.setProvincia("Tucumán");
+        facultad = facultadRegionalRepository.save(facultad);
+
+        Carrera carrera = new Carrera();
+        carrera.setNombre("Ingeniería en Sistemas");
+        carrera.setAlias("ISI");
+        carrera.setFacultad(facultad);
+        carrera = carreraRepository.save(carrera);
+
         Comision comision = new Comision();
         comision.setNombre("1K1");
         comision.setAnio(2024);
         comision.setTurno("MAÑANA");
+        comision.setNivel(1);
+        comision.setCarrera(carrera);
         comision = comisionRepository.save(comision);
 
         AdminInscripcionRequest request = new AdminInscripcionRequest();

@@ -27,6 +27,7 @@ class AdminCarreraIntegrationTest extends IntegrationTestBase {
     @Test
     @DisplayName("Admin puede crear una carrera correctamente")
     void crearCarrera_Success() throws Exception {
+        carreraRepository.deleteAll();
         // Setup: Facultad real
         FacultadRegional facultad = new FacultadRegional();
         facultad.setCiudad("Tucumán");

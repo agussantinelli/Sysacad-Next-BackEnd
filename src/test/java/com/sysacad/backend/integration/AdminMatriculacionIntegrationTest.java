@@ -7,7 +7,9 @@ import com.sysacad.backend.modelo.enums.RolUsuario;
 import com.sysacad.backend.modelo.enums.TipoDocumento;
 import com.sysacad.backend.modelo.enums.Genero;
 import com.sysacad.backend.modelo.enums.EstadoUsuario;
+import com.sysacad.backend.modelo.FacultadRegional;
 import com.sysacad.backend.repository.CarreraRepository;
+import com.sysacad.backend.repository.FacultadRegionalRepository;
 import com.sysacad.backend.repository.UsuarioRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,6 +32,9 @@ class AdminMatriculacionIntegrationTest extends IntegrationTestBase {
 
     @Autowired
     private CarreraRepository carreraRepository;
+
+    @Autowired
+    private FacultadRegionalRepository facultadRegionalRepository;
 
     @Test
     @DisplayName("Admin puede realizar una matriculación")
@@ -54,10 +59,15 @@ class AdminMatriculacionIntegrationTest extends IntegrationTestBase {
         carrera.setAlias("ISI");
         carrera = carreraRepository.save(carrera);
 
+        FacultadRegional facultad = new FacultadRegional();
+        facultad.setCiudad("Tucumán");
+        facultad.setProvincia("Tucumán");
+        facultad = facultadRegionalRepository.save(facultad);
+
         MatriculacionRequest request = new MatriculacionRequest();
         request.setIdUsuario(alumno.getId());
         request.setIdCarrera(carrera.getId());
-        request.setIdFacultad(UUID.randomUUID()); 
+        request.setIdFacultad(facultad.getId());
         request.setNroPlan(2023);
 
         mockMvc.perform(post("/api/admin/matriculacion")

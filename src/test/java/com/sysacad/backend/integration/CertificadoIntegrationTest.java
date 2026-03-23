@@ -36,7 +36,7 @@ class CertificadoIntegrationTest extends IntegrationTestBase {
         alumno.setRol(RolUsuario.ESTUDIANTE);
         usuarioRepository.save(alumno);
 
-        mockMvc.perform(get("/api/certificados/alumno-regular"))
+        mockMvc.perform(get("/api/alumnos/certificado-regular"))
                 .andExpect(status().isOk());
     }
 }

@@ -36,7 +36,7 @@ class UsuarioIntegrationTest extends IntegrationTestBase {
         usuario.setRol(RolUsuario.ESTUDIANTE);
         usuarioRepository.save(usuario);
 
-        mockMvc.perform(get("/api/usuarios/perfil"))
+        mockMvc.perform(get("/api/usuarios/" + usuario.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.nombre").value("Agus"));
     }

@@ -25,6 +25,7 @@ class AuthIntegrationTest extends IntegrationTestBase {
     @Test
     @DisplayName("Login exitoso con credenciales válidas")
     void login_Success() throws Exception {
+        usuarioRepository.deleteAll();
         // Preparar usuario en DB con todos los campos requeridos
         Usuario usuario = new Usuario();
         usuario.setLegajo("ADMIN123");

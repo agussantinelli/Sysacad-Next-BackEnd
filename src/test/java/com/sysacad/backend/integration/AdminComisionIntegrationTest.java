@@ -30,8 +30,10 @@ class AdminComisionIntegrationTest extends IntegrationTestBase {
     @Test
     @DisplayName("Admin puede crear una comisión")
     void crearComision_Success() throws Exception {
+        comisionRepository.deleteAll();
         Carrera carrera = new Carrera();
         carrera.setNombre("Sistemas");
+        carrera.setAlias("SIS");
         carrera = carreraRepository.save(carrera);
 
         ComisionRequest request = new ComisionRequest();

@@ -24,9 +24,11 @@ class ComisionIntegrationTest extends IntegrationTestBase {
         comision.setNombre("Sistemas 1K1");
         comision.setAnio(2024);
         comision.setTurno("MAÑANA");
+        comision.setNivel(1);
         comisionRepository.save(comision);
 
-        mockMvc.perform(get("/api/comisiones"))
+        mockMvc.perform(get("/api/comisiones")
+                        .param("anio", "2024"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray());
     }

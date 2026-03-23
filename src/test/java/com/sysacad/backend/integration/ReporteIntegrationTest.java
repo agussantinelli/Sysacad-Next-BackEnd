@@ -11,9 +11,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class ReporteIntegrationTest extends IntegrationTestBase {
 
     @Test
-    @DisplayName("Estudiante puede acceder a reportes académicos básicos")
+    @DisplayName("Admin puede acceder a reportes")
+    @WithMockUser(roles = "ADMIN")
     void accederReportes_Success() throws Exception {
-        mockMvc.perform(get("/api/reportes/mi-seguimiento"))
+        mockMvc.perform(get("/api/reportes/certificados"))
                 .andExpect(status().isOk());
     }
 }

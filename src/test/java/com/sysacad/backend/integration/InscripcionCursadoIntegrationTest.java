@@ -5,6 +5,10 @@ import com.sysacad.backend.modelo.Comision;
 import com.sysacad.backend.modelo.Usuario;
 import com.sysacad.backend.modelo.enums.RolUsuario;
 import com.sysacad.backend.repository.ComisionRepository;
+import com.sysacad.backend.modelo.FacultadRegional;
+import com.sysacad.backend.modelo.Carrera;
+import com.sysacad.backend.repository.FacultadRegionalRepository;
+import com.sysacad.backend.repository.CarreraRepository;
 import com.sysacad.backend.repository.UsuarioRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,9 +29,20 @@ class InscripcionCursadoIntegrationTest extends IntegrationTestBase {
     @Autowired
     private ComisionRepository comisionRepository;
 
+    @Autowired
+    private FacultadRegionalRepository facultadRegionalRepository;
+
+    @Autowired
+    private CarreraRepository carreraRepository;
+
     @Test
     @DisplayName("Estudiante puede inscribirse a una comisión")
     void inscribirComision_Success() throws Exception {
+        comisionRepository.deleteAll();
+        carreraRepository.deleteAll();
+        usuarioRepository.deleteAll();
+        facultadRegionalRepository.deleteAll();
+
         Usuario alumno = new Usuario();
         alumno.setLegajo("ALU001");
         alumno.setNombre("Agus");
@@ -43,10 +58,23 @@ class InscripcionCursadoIntegrationTest extends IntegrationTestBase {
         alumno.setRol(RolUsuario.ESTUDIANTE);
         alumno = usuarioRepository.save(alumno);
 
+        FacultadRegional facultad = new FacultadRegional();
+        facultad.setCiudad("Tucumán");
+        facultad.setProvincia("Tucumán");
+        facultad = facultadRegionalRepository.save(facultad);
+
+        Carrera carrera = new Carrera();
+        carrera.setNombre("Ingeniería en Sistemas");
+        carrera.setAlias("ISI");
+        carrera.setFacultad(facultad);
+        carrera = carreraRepository.save(carrera);
+
         Comision comision = new Comision();
         comision.setNombre("2K1");
         comision.setAnio(2024);
         comision.setTurno("NOCHE");
+        comision.setNivel(2);
+        comision.setCarrera(carrera);
         comision = comisionRepository.save(comision);
 
         InscripcionCursadoRequest request = new InscripcionCursadoRequest();
