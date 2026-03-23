@@ -50,4 +50,70 @@ class MatriculacionControllerTest {
         mockMvc.perform(get("/api/alumnos/mis-carreras-materias/historial/{idMateria}", idMateria))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    @WithMockUser(roles = "ESTUDIANTE", username = "ALU001")
+    @DisplayName("Estudiante no tiene materias por carrera (No Content)")
+    void obtenerMisMateriasPorCarrera_NoContent() throws Exception {
+        when(matriculacionService.obtenerMateriasPorCarreraDelAlumno(anyString())).thenReturn(List.of());
+
+        mockMvc.perform(get("/api/alumnos/mis-carreras-materias"))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    @DisplayName("Admin no puede ver materias de alumno (Forbidden)")
+    void obtenerMisMateriasPorCarrera_Forbidden_AsAdmin() throws Exception {
+        mockMvc.perform(get("/api/alumnos/mis-carreras-materias"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(roles = "PROFESOR")
+    @DisplayName("Profesor no puede ver materias de alumno (Forbidden)")
+    void obtenerMisMateriasPorCarrera_Forbidden_AsProfesor() throws Exception {
+        mockMvc.perform(get("/api/alumnos/mis-carreras-materias"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(roles = "ESTUDIANTE", username = "ALU001")
+    @DisplayName("Obtener historial materia (Vacio)")
+    void obtenerHistorialMateria_Empty() throws Exception {
+        when(matriculacionService.obtenerHistorialMateria(anyString(), any())).thenReturn(null);
+
+        mockMvc.perform(get("/api/alumnos/mis-carreras-materias/historial/{idMateria}", UUID.randomUUID()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    @DisplayName("Admin no puede ver historial de alumno (Forbidden)")
+    void obtenerHistorialMateria_Forbidden_AsAdmin() throws Exception {
+        mockMvc.perform(get("/api/alumnos/mis-carreras-materias/historial/{idMateria}", UUID.randomUUID()))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(roles = "PROFESOR")
+    @DisplayName("Profesor no puede ver historial de alumno (Forbidden)")
+    void obtenerHistorialMateria_Forbidden_AsProfesor() throws Exception {
+        mockMvc.perform(get("/api/alumnos/mis-carreras-materias/historial/{idMateria}", UUID.randomUUID()))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("Anónimo no puede ver materias de alumno (Unauthorized)")
+    void obtenerMisMateriasPorCarrera_Unauthorized() throws Exception {
+        mockMvc.perform(get("/api/alumnos/mis-carreras-materias"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("Anónimo no puede ver historial de alumno (Unauthorized)")
+    void obtenerHistorialMateria_Unauthorized() throws Exception {
+        mockMvc.perform(get("/api/alumnos/mis-carreras-materias/historial/{idMateria}", UUID.randomUUID()))
+                .andExpect(status().isUnauthorized());
+    }
 }
