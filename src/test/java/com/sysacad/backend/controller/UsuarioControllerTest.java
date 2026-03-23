@@ -18,10 +18,12 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -124,5 +126,111 @@ class UsuarioControllerTest {
         mockMvc.perform(delete("/api/usuarios/{id}", id)
                 .with(csrf()))
                 .andExpect(status().isNoContent());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    @DisplayName("Admin debe obtener todos los usuarios")
+    void obtenerTodos_Success() throws Exception {
+        when(usuarioService.obtenerTodos()).thenReturn(List.of(new Usuario()));
+        when(usuarioMapper.toDTO(any())).thenReturn(new UsuarioResponse());
+
+        mockMvc.perform(get("/api/usuarios"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    @DisplayName("Admin debe cambiar estado de usuario")
+    void cambiarEstado_Success() throws Exception {
+        UUID id = UUID.randomUUID();
+        when(usuarioService.cambiarEstado(any(), any())).thenReturn(new Usuario());
+        when(usuarioMapper.toDTO(any())).thenReturn(new UsuarioResponse());
+
+        mockMvc.perform(put("/api/usuarios/{id}/estado", id)
+                        .param("nuevoEstado", "ACTIVO")
+                        .with(csrf()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(username = "USR123")
+    @DisplayName("Usuario debe poder cambiar su password")
+    void cambiarPassword_Success() throws Exception {
+        UUID id = UUID.randomUUID();
+        Usuario u = new Usuario();
+        u.setLegajo("USR123");
+        when(usuarioService.obtenerPorId(id)).thenReturn(Optional.of(u));
+
+        com.sysacad.backend.dto.usuario.CambioPasswordRequest request = new com.sysacad.backend.dto.usuario.CambioPasswordRequest();
+        request.setPasswordActual("1234");
+        request.setPasswordNueva("5678");
+
+        mockMvc.perform(post("/api/usuarios/{id}/cambiar-password", id)
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = "PROFESOR")
+    @DisplayName("Profesor debe poder buscar por legajo")
+    void obtenerPorLegajo_Success() throws Exception {
+        when(usuarioService.obtenerPorLegajo(anyString())).thenReturn(Optional.of(new Usuario()));
+        when(usuarioMapper.toDTO(any())).thenReturn(new UsuarioResponse());
+
+        mockMvc.perform(get("/api/usuarios/buscar/legajo/123"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser
+    @DisplayName("Usuario debe poder actualizar sus datos")
+    void actualizarUsuario_Success() throws Exception {
+        UUID id = UUID.randomUUID();
+        when(usuarioService.actualizarUsuario(any(), any())).thenReturn(new Usuario());
+        when(usuarioMapper.toDTO(any())).thenReturn(new UsuarioResponse());
+
+        mockMvc.perform(put("/api/usuarios/{id}", id)
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{}"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("Anónimo no puede obtener perfil (Unauthorized)")
+    void obtenerPorId_Unauthorized() throws Exception {
+        mockMvc.perform(get("/api/usuarios/" + UUID.randomUUID()))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    @DisplayName("Admin debe obtener alumnos por materia")
+    void obtenerAlumnosInscriptosPorMateria_Success() throws Exception {
+        when(usuarioService.obtenerAlumnosInscriptosPorMateria(any())).thenReturn(List.of());
+        mockMvc.perform(get("/api/usuarios/alumnos/materia/" + UUID.randomUUID()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = "PROFESOR")
+    @DisplayName("Profesor debe obtener docentes por materia")
+    void obtenerPorMateria_Success() throws Exception {
+        when(usuarioService.obtenerDocentesPorMateria(any())).thenReturn(List.of());
+        mockMvc.perform(get("/api/usuarios/materia/" + UUID.randomUUID()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    @DisplayName("Admin busca usuarios por rol")
+    void obtenerTodos_WithRol_Success() throws Exception {
+        when(usuarioService.obtenerPorRol(any())).thenReturn(List.of());
+        mockMvc.perform(get("/api/usuarios")
+                        .param("rol", "ESTUDIANTE"))
+                .andExpect(status().isOk());
     }
 }
