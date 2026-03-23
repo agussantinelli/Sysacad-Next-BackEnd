@@ -446,12 +446,9 @@
 │   │       └── application-secret.properties       # Credenciales sensibles (No versionado)
 │   └── test/                                       # Tests unitarios y de integración
 │       ├── java/com/sysacad/backend/
-│       │   ├── service/                            # Unit Tests de lógica de negocio (31+ archivos)
-│       │   │   ├── AdminCarreraServiceTest.java    # ADN Académico (Carreras y Planes)
-│       │   │   ├── AdminComisionServiceTest.java   # Logística de Cursada (Comisiones y Horarios)
-│       │   │   ├── AdminFacultadServiceTest.java   # Gestión de Sedes y Regionales
-│       │   │   ├── ...ServiceTest.java             # Pruebas de dominio core
-│       │   │   └── pdf/                            # Pruebas de generación de reportes PDF
+│       │   ├── service/                            # Unit Tests de lógica de negocio (31 archivos)
+│       │   ├── mapper/                             # Unit Tests de mappers (16 archivos)
+│       │   ├── config/                             # Tests de Infraestructura y Seguridad (5 archivos)
 │       │   └── BackendApplicationTests.java        # Prueba de carga de contexto con H2
 │       └── resources/
 │           └── application-test.properties         # Configuración del entorno de pruebas
