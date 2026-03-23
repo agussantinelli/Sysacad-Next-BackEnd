@@ -192,7 +192,7 @@ class MateriaControllerTest {
         when(materiaMapper.toDTO(any())).thenReturn(new MateriaResponse());
 
         mockMvc.perform(get("/api/materias")
-                        .param("tipo", "ANUAL"))
+                        .param("tipo", "BASICA"))
                 .andExpect(status().isOk());
     }
 
