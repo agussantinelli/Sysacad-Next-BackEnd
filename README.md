@@ -452,6 +452,7 @@
 │       │   ├── config/                             # Tests de Infraestructura y Seguridad (5 archivos)
 │       │   ├── exception/                          # Unit Tests de manejo de excepciones (1 archivo)
 │       │   ├── repository/                         # Unit Tests de repositorios (24 archivos)
+│       │   ├── integration/                        # Pruebas de Integración con MockMvc (13 archivos)
 │       │   └── BackendApplicationTests.java        # Prueba de carga de contexto con H2
 │       └── resources/
 │           └── application-test.properties         # Configuración del entorno de pruebas
@@ -501,12 +502,98 @@
 <p>Validación de lógica de negocio aislada mediante el uso de Mocks para dependencias de red y persistencia. Los tests están integrados en el pipeline de <strong>GitHub Actions</strong>.</p>
 <ul>
     <li><strong>Comando de ejecución:</strong> <code>./mvnw test</code></li>
-    <li><strong>Estado Actual:</strong> <code>364</code> tests unitarios pasando exitosamente.</li>
-    <li><strong>Estructura:</strong> <code>107</code> archivos de test (28 controladores + 32 servicios + 16 mappers + 24 repositorios + 5 infraestructura/seguridad + 1 excepciones + Root).</li>
+    <li><strong>Estado Actual:</strong> <code>384</code> tests unitarios pasando exitosamente.</li>
+    <li><strong>Estructura:</strong> <code>106</code> archivos de test (Excluyendo integración).</li>
     <li><strong>Aislamiento:</strong> Uso extensivo de <strong>Mockito</strong> para el stubbing de repositorios y componentes externos.</li>
 </ul>
 
-<h3>🧩 Patrón AAA (Arrange, Act, Assert)</h3>
+<h3>🔌 Pruebas de Integración (Spring Boot Test + MockMvc)</h3>
+<p>Validación del flujo completo entre capas (Controller → Service → Repository) en un entorno controlado con base de datos H2 en memoria. Estas pruebas aseguran que la seguridad (JWT/Roles) y la persistencia funcionen correctamente en conjunto.</p>
+<ul>
+    <li><strong>Comando específico:</strong> <code>./mvnw test -Dtest=*IntegrationTest</code></li>
+    <li><strong>Estado Actual:</strong> 13 archivos de integración (23 specs individuales) pasando exitosamente.</li>
+    <li><strong>Misión:</strong> Garantizar que la interacción entre los endpoints REST, las reglas de negocio y el motor de persistencia sea consistente con los requisitos del sistema.</li>
+    <li><strong>Enfoque:</strong> Escenarios complejos de inscripción, matriculación, autenticación y generación de reportes.</li>
+</ul>
+
+<table>
+    <thead>
+        <tr>
+            <th>Módulo</th>
+            <th>Archivo de Test</th>
+            <th>Descripción del Flujo</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Autenticación</strong></td>
+            <td><code>AuthIntegrationTest.java</code></td>
+            <td>Login, validación de JWT, manejo de roles y errores de acceso.</td>
+        </tr>
+        <tr>
+            <td><strong>Administración</strong></td>
+            <td><code>AdminComisionIntegrationTest.java</code></td>
+            <td>Gestión de comisiones, vinculación de materias y validación de datos.</td>
+        </tr>
+        <tr>
+            <td><strong>Administración</strong></td>
+            <td><code>AdminCarreraIntegrationTest.java</code></td>
+            <td>Alta de carreras vinculada a sedes y facultades.</td>
+        </tr>
+        <tr>
+            <td><strong>Administración</strong></td>
+            <td><code>AdminMatriculacionIntegrationTest.java</code></td>
+            <td>Proceso de matriculación de alumnos en carreras y planes.</td>
+        </tr>
+        <tr>
+            <td><strong>Administración</strong></td>
+            <td><code>AdminMesaIntegrationTest.java</code></td>
+            <td>Gestión de turnos de examen y cronograma de mesas.</td>
+        </tr>
+        <tr>
+            <td><strong>Administración</strong></td>
+            <td><code>AdminFacultadIntegrationTest.java</code></td>
+            <td>Registro y administración de facultades regionales.</td>
+        </tr>
+        <tr>
+            <td><strong>Estudiante</strong></td>
+            <td><code>InscripcionCursadoIntegrationTest.java</code></td>
+            <td>Flujo de inscripción a cursada con validación de comisiones.</td>
+        </tr>
+        <tr>
+            <td><strong>Estudiante</strong></td>
+            <td><code>InscripcionExamenIntegrationTest.java</code></td>
+            <td>Inscripción a exámenes finales y validación de regularidad.</td>
+        </tr>
+        <tr>
+            <td><strong>Académico</strong></td>
+            <td><code>MateriaIntegrationTest.java</code></td>
+            <td>Consulta de materias, planes de estudio y modalidades.</td>
+        </tr>
+        <tr>
+            <td><strong>Académico</strong></td>
+            <td><code>ReporteIntegrationTest.java</code></td>
+            <td>Acceso a reportes de auditoría y descargas de certificados.</td>
+        </tr>
+        <tr>
+            <td><strong>Comunicación</strong></td>
+            <td><code>AvisoIntegrationTest.java</code></td>
+            <td>Publicación de avisos institucionales y visualización global.</td>
+        </tr>
+        <tr>
+            <td><strong>Administración</strong></td>
+            <td><code>AdminGeneralIntegrationTest.java</code></td>
+            <td>Flujos administrativos transversales y configuración global.</td>
+        </tr>
+        <tr>
+            <td><strong>Perfil</strong></td>
+            <td><code>UsuarioIntegrationTest.java</code></td>
+            <td>Gestión de datos del usuario y consulta de perfil.</td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>🔄 Patrón AAA (Arrange, Act, Assert)</h3>
 <p>Para maximizar la legibilidad y el valor documental de los tests, se aplica rigurosamente el patrón <strong>AAA</strong>:</p>
 <ul>
     <li><strong>Arrange (Preparar):</strong> Configuración de precondiciones, creación de objetos de prueba y configuración de comportamientos en Mocks (<code>when/thenReturn</code>).</li>
