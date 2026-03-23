@@ -449,6 +449,7 @@
 │       │   ├── service/                            # Unit Tests de lógica de negocio (32 archivos)
 │       │   ├── mapper/                             # Unit Tests de mappers (16 archivos)
 │       │   ├── config/                             # Tests de Infraestructura y Seguridad (5 archivos)
+│       │   ├── exception/                          # Unit Tests de manejo de excepciones (1 archivo)
 │       │   └── BackendApplicationTests.java        # Prueba de carga de contexto con H2
 │       └── resources/
 │           └── application-test.properties         # Configuración del entorno de pruebas
@@ -498,8 +499,8 @@
 <p>Validación de lógica de negocio aislada mediante el uso de Mocks para dependencias de red y persistencia. Los tests están integrados en el pipeline de <strong>GitHub Actions</strong>.</p>
 <ul>
     <li><strong>Comando de ejecución:</strong> <code>./mvnw test</code></li>
-    <li><strong>Estado Actual:</strong> <code>141</code> tests unitarios pasando exitosamente.</li>
-    <li><strong>Estructura:</strong> <code>53</code> archivos de test (32 servicios + 16 mappers + 5 infraestructura/seguridad).</li>
+    <li><strong>Estado Actual:</strong> <code>146</code> tests unitarios pasando exitosamente.</li>
+    <li><strong>Estructura:</strong> <code>54</code> archivos de test (32 servicios + 16 mappers + 5 infraestructura/seguridad + 1 excepciones).</li>
     <li><strong>Aislamiento:</strong> Uso extensivo de <strong>Mockito</strong> para el stubbing de repositorios y componentes externos.</li>
 </ul>
 
