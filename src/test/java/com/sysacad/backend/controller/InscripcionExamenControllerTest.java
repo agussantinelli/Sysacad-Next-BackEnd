@@ -92,4 +92,77 @@ class InscripcionExamenControllerTest {
                 .with(csrf()))
                 .andExpect(status().isNoContent());
     }
+
+    @Test
+    @WithMockUser
+    @DisplayName("Debe calificar un examen")
+    void calificar_Success() throws Exception {
+        com.sysacad.backend.dto.inscripcion_examen.CargaNotaExamenRequest request = new com.sysacad.backend.dto.inscripcion_examen.CargaNotaExamenRequest();
+        when(inscripcionExamenService.calificarExamen(any(), any())).thenReturn(new com.sysacad.backend.dto.inscripcion_examen.InscripcionExamenResponse());
+
+        mockMvc.perform(post("/api/inscripciones-examen/{id}/calificar", UUID.randomUUID())
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("Anónimo no puede listar inscripciones (Unauthorized)")
+    void getMisInscripciones_Unauthorized() throws Exception {
+        mockMvc.perform(get("/api/inscripciones-examen/mis-inscripciones"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser(username = "ALU001")
+    @DisplayName("Falla al inscribir si el usuario no existe")
+    void inscribir_UserNotFound() throws Exception {
+        when(usuarioRepository.findByLegajo(anyString())).thenReturn(java.util.Optional.empty());
+
+        mockMvc.perform(post("/api/inscripciones-examen")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{}"))
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    @WithMockUser(roles = "ESTUDIANTE")
+    @DisplayName("Estudiante no puede calificar exámenes (Forbidden)")
+    void calificar_Forbidden_AsStudent() throws Exception {
+        mockMvc.perform(post("/api/inscripciones-examen/{id}/calificar", UUID.randomUUID())
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{}"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("Anónimo no puede inscribirse (Unauthorized)")
+    void inscribir_Unauthorized() throws Exception {
+        mockMvc.perform(post("/api/inscripciones-examen")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{}"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("Anónimo no puede dar de baja (Unauthorized)")
+    void darDeBaja_Unauthorized() throws Exception {
+        mockMvc.perform(delete("/api/inscripciones-examen/{id}", UUID.randomUUID())
+                        .with(csrf()))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser(username = "ALU001")
+    @DisplayName("getMisInscripciones falla si usuario no existe")
+    void getMisInscripciones_UserNotFound() throws Exception {
+        when(usuarioRepository.findByLegajo(anyString())).thenReturn(java.util.Optional.empty());
+
+        mockMvc.perform(get("/api/inscripciones-examen/mis-inscripciones"))
+                .andExpect(status().isInternalServerError());
+    }
 }
